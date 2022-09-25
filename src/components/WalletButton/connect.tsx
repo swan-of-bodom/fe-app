@@ -13,7 +13,7 @@ export interface WalletDialogProps {
   open: boolean;
 }
 
-export default function ConnectWallet() {
+const ConnectWallet = () => {
   const { account } = useStarknet();
   const { available, connect, disconnect } = useConnectors();
 
@@ -63,4 +63,6 @@ export default function ConnectWallet() {
       <WalletDialog open={open} />
     </>
   );
-}
+};
+
+export default ConnectWallet;

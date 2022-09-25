@@ -6,62 +6,65 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { WalletButton } from "../WalletButton";
+import { ReactNode } from "react";
 
-const HeaderContent = () => {
-  return (
-    <React.Fragment>
-      <GlobalStyles
-        styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
-      />
-      <CssBaseline />
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
-      >
-        <Toolbar sx={{ flexWrap: "wrap" }}>
-          <Typography
-            variant="h6"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 1, cursor: "default" }}
-          >
-            Carmine
-          </Typography>
-          <nav>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Portfolio
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Trade
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Support
-            </Link>
-          </nav>
-          <WalletButton />
-        </Toolbar>
-      </AppBar>
-    </React.Fragment>
-  );
+type NavLinkProps = {
+  title: string;
+  link: string;
 };
 
-export default function Header() {
-  return <HeaderContent />;
-}
+const navLinks = [
+  {
+    title: "Counter",
+    link: "/",
+  },
+  {
+    title: "Sign",
+    link: "/sign",
+  },
+  {
+    title: "Token",
+    link: "/token",
+  },
+] as NavLinkProps[];
+
+const navLink = ({ title, link }: NavLinkProps): ReactNode => (
+  <Link
+    variant="button"
+    color="text.primary"
+    href={link}
+    sx={{ my: 1, mx: 1.5 }}
+  >
+    {title}
+  </Link>
+);
+
+const Header = () => (
+  <>
+    <GlobalStyles
+      styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
+    />
+    <CssBaseline />
+    <AppBar
+      position="static"
+      color="default"
+      elevation={0}
+      sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
+    >
+      <Toolbar sx={{ flexWrap: "wrap" }}>
+        <Typography
+          variant="h6"
+          color="inherit"
+          noWrap
+          sx={{ flexGrow: 1, cursor: "default" }}
+        >
+          Carmine
+        </Typography>
+        <nav>{navLinks.map((n) => navLink(n))}</nav>
+        <WalletButton />
+      </Toolbar>
+    </AppBar>
+  </>
+);
+
+export default Header;

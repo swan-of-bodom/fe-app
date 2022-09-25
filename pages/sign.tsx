@@ -1,67 +1,74 @@
-import type { NextPage } from 'next'
-import { TypedData } from 'starknet/utils/typedData'
-import { useSignTypedData, useStarknet } from '@starknet-react/core'
-import { ConnectWallet } from '~/components/ConnectWallet'
-import { useState } from 'react'
+import type { NextPage } from "next";
+import { TypedData } from "starknet/utils/typedData";
+import { useSignTypedData, useStarknet } from "@starknet-react/core";
+import { useState } from "react";
+import Layout from "~/components/Layout";
+import Typography from "@mui/material/Typography";
 
 const Sign: NextPage = () => {
-  const [message, setMessage] = useState('Hello, Bob!')
+  const [message, setMessage] = useState("Hello, Bob!");
 
   const typedData: TypedData = {
     types: {
       StarkNetDomain: [
-        { name: 'name', type: 'felt' },
-        { name: 'version', type: 'felt' },
-        { name: 'chainId', type: 'felt' },
+        { name: "name", type: "felt" },
+        { name: "version", type: "felt" },
+        { name: "chainId", type: "felt" },
       ],
       Person: [
-        { name: 'name', type: 'felt' },
-        { name: 'wallet', type: 'felt' },
+        { name: "name", type: "felt" },
+        { name: "wallet", type: "felt" },
       ],
       Mail: [
-        { name: 'from', type: 'Person' },
-        { name: 'to', type: 'Person' },
-        { name: 'contents', type: 'felt' },
+        { name: "from", type: "Person" },
+        { name: "to", type: "Person" },
+        { name: "contents", type: "felt" },
       ],
     },
-    primaryType: 'Mail',
+    primaryType: "Mail",
     domain: {
-      name: 'StarkNet Mail',
-      version: '1',
+      name: "StarkNet Mail",
+      version: "1",
       chainId: 1,
     },
     message: {
       from: {
-        name: 'Cow',
-        wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
+        name: "Cow",
+        wallet: "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
       },
       to: {
-        name: 'Bob',
-        wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+        name: "Bob",
+        wallet: "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB",
       },
       contents: message,
     },
-  }
+  };
 
-  const { account } = useStarknet()
-  const { data, error, signTypedData, reset } = useSignTypedData(typedData)
+  const { account } = useStarknet();
+  const { data, error, signTypedData, reset } = useSignTypedData(typedData);
 
   return (
-    <div>
-      <ConnectWallet />
+    <Layout>
+      <Typography variant="h2">Message Signing</Typography>
       <div>
-        <p>{error && `error: ${error}`}</p>
-        <p>{data && `data: ${data}`}</p>
+        <div>
+          <p>{error && `error: ${error}`}</p>
+          <p>{data && `data: ${data}`}</p>
+        </div>
+        {account && (
+          <>
+            <input
+              type="text"
+              value={message}
+              onChange={(evt) => setMessage(evt.target.value)}
+            />
+            <input type="button" value="Sign Message" onClick={signTypedData} />
+            <input type="button" value="Reset" onClick={reset} />
+          </>
+        )}
       </div>
-      {account && (
-        <>
-          <input type="text" value={message} onChange={(evt) => setMessage(evt.target.value)} />
-          <input type="button" value="Sign Message" onClick={signTypedData} />
-          <input type="button" value="Reset" onClick={reset} />
-        </>
-      )}
-    </div>
-  )
-}
+    </Layout>
+  );
+};
 
-export default Sign
+export default Sign;

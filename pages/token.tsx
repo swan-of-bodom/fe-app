@@ -1,115 +1,125 @@
-import { useStarknet, useStarknetCall, useStarknetInvoke } from '@starknet-react/core'
-import type { NextPage } from 'next'
-import { useCallback, useMemo, useState } from 'react'
-import { toBN } from 'starknet/dist/utils/number'
-import { bnToUint256, uint256ToBN } from 'starknet/dist/utils/uint256'
-import { ConnectWallet } from '~/components/ConnectWallet'
-import { TransactionList } from '~/components/TransactionList'
-import { useTokenContract } from '~/hooks/token'
+import Typography from "@mui/material/Typography";
+import {
+  useStarknet,
+  useStarknetCall,
+  useStarknetInvoke,
+} from "@starknet-react/core";
+import type { NextPage } from "next";
+import { useCallback, useMemo, useState } from "react";
+import { toBN } from "starknet/dist/utils/number";
+import { bnToUint256, uint256ToBN } from "starknet/dist/utils/uint256";
+import Layout from "~/components/Layout";
+import { TransactionList } from "~/components/TransactionList";
+import { useTokenContract } from "~/hooks/token";
 
 export function UserBalance() {
-  const { account } = useStarknet()
-  const { contract } = useTokenContract()
+  const { account } = useStarknet();
+  const { contract } = useTokenContract();
 
   const { data, loading, error } = useStarknetCall({
     contract,
-    method: 'balanceOf',
+    method: "balanceOf",
     args: account ? [account] : undefined,
-  })
+  });
 
   const content = useMemo(() => {
     if (loading || !data?.length) {
-      return <div>Loading balance</div>
+      return <div>Loading balance</div>;
     }
 
     if (error) {
-      return <div>Error: {error}</div>
+      return <div>Error: {error}</div>;
     }
 
-    const balance = uint256ToBN(data[0])
-    return <div>{balance.toString(10)}</div>
-  }, [data, loading, error])
+    const balance = uint256ToBN(data[0]);
+    return <div>{balance.toString(10)}</div>;
+  }, [data, loading, error]);
 
   return (
     <div>
       <h2>User balance</h2>
       {content}
     </div>
-  )
+  );
 }
 
 function MintToken() {
-  const { account } = useStarknet()
-  const [amount, setAmount] = useState('')
-  const [amountError, setAmountError] = useState<string | undefined>()
+  const { account } = useStarknet();
+  const [amount, setAmount] = useState("");
+  const [amountError, setAmountError] = useState<string | undefined>();
 
-  const { contract } = useTokenContract()
+  const { contract } = useTokenContract();
 
-  const { loading, error, reset, invoke } = useStarknetInvoke({ contract, method: 'mint' })
+  const { loading, error, reset, invoke } = useStarknetInvoke({
+    contract,
+    method: "mint",
+  });
 
   const updateAmount = useCallback(
     (newAmount: string) => {
       // soft-validate amount
-      setAmount(newAmount)
+      setAmount(newAmount);
       try {
-        toBN(newAmount)
-        setAmountError(undefined)
+        toBN(newAmount);
+        setAmountError(undefined);
       } catch (err) {
-        console.error(err)
-        setAmountError('Please input a valid number')
+        console.error(err);
+        setAmountError("Please input a valid number");
       }
     },
     [setAmount]
-  )
+  );
 
   const onMint = useCallback(() => {
-    reset()
+    reset();
     if (account && !amountError) {
-      const message = `${amount.toString()} tokens to ${account}`
-      const amountBn = bnToUint256(amount)
-      invoke({ args: [account, amountBn], metadata: { method: 'mint', message } })
+      const message = `${amount.toString()} tokens to ${account}`;
+      const amountBn = bnToUint256(amount);
+      invoke({
+        args: [account, amountBn],
+        metadata: { method: "mint", message },
+      });
     }
-  }, [account, amount, amountError, invoke, reset])
+  }, [account, amount, amountError, invoke, reset]);
 
   const mintButtonDisabled = useMemo(() => {
-    if (loading) return true
-    return !account || !!amountError
-  }, [loading, account, amountError])
+    if (loading) return true;
+    return !account || !!amountError;
+  }, [loading, account, amountError]);
 
   return (
     <div>
       <h2>Mint token</h2>
       <p>
         <span>Amount: </span>
-        <input type="number" onChange={(evt) => updateAmount(evt.target.value)} />
+        <input
+          type="number"
+          onChange={(evt) => updateAmount(evt.target.value)}
+        />
       </p>
       <button disabled={mintButtonDisabled} onClick={onMint}>
-        {loading ? 'Waiting for wallet' : 'Mint'}
+        {loading ? "Waiting for wallet" : "Mint"}
       </button>
       {error && <p>Error: {error}</p>}
     </div>
-  )
+  );
 }
 
 const TokenPage: NextPage = () => {
-  const { account } = useStarknet()
+  const { account } = useStarknet();
 
   if (!account) {
-    return (
-      <div>
-        <p>Connect Wallet</p>
-        <ConnectWallet />
-      </div>
-    )
+    return <p>You need to connect your wallet first</p>;
   }
   return (
-    <div>
-      <p>Connected: {account}</p>
+    <Layout>
+      <Typography variant="h2">Token Minting</Typography>
+      <Typography noWrap>Connected: {account}</Typography>
       <UserBalance />
       <MintToken />
       <TransactionList />
-    </div>
-  )
-}
+    </Layout>
+  );
+};
 
-export default TokenPage
+export default TokenPage;
