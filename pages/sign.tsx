@@ -49,7 +49,7 @@ const Sign: NextPage = () => {
 
   return (
     <Layout>
-      <Typography variant="h2">Message Signing</Typography>
+      <Typography variant="h4">Message Signing</Typography>
       <div>
         <div>
           <p>{error && `error: ${error}`}</p>

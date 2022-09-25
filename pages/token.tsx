@@ -113,7 +113,7 @@ const TokenPage: NextPage = () => {
   }
   return (
     <Layout>
-      <Typography variant="h2">Token Minting</Typography>
+      <Typography variant="h4">Token Minting</Typography>
       <Typography noWrap>Connected: {account}</Typography>
       <UserBalance />
       <MintToken />
