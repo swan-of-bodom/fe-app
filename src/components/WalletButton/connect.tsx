@@ -3,10 +3,11 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import List from "@mui/material/List";
-import ListItemText from "@mui/material/ListItemText";
 import { ListItemButton } from "@mui/material";
 import { useState } from "react";
 import WalletIcon from "@mui/icons-material/Wallet";
+import Container from "@mui/material/Container";
+import { walletMap } from "./wallets";
 
 export interface WalletDialogProps {
   open: boolean;
@@ -27,18 +28,20 @@ export default function ConnectWallet() {
     };
 
     return (
-      <Dialog open={open}>
-        <DialogTitle>Set backup account</DialogTitle>
-        <List sx={{ pt: 0 }}>
-          {available.map((connector, i) => (
-            <ListItemButton
-              onClick={() => handleWalletClick(connector)}
-              key={i}
-            >
-              <ListItemText primary={connector.name()} />
-            </ListItemButton>
-          ))}
-        </List>
+      <Dialog maxWidth="md" open={open}>
+        <Container sx={{ minWidth: "30vw" }}>
+          <DialogTitle>Connect a wallet</DialogTitle>
+          <List sx={{ pt: 0 }}>
+            {available.map((connector, i) => (
+              <ListItemButton
+                onClick={() => handleWalletClick(connector)}
+                key={i}
+              >
+                {walletMap(connector.id())}
+              </ListItemButton>
+            ))}
+          </List>
+        </Container>
       </Dialog>
     );
   };
