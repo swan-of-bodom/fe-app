@@ -1,11 +1,13 @@
-This is an example showing how to use StarkNet React with Next.js
+# Carmine Finance App
+
+This project is based off of [apibara nextjs starknet example](https://github.com/apibara/starknet-react/tree/main/examples/starknet-react-next).
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-pnpm run dev
+npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [localhost:3000](http://localhost:3000) and you should see the website.
