@@ -3,11 +3,12 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import List from "@mui/material/List";
-import { ListItemButton } from "@mui/material";
+import { Box, ListItemButton } from "@mui/material";
 import { useState } from "react";
 import WalletIcon from "@mui/icons-material/Wallet";
 import Container from "@mui/material/Container";
 import { walletMap } from "./wallets";
+import CloseIcon from "@mui/icons-material/Close";
 
 export interface WalletDialogProps {
   open: boolean;
@@ -30,7 +31,13 @@ const ConnectWallet = () => {
     return (
       <Dialog maxWidth="md" open={open}>
         <Container sx={{ minWidth: "30vw" }}>
-          <DialogTitle>Connect a wallet</DialogTitle>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <DialogTitle>Connect a wallet</DialogTitle>
+            <Button onClick={() => setOpen(false)}>
+              <CloseIcon />
+            </Button>
+          </Box>
+
           <List sx={{ pt: 0 }}>
             {available.map((connector, i) => (
               <ListItemButton

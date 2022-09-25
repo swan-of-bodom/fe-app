@@ -4,6 +4,7 @@ import { useSignTypedData, useStarknet } from "@starknet-react/core";
 import { useState } from "react";
 import Layout from "~/components/Layout";
 import Typography from "@mui/material/Typography";
+import { Box, Button, ButtonGroup, FormGroup, TextField } from "@mui/material";
 
 const Sign: NextPage = () => {
   const [message, setMessage] = useState("Hello, Bob!");
@@ -52,18 +53,43 @@ const Sign: NextPage = () => {
       <Typography variant="h4">Message Signing</Typography>
       <div>
         <div>
-          <p>{error && `error: ${error}`}</p>
-          <p>{data && `data: ${data}`}</p>
+          <p>{error && <Typography noWrap>Error: {error}</Typography>}</p>
+          <p>{data && <Typography noWrap>Error: {data}</Typography>}</p>
         </div>
         {account && (
           <>
-            <input
-              type="text"
-              value={message}
-              onChange={(evt) => setMessage(evt.target.value)}
-            />
-            <input type="button" value="Sign Message" onClick={signTypedData} />
-            <input type="button" value="Reset" onClick={reset} />
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "25ch" },
+                display: "flex",
+                alignItems: "center",
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                label="Message"
+                id="outlined-size-small"
+                defaultValue="Small"
+                size="small"
+                type="text"
+                value={message}
+                onChange={(evt) => setMessage(evt.target.value)}
+              />
+              <ButtonGroup
+                disableElevation
+                variant="contained"
+                aria-label="Disabled elevation buttons"
+              >
+                <Button variant="contained" onClick={signTypedData}>
+                  Sign Message
+                </Button>
+                <Button variant="contained" onClick={reset}>
+                  Reset
+                </Button>
+              </ButtonGroup>
+            </Box>
           </>
         )}
       </div>
