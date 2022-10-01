@@ -28,12 +28,13 @@ const navLinks = [
   },
 ] as NavLinkProps[];
 
-const navLink = ({ title, link }: NavLinkProps): ReactNode => (
+const navLink = ({ title, link }: NavLinkProps, i: number): ReactNode => (
   <Link
     variant="button"
     color="text.primary"
     href={link}
     sx={{ my: 1, mx: 1.5 }}
+    key={i}
   >
     {title}
   </Link>
@@ -60,7 +61,7 @@ const Header = () => (
         >
           Carmine
         </Typography>
-        <nav>{navLinks.map((n) => navLink(n))}</nav>
+        <nav>{navLinks.map((navData, i) => navLink(navData, i))}</nav>
         <WalletButton />
       </Toolbar>
     </AppBar>

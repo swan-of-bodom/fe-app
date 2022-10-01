@@ -53,22 +53,12 @@ const ConnectWallet = () => {
     );
   };
 
-  if (account) {
-    return (
-      <Button onClick={() => disconnect()}>
-        <WalletIcon />
-        Disconnect
-      </Button>
-    );
-  }
   return (
-    <>
-      <Button onClick={() => setOpen(true)}>
-        <WalletIcon />
-        Connect wallet
-      </Button>
+    <Button onClick={() => (account ? disconnect() : setOpen(true))}>
+      <WalletIcon />
+      {account ? "Connect wallet" : "Disconnect"}
       <WalletDialog open={open} />
-    </>
+    </Button>
   );
 };
 

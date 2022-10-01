@@ -1,3 +1,4 @@
+import { Box, Button, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {
   useStarknet,
@@ -89,35 +90,55 @@ function MintToken() {
 
   return (
     <div>
-      <h2>Mint token</h2>
-      <p>
-        <span>Amount: </span>
-        <input
+      <Box
+        component="form"
+        sx={{
+          "& .MuiTextField-root": { m: 1, width: "25ch" },
+          display: "flex",
+          alignItems: "center",
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <TextField
+          label="Amount"
+          id="outlined-size-small"
+          size="small"
           type="number"
+          value={amount}
           onChange={(evt) => updateAmount(evt.target.value)}
         />
-      </p>
-      <button disabled={mintButtonDisabled} onClick={onMint}>
-        {loading ? "Waiting for wallet" : "Mint"}
-      </button>
-      {error && <p>Error: {error}</p>}
+        <Button
+          variant="contained"
+          disabled={mintButtonDisabled}
+          onClick={onMint}
+        >
+          {loading ? "Waiting for wallet" : "Mint"}
+        </Button>
+      </Box>
+      {error && <Typography noWrap>Error: {error}</Typography>}
     </div>
   );
 }
 
 const TokenPage: NextPage = () => {
   const { account } = useStarknet();
+  const [message] = useState("Hello, Bob!");
 
-  if (!account) {
-    return <p>You need to connect your wallet first</p>;
-  }
   return (
     <Layout>
+      <p>{message}</p>
       <Typography variant="h4">Token Minting</Typography>
-      <Typography noWrap>Connected: {account}</Typography>
-      <UserBalance />
-      <MintToken />
-      <TransactionList />
+      {account ? (
+        <>
+          <Typography noWrap>Connected: {account}</Typography>
+          <UserBalance />
+          <MintToken />
+          <TransactionList />
+        </>
+      ) : (
+        <Typography noWrap>You need to connect your wallet first</Typography>
+      )}
     </Layout>
   );
 };
