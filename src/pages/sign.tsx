@@ -1,10 +1,13 @@
 import { TypedData } from "starknet/utils/typedData";
 import { useSignTypedData, useStarknet } from "@starknet-react/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import { Box, Button, ButtonGroup, TextField } from "@mui/material";
 
 const Sign = () => {
+  useEffect(() => {
+    document.title = "Sign | Carmine Finance";
+  });
   const [message, setMessage] = useState("Hello, Bob!");
 
   const typedData: TypedData = {

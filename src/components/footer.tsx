@@ -28,10 +28,10 @@ const footers = [
   {
     title: "Company",
     description: [
+      { title: "About", href: "https://carmine.finance" },
       { title: "Team", href: "https://carmine.finance/#team" },
-      { title: "History", href: "#" },
       { title: "Contact Us", href: "https://discord.com/invite/uRs7j8w3bX" },
-      { title: "Locations", href: "#" },
+      { title: "Twitter", href: "https://twitter.com/carmineoptions" },
     ],
   },
   {
@@ -48,7 +48,7 @@ const footers = [
     title: "Resources",
     description: [
       { title: "Documentation", href: "https://carmine-finance.gitbook.io/carmine-options-amm/" },
-      { title: "Resource Name", href: "#" },
+      { title: "GitHub", href: "https://github.com/CarmineOptions" },
       { title: "Another resource", href: "#" },
       { title: "Final resource", href: "#" },
     ],
@@ -62,7 +62,7 @@ const footers = [
   },
 ] as FooterProps[];
 
-const Footer = () => (
+export const Footer = () => (
   <>
     <Container
       maxWidth="md"
@@ -95,5 +95,3 @@ const Footer = () => (
     </Container>
   </>
 );
-
-export default Footer;

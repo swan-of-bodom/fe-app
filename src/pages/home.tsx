@@ -1,47 +1,41 @@
-import { useAccount, useStarknetCall } from "@starknet-react/core";
-import { useMemo, useState } from "react";
-import { toBN } from "starknet/dist/utils/number";
-import { IncrementCounter } from "../components/IncrementCounter";
-import { useCounterContract } from "../hooks/counter";
+import { useAccount } from "@starknet-react/core";
 import Typography from "@mui/material/Typography";
+import { Box, Paper, styled } from "@mui/material";
+import { useEffect } from "react";
+
+const Item = styled(Paper)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  backgroundColor: "#EEE",
+  minHeight: "10vh",
+  margin: "20px",
+  padding: "20px",
+}));
 
 const Home = () => {
-  const [watch, setWatch] = useState(true);
-  const { contract: counter } = useCounterContract();
+  useEffect(() => {
+    document.title = "Home | Carmine Finance";
+  });
   const { address } = useAccount();
 
-  const { data: counterResult } = useStarknetCall({
-    contract: counter,
-    method: "counter",
-    args: [],
-    options: { watch },
-  });
-
-  const counterValue = useMemo(() => {
-    if (counterResult && counterResult.length > 0) {
-      const value = toBN(counterResult[0]);
-      return value.toString(10);
-    }
-  }, [counterResult]);
-
   return (
-    <>
-      <Typography variant="h4">Counter Contract</Typography>
-      <Typography noWrap>Wallet Address: {address}</Typography>
-      <Typography noWrap>Counter Address: {counter?.address}</Typography>
-      <p>Value: {counterValue}</p>
-      <p>
-        <span>
-          Refresh value at every block{" "}
-          <input
-            type="checkbox"
-            checked={watch}
-            onChange={(evt) => setWatch(evt.target.checked)}
-          />
-        </span>
-      </p>
-      <IncrementCounter />
-    </>
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Item>
+        <Typography sx={{ padding: "15%" }} variant="h4">
+          Welcome to Carmine Finance!
+        </Typography>
+      </Item>
+      <Item>
+        <Typography noWrap>
+          Your wallet address is:
+          <br />
+          {address}
+        </Typography>
+      </Item>
+    </Box>
   );
 };
 

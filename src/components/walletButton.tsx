@@ -2,9 +2,9 @@ import { useConnectors, useAccount } from "@starknet-react/core";
 import { Button } from "@mui/material";
 import { Wallet, OpenInNew } from "@mui/icons-material";
 
-import { isNonEmptyArray } from "../utils";
+import { isNonEmptyArray } from "../utils/utils";
 
-const ConnectWallet = () => {
+export const WalletButton = () => {
   const { account } = useAccount();
   const { available, connect, disconnect } = useConnectors();
   const installWalletLink = "https://www.argent.xyz/argent-x/";
@@ -41,5 +41,3 @@ const ConnectWallet = () => {
     </Button>
   );
 };
-
-export default ConnectWallet;

@@ -1,5 +1,5 @@
-import Header from "../Header";
-import Footer from "../Footer";
+import { Header } from "./header";
+import { Footer } from "./footer";
 import { ReactNode } from "react";
 import Container from "@mui/material/Container";
 
@@ -7,7 +7,7 @@ type Props = {
   children: ReactNode;
 };
 
-const Layout = ({ children }: Props) => (
+export const Layout = ({ children }: Props) => (
   <>
     <Header />
     <Container sx={{ paddingTop: "20px" }}>
@@ -16,5 +16,3 @@ const Layout = ({ children }: Props) => (
     <Footer />
   </>
 );
-
-export default Layout;

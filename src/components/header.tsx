@@ -4,7 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router-dom";
 import GlobalStyles from "@mui/material/GlobalStyles";
-import WalletButton from "../WalletButton";
+import { WalletButton } from "./walletButton";
 import { ReactNode } from "react";
 import { Button } from "@mui/material";
 
@@ -14,10 +14,6 @@ type NavLinkProps = {
 };
 
 const navLinks = [
-  {
-    title: "Counter",
-    link: "/",
-  },
   {
     title: "Sign",
     link: "/sign",
@@ -40,7 +36,7 @@ const navLink = ({ title, link }: NavLinkProps, i: number): ReactNode => (
   </RouterLink>
 );
 
-const Header = () => (
+export const Header = () => (
   <>
     <GlobalStyles
       styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
@@ -53,13 +49,15 @@ const Header = () => (
       sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
     >
       <Toolbar sx={{ flexWrap: "wrap" }}>
-        <Typography
-          variant="h6"
-          color="inherit"
-          noWrap
-          sx={{ flexGrow: 1, cursor: "default" }}
-        >
-          Carmine
+        <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+          <RouterLink to="/" style={{ textDecoration: "none" }}>
+            <img
+              width="35px"
+              height="35px"
+              src="/android-chrome-192x192.png"
+              alt="Carmine logo"
+            />
+          </RouterLink>
         </Typography>
         <nav>{navLinks.map((navData, i) => navLink(navData, i))}</nav>
         <WalletButton />
@@ -67,5 +65,3 @@ const Header = () => (
     </AppBar>
   </>
 );
-
-export default Header;

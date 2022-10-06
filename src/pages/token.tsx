@@ -5,7 +5,7 @@ import {
   useStarknetCall,
   useStarknetInvoke,
 } from "@starknet-react/core";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toBN } from "starknet/dist/utils/number";
 import { bnToUint256, uint256ToBN } from "starknet/dist/utils/uint256";
 import { useTokenContract } from "../hooks/token";
@@ -42,6 +42,9 @@ export function UserBalance() {
 }
 
 const MintToken = () => {
+  useEffect(() => {
+    document.title = "Mint Token | Carmine Finance";
+  });
   const { account } = useStarknet();
   const [amount, setAmount] = useState("");
   const [amountError, setAmountError] = useState<string | undefined>();
