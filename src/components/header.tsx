@@ -19,12 +19,16 @@ const navLinks = [
     link: "/sign",
   },
   {
-    title: "Token",
-    link: "/token",
+    title: "Buy",
+    link: "/buy",
   },
   {
     title: "Balance",
     link: "/Balance",
+  },
+  {
+    title: "Options",
+    link: "/options",
   },
 ] as NavLinkProps[];
 

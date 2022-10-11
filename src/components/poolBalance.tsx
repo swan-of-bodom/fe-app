@@ -1,30 +1,24 @@
 import { Button } from "@mui/material";
-import { useContract, useStarknetCall } from "@starknet-react/core";
-import { StructAbi } from "starknet/types";
-import AmmAbi from "../abi/amm_abi.json";
+import { useStarknetCall } from "@starknet-react/core";
+import { AMM_METHODS, LPTOKEN_CONTRACT_ADDRESS } from "../constants/amm";
+import { useAmmContract } from "../hooks/amm";
 import { weiToEth } from "../utils/utils";
 
 const parsePoolBalance = (d: unknown): string => {
   if (!d || !Array.isArray(d)) {
     return "unknown";
   }
-  
-  return weiToEth(d[0], 3);
+
+  return weiToEth(d[0], 5);
 };
 
 export const PoolBalance = () => {
-  const { contract } = useContract({
-    address:
-      "0x031bc941e58ee989d346a3e12b2d367228c6317bb9533821ce7a29d487ae12bc",
-    abi: AmmAbi as StructAbi[],
-  });
+  const { contract } = useAmmContract();
 
   const { data, loading, error, refresh } = useStarknetCall({
     contract,
-    method: "get_pool_available_balance",
-    args: [
-      "0x02733d9218f96aaa5908ec99eff401f5239aa49d8102aae8f4c7f520c5260d5c",
-    ],
+    method: AMM_METHODS.GET_POOL_AVAILABLE_BALANCE,
+    args: [LPTOKEN_CONTRACT_ADDRESS],
     options: {
       watch: false,
     },
@@ -37,10 +31,7 @@ export const PoolBalance = () => {
           {error && `Error: ${error}`}
           {loading && `Loading...`}
         </p>
-        <Button
-          variant="contained"
-          disabled={true}
-        >
+        <Button variant="contained" disabled={true}>
           Refresh
         </Button>
       </div>
@@ -49,9 +40,7 @@ export const PoolBalance = () => {
 
   return (
     <div>
-      <p>
-        {parsePoolBalance(data)} ETH
-      </p>
+      <p>{parsePoolBalance(data)} ETH</p>
       <Button
         variant="contained"
         disabled={!!(loading || error)}

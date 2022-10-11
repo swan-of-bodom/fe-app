@@ -1,6 +1,8 @@
 import { BigNumberish } from "starknet/utils/number";
 
-export const isNonEmptyArray = (v: unknown): boolean => !!(v && Array.isArray(v) && v.length > 0);
+export const isNonEmptyArray = (v: unknown): v is Array<any> => !!(v && Array.isArray(v) && v.length > 0);
+
+export const handleBlockChainResponse = (v: unknown): BigNumberish | null => (v && isNonEmptyArray(v)) ? v[0] : null;
 
 export const weiToEth = (bn: BigNumberish, decimalPlaces: number): string => {
     const v: string = bn.toString().padStart(19, 0);
