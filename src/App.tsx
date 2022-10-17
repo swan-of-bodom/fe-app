@@ -12,8 +12,6 @@ import { store } from "./redux/store";
 
 // Pages
 import Home from "./pages/home";
-import Sign from "./pages/sign";
-import TokenPage from "./pages/token";
 import BalancePage from "./pages/balance";
 import NotFound from "./pages/notFound";
 import Options from "./pages/options";
@@ -31,8 +29,6 @@ const App = () => {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/sign" element={<Sign />} />
-              <Route path="/token" element={<TokenPage />} />
               <Route path="/balance" element={<BalancePage />} />
               <Route path="/options" element={<Options />} />
               <Route path="/buy" element={<BuyPage />} />

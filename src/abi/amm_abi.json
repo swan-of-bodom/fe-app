@@ -370,6 +370,35 @@
   {
     "inputs": [
       {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "option_side",
+        "type": "felt"
+      },
+      {
+        "name": "maturity",
+        "type": "felt"
+      },
+      {
+        "name": "strike_price",
+        "type": "felt"
+      }
+    ],
+    "name": "get_pools_option_position",
+    "outputs": [
+      {
+        "name": "res",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "name": "quote_token_address",
         "type": "felt"
       },
@@ -424,6 +453,23 @@
     "outputs": [
       {
         "name": "pool_volatility",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      }
+    ],
+    "name": "get_underlying_token_address",
+    "outputs": [
+      {
+        "name": "underlying_token_address_",
         "type": "felt"
       }
     ],
@@ -496,6 +542,69 @@
   {
     "inputs": [
       {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "starting_index",
+        "type": "felt"
+      }
+    ],
+    "name": "get_available_options_usable_index",
+    "outputs": [
+      {
+        "name": "usable_index",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "option_token_address",
+        "type": "felt"
+      }
+    ],
+    "name": "get_option_info_from_addresses",
+    "outputs": [
+      {
+        "name": "option",
+        "type": "Option"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "lpt_amt",
+        "type": "Uint256"
+      }
+    ],
+    "name": "get_underlying_for_lptokens",
+    "outputs": [
+      {
+        "name": "underlying_amt",
+        "type": "Uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "name": "quote_token_address",
         "type": "felt"
       },
@@ -556,6 +665,21 @@
       }
     ],
     "name": "add_option",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "index",
+        "type": "felt"
+      }
+    ],
+    "name": "remove_option",
     "outputs": [],
     "type": "function"
   },

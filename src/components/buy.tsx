@@ -1,15 +1,14 @@
 import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
-import {
-  AMM_METHODS,
-  ETH_ADDRESS,
-  MAIN_CONTRACT_ADDRESS,
-  USD_ADDRESS,
-} from "../constants/amm";
+import { ETH_ADDRESS, USD_ADDRESS } from "../constants/amm";
 import { Button, Link, List, ListItem } from "@mui/material";
 import { VOYAGER_TX_URL } from "../constants/starknet";
-import AmmAbi from "../abi/amm_abi.json";
-import { Abi } from "starknet/types";
+import { approveAndTrade, tradeOpenContract } from "../hooks/tradeOpen";
+import { OptionSide, OptionType } from "../types/options.d";
+import { approve } from "../hooks/approve";
+import { useAmmContract } from "../hooks/amm";
+import { Contract } from "starknet";
+import { hashToReadable } from "../utils/utils";
 
 type BuyProps = {
   amount: string;
@@ -28,7 +27,7 @@ const TransactionList = ({ transactions }: TransactionListProps) => {
       {transactions.map((t, i) => (
         <ListItem key={i}>
           <Link target="_blank" href={VOYAGER_TX_URL + t}>
-            {t}
+            {hashToReadable(t)}
           </Link>
         </ListItem>
       ))}
@@ -40,30 +39,22 @@ export const Buy = ({ amount }: BuyProps) => {
   const [transactionList, addToTransactionList] = useState<string[]>([]);
   const [isClicked, toggleClicked] = useState<boolean>(false);
   const { account, address } = useAccount();
+  const { contract } = useAmmContract();
 
   const handleApprove = async () => {
     if (!account || !address) {
       console.warn("No account or address", { account, address });
       return;
     }
-    toggleClicked(true);
-    try {
-      const res = await account.execute([
-        {
-          contractAddress: ETH_ADDRESS,
-          entrypoint: AMM_METHODS.APPROVE,
-          calldata: [address, amount, 0],
-        },
-      ]);
 
-      if (res && res.transaction_hash) {
-        addToTransactionList([...transactionList, res.transaction_hash]);
-      }
-      toggleClicked(false);
-    } catch (e) {
-      console.error(e);
-      toggleClicked(false);
+    toggleClicked(true);
+    const res = await approve(account, address, amount);
+
+    if (res && res.transaction_hash) {
+      addToTransactionList([...transactionList, res.transaction_hash]);
     }
+
+    toggleClicked(false);
   };
 
   const handleTradeOpen = async () => {
@@ -73,35 +64,49 @@ export const Buy = ({ amount }: BuyProps) => {
     }
 
     toggleClicked(true);
-    try {
-      const res = await account.execute(
-        [
-          {
-            contractAddress: MAIN_CONTRACT_ADDRESS,
-            entrypoint: AMM_METHODS.TRADE_OPEN,
-            calldata: [
-              "0", // option_type : OptionType,
-              "3919933115663279718400", // strike_price : Math64x61_,
-              "1665511435", // maturity : Int,
-              "0", // option_side : OptionSide,
-              "11529215046", // option_size : Math64x61_,
-              USD_ADDRESS, // quote_token_address: Address,
-              ETH_ADDRESS, // base_token_address: Address,
-            ],
-          },
-        ],
-        [AmmAbi] as Abi[]
-      );
+    const optionData = {
+      optionType: OptionType.Call, // option_type : OptionType,
+      strikePrice: "3458764513820540928000", // strike_price : Math64x61_,
+      maturity: 1669849199, // maturity : Int,
+      optionSide: OptionSide.Long, // option_side : OptionSide,
+      optionSize: amount, // option_size : Math64x61_,
+      quoteToken: USD_ADDRESS, // quote_token_address: Address,
+      baseToken: ETH_ADDRESS, // base_token_address: Address,
+    };
 
-      if (res && res.transaction_hash) {
-        addToTransactionList([...transactionList, res.transaction_hash]);
-      }
+    // const res = await tradeOpen(account, optionData);
 
-      toggleClicked(false);
-    } catch (e) {
-      console.error(e);
-      toggleClicked(false);
+    const res = await tradeOpenContract(contract as Contract, optionData);
+
+    if (res && res.transaction_hash) {
+      addToTransactionList([...transactionList, res.transaction_hash]);
     }
+
+    toggleClicked(false);
+  };
+
+  const handleApproveAndTrade = async () => {
+    if (!account || !address) {
+      console.warn("No account or address", { account, address });
+      return;
+    }
+
+    toggleClicked(true);
+    const optionData = {
+      optionType: OptionType.Call, // option_type : OptionType,
+      strikePrice: "3458764513820540928000", // strike_price : Math64x61_,
+      maturity: 1669849199, // maturity : Int,
+      optionSide: OptionSide.Long, // option_side : OptionSide,
+      optionSize: amount, // option_size : Math64x61_,
+      quoteToken: USD_ADDRESS, // quote_token_address: Address,
+      baseToken: ETH_ADDRESS, // base_token_address: Address,
+    };
+
+    // const res = await tradeOpen(account, optionData);
+
+    await approveAndTrade(account, address, optionData);
+
+    toggleClicked(false);
   };
 
   return (
@@ -115,6 +120,13 @@ export const Buy = ({ amount }: BuyProps) => {
         onClick={handleTradeOpen}
       >
         {isClicked ? "Processing..." : "Trade Open"}
+      </Button>
+      <Button
+        variant="contained"
+        disabled={isClicked}
+        onClick={handleApproveAndTrade}
+      >
+        {isClicked ? "Processing..." : "Approve and trade"}
       </Button>
       <TransactionList transactions={transactionList} />
     </>
