@@ -1,18 +1,14 @@
-import {
-  OptionIdentifier,
-  OptionSide,
-  OptionTradeArguments,
-  OptionType,
-} from "../types/options.d";
+import { OptionSide, OptionType, RawOption } from "../types/options.d";
 import { timestampToReadableDate, weiToEth } from "../utils/utils";
 import { Button, Paper, styled, TextField } from "@mui/material";
 import { approveAndTrade } from "../hooks/tradeOpen";
 import { AccountInterface } from "starknet";
 import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
+import { parseRawOption } from "../utils/parseOption";
 
 type OptionPreviewProps = {
-  option: OptionIdentifier;
+  rawOption: RawOption;
 };
 
 type TradeState = {
@@ -33,7 +29,7 @@ const handleBuy = async (
   account: AccountInterface | undefined,
   address: string | undefined,
   amount: string,
-  option: OptionIdentifier,
+  rawOption: RawOption,
   updateTradeState: (v: TradeState) => void
 ) => {
   if (!account || !address || !amount) {
@@ -41,13 +37,13 @@ const handleBuy = async (
     return;
   }
   updateTradeState({ failed: false, processing: true });
-  const validatedOptionData: OptionTradeArguments = {
-    ...option,
-    optionSize: amount,
-  };
-  console.log("Buying option...");
-  console.log(validatedOptionData);
-  const res = await approveAndTrade(account, address, validatedOptionData);
+
+  const res = await approveAndTrade(
+    account,
+    address,
+    rawOption,
+    parseInt(amount, 10)
+  );
 
   updateTradeState(
     res
@@ -56,13 +52,19 @@ const handleBuy = async (
   );
 };
 
-export const OptionPreview = ({ option }: OptionPreviewProps) => {
+export const OptionPreview = ({ rawOption }: OptionPreviewProps) => {
   const { account, address } = useAccount();
   const [amount, setAmount] = useState("");
   const [tradeState, updateTradeState] = useState<TradeState>({
     failed: false,
     processing: false,
   });
+
+  const option = parseRawOption(rawOption);
+
+  if (!option) {
+    return null;
+  }
 
   const { strikePrice, optionSide, optionType, maturity } = option;
   const msMaturity = maturity * 1000;
@@ -86,6 +88,7 @@ export const OptionPreview = ({ option }: OptionPreviewProps) => {
         id="outlined-number"
         label="Amount Wei"
         type="number"
+        size="small"
         InputLabelProps={{
           shrink: true,
         }}
@@ -97,7 +100,7 @@ export const OptionPreview = ({ option }: OptionPreviewProps) => {
         disabled={tradeState.processing}
         color={tradeState.failed ? "error" : "primary"}
         onClick={() =>
-          handleBuy(account, address, amount, option, updateTradeState)
+          handleBuy(account, address, amount, rawOption, updateTradeState)
         }
       >
         $$$

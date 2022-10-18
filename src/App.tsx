@@ -16,6 +16,7 @@ import BalancePage from "./pages/balance";
 import NotFound from "./pages/notFound";
 import Options from "./pages/options";
 import BuyPage from "./pages/buy";
+import { Controller } from "./components/controller";
 
 const App = () => {
   const connectors = Object.values(SupportedWalletIds).map(
@@ -25,6 +26,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <StarknetProvider connectors={connectors} autoConnect>
+        <Controller />
         <Router>
           <Layout>
             <Routes>
