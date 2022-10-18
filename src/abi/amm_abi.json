@@ -542,6 +542,39 @@
   {
     "inputs": [
       {
+        "name": "option",
+        "type": "Option"
+      },
+      {
+        "name": "position_size",
+        "type": "felt"
+      },
+      {
+        "name": "option_type",
+        "type": "felt"
+      },
+      {
+        "name": "current_volatility",
+        "type": "felt"
+      },
+      {
+        "name": "current_pool_balance",
+        "type": "felt"
+      }
+    ],
+    "name": "get_value_of_position",
+    "outputs": [
+      {
+        "name": "position_value",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "name": "lptoken_address",
         "type": "felt"
       },

@@ -1,17 +1,20 @@
 import { AMM_METHODS, ETH_ADDRESS } from "../constants/amm";
 import { AccountInterface } from "starknet";
+import { toBN, toHex } from "starknet/utils/number";
 
 export const approve = async (
   account: AccountInterface,
   address: string,
-  amount: string
+  amount: number
 ) => {
   try {
-    const res = await account.execute({
+    const call = {
       contractAddress: ETH_ADDRESS,
       entrypoint: AMM_METHODS.APPROVE,
-      calldata: [address, amount, 0],
-    });
+      calldata: [address, toHex(toBN(amount)), 0],
+    };
+    console.log("Executing following call:", call);
+    const res = await account.execute(call);
     return res;
   } catch (e) {
     console.error(e);

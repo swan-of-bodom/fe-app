@@ -1,6 +1,6 @@
 import { OptionSide, OptionType, RawOption } from "../types/options.d";
 import { timestampToReadableDate, weiToEth } from "../utils/utils";
-import { Button, Paper, styled, TextField } from "@mui/material";
+import { Button, Chip, Paper, styled, TextField } from "@mui/material";
 import { approveAndTrade } from "../hooks/tradeOpen";
 import { AccountInterface } from "starknet";
 import { useAccount } from "@starknet-react/core";
@@ -23,6 +23,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
   display: "flex",
   justifyContent: "space-between",
+  alignItems: "center",
 }));
 
 const handleBuy = async (
@@ -74,11 +75,11 @@ export const OptionPreview = ({ rawOption }: OptionPreviewProps) => {
   }
 
   const date = timestampToReadableDate(msMaturity);
-  const typeText = optionType === OptionType.Put ? "put" : "call";
-  const sideText = optionSide === OptionSide.Long ? "long" : "short";
+  const typeText = optionType === OptionType.Put ? "Put" : "Call";
+  const sideText = optionSide === OptionSide.Long ? "Long" : "Short";
   return (
-    <Item>
-      <span>{typeText}</span>
+    <Item elevation={4}>
+      <Chip label={typeText} color="info" />
       <span>
         Strike price{" "}
         {strikePrice.length > 12 ? weiToEth(strikePrice, 2) : strikePrice}
@@ -94,7 +95,7 @@ export const OptionPreview = ({ rawOption }: OptionPreviewProps) => {
         }}
         onChange={(e) => setAmount(e.target.value)}
       />
-      <span>{sideText}</span>
+      <Chip label={sideText} color="info" />
       <Button
         variant="contained"
         disabled={tradeState.processing}

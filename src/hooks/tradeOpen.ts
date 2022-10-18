@@ -16,14 +16,13 @@ export const tradeOpen = async (
   amount: number
 ) => {
   try {
-    const res = await account.execute(
-      {
-        contractAddress: MAIN_CONTRACT_ADDRESS,
-        entrypoint: AMM_METHODS.TRADE_OPEN,
-        calldata: rawOptionToCalldata(rawOption, amount),
-      },
-      [AmmAbi] as Abi[]
-    );
+    const call = {
+      contractAddress: MAIN_CONTRACT_ADDRESS,
+      entrypoint: AMM_METHODS.TRADE_OPEN,
+      calldata: rawOptionToCalldata(rawOption, amount),
+    };
+    console.log("Executing following call:", call);
+    const res = await account.execute(call, [AmmAbi] as Abi[]);
     return res;
   } catch (e) {
     console.error(e);
@@ -39,7 +38,7 @@ export const approveAndTrade = async (
 ): Promise<InvokeFunctionResponse | null> => {
   const provider = new Provider();
 
-  const approveResponse = await approve(account, address, amount.toString());
+  const approveResponse = await approve(account, address, amount);
 
   console.log("Approve response", approveResponse);
 
@@ -49,11 +48,9 @@ export const approveAndTrade = async (
 
   await provider.waitForTransaction(approveResponse.transaction_hash);
 
-  console.log("Done waiting for approve", approveResponse);
-
   const tradeResponse = await tradeOpen(account, rawOption, amount);
 
-  console.log("Done trading", tradeResponse);
+  console.log("Done trading!", tradeResponse);
 
   return tradeResponse;
 };

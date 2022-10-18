@@ -1,4 +1,4 @@
-import { BigNumberish, toHex } from "starknet/utils/number";
+import { BigNumberish, toBN, toHex } from "starknet/utils/number";
 import {
   OptionIdentifier,
   OptionSide,
@@ -37,15 +37,16 @@ export const parseRawOption = (raw: RawOption): OptionIdentifier | null => {
 };
 
 export const rawOptionToCalldata = (raw: RawOption, size: number): string[] => {
-  const optionSize = intToMath61(size);
+  // const optionSize = intToMath61(size);
+  const optionSize = toHex(toBN(size));
 
   return [
-    raw.option_type,
-    raw.strike_price,
-    raw.maturity,
-    raw.option_side,
+    toHex(raw.option_type),
+    toHex(raw.strike_price),
+    bnToInt(raw.maturity).toString(10),
+    toHex(raw.option_side),
     optionSize,
-    raw.quote_token_address,
-    raw.base_token_address,
+    toHex(raw.quote_token_address),
+    toHex(raw.base_token_address),
   ];
 };
