@@ -19,7 +19,9 @@ const Home = () => {
   useEffect(() => {
     document.title = "Home | Carmine Finance";
   });
-  const { address } = useAccount();
+  const { account, address, status } = useAccount();
+
+  console.log({ account, status, address });
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
