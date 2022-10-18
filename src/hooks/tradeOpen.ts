@@ -32,13 +32,12 @@ export const tradeOpen = async (
 
 export const approveAndTrade = async (
   account: AccountInterface,
-  address: string,
   rawOption: RawOption,
   amount: number
 ): Promise<InvokeFunctionResponse | null> => {
   const provider = new Provider();
 
-  const approveResponse = await approve(account, address, amount);
+  const approveResponse = await approve(account, amount);
 
   console.log("Approve response", approveResponse);
 

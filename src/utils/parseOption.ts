@@ -1,4 +1,4 @@
-import { BigNumberish, toBN, toHex } from "starknet/utils/number";
+import { BigNumberish, toHex } from "starknet/utils/number";
 import {
   OptionIdentifier,
   OptionSide,
@@ -19,6 +19,9 @@ const bnToOptionSide = (bn: BigNumberish): OptionSide =>
 const bnToOptionType = (bn: BigNumberish): OptionType =>
   parseInt(toHex(bn), 16) === 1 ? OptionType.Put : OptionType.Call;
 
+const encodeOptionSize = (n: number): string =>
+  Math.floor((n * 2 ** 61) / 10 ** 18).toString(10);
+
 export const parseRawOption = (raw: RawOption): OptionIdentifier | null => {
   try {
     return {
@@ -37,8 +40,7 @@ export const parseRawOption = (raw: RawOption): OptionIdentifier | null => {
 };
 
 export const rawOptionToCalldata = (raw: RawOption, size: number): string[] => {
-  // const optionSize = intToMath61(size);
-  const optionSize = toHex(toBN(size));
+  const optionSize = encodeOptionSize(size);
 
   return [
     toHex(raw.option_type),

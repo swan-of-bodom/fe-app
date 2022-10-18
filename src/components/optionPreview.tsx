@@ -28,23 +28,17 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const handleBuy = async (
   account: AccountInterface | undefined,
-  address: string | undefined,
   amount: string,
   rawOption: RawOption,
   updateTradeState: (v: TradeState) => void
 ) => {
-  if (!account || !address || !amount) {
-    console.warn("Missing some of the inputs:", { account, address, amount });
+  if (!account || !amount) {
+    console.warn("Missing some of the inputs:", { account, amount });
     return;
   }
   updateTradeState({ failed: false, processing: true });
 
-  const res = await approveAndTrade(
-    account,
-    address,
-    rawOption,
-    parseInt(amount, 10)
-  );
+  const res = await approveAndTrade(account, rawOption, parseInt(amount, 10));
 
   updateTradeState(
     res
@@ -100,9 +94,7 @@ export const OptionPreview = ({ rawOption }: OptionPreviewProps) => {
         variant="contained"
         disabled={tradeState.processing}
         color={tradeState.failed ? "error" : "primary"}
-        onClick={() =>
-          handleBuy(account, address, amount, rawOption, updateTradeState)
-        }
+        onClick={() => handleBuy(account, amount, rawOption, updateTradeState)}
       >
         $$$
       </Button>
