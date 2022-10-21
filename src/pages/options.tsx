@@ -14,7 +14,6 @@ const Options = () => {
     setIsAvailable(
       <IsOptionAvailable maturity={maturity} strikePrice={strike} />
     );
-    console.log(isAvailable);
   };
 
   return (
@@ -57,7 +56,9 @@ const Options = () => {
           variant="contained"
           aria-label="Disabled elevation buttons"
         >
-          <Button variant="contained" onClick={handleClick}>Check</Button>
+          <Button variant="contained" onClick={handleClick}>
+            Check
+          </Button>
         </ButtonGroup>
       </Box>
       {isAvailable}

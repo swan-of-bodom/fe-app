@@ -1,4 +1,3 @@
-import { useAccount } from "@starknet-react/core";
 import Typography from "@mui/material/Typography";
 import { Box, Paper, styled } from "@mui/material";
 import { useEffect } from "react";
@@ -19,22 +18,12 @@ const Home = () => {
   useEffect(() => {
     document.title = "Home | Carmine Finance";
   });
-  const { account, address, status } = useAccount();
-
-  console.log({ account, status, address });
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <Item>
         <Typography sx={{ padding: "15%" }} variant="h4">
           Welcome to Carmine Finance!
-        </Typography>
-      </Item>
-      <Item>
-        <Typography noWrap>
-          Your wallet address is:
-          <br />
-          {address}
         </Typography>
       </Item>
     </Box>

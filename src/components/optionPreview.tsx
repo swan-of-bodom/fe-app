@@ -6,6 +6,7 @@ import { AccountInterface } from "starknet";
 import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
 import { parseRawOption } from "../utils/parseOption";
+import { debug, LogTypes } from "../utils/debugger";
 
 type OptionPreviewProps = {
   rawOption: RawOption;
@@ -33,7 +34,7 @@ const handleBuy = async (
   updateTradeState: (v: TradeState) => void
 ) => {
   if (!account || !amount) {
-    console.warn("Missing some of the inputs:", { account, amount });
+    debug(LogTypes.WARN, "Missing some of the inputs:", { account, amount });
     return;
   }
   updateTradeState({ failed: false, processing: true });
@@ -48,7 +49,7 @@ const handleBuy = async (
 };
 
 export const OptionPreview = ({ rawOption }: OptionPreviewProps) => {
-  const { account, address } = useAccount();
+  const { account } = useAccount();
   const [amount, setAmount] = useState("");
   const [tradeState, updateTradeState] = useState<TradeState>({
     failed: false,
