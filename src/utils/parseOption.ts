@@ -5,6 +5,7 @@ import {
   OptionType,
   RawOption,
 } from "../types/options.d";
+import { debug, LogTypes } from "./debugger";
 
 const math61toInt = (bn: BigNumberish): number => bnToInt(bn) / 2 ** 61;
 
@@ -33,8 +34,7 @@ export const parseRawOption = (raw: RawOption): OptionIdentifier | null => {
       strikePrice: math61toInt(raw.strike_price).toString(),
     };
   } catch (e) {
-    console.warn("Failed to parse option:", raw);
-    console.error(e);
+    debug(LogTypes.ERROR, "Failed to parse option:", raw, e);
     return null;
   }
 };

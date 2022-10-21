@@ -5,6 +5,7 @@ import { useAmmContract } from "../hooks/amm";
 import { set } from "../redux/reducers/optionsList";
 import { store } from "../redux/store";
 import { RawOption } from "../types/options";
+import { debug, LogTypes } from "../utils/debugger";
 import { isNonEmptyArray } from "../utils/utils";
 
 const updateOptionsList = async (contract: Contract) => {
@@ -17,15 +18,19 @@ const updateOptionsList = async (contract: Contract) => {
     );
   }
 
-  Promise.all(promises).then((v) => {
-    if (isNonEmptyArray(v)) {
-      // Currently only returns one option
-      const options: RawOption[] = v.map((o) => o[0]);
-      console.log("Promises resolved:", options);
+  Promise.all(promises)
+    .then((v) => {
+      if (isNonEmptyArray(v)) {
+        // Currently only returns one option
+        const options: RawOption[] = v.map((o) => o[0]);
+        debug("Promises resolved:", options);
 
-      store.dispatch(set(options));
-    }
-  });
+        store.dispatch(set(options));
+      }
+    })
+    .catch((e) => {
+      debug(LogTypes.ERROR, "Failed to get Options list", e);
+    });
 };
 
 export const Controller = () => {

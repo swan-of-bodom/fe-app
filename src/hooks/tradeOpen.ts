@@ -9,6 +9,7 @@ import {
 import { RawOption } from "../types/options";
 import { approve } from "./approve";
 import { rawOptionToCalldata } from "../utils/parseOption";
+import { debug, LogTypes } from "../utils/debugger";
 
 export const tradeOpen = async (
   account: AccountInterface,
@@ -21,11 +22,11 @@ export const tradeOpen = async (
       entrypoint: AMM_METHODS.TRADE_OPEN,
       calldata: rawOptionToCalldata(rawOption, amount),
     };
-    console.log("Executing following call:", call);
+    debug("Executing following call:", call);
     const res = await account.execute(call, [AmmAbi] as Abi[]);
     return res;
   } catch (e) {
-    console.error(e);
+    debug(LogTypes.ERROR, e);
     return null;
   }
 };
@@ -39,7 +40,7 @@ export const approveAndTrade = async (
 
   const approveResponse = await approve(account, amount);
 
-  console.log("Approve response", approveResponse);
+  debug("Approve response", approveResponse);
 
   if (!approveResponse?.transaction_hash) {
     return null;
@@ -49,7 +50,7 @@ export const approveAndTrade = async (
 
   const tradeResponse = await tradeOpen(account, rawOption, amount);
 
-  console.log("Done trading!", tradeResponse);
+  debug("Done trading!", tradeResponse);
 
   return tradeResponse;
 };
