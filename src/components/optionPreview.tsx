@@ -1,7 +1,7 @@
 import { OptionSide, OptionType, RawOption } from "../types/options.d";
 import { timestampToReadableDate, weiToEth } from "../utils/utils";
 import { Button, Chip, Paper, styled, TextField } from "@mui/material";
-import { approveAndTrade } from "../hooks/tradeOpen";
+import { approveAndTrade } from "../calls/tradeOpen";
 import { AccountInterface } from "starknet";
 import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
