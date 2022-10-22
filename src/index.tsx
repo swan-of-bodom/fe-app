@@ -7,6 +7,9 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
+  // React.StrictMode causes the app to render twice in dev env
+  // if you run into problems with "useEffect" firing twice,
+  // this is probably the culrpit!
   <React.StrictMode>
     <App />
   </React.StrictMode>

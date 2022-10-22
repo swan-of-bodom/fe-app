@@ -93,7 +93,7 @@ export const OptionPreview = ({ rawOption }: OptionPreviewProps) => {
       <Chip label={sideText} color="info" />
       <Button
         variant="contained"
-        disabled={tradeState.processing}
+        disabled={tradeState.processing || !account}
         color={tradeState.failed ? "error" : "primary"}
         onClick={() => handleBuy(account, amount, rawOption, updateTradeState)}
       >

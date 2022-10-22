@@ -10,7 +10,6 @@ const BuyPage = () => {
   return (
     <>
       <Typography variant="h4">Buy Options</Typography>
-      <p>You can buy your options right here!</p>
       <OptionsList />
     </>
   );
