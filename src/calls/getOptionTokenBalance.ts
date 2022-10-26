@@ -8,7 +8,7 @@ import {
 } from "../redux/reducers/optionsList";
 import { store } from "../redux/store";
 import { HighLow, RawOption } from "../types/options";
-import { debug } from "../utils/debugger";
+import { debug, LogTypes } from "../utils/debugger";
 import { bnToInt, parseRawOption } from "../utils/parseOption";
 import { isNonEmptyArray } from "../utils/utils";
 
@@ -57,11 +57,10 @@ export const updateListBalance = async (address: string) => {
     }
   );
 
-  const updated = await Promise.all(updatePromises).catch(() =>
-    store.dispatch(setBalanceFetchState(FetchState.Failed))
-  );
-
-  debug("Got updated options", updated);
+  const updated = await Promise.all(updatePromises).catch((e) => {
+    debug(LogTypes.ERROR, "Get option token balance failed", e);
+    store.dispatch(setBalanceFetchState(FetchState.Failed));
+  });
 
   store.dispatch(setOptions(updated));
   store.dispatch(setBalanceFetchState(FetchState.Done));

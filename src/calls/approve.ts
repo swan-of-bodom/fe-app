@@ -15,7 +15,6 @@ export const approve = async (account: AccountInterface, amount: number) => {
       entrypoint: AMM_METHODS.APPROVE,
       calldata: [MAIN_CONTRACT_ADDRESS, toHex(toBN(amount * 2)), 0],
     };
-    debug("Executing following call:", call);
     const res = await account.execute(call, [LpAbi] as Abi[]);
     return res;
   } catch (e) {

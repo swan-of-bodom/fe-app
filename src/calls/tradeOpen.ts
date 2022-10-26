@@ -40,9 +40,8 @@ export const approveAndTrade = async (
 
   const approveResponse = await approve(account, amount);
 
-  debug("Approve response", approveResponse);
-
   if (!approveResponse?.transaction_hash) {
+    debug("Approve did not return transaction_hash", approveResponse);
     return null;
   }
 

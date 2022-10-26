@@ -2,6 +2,7 @@ import { Contract } from "starknet";
 import { AMM_METHODS } from "../constants/amm";
 import { RawOption } from "../types/options";
 import { rawOptionToTokenAddressCalldata } from "../utils/parseOption";
+import { isNonEmptyArray } from "../utils/utils";
 
 export const getOptionTokenAddress = async (
   contract: Contract,
@@ -9,5 +10,10 @@ export const getOptionTokenAddress = async (
 ): Promise<RawOption | null> => {
   const calldata = rawOptionToTokenAddressCalldata(raw);
   const res = await contract[AMM_METHODS.GET_OPTION_TOKEN_ADDRESS](...calldata);
-  return { ...raw, token_address: res[0] };
+
+  if (isNonEmptyArray(res)) {
+    return { ...raw, token_address: res[0] };
+  }
+
+  return null;
 };
