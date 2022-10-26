@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { RootState } from "../redux/store";
 import { FetchState } from "../redux/reducers/optionsList";
 import { SingleOwnedOption } from "./ownedOptionsSingle";
+import { debug } from "../utils/debugger";
 
 const stateToText = (fs: FetchState): string => {
   switch (fs) {
@@ -29,6 +30,10 @@ export const OwnedOptions = () => {
       updateListBalance(address);
     }
   });
+
+  if (!address) {
+    return <p>Connect a wallet to see your options!</p>;
+  }
 
   if (state !== FetchState.Done) {
     return <p>{stateToText(state)}</p>;

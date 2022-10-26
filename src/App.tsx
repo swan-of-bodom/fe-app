@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/layout";
 
 // Starknet
-import { InjectedConnector, StarknetProvider } from "@starknet-react/core";
+import { InjectedConnector } from "@starknet-react/core";
 import { SupportedWalletIds } from "./types/wallet";
 
 // Redux
@@ -17,6 +17,7 @@ import NotFound from "./pages/notFound";
 import Options from "./pages/options";
 import BuyPage from "./pages/buy";
 import { Controller } from "./components/controller";
+import { StarknetConfig } from "@starknet-react/core";
 
 const App = () => {
   const connectors = Object.values(SupportedWalletIds).map(
@@ -25,7 +26,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <StarknetProvider connectors={connectors} autoConnect>
+      <StarknetConfig connectors={connectors} autoConnect={false}>
         <Controller />
         <Router>
           <Layout>
@@ -38,7 +39,7 @@ const App = () => {
             </Routes>
           </Layout>
         </Router>
-      </StarknetProvider>
+      </StarknetConfig>
     </Provider>
   );
 };
