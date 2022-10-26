@@ -10,6 +10,8 @@ export const store = configureStore({
     }),
 });
 
+export type RootState = ReturnType<typeof store.getState>;
+
 // Can still subscribe to the store
 store.subscribe(() =>
   debug("Redux store updated", { state: store.getState() })

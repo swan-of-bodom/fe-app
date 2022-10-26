@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { Contract } from "starknet";
+import { getOptionTokenAddress } from "../calls/getOptionTokenAddress";
 import { AMM_METHODS, LPTOKEN_CONTRACT_ADDRESS } from "../constants/amm";
 import { useAmmContract } from "../hooks/amm";
-import { OptionsListFetchState, setFetchState, setOptions } from "../redux/reducers/optionsList";
+import {
+  FetchState,
+  setFetchState,
+  setOptions,
+} from "../redux/reducers/optionsList";
 import { store } from "../redux/store";
 import { RawOption } from "../types/options";
 import { debug, LogTypes } from "../utils/debugger";
@@ -11,7 +16,7 @@ import { isNonEmptyArray } from "../utils/utils";
 const updateOptionsList = async (contract: Contract) => {
   const promises = [];
   const n = 8;
-  store.dispatch(setFetchState(OptionsListFetchState.Fetching));
+  store.dispatch(setFetchState(FetchState.Fetching));
 
   for (let i = 0; i < n; i++) {
     promises.push(
@@ -19,21 +24,37 @@ const updateOptionsList = async (contract: Contract) => {
     );
   }
 
-  Promise.all(promises)
-    .then((v) => {
-      if (isNonEmptyArray(v)) {
-        // Currently only returns one option
-        const options: RawOption[] = v.map((o) => o[0]);
-        debug("Promises resolved:", options);
+  const res = await Promise.all(promises).catch((e) => {
+    debug(LogTypes.ERROR, "Failed to get Options list", e);
+    store.dispatch(setFetchState(FetchState.Failed));
+  });
 
-        store.dispatch(setOptions(options));
-        store.dispatch(setFetchState(OptionsListFetchState.Done));
-      }
-    })
-    .catch((e) => {
+  if (!isNonEmptyArray(res)) {
+    store.dispatch(setFetchState(FetchState.Done));
+    return;
+  }
+
+  // Currently only returns one option
+  const options: RawOption[] = res.map((o) => o[0]);
+
+  debug("Fetched initial options", options);
+
+  const p = options
+    .map((r) => getOptionTokenAddress(contract, r))
+    .filter(Boolean);
+
+  const rawWithAddress: Array<RawOption | null> = await Promise.all(p).catch(
+    (e) => {
       debug(LogTypes.ERROR, "Failed to get Options list", e);
-      store.dispatch(setFetchState(OptionsListFetchState.Failed));
-    });
+      store.dispatch(setFetchState(FetchState.Failed));
+      return [null];
+    }
+  );
+
+  const final = rawWithAddress.filter(Boolean);
+  store.dispatch(setOptions(final));
+  store.dispatch(setFetchState(FetchState.Done));
+  debug("Addresses resolved", final);
 };
 
 export const Controller = () => {

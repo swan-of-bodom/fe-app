@@ -1,11 +1,11 @@
-import { OptionSide, OptionType, RawOption } from "../types/options.d";
+import { OptionSide, OptionType, RawOption } from "../types/options";
 import { timestampToReadableDate, weiToEth } from "../utils/utils";
 import { Button, Chip, Paper, styled, TextField } from "@mui/material";
 import { approveAndTrade } from "../calls/tradeOpen";
 import { AccountInterface } from "starknet";
 import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
-import { parseRawOption } from "../utils/parseOption";
+import { isFresh, parseRawOption } from "../utils/parseOption";
 import { debug, LogTypes } from "../utils/debugger";
 
 type OptionPreviewProps = {
@@ -58,16 +58,12 @@ export const OptionPreview = ({ rawOption }: OptionPreviewProps) => {
 
   const option = parseRawOption(rawOption);
 
-  if (!option) {
+  if (!option || !isFresh(rawOption)) {
     return null;
   }
 
   const { strikePrice, optionSide, optionType, maturity } = option;
   const msMaturity = maturity * 1000;
-
-  if (msMaturity < new Date().getTime()) {
-    return null;
-  }
 
   const date = timestampToReadableDate(msMaturity);
   const typeText = optionType === OptionType.Put ? "Put" : "Call";

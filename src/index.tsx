@@ -10,9 +10,9 @@ root.render(
   // React.StrictMode causes the app to render twice in dev env
   // if you run into problems with "useEffect" firing twice,
   // this is probably the culrpit!
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  // <React.StrictMode>
+  <App />
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { useEffect } from "react";
-import { PoolBalance } from "../components/poolBalance";
+import { OwnedOptions } from "../components/ownedOptions";
 
 const Balance = () => {
   useEffect(() => {
@@ -9,9 +9,9 @@ const Balance = () => {
 
   return (
     <>
-      <Typography variant="h4">Pool Balance</Typography>
-      <p>Check the current lockable capital in the pool.</p>
-      <PoolBalance />
+      <Typography variant="h4">Options Balance</Typography>
+      <p>Review your currently owned options.</p>
+      <OwnedOptions />
     </>
   );
 };
