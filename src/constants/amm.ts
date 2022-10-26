@@ -13,4 +13,5 @@ export const enum AMM_METHODS {
   APPROVE = "approve",
   TRADE_OPEN = "trade_open",
   GET_AVAILABLE_OPTIONS = "get_available_options",
+  GET_OPTION_TOKEN_ADDRESS = "get_option_token_address",
 }

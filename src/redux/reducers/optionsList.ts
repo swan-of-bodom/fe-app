@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RawOption } from "../../types/options";
 
-export const enum OptionsListFetchState {
+export const enum FetchState {
   NotStarted,
   Done,
   Failed,
@@ -12,13 +12,11 @@ export const optionsList = createSlice({
   name: "optionsList",
   initialState: {
     rawOptionsList: [] as RawOption[],
-    state: OptionsListFetchState.NotStarted,
+    state: FetchState.NotStarted,
+    balanceState: FetchState.NotStarted,
   },
   reducers: {
     setOptions: (state, action) => {
-      if (state.rawOptionsList.length > 0) {
-        return state;
-      }
       const arr: RawOption[] = action.payload;
       state.rawOptionsList = arr;
       return state;
@@ -26,7 +24,11 @@ export const optionsList = createSlice({
     setFetchState: (state, action) => {
       state.state = action.payload;
     },
+    setBalanceFetchState: (state, action) => {
+      state.balanceState = action.payload;
+    },
   },
 });
 
-export const { setOptions, setFetchState } = optionsList.actions;
+export const { setOptions, setFetchState, setBalanceFetchState } =
+  optionsList.actions;

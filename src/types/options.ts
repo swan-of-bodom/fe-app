@@ -8,6 +8,16 @@
 
 import { BigNumberish } from "starknet/utils/number";
 
+export type RawHighLow = {
+  low: BigNumberish;
+  high: BigNumberish;
+};
+
+export type HighLow = {
+  low: number;
+  high: number;
+};
+
 export enum OptionType {
   Call = "0",
   Put = "1",
@@ -25,15 +35,22 @@ export type OptionIdentifier = {
   optionSide: OptionSide;
   quoteToken: string;
   baseToken: string;
+  tokenAddress?: string | null;
 };
 
-export type RawOption = {
+export interface RawOption {
   option_side: BigNumberish;
   maturity: BigNumberish;
   strike_price: BigNumberish;
   quote_token_address: BigNumberish;
   base_token_address: BigNumberish;
   option_type: BigNumberish;
-};
+  token_address?: BigNumberish;
+  high_low?: HighLow;
+}
+
+export interface RawOptionWithHighLow extends RawOption {
+  high_low: HighLow;
+}
 
 export type OptionTradeArguments = OptionIdentifier & { optionSize: string };

@@ -1,36 +1,31 @@
-import { RawOption } from "../types/options.d";
+import { RawOption } from "../types/options";
 import { Box, Stack } from "@mui/material";
 import { OptionPreview } from "./optionPreview";
 import { useSelector } from "react-redux";
-import { store } from "../redux/store";
-import { OptionsListFetchState } from "../redux/reducers/optionsList";
+import { RootState } from "../redux/store";
+import { FetchState } from "../redux/reducers/optionsList";
 
-type StateWithRawOptionsList = {
-  rawOptionsList: RawOption[];
+const stateToText = (fs: FetchState): string => {
+  switch (fs) {
+    case FetchState.NotStarted:
+      return "We will get the options in a jiffy!";
+    case FetchState.Fetching:
+      return "Getting the list of available options...";
+    default:
+      return "Something went wrong while getting the options.";
+  }
 };
 
 export const OptionsList = () => {
-  const { rawOptionsList: list } = useSelector<
-    StateWithRawOptionsList,
-    StateWithRawOptionsList
-  >((s) => s);
+  const list = useSelector((s: RootState) => s.rawOptionsList);
+  const state = useSelector((s: RootState) => s.state);
 
-  const fetchState = store.getState().state;
-
-  if (fetchState !== OptionsListFetchState.Done) {
-    if (fetchState === OptionsListFetchState.NotStarted) {
-      return <p>We will get the options in a jiffy!</p>
-    }
-    if (fetchState === OptionsListFetchState.Fetching) {
-      return <p>Getting the list of available options...</p>
-    }
-    if (fetchState === OptionsListFetchState.Failed) {
-      return <p>Something went wrong while getting the options.</p>
-    }
+  if (state !== FetchState.Done) {
+    return <p>{stateToText(state)}</p>;
   }
 
   if (list.length === 0) {
-    return <p>It seems that there are currently no available options.</p>
+    return <p>It seems that there are currently no available options.</p>;
   }
 
   return (

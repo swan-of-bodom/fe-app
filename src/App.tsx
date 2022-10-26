@@ -4,7 +4,7 @@ import { Layout } from "./components/layout";
 
 // Starknet
 import { InjectedConnector, StarknetProvider } from "@starknet-react/core";
-import { SupportedWalletIds } from "./types/wallet.d";
+import { SupportedWalletIds } from "./types/wallet";
 
 // Redux
 import { Provider } from "react-redux";
