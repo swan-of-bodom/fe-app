@@ -1,4 +1,4 @@
-import { RawOptionWithHighLow } from "../types/options";
+import { CompositeOptionWithBalance } from "../types/options";
 import { isNonEmptyArray } from "../utils/utils";
 import { Box, Stack } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { RootState } from "../redux/store";
 import { FetchState } from "../redux/reducers/optionsList";
 import { SingleOwnedOption } from "./ownedOptionsSingle";
-import { debug } from "../utils/debugger";
+import { composeOption, hasHighLow } from "../utils/parseOption";
 
 const stateToText = (fs: FetchState): string => {
   switch (fs) {
@@ -39,15 +39,17 @@ export const OwnedOptions = () => {
     return <p>{stateToText(state)}</p>;
   }
 
-  if (!isNonEmptyArray(raw)) {
+  const composite = raw.map(composeOption);
+
+  if (!isNonEmptyArray(composite)) {
     return <p>Huh, I seem to have misplaced all the options...</p>;
   }
 
-  const optionsWithBalance: RawOptionWithHighLow[] = raw.filter(
-    (r): r is RawOptionWithHighLow => !!r.high_low
+  const withBalance = composite.filter((c): c is CompositeOptionWithBalance =>
+    hasHighLow(c.raw)
   );
 
-  if (!isNonEmptyArray(optionsWithBalance)) {
+  if (!isNonEmptyArray(withBalance)) {
     return (
       <p>
         There seem to be no options linked to the wallet you are currently
@@ -59,8 +61,8 @@ export const OwnedOptions = () => {
   return (
     <Box sx={{ width: "100%" }}>
       <Stack spacing={2}>
-        {optionsWithBalance.map((r: RawOptionWithHighLow, i: number) => (
-          <SingleOwnedOption raw={r} key={i} />
+        {withBalance.map(({ raw }, i: number) => (
+          <SingleOwnedOption raw={raw} key={i} />
         ))}
       </Stack>
     </Box>

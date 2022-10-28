@@ -1,10 +1,12 @@
 import { BigNumberish, toHex } from "starknet/utils/number";
 import { LPTOKEN_CONTRACT_ADDRESS } from "../constants/amm";
 import {
-  OptionIdentifier,
+  CompositeOption,
   OptionSide,
   OptionType,
+  ParsedOption,
   RawOption,
+  RawOptionWithHighLow,
 } from "../types/options";
 import { debug, LogTypes } from "./debugger";
 
@@ -24,7 +26,7 @@ const bnToOptionType = (bn: BigNumberish): OptionType =>
 const encodeOptionSize = (n: number): string =>
   Math.floor((n * 2 ** 61) / 10 ** 18).toString(10);
 
-export const parseRawOption = (raw: RawOption): OptionIdentifier | null => {
+export const parseRawOption = (raw: RawOption): ParsedOption => {
   try {
     return {
       optionSide: bnToOptionSide(raw.option_side),
@@ -33,13 +35,18 @@ export const parseRawOption = (raw: RawOption): OptionIdentifier | null => {
       baseToken: toHex(raw.base_token_address),
       quoteToken: toHex(raw.quote_token_address),
       strikePrice: math61toInt(raw.strike_price).toString(),
-      tokenAddress: raw.token_address ? toHex(raw.token_address) : null,
+      tokenAddress: raw.token_address && toHex(raw.token_address),
     };
   } catch (e) {
     debug(LogTypes.ERROR, "Failed to parse option:", raw, e);
-    return null;
+    throw new Error(`Failed to parse option ${JSON.stringify(raw)}`);
   }
 };
+
+export const composeOption = (raw: RawOption): CompositeOption => ({
+  raw,
+  parsed: parseRawOption(raw),
+});
 
 export const rawOptionToCalldata = (raw: RawOption, size: number): string[] => {
   const optionSize = encodeOptionSize(size);
@@ -66,3 +73,6 @@ export const rawOptionToTokenAddressCalldata = (raw: RawOption): string[] => {
 
 export const isFresh = (raw: RawOption): boolean =>
   bnToInt(raw.maturity) * 1000 > new Date().getTime();
+
+export const hasHighLow = (raw: RawOption): raw is RawOptionWithHighLow =>
+  !!(raw.high_low && Math.max(raw.high_low.high, raw.high_low.low));

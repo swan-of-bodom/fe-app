@@ -19,12 +19,8 @@ const navLinks = [
     link: "/buy",
   },
   {
-    title: "Balance",
-    link: "/Balance",
-  },
-  {
-    title: "Options",
-    link: "/options",
+    title: "Sell",
+    link: "/sell",
   },
 ] as NavLinkProps[];
 

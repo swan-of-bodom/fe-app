@@ -28,14 +28,14 @@ export enum OptionSide {
   Short = "1",
 }
 
-export type OptionIdentifier = {
+export type ParsedOption = {
   optionType: OptionType;
   strikePrice: string;
   maturity: number;
   optionSide: OptionSide;
   quoteToken: string;
   baseToken: string;
-  tokenAddress?: string | null;
+  tokenAddress?: string;
 };
 
 export interface RawOption {
@@ -53,4 +53,14 @@ export interface RawOptionWithHighLow extends RawOption {
   high_low: HighLow;
 }
 
-export type OptionTradeArguments = OptionIdentifier & { optionSize: string };
+export type OptionTradeArguments = ParsedOption & { optionSize: string };
+
+export type CompositeOption = {
+  raw: RawOption;
+  parsed: ParsedOption;
+};
+
+export type CompositeOptionWithBalance = {
+  raw: RawOptionWithHighLow;
+  parsed: ParsedOption;
+};

@@ -1,7 +1,16 @@
-import { OptionSide, OptionType, RawOptionWithHighLow } from "../types/options";
+import {
+  OptionSide,
+  OptionType,
+  RawOption,
+  RawOptionWithHighLow,
+} from "../types/options";
 import { timestampToReadableDate, weiToEth } from "../utils/utils";
-import { Chip, Paper, styled } from "@mui/material";
+import { Button, Chip, Paper, styled } from "@mui/material";
 import { parseRawOption } from "../utils/parseOption";
+import { debug } from "../utils/debugger";
+import { tradeClose } from "../calls/tradeClose";
+import { useAccount } from "@starknet-react/core";
+import { AccountInterface } from "starknet";
 
 type Props = {
   raw: RawOptionWithHighLow;
@@ -17,17 +26,25 @@ const Item = styled(Paper)(({ theme }) => ({
   alignItems: "center",
 }));
 
+const handleTradeClose = async (
+  account: AccountInterface | undefined,
+  raw: RawOption,
+  amount: number
+) => {
+  if (!account || !raw || !amount) {
+    debug("Could not trade close", { account, raw, amount });
+    return;
+  }
+  const res = await tradeClose(account, raw, amount);
+  debug("Trade close", res);
+};
+
 export const SingleOwnedOption = ({ raw }: Props) => {
+  const { account } = useAccount();
   const { low, high } = raw.high_low;
   const v: number = Math.max(low, high);
 
-  if (v === 0) {
-    return null;
-  }
   const option = parseRawOption(raw);
-  if (!option) {
-    return null;
-  }
 
   const { strikePrice, optionSide, optionType, maturity } = option;
   const msMaturity = maturity * 1000;
@@ -46,7 +63,14 @@ export const SingleOwnedOption = ({ raw }: Props) => {
       <span>Maturity {date}</span>
       <Chip label={sideText} color="info" />
 
-      <span>Balance {v}</span>
+      <span>Balance: {v} Wei</span>
+
+      <Button
+        variant="contained"
+        onClick={() => handleTradeClose(account, raw, v)}
+      >
+        Sell!
+      </Button>
     </Item>
   );
 };

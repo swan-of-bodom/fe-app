@@ -14,7 +14,6 @@ import { store } from "./redux/store";
 import Home from "./pages/home";
 import BalancePage from "./pages/balance";
 import NotFound from "./pages/notFound";
-import Options from "./pages/options";
 import BuyPage from "./pages/buy";
 import { Controller } from "./components/controller";
 import { StarknetConfig } from "@starknet-react/core";
@@ -32,8 +31,7 @@ const App = () => {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/balance" element={<BalancePage />} />
-              <Route path="/options" element={<Options />} />
+              <Route path="/sell" element={<BalancePage />} />
               <Route path="/buy" element={<BuyPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -7,7 +7,7 @@ import { isNonEmptyArray } from "../utils/utils";
 export const getOptionTokenAddress = async (
   contract: Contract,
   raw: RawOption
-): Promise<RawOption | null> => {
+): Promise<RawOption | undefined> => {
   const calldata = rawOptionToTokenAddressCalldata(raw);
   const res = await contract[AMM_METHODS.GET_OPTION_TOKEN_ADDRESS](...calldata);
 
@@ -15,5 +15,5 @@ export const getOptionTokenAddress = async (
     return { ...raw, token_address: res[0] };
   }
 
-  return null;
+  return undefined;
 };

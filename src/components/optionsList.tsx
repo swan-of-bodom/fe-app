@@ -1,9 +1,11 @@
-import { RawOption } from "../types/options";
-import { Box, Stack } from "@mui/material";
+import { OptionSide } from "../types/options";
+import { Box, Button, Stack } from "@mui/material";
 import { OptionPreview } from "./optionPreview";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { FetchState } from "../redux/reducers/optionsList";
+import { useState } from "react";
+import { composeOption } from "../utils/parseOption";
 
 const stateToText = (fs: FetchState): string => {
   switch (fs) {
@@ -19,6 +21,7 @@ const stateToText = (fs: FetchState): string => {
 export const OptionsList = () => {
   const list = useSelector((s: RootState) => s.rawOptionsList);
   const state = useSelector((s: RootState) => s.state);
+  const [longShort, setLongShort] = useState<OptionSide>(OptionSide.Long);
 
   if (state !== FetchState.Done) {
     return <p>{stateToText(state)}</p>;
@@ -28,13 +31,29 @@ export const OptionsList = () => {
     return <p>It seems that there are currently no available options.</p>;
   }
 
+  const filtered = list
+    .map(composeOption)
+    .filter(({ parsed }) => parsed.optionSide === longShort);
+
   return (
-    <Box sx={{ width: "100%" }}>
-      <Stack spacing={2}>
-        {list.map((o: RawOption, i: number) => (
-          <OptionPreview rawOption={o} key={i} />
-        ))}
-      </Stack>
-    </Box>
+    <>
+      <Button
+        variant="contained"
+        onClick={() =>
+          longShort === OptionSide.Long
+            ? setLongShort(OptionSide.Short)
+            : setLongShort(OptionSide.Long)
+        }
+      >
+        {longShort === OptionSide.Long ? "Long" : "Short"}
+      </Button>
+      <Box sx={{ width: "100%" }}>
+        <Stack spacing={2}>
+          {filtered.map(({ raw }, i: number) => (
+            <OptionPreview rawOption={raw} key={i} />
+          ))}
+        </Stack>
+      </Box>
+    </>
   );
 };
