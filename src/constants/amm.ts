@@ -12,6 +12,7 @@ export const enum AMM_METHODS {
   GET_POOL_AVAILABLE_BALANCE = "get_pool_available_balance",
   APPROVE = "approve",
   TRADE_OPEN = "trade_open",
+  TRADE_CLOSE = "trade_close",
   GET_AVAILABLE_OPTIONS = "get_available_options",
   GET_OPTION_TOKEN_ADDRESS = "get_option_token_address",
 }

@@ -93,7 +93,7 @@ export const OptionPreview = ({ rawOption }: OptionPreviewProps) => {
         color={tradeState.failed ? "error" : "primary"}
         onClick={() => handleBuy(account, amount, rawOption, updateTradeState)}
       >
-        $$$
+        Buy!
       </Button>
     </Item>
   );

@@ -43,13 +43,13 @@ const updateOptionsList = async (contract: Contract) => {
     .map((r) => getOptionTokenAddress(contract, r))
     .filter(Boolean);
 
-  const rawWithAddress: Array<RawOption | null> = await Promise.all(p).catch(
-    (e) => {
-      debug(LogTypes.ERROR, "Failed to get Options list", e);
-      store.dispatch(setFetchState(FetchState.Failed));
-      return [null];
-    }
-  );
+  const rawWithAddress: Array<RawOption | undefined> = await Promise.all(
+    p
+  ).catch((e) => {
+    debug(LogTypes.ERROR, "Failed to get Options list", e);
+    store.dispatch(setFetchState(FetchState.Failed));
+    return [];
+  });
 
   const final = rawWithAddress.filter(Boolean);
   store.dispatch(setOptions(final));
