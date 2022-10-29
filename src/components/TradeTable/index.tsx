@@ -44,7 +44,14 @@ const TradeTable = () => {
     );
 
   return (
-    <>
+    <Paper
+      sx={{
+        margin: "16px",
+        padding: "16px",
+        width: "100%",
+        background: "#F5F5F5",
+      }}
+    >
       <Button
         variant={longShort === OptionSide.Long ? "contained" : "outlined"}
         onClick={() => setLongShort(OptionSide.Long)}
@@ -76,7 +83,7 @@ const TradeTable = () => {
           <OptionsTable options={filtered} />
         )}
       </TableContainer>
-    </>
+    </Paper>
   );
 };
 
