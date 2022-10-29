@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Typography } from "@mui/material";
 import TradeTable from "../components/TradeTable";
+import BasicGraph from "../components/BasicGraph";
 
 const BuyPage = () => {
   useEffect(() => {
@@ -10,6 +11,7 @@ const BuyPage = () => {
   return (
     <>
       <Typography variant="h4">Buy Options</Typography>
+      <BasicGraph />
       <TradeTable />
     </>
   );
