@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, ButtonGroup, CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import {
   LineChart,
   Line,
@@ -31,9 +31,12 @@ const LoadingAnimation = () => (
   </Box>
 );
 
-const Graph = () => {
+type Props = {
+  days: number;
+};
+
+const Graph = ({ days }: Props) => {
   const [historicData, setHistoricData] = useState<IHistoricData | null>(null);
-  const [days, setDays] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,46 +74,24 @@ const Graph = () => {
   }));
 
   return (
-    <>
-      <ButtonGroup size="small" aria-label="small button group">
-        <Button
-          variant={days === 1 ? "contained" : undefined}
-          onClick={() => setDays(1)}
-        >
-          1D
-        </Button>
-        <Button
-          variant={days === 7 ? "contained" : undefined}
-          onClick={() => setDays(7)}
-        >
-          1W
-        </Button>
-        <Button
-          variant={days === 30 ? "contained" : undefined}
-          onClick={() => setDays(30)}
-        >
-          1M
-        </Button>
-      </ButtonGroup>
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          width={500}
-          height={300}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <XAxis hide={true} dataKey="t" />
-          <YAxis hide={true} domain={graphDomain} />
-          <Tooltip />
-          <Line strokeWidth={3} dot={false} type="monotone" dataKey="usd" />
-        </LineChart>
-      </ResponsiveContainer>
-    </>
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart
+        width={500}
+        height={300}
+        data={data}
+        margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}
+      >
+        <XAxis hide={true} dataKey="t" />
+        <YAxis hide={true} domain={graphDomain} />
+        <Tooltip />
+        <Line strokeWidth={3} dot={false} type="monotone" dataKey="usd" />
+      </LineChart>
+    </ResponsiveContainer>
   );
 };
 
