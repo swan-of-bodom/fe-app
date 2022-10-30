@@ -23,3 +23,16 @@ export const graphDomain = [handleMin, handleMax] as AxisDomain;
 
 export const validateResponse = (res: Res): boolean =>
   isNonEmptyArray(res?.prices);
+
+export const getPercentage = (fv: number, cv: number): string => {
+  const onePercent = fv / 100;
+  const relativePercentage = cv / onePercent - 100;
+  const abs = Math.abs(relativePercentage).toFixed(2);
+
+  if (relativePercentage > 0) {
+    return `+${abs}%`;
+  } else if (relativePercentage < 0) {
+    return `-${abs}%`;
+  }
+  return "0%";
+};

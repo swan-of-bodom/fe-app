@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import {
   LineChart,
   Line,
@@ -11,11 +11,18 @@ import {
 import {
   formatGraphDate,
   getHistoricalChartUrl,
+  getPercentage,
   graphDomain,
   validateResponse,
 } from "./utils";
+import { isNonEmptyArray } from "../../utils/utils";
 
 export type IHistoricData = Array<number[]>;
+
+const enum Color {
+  Green = "#008000",
+  Red = "#B22222",
+}
 
 const LoadingAnimation = () => (
   <Box
@@ -31,6 +38,31 @@ const LoadingAnimation = () => (
   </Box>
 );
 
+const CustomTooltip = ({
+  active,
+  payload,
+  firstValue,
+  color,
+  setColor,
+}: any) => {
+  if (!active || !isNonEmptyArray(payload) || !payload[0].value) {
+    return null;
+  }
+  const currentValue = payload[0].value;
+  const newColor = currentValue < firstValue ? Color.Red : Color.Green;
+  if (color !== newColor) {
+    setColor(newColor);
+  }
+  return (
+    <Box>
+      <Typography sx={{ color, fontWeight: "800" }}>${currentValue}</Typography>
+      <Typography sx={{ color }}>
+        {getPercentage(firstValue, currentValue)}
+      </Typography>
+    </Box>
+  );
+};
+
 type Props = {
   days: number;
 };
@@ -39,6 +71,7 @@ const Graph = ({ days }: Props) => {
   const [historicData, setHistoricData] = useState<IHistoricData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [color, setColor] = useState<Color>(Color.Green);
 
   useEffect(() => {
     setLoading(true);
@@ -88,8 +121,22 @@ const Graph = ({ days }: Props) => {
       >
         <XAxis hide={true} dataKey="t" />
         <YAxis hide={true} domain={graphDomain} />
-        <Tooltip />
-        <Line strokeWidth={3} dot={false} type="monotone" dataKey="usd" />
+        <Tooltip
+          content={
+            <CustomTooltip
+              firstValue={historicData[0][1]}
+              color={color}
+              setColor={setColor}
+            />
+          }
+        />
+        <Line
+          strokeWidth={3}
+          dot={false}
+          type="monotone"
+          dataKey="usd"
+          stroke={color}
+        />
       </LineChart>
     </ResponsiveContainer>
   );
