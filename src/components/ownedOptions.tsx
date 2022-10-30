@@ -10,6 +10,10 @@ import { FetchState } from "../redux/reducers/optionsList";
 import { SingleOwnedOption } from "./ownedOptionsSingle";
 import { composeOption, hasHighLow } from "../utils/parseOption";
 
+const GenericErrorMessage = () => (
+  <p>"Huh, I seem to have misplaced all the options..."</p>
+);
+
 const stateToText = (fs: FetchState): string => {
   switch (fs) {
     case FetchState.NotStarted:
@@ -39,10 +43,14 @@ export const OwnedOptions = () => {
     return <p>{stateToText(state)}</p>;
   }
 
+  if (!isNonEmptyArray(raw)) {
+    return <GenericErrorMessage />;
+  }
+
   const composite = raw.map(composeOption);
 
   if (!isNonEmptyArray(composite)) {
-    return <p>Huh, I seem to have misplaced all the options...</p>;
+    return <GenericErrorMessage />;
   }
 
   const withBalance = composite.filter((c): c is CompositeOptionWithBalance =>
