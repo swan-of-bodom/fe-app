@@ -1,5 +1,5 @@
 import { OptionSide, OptionType } from "../../types/options";
-import { Button, Paper, TableContainer } from "@mui/material";
+import { Box, Button, Paper, TableContainer } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { FetchState } from "../../redux/reducers/optionsList";
@@ -18,7 +18,19 @@ const stateToText = (fs: FetchState): string => {
   }
 };
 
-const NoOptions = () => <p>No options fit your criteria.</p>;
+type NoOptionsProps = {
+  type: OptionType;
+  side: OptionSide;
+};
+
+const NoOptions = ({ type, side }: NoOptionsProps) => (
+  <Box sx={{ textAlign: "center" }}>
+    <p>
+      We currently do not have any {side === OptionSide.Long ? "long" : "short"}{" "}
+      {type === OptionType.Call ? "call" : "put"} options.
+    </p>
+  </Box>
+);
 
 const TradeTable = () => {
   const list = useSelector((s: RootState) => s.rawOptionsList);
@@ -78,7 +90,7 @@ const TradeTable = () => {
       </Button>
       <TableContainer elevation={2} component={Paper}>
         {filtered.length === 0 ? (
-          <NoOptions />
+          <NoOptions type={callPut} side={longShort} />
         ) : (
           <OptionsTable options={filtered} />
         )}

@@ -1,4 +1,5 @@
 import { BigNumberish, toHex } from "starknet/utils/number";
+import { isUint256 } from "starknet/utils/uint256";
 import { LPTOKEN_CONTRACT_ADDRESS } from "../constants/amm";
 import {
   CompositeOption,
@@ -6,7 +7,7 @@ import {
   OptionType,
   ParsedOption,
   RawOption,
-  RawOptionWithHighLow,
+  RawOptionWithBalance,
 } from "../types/options";
 import { debug, LogTypes } from "./debugger";
 
@@ -74,5 +75,5 @@ export const rawOptionToTokenAddressCalldata = (raw: RawOption): string[] => {
 export const isFresh = (raw: RawOption): boolean =>
   bnToInt(raw.maturity) * 1000 > new Date().getTime();
 
-export const hasHighLow = (raw: RawOption): raw is RawOptionWithHighLow =>
-  !!(raw.high_low && Math.max(raw.high_low.high, raw.high_low.low));
+export const hasBalance = (raw: RawOption): raw is RawOptionWithBalance =>
+  !!(raw?.balance && bnToInt(raw.balance) > 0);

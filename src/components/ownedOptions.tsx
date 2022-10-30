@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { RootState } from "../redux/store";
 import { FetchState } from "../redux/reducers/optionsList";
 import { SingleOwnedOption } from "./ownedOptionsSingle";
-import { composeOption, hasHighLow } from "../utils/parseOption";
+import { composeOption, hasBalance } from "../utils/parseOption";
 
 const GenericErrorMessage = () => (
   <p>"Huh, I seem to have misplaced all the options..."</p>
@@ -54,7 +54,7 @@ export const OwnedOptions = () => {
   }
 
   const withBalance = composite.filter((c): c is CompositeOptionWithBalance =>
-    hasHighLow(c.raw)
+    hasBalance(c.raw)
   );
 
   if (!isNonEmptyArray(withBalance)) {

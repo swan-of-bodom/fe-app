@@ -34,7 +34,6 @@ const updateOptionsList = async (contract: Contract) => {
     return;
   }
 
-  // Currently only returns one option
   const options: RawOption[] = res.map((o) => o[0]);
 
   debug("Fetched initial options", options);

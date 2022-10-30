@@ -25,7 +25,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <StarknetConfig connectors={connectors} autoConnect={false}>
+      <StarknetConfig connectors={connectors} autoConnect={true}>
         <Controller />
         <Router>
           <Layout>

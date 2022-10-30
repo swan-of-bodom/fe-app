@@ -2,18 +2,18 @@ import {
   OptionSide,
   OptionType,
   RawOption,
-  RawOptionWithHighLow,
+  RawOptionWithBalance,
 } from "../types/options";
 import { timestampToReadableDate, weiToEth } from "../utils/utils";
 import { Button, Chip, Paper, styled } from "@mui/material";
-import { parseRawOption } from "../utils/parseOption";
+import { bnToInt, parseRawOption } from "../utils/parseOption";
 import { debug } from "../utils/debugger";
 import { tradeClose } from "../calls/tradeClose";
 import { useAccount } from "@starknet-react/core";
 import { AccountInterface } from "starknet";
 
 type Props = {
-  raw: RawOptionWithHighLow;
+  raw: RawOptionWithBalance;
 };
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -41,8 +41,7 @@ const handleTradeClose = async (
 
 export const SingleOwnedOption = ({ raw }: Props) => {
   const { account } = useAccount();
-  const { low, high } = raw.high_low;
-  const v: number = Math.max(low, high);
+  const balance = bnToInt(raw.balance);
 
   const option = parseRawOption(raw);
 
@@ -53,21 +52,17 @@ export const SingleOwnedOption = ({ raw }: Props) => {
   const typeText = optionType === OptionType.Put ? "Put" : "Call";
   const sideText = optionSide === OptionSide.Long ? "Long" : "Short";
 
+  const desc = `${sideText} ${typeText} with strike $${strikePrice}`;
+
   return (
     <Item elevation={4}>
-      <Chip label={typeText} color="info" />
-      <span>
-        Strike price{" "}
-        {strikePrice.length > 12 ? weiToEth(strikePrice, 2) : strikePrice}
-      </span>
+      <span>{desc}</span>
       <span>Maturity {date}</span>
-      <Chip label={sideText} color="info" />
-
-      <span>Balance: {v} Wei</span>
+      <span>Balance: {weiToEth(balance, 8)} ETH</span>
 
       <Button
         variant="contained"
-        onClick={() => handleTradeClose(account, raw, v)}
+        onClick={() => handleTradeClose(account, raw, balance)}
       >
         Sell!
       </Button>
