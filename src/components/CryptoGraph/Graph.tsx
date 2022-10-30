@@ -73,9 +73,24 @@ const Graph = () => {
   return (
     <>
       <ButtonGroup size="small" aria-label="small button group">
-        <Button onClick={() => setDays(1)}>1D</Button>
-        <Button onClick={() => setDays(7)}>1W</Button>
-        <Button onClick={() => setDays(30)}>1M</Button>
+        <Button
+          variant={days === 1 ? "contained" : undefined}
+          onClick={() => setDays(1)}
+        >
+          1D
+        </Button>
+        <Button
+          variant={days === 7 ? "contained" : undefined}
+          onClick={() => setDays(7)}
+        >
+          1W
+        </Button>
+        <Button
+          variant={days === 30 ? "contained" : undefined}
+          onClick={() => setDays(30)}
+        >
+          1M
+        </Button>
       </ButtonGroup>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
