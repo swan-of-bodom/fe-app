@@ -17,15 +17,22 @@ import NotFound from "./pages/notFound";
 import BuyPage from "./pages/buy";
 import { Controller } from "./components/controller";
 import { StarknetConfig } from "@starknet-react/core";
+import { getProvider } from "./utils/environment";
 
 const App = () => {
   const connectors = Object.values(SupportedWalletIds).map(
     (id) => new InjectedConnector({ options: { id } })
   );
 
+  console.log(process.env);
+
   return (
     <Provider store={store}>
-      <StarknetConfig connectors={connectors} autoConnect={true}>
+      <StarknetConfig
+        defaultProvider={getProvider()}
+        connectors={connectors}
+        autoConnect={true}
+      >
         <Controller />
         <Router>
           <Layout>
