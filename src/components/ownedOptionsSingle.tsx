@@ -5,7 +5,7 @@ import {
   RawOptionWithBalance,
 } from "../types/options";
 import { timestampToReadableDate, weiToEth } from "../utils/utils";
-import { Button, Chip, Paper, styled } from "@mui/material";
+import { Button, Paper, styled } from "@mui/material";
 import { bnToInt, parseRawOption } from "../utils/parseOption";
 import { debug } from "../utils/debugger";
 import { tradeClose } from "../calls/tradeClose";

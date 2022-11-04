@@ -27,8 +27,8 @@ const stateToText = (fs: FetchState): string => {
 
 export const OwnedOptions = () => {
   const { address } = useAccount();
-  const raw = useSelector((s: RootState) => s.rawOptionsList);
-  const state = useSelector((s: RootState) => s.balanceState);
+  const raw = useSelector((s: RootState) => s.optionsList.rawOptionsList);
+  const state = useSelector((s: RootState) => s.optionsList.balanceState);
   useEffect(() => {
     if (state === FetchState.NotStarted && address) {
       updateListBalance(address);

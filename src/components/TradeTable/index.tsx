@@ -7,8 +7,8 @@ import { useState } from "react";
 import { composeOption, isFresh } from "../../utils/parseOption";
 import OptionsTable from "./OptionsTable";
 
-const stateToText = (fs: FetchState): string => {
-  switch (fs) {
+const stateToText = (v: FetchState): string => {
+  switch (v) {
     case FetchState.NotStarted:
       return "We will get the options in a jiffy!";
     case FetchState.Fetching:
@@ -33,8 +33,8 @@ const NoOptions = ({ type, side }: NoOptionsProps) => (
 );
 
 const TradeTable = () => {
-  const list = useSelector((s: RootState) => s.rawOptionsList);
-  const state = useSelector((s: RootState) => s.state);
+  const list = useSelector((s: RootState) => s.optionsList.rawOptionsList);
+  const state = useSelector((s: RootState) => s.optionsList.state);
   const [longShort, setLongShort] = useState<OptionSide>(OptionSide.Long);
   const [callPut, setCallPut] = useState<OptionType>(OptionType.Call);
 

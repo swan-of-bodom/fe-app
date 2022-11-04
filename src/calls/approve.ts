@@ -1,8 +1,4 @@
-import {
-  AMM_METHODS,
-  ETH_ADDRESS,
-  MAIN_CONTRACT_ADDRESS,
-} from "../constants/amm";
+import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { Abi, AccountInterface } from "starknet";
 import { toBN, toHex } from "starknet/utils/number";
 import LpAbi from "../abi/lptoken_abi.json";
@@ -10,6 +6,7 @@ import { debug, LogTypes } from "../utils/debugger";
 
 export const approve = async (account: AccountInterface, amount: number) => {
   try {
+    const { ETH_ADDRESS, MAIN_CONTRACT_ADDRESS } = getTokenAddresses();
     const call = {
       contractAddress: ETH_ADDRESS,
       entrypoint: AMM_METHODS.APPROVE,

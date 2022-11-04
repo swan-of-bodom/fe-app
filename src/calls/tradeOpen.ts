@@ -1,4 +1,4 @@
-import { AMM_METHODS, MAIN_CONTRACT_ADDRESS } from "../constants/amm";
+import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import AmmAbi from "../abi/amm_abi.json";
 import {
   Abi,
@@ -18,7 +18,7 @@ export const tradeOpen = async (
 ) => {
   try {
     const call = {
-      contractAddress: MAIN_CONTRACT_ADDRESS,
+      contractAddress: getTokenAddresses().MAIN_CONTRACT_ADDRESS,
       entrypoint: AMM_METHODS.TRADE_OPEN,
       calldata: rawOptionToCalldata(rawOption, amount),
     };

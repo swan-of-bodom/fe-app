@@ -24,8 +24,6 @@ const App = () => {
     (id) => new InjectedConnector({ options: { id } })
   );
 
-  console.log(process.env);
-
   return (
     <Provider store={store}>
       <StarknetConfig

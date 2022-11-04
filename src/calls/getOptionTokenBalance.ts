@@ -35,7 +35,7 @@ const getTokenAddress = (raw: RawOption): string | null =>
   parseRawOption(raw)?.tokenAddress || null;
 
 export const updateListBalance = async (address: string) => {
-  const list = store.getState().rawOptionsList;
+  const list = store.getState().optionsList.rawOptionsList;
 
   if (!isNonEmptyArray(list)) {
     return;

@@ -1,5 +1,5 @@
 import { useStarknetCall } from "@starknet-react/core";
-import { AMM_METHODS, LPTOKEN_CONTRACT_ADDRESS } from "../constants/amm";
+import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { useAmmContract } from "../hooks/amm";
 import { handleBlockChainResponse } from "../utils/utils";
 
@@ -18,7 +18,7 @@ export const IsOptionAvailable = ({
     contract,
     method: AMM_METHODS.IS_OPTION_AVAILABLE,
     args: [
-      LPTOKEN_CONTRACT_ADDRESS, // lptoken_address
+      getTokenAddresses().LPTOKEN_CONTRACT_ADDRESS, // lptoken_address
       "0", // option_side
       strikePrice,
       maturity,

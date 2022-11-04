@@ -7,6 +7,7 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 import { WalletButton } from "./walletButton";
 import { ReactNode } from "react";
 import { Button } from "@mui/material";
+import { NetworkSwitch } from "./networkSwitch";
 
 type NavLinkProps = {
   title: string;
@@ -55,6 +56,7 @@ export const Header = () => (
             />
           </RouterLink>
         </Typography>
+        <NetworkSwitch />
         <nav>{navLinks.map((navData, i) => navLink(navData, i))}</nav>
         <WalletButton />
       </Toolbar>

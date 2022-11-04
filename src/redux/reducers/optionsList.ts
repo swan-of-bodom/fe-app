@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RawOption } from "../../types/options";
+import { isNonEmptyArray } from "../../utils/utils";
 
-export const enum FetchState {
-  NotStarted,
-  Done,
-  Failed,
-  Fetching,
+export enum FetchState {
+  NotStarted = "not-started",
+  Done = "done",
+  Failed = "failed",
+  Fetching = "fetching",
 }
 
 export const optionsList = createSlice({
@@ -18,7 +19,7 @@ export const optionsList = createSlice({
   reducers: {
     setOptions: (state, action) => {
       const arr: RawOption[] = action.payload;
-      state.rawOptionsList = arr;
+      isNonEmptyArray(arr) && (state.rawOptionsList = arr);
       return state;
     },
     setFetchState: (state, action) => {

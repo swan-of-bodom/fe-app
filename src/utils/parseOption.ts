@@ -1,6 +1,5 @@
 import { BigNumberish, toHex } from "starknet/utils/number";
-import { isUint256 } from "starknet/utils/uint256";
-import { LPTOKEN_CONTRACT_ADDRESS } from "../constants/amm";
+import { getTokenAddresses } from "../constants/amm";
 import {
   CompositeOption,
   OptionSide,
@@ -65,7 +64,7 @@ export const rawOptionToCalldata = (raw: RawOption, size: number): string[] => {
 
 export const rawOptionToTokenAddressCalldata = (raw: RawOption): string[] => {
   return [
-    LPTOKEN_CONTRACT_ADDRESS,
+    getTokenAddresses().LPTOKEN_CONTRACT_ADDRESS,
     toHex(raw.option_side),
     bnToInt(raw.maturity).toString(10),
     toHex(raw.strike_price),
