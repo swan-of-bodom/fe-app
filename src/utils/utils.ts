@@ -62,3 +62,19 @@ export const timestampToReadableDate = (ts: number): string => {
 
 export const hashToReadable = (v: string): string =>
   v.slice(0, 4) + "..." + v.slice(v.length - 4);
+
+export const premiaToUsd = (bn: BN): number => {
+  const ethInUsd = 157700; // actually in cents
+  return (
+    new BN(bn)
+      .mul(new BN(ethInUsd))
+      .div(new BN(2).pow(new BN(61)))
+      .toNumber() / 100
+  );
+};
+
+export const premiaToWei = (bn: BN): string =>
+  new BN(bn)
+    .mul(new BN(10).pow(new BN(18)))
+    .div(new BN(2).pow(new BN(61)))
+    .toString(10);

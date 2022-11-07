@@ -26,6 +26,8 @@ export type ParsedOption = {
   quoteToken: string;
   baseToken: string;
   tokenAddress?: string;
+  premiaUsd?: number;
+  premiaWei?: string;
 };
 
 export interface RawOption {
@@ -37,6 +39,7 @@ export interface RawOption {
   option_type: BigNumberish;
   token_address?: BigNumberish;
   balance?: BigNumberish;
+  premia?: BigNumberish;
 }
 
 export interface RawOptionWithBalance extends RawOption {

@@ -23,9 +23,15 @@ const OptionsTable = ({ options }: Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {options.map((o, i: number) => (
-          <OptionsTableItem option={o} key={i} />
-        ))}
+        {options
+          .sort(
+            (a, b) =>
+              parseInt(b.parsed.strikePrice, 10) -
+              parseInt(a.parsed.strikePrice, 10)
+          )
+          .map((o, i: number) => (
+            <OptionsTableItem option={o} key={i} />
+          ))}
       </TableBody>
     </Table>
   );

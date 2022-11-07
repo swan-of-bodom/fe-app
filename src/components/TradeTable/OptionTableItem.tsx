@@ -46,7 +46,7 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
     processing: false,
   });
 
-  const { strikePrice, maturity } = option.parsed;
+  const { strikePrice, maturity, premiaUsd } = option.parsed;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
@@ -83,7 +83,7 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
             handleBuy(account, amount, option.raw, updateTradeState)
           }
         >
-          Buy!
+          ${premiaUsd}
         </Button>
       </TableCell>
     </TableRow>

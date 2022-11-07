@@ -63,19 +63,19 @@ const Content = ({ options, type, side }: ContentProps) => {
 };
 
 const TradeTable = () => {
-  const list = useSelector((s: RootState) => s.optionsList.rawOptionsList);
+  const list = useSelector(
+    (s: RootState) => s.optionsList.compositeOptionsList
+  );
   const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
   const [type, setCallPut] = useState<OptionType>(OptionType.Call);
 
   const filtered = isNonEmptyArray(list)
-    ? list
-        .map(composeOption)
-        .filter(
-          ({ raw, parsed }) =>
-            isFresh(raw) &&
-            parsed.optionSide === side &&
-            parsed.optionType === type
-        )
+    ? list.filter(
+        ({ raw, parsed }) =>
+          isFresh(raw) &&
+          parsed.optionSide === side &&
+          parsed.optionType === type
+      )
     : [];
 
   return (
