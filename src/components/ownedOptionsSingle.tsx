@@ -6,11 +6,12 @@ import {
 } from "../types/options";
 import { timestampToReadableDate, weiToEth } from "../utils/utils";
 import { Button, Paper, styled } from "@mui/material";
-import { bnToInt, parseRawOption } from "../utils/parseOption";
+import { parseRawOption } from "../utils/parseOption";
 import { debug } from "../utils/debugger";
 import { tradeClose } from "../calls/tradeClose";
 import { useAccount } from "@starknet-react/core";
 import { AccountInterface } from "starknet";
+import BN from "bn.js";
 
 type Props = {
   raw: RawOptionWithBalance;
@@ -29,7 +30,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const handleTradeClose = async (
   account: AccountInterface | undefined,
   raw: RawOption,
-  amount: number
+  amount: string
 ) => {
   if (!account || !raw || !amount) {
     debug("Could not trade close", { account, raw, amount });
@@ -41,7 +42,7 @@ const handleTradeClose = async (
 
 export const SingleOwnedOption = ({ raw }: Props) => {
   const { account } = useAccount();
-  const balance = bnToInt(raw.balance);
+  const balance = new BN(raw.balance);
 
   const option = parseRawOption(raw);
 
@@ -62,9 +63,9 @@ export const SingleOwnedOption = ({ raw }: Props) => {
 
       <Button
         variant="contained"
-        onClick={() => handleTradeClose(account, raw, balance)}
+        onClick={() => handleTradeClose(account, raw, balance.toString(10))}
       >
-        Sell!
+        Close
       </Button>
     </Item>
   );

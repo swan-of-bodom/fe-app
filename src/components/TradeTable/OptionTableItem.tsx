@@ -6,6 +6,7 @@ import { AccountInterface } from "starknet";
 import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
 import { debug, LogTypes } from "../../utils/debugger";
+import { Float } from "../../types/base";
 
 type OptionPreviewProps = {
   option: CompositeOption;
@@ -18,7 +19,7 @@ type TradeState = {
 
 const handleBuy = async (
   account: AccountInterface | undefined,
-  amount: string,
+  amount: Float,
   rawOption: RawOption,
   updateTradeState: (v: TradeState) => void
 ) => {
@@ -28,7 +29,7 @@ const handleBuy = async (
   }
   updateTradeState({ failed: false, processing: true });
 
-  const res = await approveAndTrade(account, rawOption, parseInt(amount, 10));
+  const res = await approveAndTrade(account, rawOption, amount);
 
   updateTradeState(
     res
@@ -39,7 +40,7 @@ const handleBuy = async (
 
 const OptionTableItem = ({ option }: OptionPreviewProps) => {
   const { account } = useAccount();
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState<number>(0.0);
   const [tradeState, updateTradeState] = useState<TradeState>({
     failed: false,
     processing: false,
@@ -58,13 +59,19 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
         {" "}
         <TextField
           id="outlined-number"
-          label="Amount Wei"
+          label="Amount"
           type="number"
           size="small"
           InputLabelProps={{
             shrink: true,
           }}
-          onChange={(e) => setAmount(e.target.value)}
+          inputProps={{
+            maxLength: 13,
+            step: "0.01",
+            min: 0,
+            max: 50,
+          }}
+          onChange={(e) => setAmount(parseFloat(e.target.value))}
         />
       </TableCell>
       <TableCell align="right">

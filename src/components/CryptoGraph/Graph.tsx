@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { memo, useEffect, useState } from "react";
+import { Box, Typography } from "@mui/material";
 import {
   LineChart,
   Line,
@@ -16,6 +16,7 @@ import {
   validateResponse,
 } from "./utils";
 import { isNonEmptyArray } from "../../utils/utils";
+import { LoadingAnimation } from "../loading";
 
 export type IHistoricData = Array<number[]>;
 
@@ -24,44 +25,29 @@ const enum Color {
   Red = "#B22222",
 }
 
-const LoadingAnimation = () => (
-  <Box
-    sx={{
-      display: "flex",
-      width: "100%",
-      height: "100%",
-      justifyContent: "center",
-      alignItems: "center",
-    }}
-  >
-    <CircularProgress size={90} />
-  </Box>
+const CustomTooltip = memo(
+  ({ active, payload, firstValue, color, setColor }: any) => {
+    if (!active || !isNonEmptyArray(payload) || !payload[0].value) {
+      return null;
+    }
+    const currentValue = payload[0].value;
+    const newColor = currentValue < firstValue ? Color.Red : Color.Green;
+    if (color !== newColor) {
+      setColor(newColor);
+    }
+    return (
+      <Box>
+        <Typography sx={{ color, fontWeight: "800" }}>
+          ${currentValue}
+        </Typography>
+        <Typography sx={{ color }}>
+          {getPercentage(firstValue, currentValue)}
+        </Typography>
+      </Box>
+    );
+  },
+  (prev, next) => prev === next
 );
-
-const CustomTooltip = ({
-  active,
-  payload,
-  firstValue,
-  color,
-  setColor,
-}: any) => {
-  if (!active || !isNonEmptyArray(payload) || !payload[0].value) {
-    return null;
-  }
-  const currentValue = payload[0].value;
-  const newColor = currentValue < firstValue ? Color.Red : Color.Green;
-  if (color !== newColor) {
-    setColor(newColor);
-  }
-  return (
-    <Box>
-      <Typography sx={{ color, fontWeight: "800" }}>${currentValue}</Typography>
-      <Typography sx={{ color }}>
-        {getPercentage(firstValue, currentValue)}
-      </Typography>
-    </Box>
-  );
-};
 
 type Props = {
   days: number;
@@ -94,7 +80,7 @@ const Graph = ({ days }: Props) => {
   }, [days]);
 
   if (!historicData || loading) {
-    return <LoadingAnimation />;
+    return <LoadingAnimation size={90} />;
   }
 
   if (error) {

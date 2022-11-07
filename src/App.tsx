@@ -11,13 +11,13 @@ import { Provider } from "react-redux";
 import { store } from "./redux/store";
 
 // Pages
-import Home from "./pages/home";
 import BalancePage from "./pages/balance";
 import NotFound from "./pages/notFound";
-import BuyPage from "./pages/buy";
+import TradePage from "./pages/trade";
 import { Controller } from "./components/controller";
 import { StarknetConfig } from "@starknet-react/core";
 import { getProvider } from "./utils/environment";
+import StakePage from "./pages/stake";
 
 const App = () => {
   const connectors = Object.values(SupportedWalletIds).map(
@@ -29,15 +29,16 @@ const App = () => {
       <StarknetConfig
         defaultProvider={getProvider()}
         connectors={connectors}
-        autoConnect={true}
+        autoConnect={false}
       >
         <Controller />
         <Router>
           <Layout>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/sell" element={<BalancePage />} />
-              <Route path="/buy" element={<BuyPage />} />
+              <Route path="/" element={<TradePage />} />
+              <Route path="/trade" element={<TradePage />} />
+              <Route path="/position" element={<BalancePage />} />
+              <Route path="/staking" element={<StakePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>

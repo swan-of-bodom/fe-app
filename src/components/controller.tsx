@@ -18,8 +18,12 @@ const updateOptionsList = async (contract: Contract) => {
     return;
   }
 
+  if (isNonEmptyArray(store.getState().optionsList.rawOptionsList)) {
+    return;
+  }
+
   const promises = [];
-  const n = 8;
+  const n = 10;
 
   store.dispatch(setFetchState(FetchState.Fetching));
 
@@ -65,6 +69,8 @@ const updateOptionsList = async (contract: Contract) => {
     failed = true;
     return [];
   });
+
+  debug("GOT TOKEN ADDRESSES", rawWithAddress);
 
   if (failed) {
     return;

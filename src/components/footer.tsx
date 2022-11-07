@@ -47,7 +47,10 @@ const footers = [
   {
     title: "Resources",
     description: [
-      { title: "Documentation", href: "https://carmine-finance.gitbook.io/carmine-options-amm/" },
+      {
+        title: "Documentation",
+        href: "https://carmine-finance.gitbook.io/carmine-options-amm/",
+      },
       { title: "GitHub", href: "https://github.com/CarmineOptions" },
       { title: "Another resource", href: "#" },
       { title: "Final resource", href: "#" },
@@ -73,7 +76,7 @@ export const Footer = () => (
         py: [3, 6],
       }}
     >
-      <Grid container spacing={4} justifyContent="space-evenly">
+      {/* <Grid container spacing={4} justifyContent="space-evenly">
         {footers.map((footer) => (
           <Grid item xs={6} sm={3} key={footer.title}>
             <Typography variant="h6" color="text.primary" gutterBottom>
@@ -90,7 +93,7 @@ export const Footer = () => (
             </ul>
           </Grid>
         ))}
-      </Grid>
+      </Grid> */}
       <Copyright />
     </Container>
   </>

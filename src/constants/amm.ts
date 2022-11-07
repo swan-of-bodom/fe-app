@@ -52,4 +52,5 @@ export const enum AMM_METHODS {
   TRADE_CLOSE = "trade_close",
   GET_AVAILABLE_OPTIONS = "get_available_options",
   GET_OPTION_TOKEN_ADDRESS = "get_option_token_address",
+  GET_ALL_NON_EXPIRED_OPTIONS_WITH_PREMIA = "get_all_non_expired_options_with_premia",
 }

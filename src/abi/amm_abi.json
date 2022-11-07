@@ -39,6 +39,28 @@
   {
     "members": [
       {
+        "name": "quote_token_address",
+        "offset": 0,
+        "type": "felt"
+      },
+      {
+        "name": "base_token_address",
+        "offset": 1,
+        "type": "felt"
+      },
+      {
+        "name": "option_type",
+        "offset": 2,
+        "type": "felt"
+      }
+    ],
+    "name": "Pool",
+    "size": 3,
+    "type": "struct"
+  },
+  {
+    "members": [
+      {
         "name": "low",
         "offset": 0,
         "type": "felt"
@@ -98,6 +120,27 @@
       }
     ],
     "name": "empiric_median_price",
+    "outputs": [
+      {
+        "name": "price",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "key",
+        "type": "felt"
+      },
+      {
+        "name": "maturity",
+        "type": "felt"
+      }
+    ],
+    "name": "get_terminal_price",
     "outputs": [
       {
         "name": "price",
@@ -286,30 +329,33 @@
   {
     "inputs": [
       {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
+        "name": "order_i",
         "type": "felt"
       }
     ],
-    "name": "get_pool_option_position",
+    "name": "get_available_lptoken_addresses",
     "outputs": [
       {
-        "name": "res",
+        "name": "lptoken_address",
         "type": "felt"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "order_i",
+        "type": "felt"
+      },
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      }
+    ],
+    "name": "set_available_lptoken_addresses",
+    "outputs": [],
     "type": "function"
   },
   {
@@ -424,6 +470,23 @@
   {
     "inputs": [
       {
+        "name": "lptoken_addres",
+        "type": "felt"
+      }
+    ],
+    "name": "get_pool_definition_from_lptoken_address",
+    "outputs": [
+      {
+        "name": "pool",
+        "type": "Pool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "name": "lptoken_address",
         "type": "felt"
       }
@@ -529,6 +592,80 @@
         "type": "felt"
       }
     ],
+    "name": "get_all_options",
+    "outputs": [
+      {
+        "name": "array_len",
+        "type": "felt"
+      },
+      {
+        "name": "array",
+        "type": "felt*"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      }
+    ],
+    "name": "get_all_non_expired_options_with_premia",
+    "outputs": [
+      {
+        "name": "array_len",
+        "type": "felt"
+      },
+      {
+        "name": "array",
+        "type": "felt*"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "get_option_with_position_of_user",
+    "outputs": [
+      {
+        "name": "array_len",
+        "type": "felt"
+      },
+      {
+        "name": "array",
+        "type": "felt*"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "get_all_lptoken_addresses",
+    "outputs": [
+      {
+        "name": "array_len",
+        "type": "felt"
+      },
+      {
+        "name": "array",
+        "type": "felt*"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      }
+    ],
     "name": "get_value_of_pool_position",
     "outputs": [
       {
@@ -584,6 +721,23 @@
       }
     ],
     "name": "get_available_options_usable_index",
+    "outputs": [
+      {
+        "name": "usable_index",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "starting_index",
+        "type": "felt"
+      }
+    ],
+    "name": "get_available_lptoken_addresses_usable_index",
     "outputs": [
       {
         "name": "usable_index",

@@ -8,7 +8,7 @@ import { debug, LogTypes } from "../utils/debugger";
 export const tradeClose = async (
   account: AccountInterface,
   rawOption: RawOption,
-  amount: number
+  amount: string
 ) => {
   try {
     const call = {
