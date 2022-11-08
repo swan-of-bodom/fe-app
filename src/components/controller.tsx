@@ -55,10 +55,9 @@ export const Controller = () => {
   const { contract } = useAmmContract();
 
   useEffect(() => {
-    if (contract) {
-      updateOptionsList(contract);
-    }
-  }, [contract]);
+    updateOptionsList(contract!);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return null;
 };

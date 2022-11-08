@@ -1,5 +1,10 @@
-import { CompositeOption, RawOption } from "../../types/options";
-import { timestampToReadableDate } from "../../utils/utils";
+import {
+  CompositeOption,
+  OptionType,
+  ParsedCallOption,
+  ParsedPutOption,
+} from "../../types/options";
+import { timestampToReadableDate, weiToEth } from "../../utils/utils";
 import { Button, TableCell, TableRow, TextField } from "@mui/material";
 import { approveAndTrade } from "../../calls/tradeOpen";
 import { AccountInterface } from "starknet";
@@ -7,6 +12,7 @@ import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
 import { debug, LogTypes } from "../../utils/debugger";
 import { Float } from "../../types/base";
+import BN from "bn.js";
 
 type OptionPreviewProps = {
   option: CompositeOption;
@@ -20,7 +26,7 @@ type TradeState = {
 const handleBuy = async (
   account: AccountInterface | undefined,
   amount: Float,
-  rawOption: RawOption,
+  option: CompositeOption,
   updateTradeState: (v: TradeState) => void
 ) => {
   if (!account || !amount) {
@@ -29,7 +35,7 @@ const handleBuy = async (
   }
   updateTradeState({ failed: false, processing: true });
 
-  const res = await approveAndTrade(account, rawOption, amount);
+  const res = await approveAndTrade(account, option, amount);
 
   updateTradeState(
     res
@@ -46,7 +52,7 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
     processing: false,
   });
 
-  const { strikePrice, maturity, premiaUsd } = option.parsed;
+  const { strikePrice, maturity, optionType } = option.parsed;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
@@ -79,11 +85,14 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
           variant="contained"
           disabled={tradeState.processing || !account}
           color={tradeState.failed ? "error" : "primary"}
-          onClick={() =>
-            handleBuy(account, amount, option.raw, updateTradeState)
-          }
+          onClick={() => handleBuy(account, amount, option, updateTradeState)}
         >
-          ${premiaUsd}
+          {optionType === OptionType.Call
+            ? `ETH ${weiToEth(
+                new BN((option.parsed as ParsedCallOption).premiaWei as string),
+                4
+              )}`
+            : `USD ${(option.parsed as ParsedPutOption).premiaUsd}`}
         </Button>
       </TableCell>
     </TableRow>

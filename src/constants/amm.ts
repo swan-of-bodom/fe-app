@@ -6,6 +6,7 @@ type TokenAddresses = {
   USD_ADDRESS: string;
   MAIN_CONTRACT_ADDRESS: string;
   LPTOKEN_CONTRACT_ADDRESS: string;
+  LPTOKEN_CONTRACT_ADDRESS_PUT: string;
 };
 
 const testnetTokens = {
@@ -17,6 +18,8 @@ const testnetTokens = {
     "0x042a7d485171a01b8c38b6b37e0092f0f096e9d3f945c50c77799171916f5a54",
   LPTOKEN_CONTRACT_ADDRESS:
     "0x03b176f8e5b4c9227b660e49e97f2d9d1756f96e5878420ad4accd301dd0cc17",
+  LPTOKEN_CONTRACT_ADDRESS_PUT:
+    "0x0030fe5d12635ed696483a824eca301392b3f529e06133b42784750503a24972",
 };
 
 export const getTokenAddresses = (): TokenAddresses => {
@@ -30,6 +33,8 @@ export const getTokenAddresses = (): TokenAddresses => {
         MAIN_CONTRACT_ADDRESS: process.env.REACT_APP_MAIN_CONTRACT_ADDRESS!,
         LPTOKEN_CONTRACT_ADDRESS:
           process.env.REACT_APP_LPTOKEN_CONTRACT_ADDRESS!,
+        LPTOKEN_CONTRACT_ADDRESS_PUT:
+          process.env.REACT_APP_LPTOKEN_CONTRACT_ADDRESS_PUT!,
       };
 
     case Envs.Testnet:
@@ -53,4 +58,7 @@ export const enum AMM_METHODS {
   GET_AVAILABLE_OPTIONS = "get_available_options",
   GET_OPTION_TOKEN_ADDRESS = "get_option_token_address",
   GET_ALL_NON_EXPIRED_OPTIONS_WITH_PREMIA = "get_all_non_expired_options_with_premia",
+  GET_OPTION_WITH_POSITION_OF_USER = "get_option_with_position_of_user",
 }
+
+export const SLIPPAGE = 0.1;

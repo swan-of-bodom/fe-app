@@ -61,6 +61,23 @@
   {
     "members": [
       {
+        "name": "value_of_user_stake",
+        "offset": 0,
+        "type": "Uint256"
+      },
+      {
+        "name": "pool_info",
+        "offset": 2,
+        "type": "PoolInfo"
+      }
+    ],
+    "name": "UserPoolInfo",
+    "size": 9,
+    "type": "struct"
+  },
+  {
+    "members": [
+      {
         "name": "low",
         "offset": 0,
         "type": "felt"
@@ -73,6 +90,38 @@
     ],
     "name": "Uint256",
     "size": 2,
+    "type": "struct"
+  },
+  {
+    "members": [
+      {
+        "name": "pool",
+        "offset": 0,
+        "type": "Pool"
+      },
+      {
+        "name": "lptoken_address",
+        "offset": 3,
+        "type": "felt"
+      },
+      {
+        "name": "staked_capital",
+        "offset": 4,
+        "type": "felt"
+      },
+      {
+        "name": "unlocked_capital",
+        "offset": 5,
+        "type": "felt"
+      },
+      {
+        "name": "value_of_pool_position",
+        "offset": 6,
+        "type": "felt"
+      }
+    ],
+    "name": "PoolInfo",
+    "size": 7,
     "type": "struct"
   },
   {
@@ -346,21 +395,6 @@
   {
     "inputs": [
       {
-        "name": "order_i",
-        "type": "felt"
-      },
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "set_available_lptoken_addresses",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "name": "lptoken_address",
         "type": "felt"
       }
@@ -628,7 +662,12 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "user_address",
+        "type": "felt"
+      }
+    ],
     "name": "get_option_with_position_of_user",
     "outputs": [
       {
@@ -704,6 +743,43 @@
       {
         "name": "position_value",
         "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "user",
+        "type": "felt"
+      }
+    ],
+    "name": "get_user_pool_infos",
+    "outputs": [
+      {
+        "name": "user_pool_infos_len",
+        "type": "felt"
+      },
+      {
+        "name": "user_pool_infos",
+        "type": "UserPoolInfo*"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "get_all_poolinfo",
+    "outputs": [
+      {
+        "name": "pool_info_len",
+        "type": "felt"
+      },
+      {
+        "name": "pool_info",
+        "type": "PoolInfo*"
       }
     ],
     "stateMutability": "view",

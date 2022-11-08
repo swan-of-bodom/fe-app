@@ -4,7 +4,9 @@ import {
   CompositeOption,
   OptionSide,
   OptionType,
+  ParsedCallOption,
   ParsedOption,
+  ParsedPutOption,
   RawOption,
   RawOptionWithBalance,
 } from "../types/options";
@@ -91,7 +93,31 @@ export const parseNewOption = (arr: BN[]): CompositeOption => {
       option_type: arr[5],
       premia: arr[6],
     };
-    const parsed = {
+
+    const type =
+      new BN(arr[5]).toString(10) === OptionType.Call
+        ? OptionType.Call
+        : OptionType.Put;
+
+    if (type === OptionType.Call) {
+      const parsed: ParsedCallOption = {
+        optionSide:
+          new BN(arr[0]).toString(10) === OptionSide.Long
+            ? OptionSide.Long
+            : OptionSide.Short,
+        maturity: new BN(arr[1]).toNumber(),
+        strikePrice: new BN(arr[2]).div(new BN(2).pow(new BN(61))).toString(10),
+        quoteToken: "0x" + new BN(arr[3]).toString(16),
+        baseToken: "0x" + new BN(arr[4]).toString(16),
+        optionType:
+          new BN(arr[5]).toString(10) === OptionType.Call
+            ? OptionType.Call
+            : OptionType.Put,
+        premiaWei: premiaToWei(arr[6]),
+      };
+      return { raw, parsed };
+    }
+    const parsed: ParsedPutOption = {
       optionSide:
         new BN(arr[0]).toString(10) === OptionSide.Long
           ? OptionSide.Long
@@ -105,7 +131,6 @@ export const parseNewOption = (arr: BN[]): CompositeOption => {
           ? OptionType.Call
           : OptionType.Put,
       premiaUsd: premiaToUsd(arr[6]),
-      premiaWei: premiaToWei(arr[6]),
     };
     return { raw, parsed };
   } catch (err) {

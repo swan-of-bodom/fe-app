@@ -1,7 +1,7 @@
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import AmmAbi from "../abi/amm_abi.json";
 import { Abi, AccountInterface, InvokeFunctionResponse } from "starknet";
-import { RawOption } from "../types/options";
+import { CompositeOption, RawOption } from "../types/options";
 import { approve } from "./approve";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug, LogTypes } from "../utils/debugger";
@@ -31,7 +31,7 @@ export const tradeOpen = async (
 
 export const approveAndTrade = async (
   account: AccountInterface,
-  rawOption: RawOption,
+  option: CompositeOption,
   amountEth: number
 ): Promise<InvokeFunctionResponse | null> => {
   const provider = getProvider();
@@ -43,7 +43,11 @@ export const approveAndTrade = async (
 
   const amountWei = ethToWei(amountEth);
 
-  const approveResponse = await approve(account, amountWei);
+  const approveResponse = await approve(
+    option.parsed.optionType,
+    account,
+    amountWei
+  );
 
   if (!approveResponse?.transaction_hash) {
     debug("Approve did not return transaction_hash", approveResponse);
@@ -56,7 +60,7 @@ export const approveAndTrade = async (
 
   debug("Approve done, let's trade open...", math64x61);
 
-  const tradeResponse = await tradeOpen(account, rawOption, math64x61);
+  const tradeResponse = await tradeOpen(account, option.raw, math64x61);
 
   debug("Done trading!", tradeResponse);
 

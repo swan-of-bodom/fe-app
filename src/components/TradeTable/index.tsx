@@ -1,24 +1,13 @@
 import { CompositeOption, OptionSide, OptionType } from "../../types/options";
-import { Box, Button, Paper, TableContainer } from "@mui/material";
+import { Box, Button, Paper, TableContainer, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { FetchState } from "../../redux/reducers/optionsList";
 import { useState } from "react";
-import { composeOption, isFresh } from "../../utils/parseOption";
+import { isFresh } from "../../utils/parseOption";
 import OptionsTable from "./OptionsTable";
 import { isNonEmptyArray } from "../../utils/utils";
 import { LoadingAnimation } from "../loading";
-
-const stateToText = (v: FetchState): string => {
-  switch (v) {
-    case FetchState.NotStarted:
-      return "We will get the options in a jiffy!";
-    case FetchState.Fetching:
-      return "Getting the list of available options...";
-    default:
-      return "Something went wrong while getting the options.";
-  }
-};
 
 type NoOptionsProps = {
   type: OptionType;
@@ -47,6 +36,16 @@ const Content = ({ options, type, side }: ContentProps) => {
     return (
       <Box sx={{ padding: "20px" }}>
         <LoadingAnimation size={40} />
+      </Box>
+    );
+  }
+
+  if (state === FetchState.Failed) {
+    return (
+      <Box sx={{ padding: "20px" }}>
+        <Typography>
+          Something went wrong while getting the list of options.
+        </Typography>
       </Box>
     );
   }
