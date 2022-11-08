@@ -1,3 +1,4 @@
+import BN from "bn.js";
 import { Envs } from "../redux/reducers/environment";
 import { store } from "../redux/store";
 
@@ -62,3 +63,8 @@ export const enum AMM_METHODS {
 }
 
 export const SLIPPAGE = 0.1;
+
+export const ETH_BASE_VALUE = new BN(10).pow(new BN(18));
+export const USD_BASE_VALUE = new BN(10).pow(new BN(6));
+export const BASE_MATH_64_61 = new BN(2).pow(new BN(61));
+export const USD_PRECISSION = 1000;

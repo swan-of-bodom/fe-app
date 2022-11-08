@@ -33,7 +33,7 @@ export interface ParsedCallOption extends ParsedOption {
 }
 
 export interface ParsedPutOption extends ParsedOption {
-  premiaUsd: number;
+  premiaUsd: BigNumberish;
 }
 
 export interface ParsedOptionWithPosition extends ParsedOption {

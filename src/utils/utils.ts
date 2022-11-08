@@ -1,5 +1,6 @@
 import BN from "bn.js";
 import { BigNumberish } from "starknet/utils/number";
+import { USD_BASE_VALUE, USD_PRECISSION } from "../constants/amm";
 
 export const isNonEmptyArray = (v: unknown): v is Array<any> =>
   !!(v && Array.isArray(v) && v.length > 0);
@@ -63,13 +64,11 @@ export const timestampToReadableDate = (ts: number): string => {
 export const hashToReadable = (v: string): string =>
   v.slice(0, 4) + "..." + v.slice(v.length - 4);
 
-export const premiaToUsd = (usdInMath64x61: BN): number => {
-  return (
-    new BN(usdInMath64x61)
-      .mul(new BN(100))
-      .div(new BN(2).pow(new BN(61)))
-      .toNumber() / 100
-  );
+export const premiaToUsd = (usdInMath64x61: BN): string => {
+  return new BN(usdInMath64x61)
+    .mul(new BN(USD_BASE_VALUE))
+    .div(new BN(2).pow(new BN(61)))
+    .toString(10);
 };
 
 export const premiaToWei = (bn: BN): string =>

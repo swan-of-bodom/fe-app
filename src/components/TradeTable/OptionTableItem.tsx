@@ -1,5 +1,6 @@
 import {
   CompositeOption,
+  OptionSide,
   OptionType,
   ParsedCallOption,
   ParsedPutOption,
@@ -13,6 +14,7 @@ import { useState } from "react";
 import { debug, LogTypes } from "../../utils/debugger";
 import { Float } from "../../types/base";
 import BN from "bn.js";
+import { USD_BASE_VALUE, USD_PRECISSION } from "../../constants/amm";
 
 type OptionPreviewProps = {
   option: CompositeOption;
@@ -27,6 +29,9 @@ const handleBuy = async (
   account: AccountInterface | undefined,
   amount: Float,
   option: CompositeOption,
+  optionType: OptionType,
+  optionSide: OptionSide,
+  premia: BN,
   updateTradeState: (v: TradeState) => void
 ) => {
   if (!account || !amount) {
@@ -35,7 +40,14 @@ const handleBuy = async (
   }
   updateTradeState({ failed: false, processing: true });
 
-  const res = await approveAndTrade(account, option, amount);
+  const res = await approveAndTrade(
+    account,
+    option,
+    amount,
+    optionType,
+    optionSide,
+    premia
+  );
 
   updateTradeState(
     res
@@ -52,10 +64,21 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
     processing: false,
   });
 
-  const { strikePrice, maturity, optionType } = option.parsed;
+  const { strikePrice, maturity, optionType, optionSide } = option.parsed;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
+
+  const currentPremia: BN =
+    optionType === OptionType.Call
+      ? new BN((option.parsed as ParsedCallOption).premiaWei)
+      : new BN((option.parsed as ParsedPutOption).premiaUsd);
+
+  const displayPremia =
+    optionType === OptionType.Call
+      ? weiToEth(currentPremia, 4)
+      : currentPremia.mul(new BN(100)).div(USD_BASE_VALUE).toNumber() / 100;
+  const currency = optionType === OptionType.Call ? "ETH" : "USD";
 
   return (
     <TableRow>
@@ -85,14 +108,19 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
           variant="contained"
           disabled={tradeState.processing || !account}
           color={tradeState.failed ? "error" : "primary"}
-          onClick={() => handleBuy(account, amount, option, updateTradeState)}
+          onClick={() =>
+            handleBuy(
+              account,
+              amount,
+              option,
+              optionType,
+              optionSide,
+              currentPremia,
+              updateTradeState
+            )
+          }
         >
-          {optionType === OptionType.Call
-            ? `ETH ${weiToEth(
-                new BN((option.parsed as ParsedCallOption).premiaWei as string),
-                4
-              )}`
-            : `USD ${(option.parsed as ParsedPutOption).premiaUsd}`}
+          {`${currency} ${displayPremia}`}
         </Button>
       </TableCell>
     </TableRow>
