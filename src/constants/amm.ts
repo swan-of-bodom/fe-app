@@ -60,6 +60,8 @@ export const enum AMM_METHODS {
   GET_OPTION_TOKEN_ADDRESS = "get_option_token_address",
   GET_ALL_NON_EXPIRED_OPTIONS_WITH_PREMIA = "get_all_non_expired_options_with_premia",
   GET_OPTION_WITH_POSITION_OF_USER = "get_option_with_position_of_user",
+  DEPOSIT_LIQUIDITY = "deposit_liquidity",
+  GET_USER_POOL_INFOS = "get_user_pool_infos",
 }
 
 export const SLIPPAGE = 0.1;

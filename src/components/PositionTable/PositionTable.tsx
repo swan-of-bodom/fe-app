@@ -131,6 +131,7 @@ export const PositionTableComponent = () => {
           <TableCell align="right">Maturity</TableCell>
           <TableCell align="right">Size</TableCell>
           <TableCell align="right">Value</TableCell>
+          <TableCell align="right"></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

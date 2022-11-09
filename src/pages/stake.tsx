@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { Typography } from "@mui/material";
+import StakeCapital from "../components/StakeCapital";
+import { WithdrawCapital } from "../components/WithdrawCapital";
 
 const StakePage = () => {
   useEffect(() => {
@@ -9,7 +11,8 @@ const StakePage = () => {
   return (
     <>
       <Typography variant="h4">Stake Capital</Typography>
-      <Typography>Comming soon!</Typography>
+      <StakeCapital />
+      <WithdrawCapital />
     </>
   );
 };
