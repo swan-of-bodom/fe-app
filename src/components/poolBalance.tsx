@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { useStarknetCall } from "@starknet-react/core";
-import { AMM_METHODS, LPTOKEN_CONTRACT_ADDRESS } from "../constants/amm";
+import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { useAmmContract } from "../hooks/amm";
 import { weiToEth } from "../utils/utils";
 
@@ -18,7 +18,7 @@ export const PoolBalance = () => {
   const { data, loading, error, refresh } = useStarknetCall({
     contract,
     method: AMM_METHODS.GET_POOL_AVAILABLE_BALANCE,
-    args: [LPTOKEN_CONTRACT_ADDRESS],
+    args: [getTokenAddresses().LPTOKEN_CONTRACT_ADDRESS],
     options: {
       watch: false,
     },

@@ -1,24 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { RawOption } from "../../types/options";
+import { CompositeOption, RawOption } from "../../types/options";
+import { isNonEmptyArray } from "../../utils/utils";
 
-export const enum FetchState {
-  NotStarted,
-  Done,
-  Failed,
-  Fetching,
+export enum FetchState {
+  NotStarted = "not-started",
+  Done = "done",
+  Failed = "failed",
+  Fetching = "fetching",
 }
 
 export const optionsList = createSlice({
   name: "optionsList",
   initialState: {
     rawOptionsList: [] as RawOption[],
+    compositeOptionsList: [] as CompositeOption[],
     state: FetchState.NotStarted,
     balanceState: FetchState.NotStarted,
   },
   reducers: {
     setOptions: (state, action) => {
       const arr: RawOption[] = action.payload;
-      state.rawOptionsList = arr;
+      isNonEmptyArray(arr) && (state.rawOptionsList = arr);
+      return state;
+    },
+    setCompositeOptions: (state, action) => {
+      const arr: CompositeOption[] = action.payload;
+      isNonEmptyArray(arr) && (state.compositeOptionsList = arr);
       return state;
     },
     setFetchState: (state, action) => {
@@ -30,5 +37,9 @@ export const optionsList = createSlice({
   },
 });
 
-export const { setOptions, setFetchState, setBalanceFetchState } =
-  optionsList.actions;
+export const {
+  setOptions,
+  setCompositeOptions,
+  setFetchState,
+  setBalanceFetchState,
+} = optionsList.actions;

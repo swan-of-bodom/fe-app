@@ -18,7 +18,7 @@ export enum OptionSide {
   Short = "1",
 }
 
-export type ParsedOption = {
+export interface ParsedOption {
   optionType: OptionType;
   strikePrice: string;
   maturity: number;
@@ -26,7 +26,20 @@ export type ParsedOption = {
   quoteToken: string;
   baseToken: string;
   tokenAddress?: string;
-};
+}
+
+export interface ParsedCallOption extends ParsedOption {
+  premiaWei: string;
+}
+
+export interface ParsedPutOption extends ParsedOption {
+  premiaUsd: BigNumberish;
+}
+
+export interface ParsedOptionWithPosition extends ParsedOption {
+  positionSize: number;
+  positionValue: number;
+}
 
 export interface RawOption {
   option_side: BigNumberish;
@@ -37,6 +50,9 @@ export interface RawOption {
   option_type: BigNumberish;
   token_address?: BigNumberish;
   balance?: BigNumberish;
+  premia?: BigNumberish;
+  position_size?: BigNumberish;
+  value_of_position?: BigNumberish;
 }
 
 export interface RawOptionWithBalance extends RawOption {
@@ -47,10 +63,18 @@ export type OptionTradeArguments = ParsedOption & { optionSize: string };
 
 export type CompositeOption = {
   raw: RawOption;
-  parsed: ParsedOption;
+  parsed:
+    | ParsedOption
+    | ParsedCallOption
+    | ParsedPutOption
+    | ParsedOptionWithPosition;
 };
 
 export type CompositeOptionWithBalance = {
   raw: RawOptionWithBalance;
-  parsed: ParsedOption;
+  parsed:
+    | ParsedOption
+    | ParsedCallOption
+    | ParsedPutOption
+    | ParsedOptionWithPosition;
 };

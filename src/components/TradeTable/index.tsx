@@ -1,22 +1,13 @@
-import { OptionSide, OptionType } from "../../types/options";
-import { Box, Button, Paper, TableContainer } from "@mui/material";
+import { CompositeOption, OptionSide, OptionType } from "../../types/options";
+import { Box, Button, Paper, TableContainer, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { FetchState } from "../../redux/reducers/optionsList";
 import { useState } from "react";
-import { composeOption, isFresh } from "../../utils/parseOption";
+import { isFresh } from "../../utils/parseOption";
 import OptionsTable from "./OptionsTable";
-
-const stateToText = (fs: FetchState): string => {
-  switch (fs) {
-    case FetchState.NotStarted:
-      return "We will get the options in a jiffy!";
-    case FetchState.Fetching:
-      return "Getting the list of available options...";
-    default:
-      return "Something went wrong while getting the options.";
-  }
-};
+import { isNonEmptyArray } from "../../utils/utils";
+import { LoadingAnimation } from "../loading";
 
 type NoOptionsProps = {
   type: OptionType;
@@ -32,28 +23,59 @@ const NoOptions = ({ type, side }: NoOptionsProps) => (
   </Box>
 );
 
-const TradeTable = () => {
-  const list = useSelector((s: RootState) => s.rawOptionsList);
-  const state = useSelector((s: RootState) => s.state);
-  const [longShort, setLongShort] = useState<OptionSide>(OptionSide.Long);
-  const [callPut, setCallPut] = useState<OptionType>(OptionType.Call);
+type ContentProps = {
+  options: CompositeOption[];
+  type: OptionType;
+  side: OptionSide;
+};
 
-  if (state !== FetchState.Done) {
-    return <p>{stateToText(state)}</p>;
-  }
+const Content = ({ options, type, side }: ContentProps) => {
+  const state = useSelector((s: RootState) => s.optionsList.state);
 
-  if (list.length === 0) {
-    return <p>It seems that there are currently no available options.</p>;
-  }
-
-  const filtered = list
-    .map(composeOption)
-    .filter(
-      ({ raw, parsed }) =>
-        isFresh(raw) &&
-        parsed.optionSide === longShort &&
-        parsed.optionType === callPut
+  if (state === FetchState.Fetching) {
+    return (
+      <Box sx={{ padding: "20px" }}>
+        <LoadingAnimation size={40} />
+      </Box>
     );
+  }
+
+  if (state === FetchState.Failed) {
+    return (
+      <Box sx={{ padding: "20px" }}>
+        <Typography>
+          Something went wrong while getting the list of options.
+        </Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <>
+      {options.length === 0 ? (
+        <NoOptions type={type} side={side} />
+      ) : (
+        <OptionsTable options={options} />
+      )}
+    </>
+  );
+};
+
+const TradeTable = () => {
+  const list = useSelector(
+    (s: RootState) => s.optionsList.compositeOptionsList
+  );
+  const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
+  const [type, setCallPut] = useState<OptionType>(OptionType.Call);
+
+  const filtered = isNonEmptyArray(list)
+    ? list.filter(
+        ({ raw, parsed }) =>
+          isFresh(raw) &&
+          parsed.optionSide === side &&
+          parsed.optionType === type
+      )
+    : [];
 
   return (
     <Paper
@@ -65,35 +87,31 @@ const TradeTable = () => {
       }}
     >
       <Button
-        variant={longShort === OptionSide.Long ? "contained" : "outlined"}
+        variant={side === OptionSide.Long ? "contained" : "outlined"}
         onClick={() => setLongShort(OptionSide.Long)}
       >
         Long
       </Button>
       <Button
-        variant={longShort === OptionSide.Long ? "outlined" : "contained"}
+        variant={side === OptionSide.Long ? "outlined" : "contained"}
         onClick={() => setLongShort(OptionSide.Short)}
       >
         Short
       </Button>
       <Button
-        variant={callPut === OptionType.Call ? "contained" : "outlined"}
+        variant={type === OptionType.Call ? "contained" : "outlined"}
         onClick={() => setCallPut(OptionType.Call)}
       >
         Call
       </Button>
       <Button
-        variant={callPut === OptionType.Call ? "outlined" : "contained"}
+        variant={type === OptionType.Call ? "outlined" : "contained"}
         onClick={() => setCallPut(OptionType.Put)}
       >
         Put
       </Button>
       <TableContainer elevation={2} component={Paper}>
-        {filtered.length === 0 ? (
-          <NoOptions type={callPut} side={longShort} />
-        ) : (
-          <OptionsTable options={filtered} />
-        )}
+        <Content options={filtered} side={side} type={type} />
       </TableContainer>
     </Paper>
   );

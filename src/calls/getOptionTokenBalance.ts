@@ -12,12 +12,20 @@ import { RawOption, RawOptionWithBalance } from "../types/options";
 import { debug, LogTypes } from "../utils/debugger";
 import { parseRawOption } from "../utils/parseOption";
 import { isNonEmptyArray } from "../utils/utils";
+import { getProvider } from "../utils/environment";
 
 export const getOptionTokenBalance = async (
   tokenAddress: string,
   address: string
 ): Promise<BigNumberish> => {
-  const contract = new Contract(LpAbi as Abi, tokenAddress);
+  const provider = getProvider();
+
+  if (!provider) {
+    debug("GET BALANCE - NO PROVIDER");
+    return 0;
+  }
+
+  const contract = new Contract(LpAbi as Abi, tokenAddress, provider);
   const res: Uint256[] = await contract.balanceOf(address);
 
   if (!isNonEmptyArray(res)) {
@@ -31,11 +39,14 @@ export const getOptionTokenBalance = async (
   return balance;
 };
 
-const getTokenAddress = (raw: RawOption): string | null =>
-  parseRawOption(raw)?.tokenAddress || null;
-
+const getTokenAddress = (raw: RawOption): string | null => {
+  debug("RAW", raw);
+  const res = parseRawOption(raw)?.tokenAddress || null;
+  debug("PARSED", res);
+  return res;
+};
 export const updateListBalance = async (address: string) => {
-  const list = store.getState().rawOptionsList;
+  const list = store.getState().optionsList.rawOptionsList;
 
   if (!isNonEmptyArray(list)) {
     return;
@@ -45,6 +56,7 @@ export const updateListBalance = async (address: string) => {
   const updatePromises = list.map(
     async (raw: RawOption): Promise<RawOptionWithBalance> => {
       const t = getTokenAddress(raw);
+      debug("GOT TOKEN ADDRESS", t);
       if (!t) {
         return { ...raw, balance: 0 };
       }

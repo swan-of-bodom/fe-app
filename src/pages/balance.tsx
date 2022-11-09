@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { useEffect } from "react";
-import { OwnedOptions } from "../components/ownedOptions";
+import PositionTable from "../components/PositionTable";
 
 const Balance = () => {
   useEffect(() => {
@@ -10,8 +10,7 @@ const Balance = () => {
   return (
     <>
       <Typography variant="h4">Options Balance</Typography>
-      <p>Review your currently owned options.</p>
-      <OwnedOptions />
+      <PositionTable />
     </>
   );
 };

@@ -3,7 +3,7 @@ import { Typography } from "@mui/material";
 import TradeTable from "../components/TradeTable";
 import CryptoGraph from "../components/CryptoGraph";
 
-const BuyPage = () => {
+const TradePage = () => {
   useEffect(() => {
     document.title = "Buy | Carmine Finance";
   });
@@ -17,4 +17,4 @@ const BuyPage = () => {
   );
 };
 
-export default BuyPage;
+export default TradePage;
