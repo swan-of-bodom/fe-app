@@ -1,59 +1,48 @@
 import { CompositeOption, OptionSide, OptionType } from "../../types/options";
-import { Box, Button, Paper, TableContainer, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import { FetchState } from "../../redux/reducers/optionsList";
-import { useState } from "react";
+import { Box, Button, Paper, TableContainer } from "@mui/material";
+import { useEffect, useState } from "react";
 import { isFresh } from "../../utils/parseOption";
 import OptionsTable from "./OptionsTable";
 import { isNonEmptyArray } from "../../utils/utils";
 import { LoadingAnimation } from "../loading";
+import { NoContent } from "../TableNoContent";
+import { useAmmContract } from "../../hooks/amm";
+import { fetchOptions } from "./fetchOptions";
+import { debug } from "../../utils/debugger";
 
-type NoOptionsProps = {
-  type: OptionType;
-  side: OptionSide;
-};
-
-const NoOptions = ({ type, side }: NoOptionsProps) => (
-  <Box sx={{ textAlign: "center" }}>
-    <p>
-      We currently do not have any {side === OptionSide.Long ? "long" : "short"}{" "}
-      {type === OptionType.Call ? "call" : "put"} options.
-    </p>
-  </Box>
-);
+const getText = (
+  type: OptionType,
+  side: OptionSide
+) => `We currently do not have any ${
+  side === OptionSide.Long ? "long" : "short"
+}{" "}
+      ${type === OptionType.Call ? "call" : "put"} options.`;
 
 type ContentProps = {
   options: CompositeOption[];
   type: OptionType;
   side: OptionSide;
+  loading: boolean;
+  error: string;
 };
 
-const Content = ({ options, type, side }: ContentProps) => {
-  const state = useSelector((s: RootState) => s.optionsList.state);
-
-  if (state === FetchState.Fetching) {
+const Content = ({ options, type, side, loading, error }: ContentProps) => {
+  if (loading)
     return (
       <Box sx={{ padding: "20px" }}>
         <LoadingAnimation size={40} />
       </Box>
     );
-  }
 
-  if (state === FetchState.Failed) {
+  if (error)
     return (
-      <Box sx={{ padding: "20px" }}>
-        <Typography>
-          Something went wrong while getting the list of options.
-        </Typography>
-      </Box>
+      <NoContent text="Something went wrong while getting the list of options." />
     );
-  }
 
   return (
     <>
       {options.length === 0 ? (
-        <NoOptions type={type} side={side} />
+        <NoContent text={getText(type, side)} />
       ) : (
         <OptionsTable options={options} />
       )}
@@ -62,14 +51,23 @@ const Content = ({ options, type, side }: ContentProps) => {
 };
 
 const TradeTable = () => {
-  const list = useSelector(
-    (s: RootState) => s.optionsList.compositeOptionsList
-  );
+  const { contract } = useAmmContract();
   const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
   const [type, setCallPut] = useState<OptionType>(OptionType.Call);
+  const [data, setData] = useState<CompositeOption[]>([]);
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const filtered = isNonEmptyArray(list)
-    ? list.filter(
+  useEffect(() => {
+    debug("useEffect called", contract);
+    if (contract && !loading) {
+      fetchOptions(contract, setLoading, setError, setData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contract]);
+
+  const filtered = isNonEmptyArray(data)
+    ? data.filter(
         ({ raw, parsed }) =>
           isFresh(raw) &&
           parsed.optionSide === side &&
@@ -111,7 +109,13 @@ const TradeTable = () => {
         Put
       </Button>
       <TableContainer elevation={2} component={Paper}>
-        <Content options={filtered} side={side} type={type} />
+        <Content
+          options={filtered}
+          side={side}
+          type={type}
+          loading={loading}
+          error={error}
+        />
       </TableContainer>
     </Paper>
   );

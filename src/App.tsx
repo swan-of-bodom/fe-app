@@ -14,7 +14,6 @@ import { store } from "./redux/store";
 import BalancePage from "./pages/balance";
 import NotFound from "./pages/notFound";
 import TradePage from "./pages/trade";
-import { Controller } from "./components/controller";
 import { StarknetConfig } from "@starknet-react/core";
 import { getProvider } from "./utils/environment";
 import StakePage from "./pages/stake";
@@ -31,7 +30,6 @@ const App = () => {
         connectors={connectors}
         autoConnect={false}
       >
-        <Controller />
         <Router>
           <Layout>
             <Routes>

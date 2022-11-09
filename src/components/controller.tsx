@@ -24,27 +24,35 @@ const updateOptionsList = async (contract: Contract) => {
   store.dispatch(setFetchState(FetchState.Fetching));
 
   let failed = false;
-  const newOptions = await contract[
+  const callOptionsPromise = contract[
     AMM_METHODS.GET_ALL_NON_EXPIRED_OPTIONS_WITH_PREMIA
-  ](getTokenAddresses().LPTOKEN_CONTRACT_ADDRESS).catch((e: string) => {
-    debug(
-      "Failed while calling",
-      AMM_METHODS.GET_ALL_NON_EXPIRED_OPTIONS_WITH_PREMIA
-    );
-    debug("error", e);
-    failed = true;
-  });
+  ](getTokenAddresses().LPTOKEN_CONTRACT_ADDRESS);
 
-  if (failed) {
+  const putOptionsPromise = contract[
+    AMM_METHODS.GET_ALL_NON_EXPIRED_OPTIONS_WITH_PREMIA
+  ](getTokenAddresses().LPTOKEN_CONTRACT_ADDRESS_PUT);
+
+  const res = await Promise.all([callOptionsPromise, putOptionsPromise]).catch(
+    (e) => {
+      debug("Fetching options failed");
+      debug("error", e);
+      store.dispatch(setFetchState(FetchState.Failed));
+      failed = true;
+    }
+  );
+
+  if (failed || !isNonEmptyArray(res)) {
     store.dispatch(setFetchState(FetchState.Failed));
     return;
   }
 
-  if (isNonEmptyArray(newOptions)) {
-    const compositeOptions = parseBatchOfOptions(newOptions[0]);
+  const options = res.flat(2);
 
+  debug("Received options", options);
+
+  if (isNonEmptyArray(options)) {
+    const compositeOptions = parseBatchOfOptions(options);
     debug("Parsed fetched options", compositeOptions);
-
     store.dispatch(setCompositeOptions(compositeOptions));
   }
 
