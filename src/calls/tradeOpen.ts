@@ -28,11 +28,11 @@ import BN from "bn.js";
     call + put -> pokud long
     options_size * premium * (1+slippage)
     short call
-    option size - premium * (1-slippage)
+    option size - option size * premium * (1-slippage)
     - premium v ETH
     - option size bezrozmerne, ale jakoze v ETH 
     short put
-    option size * current underlying price - premium * (1-slippage)
+    option size * current underlying price - option size * premium * (1-slippage)
     -> option size - bezrozmerne, ale jakoze v ETH... option size * current underlying price -> v USD (ale jakoze bezrozmerne)
     -> premium v USD */
 
@@ -78,8 +78,10 @@ const shortCall = (size: number, premia: BN) => {
     .div(new BN(precision));
 
   const toSubtract = premia
+    .mul(new BN(size * precision))
     .mul(new BN(9)) // slippage
-    .div(new BN(10));
+    .div(new BN(10))
+    .div(new BN(precision));
 
   const toApprove = base.sub(toSubtract);
   debug("SHORT CALL calculated to approve", {
@@ -110,8 +112,10 @@ const shortPut = (size: number, premia: BN) => {
     .div(new BN(precision));
 
   const toSubtract = premia
+    .mul(new BN(size * precision))
     .mul(new BN(9)) // slippage
-    .div(new BN(10));
+    .div(new BN(10))
+    .div(new BN(precision));
 
   const toApprove = base.sub(toSubtract);
   debug("SHORT PUT calculated to approve", {
