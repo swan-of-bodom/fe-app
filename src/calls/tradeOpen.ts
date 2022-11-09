@@ -60,10 +60,11 @@ export const tradeOpen = async (
 const precision = 10000;
 
 const longCall = (size: number, premia: BN) => {
-  const toApprove = new BN(size)
+  const toApprove = new BN(size * precision)
     .mul(premia)
-    .mul(new BN(11)) // slippage
-    .div(new BN(10));
+    .mul(new BN(12)) // slippage
+    .div(new BN(10))
+    .div(new BN(precision));
   debug("LONG CALL calculated to approve", {
     size,
     premia: premia.toString(10),
@@ -158,7 +159,7 @@ export const approveAndTrade = async (
     return null;
   }
 
-  toApprove = new BN(toApprove).mul(new BN(3));
+  toApprove = new BN(toApprove);
 
   const approveResponse = await approve(
     option.parsed.optionType,
