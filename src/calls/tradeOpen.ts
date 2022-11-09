@@ -104,7 +104,7 @@ const longPut = (size: number, premia: BN) => {
   });
 };
 const shortPut = (size: number, premia: BN) => {
-  const ethNow = 1275;
+  const ethNow = 1157;
   const base = new BN(size * precision * ethNow)
     .mul(USD_BASE_VALUE)
     .div(new BN(precision));

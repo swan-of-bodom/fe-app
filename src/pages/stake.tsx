@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Typography } from "@mui/material";
 import StakeCapital from "../components/StakeCapital";
-import { WithdrawCapital } from "../components/WithdrawCapital";
+import WithdrawCapital from "../components/WithdrawCapital";
 
 const StakePage = () => {
   useEffect(() => {

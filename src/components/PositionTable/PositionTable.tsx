@@ -17,6 +17,7 @@ import { AMM_METHODS } from "../../constants/amm";
 import { useAmmContract } from "../../hooks/amm";
 import BN from "bn.js";
 import { LoadingAnimation } from "../loading";
+import { NoContent } from "../TableNoContent";
 
 const parsePosition = (arr: BN[]): CompositeOption => {
   const raw = {
@@ -107,21 +108,20 @@ export const PositionTableComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, contract]);
 
-  if (!address) {
-    return <p>Connect your wallet to see your positions.</p>;
-  }
+  if (!address)
+    return <NoContent text="Connect your wallet to see your positions." />;
 
-  if (loading) {
+  if (loading)
     return (
       <Box sx={{ padding: "20px" }}>
         <LoadingAnimation size={40} />
       </Box>
     );
-  }
 
-  if (!isNonEmptyArray(list)) {
-    return <p>It seems you are not currently holding any positions.</p>;
-  }
+  if (!isNonEmptyArray(list))
+    return (
+      <NoContent text="It seems you are not currently holding any positions." />
+    );
 
   return (
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
