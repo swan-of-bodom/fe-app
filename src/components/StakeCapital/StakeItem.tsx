@@ -77,7 +77,8 @@ type Props = {
 export const StakeCapitalItem = ({ account, type }: Props) => {
   const [amount, setAmount] = useState<number>(0);
 
-  const poolName = type === OptionType.Call ? "Call Pool" : "Put Pool";
+  const poolName =
+    type === OptionType.Call ? "Call Pool (ETH)" : "Put Pool (USD)";
 
   return (
     <TableRow>

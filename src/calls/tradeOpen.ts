@@ -62,7 +62,7 @@ const precision = 10000;
 const longCall = (size: number, premia: BN) => {
   const toApprove = new BN(size * precision)
     .mul(premia)
-    .mul(new BN(12)) // slippage
+    .mul(new BN(12)) // TODO: fix slippage - is now 20% because 10% did not work
     .div(new BN(10))
     .div(new BN(precision));
   debug("LONG CALL calculated to approve", {

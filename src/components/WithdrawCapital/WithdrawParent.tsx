@@ -143,8 +143,9 @@ export const WithdrawParent = () => {
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
       <TableHead>
         <TableRow>
-          <TableCell>Size</TableCell>
-          <TableCell align="right">Value</TableCell>
+          <TableCell>Value of staked capital</TableCell>
+          <TableCell align="right"># LP Tokens</TableCell>
+          <TableCell align="right">Amount to withdraw</TableCell>
           <TableCell align="right"></TableCell>
         </TableRow>
       </TableHead>
