@@ -33,11 +33,7 @@ export const approvePut = async (account: AccountInterface, amount: string) => {
     const call = {
       contractAddress: USD_ADDRESS,
       entrypoint: AMM_METHODS.APPROVE,
-      calldata: [
-        MAIN_CONTRACT_ADDRESS,
-        toHex(new BN(amount).mul(new BN(2000))), // TODO: this is for testing
-        0,
-      ],
+      calldata: [MAIN_CONTRACT_ADDRESS, toHex(new BN(amount)), 0],
     };
     const res = await account.execute(call, [LpAbi] as Abi[]);
     return res;
