@@ -59,7 +59,6 @@ const TradeTable = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    debug("useEffect called", contract);
     if (contract && !loading) {
       fetchOptions(contract, setLoading, setError, setData);
     }

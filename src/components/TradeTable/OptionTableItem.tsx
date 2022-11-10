@@ -14,7 +14,7 @@ import { useState } from "react";
 import { debug, LogTypes } from "../../utils/debugger";
 import { Float } from "../../types/base";
 import BN from "bn.js";
-import { USD_BASE_VALUE, USD_PRECISSION } from "../../constants/amm";
+import { USD_BASE_VALUE } from "../../constants/amm";
 
 type OptionPreviewProps = {
   option: CompositeOption;
