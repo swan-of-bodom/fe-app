@@ -4,6 +4,7 @@ import { getUsedNetwork } from "../../utils/environment";
 export enum Envs {
   Devnet = "Devnet",
   Testnet = "Testnet",
+  Testnet2 = "Testnet2",
   Mainnet = "Mainnet",
 }
 

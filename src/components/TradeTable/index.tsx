@@ -8,15 +8,11 @@ import { LoadingAnimation } from "../loading";
 import { NoContent } from "../TableNoContent";
 import { useAmmContract } from "../../hooks/amm";
 import { fetchOptions } from "./fetchOptions";
-import { debug } from "../../utils/debugger";
 
-const getText = (
-  type: OptionType,
-  side: OptionSide
-) => `We currently do not have any ${
-  side === OptionSide.Long ? "long" : "short"
-}{" "}
-      ${type === OptionType.Call ? "call" : "put"} options.`;
+const getText = (type: OptionType, side: OptionSide) =>
+  `We currently do not have any ${
+    side === OptionSide.Long ? "long" : "short"
+  } ${type === OptionType.Call ? "call" : "put"} options.`;
 
 type ContentProps = {
   options: CompositeOption[];
@@ -34,10 +30,7 @@ const Content = ({ options, type, side, loading, error }: ContentProps) => {
       </Box>
     );
 
-  if (error)
-    return (
-      <NoContent text="Something went wrong while getting the list of options." />
-    );
+  if (error) return <NoContent text="Option not available at the moment." />;
 
   return (
     <>

@@ -1,6 +1,9 @@
 import { ProviderInterface } from "starknet";
 import { Provider } from "starknet";
-import { devProviderOptions } from "../constants/environment";
+import {
+  devProviderOptions,
+  testnet2ProviderOptions,
+} from "../constants/environment";
 import { Envs } from "../redux/reducers/environment";
 
 const networkKey = "starknet-network";
@@ -15,7 +18,7 @@ export const storeUsedNetwork = (network: Envs): void => {
  */
 export const getUsedNetwork = (): Envs => {
   const network = localStorage.getItem(networkKey);
-  const fallback = Envs.Testnet;
+  const fallback = Envs.Testnet2;
   return Object.values(Envs).includes(network as Envs)
     ? (network as Envs)
     : fallback;
@@ -26,12 +29,19 @@ export const getProvider = (): ProviderInterface | undefined => {
   switch (network) {
     case Envs.Devnet:
       return new Provider(devProviderOptions);
+
     case Envs.Testnet:
       // no options for testnet
       return new Provider();
+
+    case Envs.Testnet2:
+      // no options for testnet
+      return new Provider(testnet2ProviderOptions);
+
     case Envs.Mainnet:
       // TODO: add mainnet options
       return new Provider();
+
     default:
       // when in doubt, use testnet
       return new Provider();

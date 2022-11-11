@@ -12,6 +12,7 @@ const StakePage = () => {
     <>
       <Typography variant="h4">Stake Capital</Typography>
       <StakeCapital />
+      <Typography variant="h4">Withdraw Capital</Typography>
       <WithdrawCapital />
     </>
   );
