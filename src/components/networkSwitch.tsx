@@ -36,6 +36,7 @@ export const NetworkSwitch = () => {
             <MenuItem value={Envs.Devnet}>Devnet</MenuItem>
           ) : null}
           <MenuItem value={Envs.Testnet}>Testnet</MenuItem>
+          <MenuItem value={Envs.Testnet2}>Testnet 2</MenuItem>
           <MenuItem disabled={true} value={Envs.Mainnet}>
             Mainnet - comming soon!
           </MenuItem>
