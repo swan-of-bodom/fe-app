@@ -14,8 +14,6 @@ export const fetchOptions = async (
   setLoading(true);
   setError("");
 
-  let failed = false;
-
   const callOptionsPromise = contract[
     AMM_METHODS.GET_ALL_NON_EXPIRED_OPTIONS_WITH_PREMIA
   ](getTokenAddresses().LPTOKEN_CONTRACT_ADDRESS);
@@ -24,23 +22,33 @@ export const fetchOptions = async (
     AMM_METHODS.GET_ALL_NON_EXPIRED_OPTIONS_WITH_PREMIA
   ](getTokenAddresses().LPTOKEN_CONTRACT_ADDRESS_PUT);
 
-  const res = await Promise.all([callOptionsPromise, putOptionsPromise]).catch(
-    (e) => {
-      debug("Fetching options failed");
-      debug("error", e);
-      setError(e);
-      failed = true;
-    }
-  );
+  const call = await callOptionsPromise.catch((e: string) => {
+    debug("Fetching CALL options failed");
+    debug("error", e);
+    return null;
+  });
 
-  if (failed || !isNonEmptyArray(res)) {
+  const put = await putOptionsPromise.catch((e: string) => {
+    debug("Fetching PUT options failed");
+    debug("error", e);
+    return null;
+  });
+
+  if (call === null && put === null) {
+    setError("Failed to fetch options");
     setLoading(false);
     return;
   }
 
-  const options = res.flat(2);
+  const options = [];
 
-  debug("Received options", options);
+  if (isNonEmptyArray(call) && isNonEmptyArray(call[0])) {
+    options.push(...call[0]);
+  }
+
+  if (isNonEmptyArray(put) && isNonEmptyArray(put[0])) {
+    options.push(...put[0]);
+  }
 
   if (isNonEmptyArray(options)) {
     const compositeOptions = parseBatchOfOptions(options);
