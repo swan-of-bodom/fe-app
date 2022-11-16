@@ -20,6 +20,7 @@ import { getProvider } from "../../utils/environment";
 import LpAbi from "../../abi/lptoken_abi.json";
 import { WithdrawItem } from "./WithdrawItem";
 import { NoContent } from "../TableNoContent";
+import { OptionType } from "../../types/options";
 
 /*
 
@@ -38,15 +39,17 @@ struct UserPoolInfo {
 
 const precision = 10000;
 
-type ParsedPool = {
+type StakedCapitalInfo = {
   stakedCapital: number;
-  magicalValue: number;
+  numberOfTokens: number;
+  type: OptionType;
+  poolInfo: Object;
 };
 
 const parseUserPool = (
   arr: any[],
   address: string
-): Promise<ParsedPool>[] | null => {
+): Promise<StakedCapitalInfo>[] | null => {
   debug("Received data", arr, arr.length);
 
   if (!isNonEmptyArray(arr)) {
@@ -63,16 +66,19 @@ const parseUserPool = (
         .div(ETH_BASE_VALUE)
         .toNumber() / precision;
 
+    const type = new BN(pool_info?.pool?.option_type).toString(
+      10
+    ) as OptionType;
     const lpAddress = "0x" + new BN(pool_info.lptoken_address).toString("hex");
     const provider = getProvider();
     const contract = new Contract(LpAbi as Abi, lpAddress, provider);
     const res = await contract.balanceOf(address);
 
-    const magicalValue =
+    const numberOfTokens =
       new BN(res[0].low).mul(new BN(precision)).div(ETH_BASE_VALUE).toNumber() /
       precision;
 
-    return { stakedCapital, magicalValue };
+    return { stakedCapital, numberOfTokens, type, poolInfo: pool_info };
   });
 
   return res;
@@ -96,7 +102,9 @@ const fetchCapital = async (
 
   debug(AMM_METHODS.GET_USER_POOL_INFOS, "call returned", res);
 
-  if (!isNonEmptyArray(res)) {
+  if (!isNonEmptyArray(res) || !isNonEmptyArray(res[0])) {
+    debug("Got empty response while fetching capital");
+    setLoading(false);
     return;
   }
 
@@ -131,7 +139,11 @@ export const WithdrawParent = () => {
   }, [contract, address]);
 
   if (loading) {
-    return <LoadingAnimation size={50} />;
+    return (
+      <Box sx={{ padding: "20px" }}>
+        <LoadingAnimation size={40} />
+      </Box>
+    );
   }
 
   if (!isNonEmptyArray(data))
@@ -150,12 +162,14 @@ export const WithdrawParent = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {data.map(({ stakedCapital, magicalValue }, i) => (
+        {data.map(({ stakedCapital, numberOfTokens, type, poolInfo }, i) => (
           <WithdrawItem
             key={i}
             account={account}
             size={stakedCapital}
-            value={magicalValue}
+            value={numberOfTokens}
+            type={type}
+            poolInfo={poolInfo}
           />
         ))}
       </TableBody>

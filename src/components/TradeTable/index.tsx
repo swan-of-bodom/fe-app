@@ -6,8 +6,11 @@ import OptionsTable from "./OptionsTable";
 import { isNonEmptyArray } from "../../utils/utils";
 import { LoadingAnimation } from "../loading";
 import { NoContent } from "../TableNoContent";
-import { useAmmContract } from "../../hooks/amm";
 import { fetchOptions } from "./fetchOptions";
+import { getTokenAddresses } from "../../constants/amm";
+import { useContract } from "@starknet-react/core";
+import { Abi } from "starknet";
+import AmmAbi from "../../abi/amm_abi.json";
 
 const getText = (type: OptionType, side: OptionSide) =>
   `We currently do not have any ${
@@ -44,7 +47,10 @@ const Content = ({ options, type, side, loading, error }: ContentProps) => {
 };
 
 const TradeTable = () => {
-  const { contract } = useAmmContract();
+  const { contract } = useContract({
+    abi: AmmAbi as Abi,
+    address: getTokenAddresses().MAIN_CONTRACT_ADDRESS,
+  });
   const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
   const [type, setCallPut] = useState<OptionType>(OptionType.Call);
   const [data, setData] = useState<CompositeOption[]>([]);

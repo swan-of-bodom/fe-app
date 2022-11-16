@@ -2,32 +2,35 @@ import { Button, TableCell, TableRow, TextField } from "@mui/material";
 import { useState } from "react";
 import { debug } from "../../utils/debugger";
 import { AccountInterface } from "starknet";
+import { withdrawCall } from "./withdrawCall";
+import { OptionType } from "../../types/options";
 
-/*
-
-func deposit_liquidity{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    pooled_token_addr: Address,
-    quote_token_address: Address,
-    base_token_address: Address,
-    option_type: OptionType,
-    amount: Uint256
-) {
-pro call ETH, USD, ETH, 0, AMOUNT_in_wei
-pro put USD, USD, ETH, 0, AMOUNT_in_usd_base
-
-*/
-
-const handleWithdraw = async (account: AccountInterface, amount: number) => {
+const handleWithdraw = async (
+  account: AccountInterface,
+  amount: number,
+  type: OptionType,
+  poolInfo: Object
+) => {
   debug("Withdrawing", amount);
+  debug("POOL INFO", poolInfo);
+  withdrawCall(account, amount, type);
 };
 
 type Props = {
   account: AccountInterface;
   size: number;
   value: number;
+  type: OptionType;
+  poolInfo: Object;
 };
 
-export const WithdrawItem = ({ account, size, value }: Props) => {
+export const WithdrawItem = ({
+  account,
+  size,
+  value,
+  type,
+  poolInfo,
+}: Props) => {
   const [amount, setAmount] = useState<number>(0);
 
   return (
@@ -56,7 +59,7 @@ export const WithdrawItem = ({ account, size, value }: Props) => {
       <TableCell align="right">
         <Button
           variant="contained"
-          onClick={() => handleWithdraw(account, amount)}
+          onClick={() => handleWithdraw(account, amount, type, poolInfo)}
         >
           Withdraw
         </Button>

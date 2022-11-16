@@ -78,6 +78,7 @@ export const enum AMM_METHODS {
   GET_OPTION_WITH_POSITION_OF_USER = "get_option_with_position_of_user",
   DEPOSIT_LIQUIDITY = "deposit_liquidity",
   GET_USER_POOL_INFOS = "get_user_pool_infos",
+  WITHDRAW_LIQUIDITY = "withdraw_liquidity",
 }
 
 export const SLIPPAGE = 0.1;
