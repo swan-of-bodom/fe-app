@@ -3,11 +3,10 @@ import {
   BASE_MATH_64_61,
   getTokenAddresses,
 } from "../constants/amm";
-import { Abi, AccountInterface, InvokeFunctionResponse } from "starknet";
+import { Abi, AccountInterface } from "starknet";
 import { CompositeOption, OptionSide, OptionType } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug } from "../utils/debugger";
-import { getProvider } from "../utils/environment";
 import BN from "bn.js";
 import { getToApprove, PRECISION } from "../utils/computations";
 import { toHex } from "starknet/utils/number";
@@ -23,14 +22,8 @@ export const oneClickApproveAndTrade = async (
   optionSide: OptionSide,
   premia: BN
 ): Promise<boolean> => {
-  const provider = getProvider();
   const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
     getTokenAddresses();
-
-  if (!provider) {
-    debug("Failed to get provider inside 'approveAndTrade'");
-    return false;
-  }
 
   const toApprove = getToApprove(optionType, optionSide, size, premia);
 
@@ -56,7 +49,7 @@ export const oneClickApproveAndTrade = async (
   await account
     .execute([approveCalldata, tradeOpenCalldata], [LpAbi, AmmAbi] as Abi[])
     .catch((e) => {
-      debug("Trade open rejected or failed");
+      debug("Trade open rejected or failed", e.message);
       success = false;
     });
 

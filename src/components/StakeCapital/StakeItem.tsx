@@ -41,7 +41,7 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
         <Button
           disabled={loading}
           variant="contained"
-          onClick={() => handleStake(account, amount, setLoading)}
+          onClick={() => handleStake(account, amount, type, setLoading)}
         >
           {loading ? "Processing..." : "Stake"}
         </Button>
