@@ -15,6 +15,7 @@ import { debug, LogTypes } from "../../utils/debugger";
 import { Float } from "../../types/base";
 import BN from "bn.js";
 import { USD_BASE_VALUE } from "../../constants/amm";
+import { oneClickApproveAndTrade } from "../../calls/oneClickTradeOpen";
 
 type OptionPreviewProps = {
   option: CompositeOption;
@@ -40,7 +41,7 @@ const handleBuy = async (
   }
   updateTradeState({ failed: false, processing: true });
 
-  const res = await approveAndTrade(
+  const res = await oneClickApproveAndTrade(
     account,
     option,
     amount,

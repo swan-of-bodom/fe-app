@@ -86,11 +86,15 @@ const fetchOptionsWithPosition = async (
   ).catch((e: string) => {
     debug("Failed while calling", AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER);
     debug("error", e);
+    return null;
   });
 
-  const composite = parseBatchOfOptions(res[0]);
-  debug("Fetched options with position", composite);
-  setList(composite);
+  if (isNonEmptyArray(res)) {
+    const composite = parseBatchOfOptions(res[0]);
+    debug("Fetched options with position", composite);
+    setList(composite);
+  }
+
   setLoading(false);
 };
 
