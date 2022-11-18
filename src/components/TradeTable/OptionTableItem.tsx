@@ -7,7 +7,7 @@ import {
 } from "../../types/options";
 import { timestampToReadableDate, weiToEth } from "../../utils/utils";
 import { Button, TableCell, TableRow, TextField } from "@mui/material";
-import { approveAndTrade } from "../../calls/tradeOpen";
+import { approveAndTradeOpen } from "../../calls/tradeOpen";
 import { AccountInterface } from "starknet";
 import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
@@ -15,7 +15,6 @@ import { debug, LogTypes } from "../../utils/debugger";
 import { Float } from "../../types/base";
 import BN from "bn.js";
 import { USD_BASE_VALUE } from "../../constants/amm";
-import { oneClickApproveAndTrade } from "../../calls/oneClickTradeOpen";
 
 type OptionPreviewProps = {
   option: CompositeOption;
@@ -41,7 +40,7 @@ const handleBuy = async (
   }
   updateTradeState({ failed: false, processing: true });
 
-  const res = await oneClickApproveAndTrade(
+  const res = await approveAndTradeOpen(
     account,
     option,
     amount,

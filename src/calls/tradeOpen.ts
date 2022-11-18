@@ -3,90 +3,69 @@ import {
   BASE_MATH_64_61,
   getTokenAddresses,
 } from "../constants/amm";
-import AmmAbi from "../abi/amm_abi.json";
-import { Abi, AccountInterface, InvokeFunctionResponse } from "starknet";
-import {
-  CompositeOption,
-  OptionSide,
-  OptionType,
-  RawOption,
-} from "../types/options";
-import { approve } from "./approve";
+import { Abi, AccountInterface } from "starknet";
+import { CompositeOption, OptionSide, OptionType } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
-import { debug, LogTypes } from "../utils/debugger";
-import { getProvider } from "../utils/environment";
+import { debug } from "../utils/debugger";
 import BN from "bn.js";
 import { getToApprove, PRECISION } from "../utils/computations";
+import { toHex } from "starknet/utils/number";
 
-export const tradeOpen = async (
-  account: AccountInterface,
-  rawOption: RawOption,
-  amount: string
-) => {
-  try {
-    const call = {
-      contractAddress: getTokenAddresses().MAIN_CONTRACT_ADDRESS,
-      entrypoint: AMM_METHODS.TRADE_OPEN,
-      calldata: rawOptionToCalldata(rawOption, amount),
-    };
-    debug("Executing following call:", call);
-    const res = await account.execute(call, [AmmAbi] as Abi[]);
-    return res;
-  } catch (e) {
-    debug("error", "Trade open call failed");
-    debug(LogTypes.ERROR, e);
-    return null;
-  }
-};
+import AmmAbi from "../abi/amm_abi.json";
+import LpAbi from "../abi/lptoken_abi.json";
 
-export const approveAndTrade = async (
+export const approveAndTradeOpen = async (
   account: AccountInterface,
   option: CompositeOption,
   size: number,
   optionType: OptionType,
   optionSide: OptionSide,
   premia: BN
-): Promise<InvokeFunctionResponse | null> => {
-  const provider = getProvider();
+): Promise<boolean> => {
+  const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
+    getTokenAddresses();
 
-  if (!provider) {
-    debug("Failed to get provider inside 'approveAndTrade'");
-    return null;
-  }
-
-  const toApprove = getToApprove(optionType, optionSide, size, premia);
-
-  debug("Calculated toApprove", {
+  const toApprove = await getToApprove(
     optionType,
     optionSide,
     size,
-    premia: premia.toString(10),
-    toApprove: toApprove.toString(10),
+    premia
+  ).catch((e) => {
+    debug("Getting amount to approve failed:", e.message);
+    return null;
   });
 
-  const approveResponse = await approve(
-    option.parsed.optionType,
-    account,
-    toApprove.toString(10)
-  );
-
-  if (!approveResponse?.transaction_hash) {
-    debug("Approve did not return transaction_hash", approveResponse);
-    return null;
+  if (!toApprove) {
+    return false;
   }
-
-  await provider.waitForTransaction(approveResponse.transaction_hash);
 
   const size64x61 = new BN(size * PRECISION)
     .mul(BASE_MATH_64_61)
     .div(new BN(PRECISION))
     .toString(10);
 
-  debug("Approve done, let's trade open...", size64x61);
+  const approveCalldata = {
+    contractAddress: optionType === OptionType.Call ? ETH_ADDRESS : USD_ADDRESS,
+    entrypoint: AMM_METHODS.APPROVE,
+    calldata: [MAIN_CONTRACT_ADDRESS, toHex(new BN(toApprove)), 0],
+  };
 
-  const tradeResponse = await tradeOpen(account, option.raw, size64x61);
+  const tradeOpenCalldata = {
+    contractAddress: MAIN_CONTRACT_ADDRESS,
+    entrypoint: AMM_METHODS.TRADE_OPEN,
+    calldata: rawOptionToCalldata(option.raw, size64x61),
+  };
 
-  debug("Done trading!", tradeResponse);
+  let success = true;
 
-  return tradeResponse;
+  await account
+    .execute([approveCalldata, tradeOpenCalldata], [LpAbi, AmmAbi] as Abi[])
+    .catch((e) => {
+      debug("Trade open rejected or failed", e.message);
+      success = false;
+    });
+
+  debug("Done trading, sucess:", success);
+
+  return success;
 };
