@@ -1,6 +1,7 @@
 import { ETH_BASE_VALUE, USD_BASE_VALUE } from "../constants/amm";
 import { OptionSide, OptionType } from "../types/options";
 import BN from "bn.js";
+import { getEthInUsd } from "../calls/currencies";
 
 /*  call - prevadi se ETH
     put - prevadi se USD
@@ -19,7 +20,7 @@ import BN from "bn.js";
     -> option size - bezrozmerne, ale jakoze v ETH... option size * current underlying price -> v USD (ale jakoze bezrozmerne)
     -> premium v USD */
 
-type GetApproveAmount = (size: number, premia: BN) => BN;
+type GetApproveAmount = (size: number, premia: BN) => BN | Promise<BN>;
 
 export const PRECISION = 10000;
 
@@ -51,8 +52,8 @@ const longPut: GetApproveAmount = (size, premia) =>
     .div(new BN(10))
     .div(new BN(PRECISION));
 
-const shortPut: GetApproveAmount = (size, premia): BN => {
-  const ethNow = 1297;
+const shortPut: GetApproveAmount = async (size, premia): Promise<BN> => {
+  const ethNow = await getEthInUsd();
   const base = new BN(size * PRECISION * ethNow)
     .mul(USD_BASE_VALUE)
     .div(new BN(PRECISION));
@@ -82,9 +83,9 @@ const getToApproveFunction = (
   }
 };
 
-export const getToApprove = (
+export const getToApprove = async (
   type: OptionType,
   side: OptionSide,
   size: number,
   premia: BN
-): BN => getToApproveFunction(type, side)(size, premia);
+): Promise<BN> => getToApproveFunction(type, side)(size, premia);

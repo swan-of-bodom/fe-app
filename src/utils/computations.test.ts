@@ -52,34 +52,48 @@ const shortPutDataset: ToApproveDataset[] = [
 
 describe("calculates correctly approve amount", () => {
   test("LONG CALL", () => {
-    longCallDataset.forEach(({ size, premia, correct }) =>
-      expect(
-        getToApprove(OptionType.Call, OptionSide.Long, size, premia).eq(correct)
-      ).toBe(true)
-    );
+    longCallDataset.forEach(async ({ size, premia, correct }) => {
+      const res = await getToApprove(
+        OptionType.Call,
+        OptionSide.Long,
+        size,
+        premia
+      );
+      expect(res.eq(correct)).toBe(true);
+    });
   });
   test("SHORT CALL", () => {
-    shortCallDataset.forEach(({ size, premia, correct }) =>
-      expect(
-        getToApprove(OptionType.Call, OptionSide.Short, size, premia).eq(
-          correct
-        )
-      ).toBe(true)
-    );
+    shortCallDataset.forEach(async ({ size, premia, correct }) => {
+      const res = await getToApprove(
+        OptionType.Call,
+        OptionSide.Short,
+        size,
+        premia
+      );
+      expect(res.eq(correct)).toBe(true);
+    });
   });
   test("LONG PUT", () => {
-    longPutDataset.forEach(({ size, premia, correct }) =>
-      expect(
-        getToApprove(OptionType.Put, OptionSide.Long, size, premia).eq(correct)
-      ).toBe(true)
-    );
+    longPutDataset.forEach(async ({ size, premia, correct }) => {
+      const res = await getToApprove(
+        OptionType.Put,
+        OptionSide.Long,
+        size,
+        premia
+      );
+      expect(res.eq(correct)).toBe(true);
+    });
   });
   test("SHORT PUT", () => {
-    shortPutDataset.forEach(({ size, premia, correct }) =>
-      expect(
-        getToApprove(OptionType.Put, OptionSide.Short, size, premia).eq(correct)
-      ).toBe(true)
-    );
+    shortPutDataset.forEach(async ({ size, premia, correct }) => {
+      const res = await getToApprove(
+        OptionType.Put,
+        OptionSide.Short,
+        size,
+        premia
+      );
+      expect(res.eq(correct)).toBe(true);
+    });
   });
 });
 
