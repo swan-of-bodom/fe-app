@@ -17,32 +17,43 @@ import TradePage from "./pages/trade";
 import { StarknetConfig } from "@starknet-react/core";
 import { getProvider } from "./utils/environment";
 import StakePage from "./pages/stake";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { isDarkMode } from "./utils/utils";
 
 const App = () => {
   const connectors = Object.values(SupportedWalletIds).map(
     (id) => new InjectedConnector({ options: { id } })
   );
 
+  const theme = createTheme({
+    palette: {
+      mode: isDarkMode() ? "dark" : "light",
+    },
+  });
+
   return (
-    <Provider store={store}>
-      <StarknetConfig
-        defaultProvider={getProvider()}
-        connectors={connectors}
-        autoConnect={false}
-      >
-        <Router>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<TradePage />} />
-              <Route path="/trade" element={<TradePage />} />
-              <Route path="/position" element={<BalancePage />} />
-              <Route path="/staking" element={<StakePage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
-        </Router>
-      </StarknetConfig>
-    </Provider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Provider store={store}>
+        <StarknetConfig
+          defaultProvider={getProvider()}
+          connectors={connectors}
+          autoConnect={false}
+        >
+          <Router>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<TradePage />} />
+                <Route path="/trade" element={<TradePage />} />
+                <Route path="/position" element={<BalancePage />} />
+                <Route path="/staking" element={<StakePage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          </Router>
+        </StarknetConfig>
+      </Provider>
+    </ThemeProvider>
   );
 };
 

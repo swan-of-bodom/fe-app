@@ -67,3 +67,7 @@ export const debounce = (cb: (...args: any[]) => void, delay: number = 750) => {
     }, delay);
   };
 };
+
+export const isDarkMode = (): boolean =>
+  window.matchMedia &&
+  window.matchMedia("(prefers-color-scheme: dark)").matches;
