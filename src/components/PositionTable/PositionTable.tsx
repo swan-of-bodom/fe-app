@@ -31,7 +31,7 @@ const parsePosition = (arr: BN[]): CompositeOption => {
     value_of_position: arr[7],
   };
 
-  const precision = 10000;
+  const precision = 1000000;
 
   const type =
     new BN(arr[5]).toString(10) === OptionType.Call

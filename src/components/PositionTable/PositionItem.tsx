@@ -52,9 +52,9 @@ export const PositionItem = ({ option }: Props) => {
     <TableRow>
       <TableCell>{desc}</TableCell>
       <TableCell align="right">{date}</TableCell>
-      <TableCell align="right">{positionSize}</TableCell>
+      <TableCell align="right">{positionSize.toFixed(4)}</TableCell>
       <TableCell align="right">
-        {currency} {positionValue}
+        {currency} {positionValue.toFixed(4)}
       </TableCell>
       <TableCell align="right">
         <Button
