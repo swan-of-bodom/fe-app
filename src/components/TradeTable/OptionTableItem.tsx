@@ -74,10 +74,15 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
       ? new BN((option.parsed as ParsedCallOption).premiaWei)
       : new BN((option.parsed as ParsedPutOption).premiaUsd);
 
+  const digits = 4;
   const displayPremia =
     optionType === OptionType.Call
-      ? weiToEth(currentPremia, 4)
-      : currentPremia.mul(new BN(100)).div(USD_BASE_VALUE).toNumber() / 100;
+      ? (parseFloat(weiToEth(currentPremia, 4)) * (amount || 1)).toFixed(digits)
+      : (
+          (currentPremia.mul(new BN(100)).div(USD_BASE_VALUE).toNumber() /
+            100) *
+          (amount || 1)
+        ).toFixed(digits);
   const currency = optionType === OptionType.Call ? "ETH" : "USD";
 
   return (
