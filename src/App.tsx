@@ -17,22 +17,16 @@ import TradePage from "./pages/trade";
 import { StarknetConfig } from "@starknet-react/core";
 import { getProvider } from "./utils/environment";
 import StakePage from "./pages/stake";
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { isDarkMode } from "./utils/utils";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { baseTheme } from "./style/themes";
 
 const App = () => {
   const connectors = Object.values(SupportedWalletIds).map(
     (id) => new InjectedConnector({ options: { id } })
   );
 
-  const theme = createTheme({
-    palette: {
-      mode: isDarkMode() ? "dark" : "light",
-    },
-  });
-
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={baseTheme}>
       <CssBaseline />
       <Provider store={store}>
         <StarknetConfig
