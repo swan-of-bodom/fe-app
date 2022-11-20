@@ -11,13 +11,16 @@ import {
 import { useAccount } from "@starknet-react/core";
 import { useEffect, useState } from "react";
 import { PositionItem } from "./PositionItem";
-import { Contract } from "starknet";
+import { Abi, Contract } from "starknet";
 import { debug } from "../../utils/debugger";
-import { AMM_METHODS } from "../../constants/amm";
-import { useAmmContract } from "../../hooks/amm";
+import { AMM_METHODS, getTokenAddresses } from "../../constants/amm";
 import BN from "bn.js";
 import { LoadingAnimation } from "../loading";
 import { NoContent } from "../TableNoContent";
+import { getProvider } from "../../utils/environment";
+
+import AmmAbi from "../../abi/amm_abi.json";
+import { getMainContract } from "../../utils/blockchain";
 
 const parsePosition = (arr: BN[]): CompositeOption => {
   const raw = {
@@ -75,12 +78,14 @@ export const parseBatchOfOptions = (arr: BN[]): CompositeOption[] => {
 };
 
 const fetchOptionsWithPosition = async (
-  contract: Contract,
   address: string,
   setList: (v: CompositeOption[]) => void,
   setLoading: (v: boolean) => void
 ) => {
   setLoading(true);
+
+  const contract = getMainContract();
+
   const res = await contract[AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER](
     address
   ).catch((e: string) => {
@@ -102,15 +107,14 @@ export const PositionTableComponent = () => {
   const [list, setList] = useState<CompositeOption[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { address, status } = useAccount();
-  const { contract } = useAmmContract();
 
   useEffect(() => {
-    if (status === "connected" && contract && address) {
+    if (status === "connected" && address) {
       debug("Fetching positons");
-      fetchOptionsWithPosition(contract, address, setList, setLoading);
+      fetchOptionsWithPosition(address, setList, setLoading);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, contract]);
+  }, [status]);
 
   if (!address)
     return <NoContent text="Connect your wallet to see your positions." />;
