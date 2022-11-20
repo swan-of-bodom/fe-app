@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import { BigNumberish } from "starknet/utils/number";
-import { USD_BASE_VALUE, USD_PRECISSION } from "../constants/amm";
+import { USD_BASE_VALUE } from "../constants/amm";
 
 export const isNonEmptyArray = (v: unknown): v is Array<any> =>
   !!(v && Array.isArray(v) && v.length > 0);

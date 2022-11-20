@@ -11,15 +11,12 @@ import {
 import { useAccount } from "@starknet-react/core";
 import { useEffect, useState } from "react";
 import { PositionItem } from "./PositionItem";
-import { Abi, Contract } from "starknet";
 import { debug } from "../../utils/debugger";
-import { AMM_METHODS, getTokenAddresses } from "../../constants/amm";
+import { AMM_METHODS } from "../../constants/amm";
 import BN from "bn.js";
 import { LoadingAnimation } from "../loading";
 import { NoContent } from "../TableNoContent";
-import { getProvider } from "../../utils/environment";
 
-import AmmAbi from "../../abi/amm_abi.json";
 import { getMainContract } from "../../utils/blockchain";
 
 const parsePosition = (arr: BN[]): CompositeOption => {
