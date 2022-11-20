@@ -10,7 +10,6 @@ import { useAccount } from "@starknet-react/core";
 import { useEffect, useState } from "react";
 import { Abi, Contract } from "starknet";
 import { AMM_METHODS, ETH_BASE_VALUE } from "../../constants/amm";
-import { useAmmContract } from "../../hooks/amm";
 import { debug } from "../../utils/debugger";
 import { LoadingAnimation } from "../loading";
 import { isNonEmptyArray } from "../../utils/utils";
@@ -21,6 +20,7 @@ import LpAbi from "../../abi/lptoken_abi.json";
 import { WithdrawItem } from "./WithdrawItem";
 import { NoContent } from "../TableNoContent";
 import { OptionType } from "../../types/options";
+import { getMainContract } from "../../utils/blockchain";
 
 /*
 
@@ -85,12 +85,12 @@ const parseUserPool = (
 };
 
 const fetchCapital = async (
-  contract: Contract,
   address: string,
   setData: (v: any) => void,
   setLoading: (v: boolean) => void
 ) => {
   setLoading(true);
+  const contract = getMainContract();
   const res = await contract[AMM_METHODS.GET_USER_POOL_INFOS](address).catch(
     (e: string) => {
       debug("Failed while calling", AMM_METHODS.GET_USER_POOL_INFOS);
@@ -128,15 +128,14 @@ const fetchCapital = async (
 
 export const WithdrawParent = () => {
   const { account, address } = useAccount();
-  const { contract } = useAmmContract();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (address && contract) {
-      fetchCapital(contract, address, setData, setLoading);
+    if (address) {
+      fetchCapital(address, setData, setLoading);
     }
-  }, [contract, address]);
+  }, [address]);
 
   if (loading) {
     return (
