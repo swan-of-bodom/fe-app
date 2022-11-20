@@ -77,11 +77,13 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
   const digits = 4;
   const displayPremia =
     optionType === OptionType.Call
-      ? (parseFloat(weiToEth(currentPremia, 4)) * (amount || 1)).toFixed(digits)
+      ? weiToEth(currentPremia, digits)
       : (
-          (currentPremia.mul(new BN(100)).div(USD_BASE_VALUE).toNumber() /
-            100) *
-          (amount || 1)
+          currentPremia
+            .mul(new BN(10 ** digits))
+            .div(USD_BASE_VALUE)
+            .toNumber() /
+          10 ** digits
         ).toFixed(digits);
   const currency = optionType === OptionType.Call ? "ETH" : "USD";
 

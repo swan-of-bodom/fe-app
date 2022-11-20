@@ -32,9 +32,11 @@ export const WithdrawItem = ({
   poolInfo,
 }: Props) => {
   const [amount, setAmount] = useState<number>(0);
+  const pool = type === OptionType.Call ? "Call" : "Put";
 
   return (
     <TableRow>
+      <TableCell>{pool}</TableCell>
       <TableCell>{size}</TableCell>
       <TableCell>{value}</TableCell>
       <TableCell align="right">
