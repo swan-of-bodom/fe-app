@@ -1,12 +1,11 @@
-import { Contract } from "starknet";
 import { AMM_METHODS, getTokenAddresses } from "../../constants/amm";
 import { CompositeOption } from "../../types/options";
 import { debug } from "../../utils/debugger";
 import { parseBatchOfOptions } from "../../utils/parseOption";
 import { isNonEmptyArray } from "../../utils/utils";
+import { getMainContract } from "../../utils/blockchain";
 
 export const fetchOptions = async (
-  contract: Contract,
   setLoading: (v: boolean) => void,
   setError: (v: string) => void,
   setData: (d: CompositeOption[]) => void
@@ -14,13 +13,18 @@ export const fetchOptions = async (
   setLoading(true);
   setError("");
 
+  const { LPTOKEN_CONTRACT_ADDRESS, LPTOKEN_CONTRACT_ADDRESS_PUT } =
+    getTokenAddresses();
+
+  const contract = getMainContract();
+
   const callOptionsPromise = contract[
     AMM_METHODS.GET_ALL_NON_EXPIRED_OPTIONS_WITH_PREMIA
-  ](getTokenAddresses().LPTOKEN_CONTRACT_ADDRESS);
+  ](LPTOKEN_CONTRACT_ADDRESS);
 
   const putOptionsPromise = contract[
     AMM_METHODS.GET_ALL_NON_EXPIRED_OPTIONS_WITH_PREMIA
-  ](getTokenAddresses().LPTOKEN_CONTRACT_ADDRESS_PUT);
+  ](LPTOKEN_CONTRACT_ADDRESS_PUT);
 
   const call = await callOptionsPromise.catch((e: string) => {
     debug("Fetching CALL options failed");
