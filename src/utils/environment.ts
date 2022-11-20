@@ -1,9 +1,6 @@
 import { ProviderInterface } from "starknet";
 import { Provider } from "starknet";
-import {
-  devProviderOptions,
-  testnet2ProviderOptions,
-} from "../constants/environment";
+import { devProviderOptions } from "../constants/environment";
 import { Envs } from "../redux/reducers/environment";
 
 const networkKey = "starknet-network";
@@ -32,11 +29,19 @@ export const getProvider = (): ProviderInterface | undefined => {
 
     case Envs.Testnet:
       // no options for testnet
-      return new Provider();
+      return new Provider({
+        sequencer: {
+          network: "goerli-alpha",
+        },
+      });
 
     case Envs.Testnet2:
       // no options for testnet
-      return new Provider(testnet2ProviderOptions);
+      return new Provider({
+        sequencer: {
+          network: "goerli-alpha-2",
+        },
+      });
 
     case Envs.Mainnet:
       // TODO: add mainnet options

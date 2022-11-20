@@ -9,9 +9,3 @@ export const devProviderOptions: ProviderOptions = {
     chainId: process.env.REACT_APP_CHAIN_ID as StarknetChainId,
   },
 };
-
-export const testnet2ProviderOptions: ProviderOptions = {
-  sequencer: {
-    network: "goerli-alpha-2",
-  },
-};
