@@ -11,6 +11,7 @@ import { debug } from "../../utils/debugger";
 import { tradeClose } from "../../calls/tradeClose";
 import { useAccount } from "@starknet-react/core";
 import { AccountInterface } from "starknet";
+import BN from "bn.js";
 
 type Props = {
   option: CompositeOption;
@@ -18,14 +19,17 @@ type Props = {
 
 const handleTradeClose = async (
   account: AccountInterface | undefined,
-  raw: RawOption,
-  amount: string
+  raw: RawOption
 ) => {
-  if (!account || !raw || !amount) {
-    debug("Could not trade close", { account, raw, amount });
+  if (!account || !raw || !raw.position_size) {
+    debug("Could not trade close", { account, raw });
     return;
   }
-  const res = await tradeClose(account, raw, amount);
+  const res = await tradeClose(
+    account,
+    raw,
+    new BN(raw.position_size).toString(10)
+  );
   debug("Trade close", res);
 };
 
@@ -59,9 +63,7 @@ export const PositionItem = ({ option }: Props) => {
       <TableCell align="right">
         <Button
           variant="contained"
-          onClick={() =>
-            handleTradeClose(account, option.raw, positionValue.toString(10))
-          }
+          onClick={() => handleTradeClose(account, option.raw)}
         >
           Close
         </Button>
