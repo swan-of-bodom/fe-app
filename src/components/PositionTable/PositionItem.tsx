@@ -59,7 +59,7 @@ export const PositionItem = ({ option }: Props) => {
       <TableCell align="right">{date}</TableCell>
       <TableCell align="right">{positionSize.toFixed(decimals)}</TableCell>
       <TableCell align="right">
-        <Tooltip title={positionValue + " wei"}>
+        <Tooltip title={positionValue}>
           <span>
             {currency} {positionValue.toFixed(decimals)}
           </span>
