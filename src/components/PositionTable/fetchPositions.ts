@@ -61,26 +61,28 @@ const parsePosition = (arr: BN[]): CompositeOption => {
   const precision = 1000000;
 
   const type =
-    new BN(arr[5]).toString(10) === OptionType.Call
+    new BN(raw.option_type).toString(10) === OptionType.Call
       ? OptionType.Call
       : OptionType.Put;
   const parsed = {
     optionSide:
-      new BN(arr[0]).toString(10) === OptionSide.Long
+      new BN(raw.option_side).toString(10) === OptionSide.Long
         ? OptionSide.Long
         : OptionSide.Short,
-    maturity: new BN(arr[1]).toNumber(),
-    strikePrice: new BN(arr[2]).div(new BN(2).pow(new BN(61))).toString(10),
-    quoteToken: "0x" + new BN(arr[3]).toString(16),
-    baseToken: "0x" + new BN(arr[4]).toString(16),
+    maturity: new BN(raw.maturity).toNumber(),
+    strikePrice: new BN(raw.strike_price)
+      .div(new BN(2).pow(new BN(61)))
+      .toString(10),
+    quoteToken: "0x" + new BN(raw.quote_token_address).toString(16),
+    baseToken: "0x" + new BN(raw.base_token_address).toString(16),
     optionType: type,
     positionSize:
-      new BN(arr[6])
+      new BN(raw.position_size)
         .mul(new BN(precision))
         .div(new BN(2).pow(new BN(61)))
         .toNumber() / precision,
     positionValue:
-      new BN(arr[6])
+      new BN(raw.value_of_position)
         .mul(new BN(precision))
         .div(new BN(2).pow(new BN(61)))
         .toNumber() / precision,
