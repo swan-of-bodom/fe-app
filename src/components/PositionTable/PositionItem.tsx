@@ -6,7 +6,7 @@ import {
   RawOption,
 } from "../../types/options";
 import { timestampToReadableDate } from "../../utils/utils";
-import { Button, TableCell, TableRow } from "@mui/material";
+import { Button, TableCell, TableRow, Tooltip } from "@mui/material";
 import { debug } from "../../utils/debugger";
 import { tradeClose } from "../../calls/tradeClose";
 import { useAccount } from "@starknet-react/core";
@@ -51,14 +51,19 @@ export const PositionItem = ({ option }: Props) => {
   const currency = optionType === OptionType.Put ? "USD" : "ETH";
 
   const desc = `${sideText} ${typeText} with strike $${strikePrice}`;
+  const decimals = 4;
 
   return (
     <TableRow>
       <TableCell>{desc}</TableCell>
       <TableCell align="right">{date}</TableCell>
-      <TableCell align="right">{positionSize.toFixed(4)}</TableCell>
+      <TableCell align="right">{positionSize.toFixed(decimals)}</TableCell>
       <TableCell align="right">
-        {currency} {positionValue.toFixed(4)}
+        <Tooltip title={positionValue + " wei"}>
+          <span>
+            {currency} {positionValue.toFixed(decimals)}
+          </span>
+        </Tooltip>
       </TableCell>
       <TableCell align="right">
         <Button
