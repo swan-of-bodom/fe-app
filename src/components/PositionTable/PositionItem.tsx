@@ -22,17 +22,32 @@ type Props = {
 const handleTradeClose = async (
   account: AccountInterface | undefined,
   amount: number,
-  raw: RawOption
+  raw: RawOption,
+  sendFull: boolean
 ) => {
   if (!account || !raw || !raw.position_size || !amount) {
     debug("Could not trade close", { account, raw, amount });
     return;
   }
+
+  if (sendFull) {
+    // user is trying to close the whole option
+    // send position size from backend as amount to close
+    const res = await tradeClose(
+      account,
+      raw,
+      new BN(raw.position_size).toString(10)
+    );
+    debug("Trade close, full option", res);
+    return;
+  }
+
   const precission = 10000;
   const size64x61 = new BN(amount * precission)
     .mul(BASE_MATH_64_61)
     .div(new BN(precission))
     .toString(10);
+
   const res = await tradeClose(account, raw, size64x61);
   debug("Trade close", res);
 };
@@ -110,7 +125,14 @@ export const PositionItem = ({ option }: Props) => {
       <TableCell align="right">
         <Button
           variant="contained"
-          onClick={() => handleTradeClose(account, amount, option.raw)}
+          onClick={() => {
+            handleTradeClose(
+              account,
+              amount,
+              option.raw,
+              amount === positionSize
+            );
+          }}
         >
           Close
         </Button>
