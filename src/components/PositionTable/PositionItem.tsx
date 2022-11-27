@@ -6,12 +6,14 @@ import {
   RawOption,
 } from "../../types/options";
 import { timestampToReadableDate } from "../../utils/utils";
-import { Button, TableCell, TableRow, Tooltip } from "@mui/material";
+import { Button, TableCell, TableRow, TextField, Tooltip } from "@mui/material";
 import { debug } from "../../utils/debugger";
 import { tradeClose } from "../../calls/tradeClose";
 import { useAccount } from "@starknet-react/core";
 import { AccountInterface } from "starknet";
 import BN from "bn.js";
+import { useState } from "react";
+import { BASE_MATH_64_61 } from "../../constants/amm";
 
 type Props = {
   option: CompositeOption;
@@ -19,21 +21,24 @@ type Props = {
 
 const handleTradeClose = async (
   account: AccountInterface | undefined,
+  amount: number,
   raw: RawOption
 ) => {
-  if (!account || !raw || !raw.position_size) {
-    debug("Could not trade close", { account, raw });
+  if (!account || !raw || !raw.position_size || !amount) {
+    debug("Could not trade close", { account, raw, amount });
     return;
   }
-  const res = await tradeClose(
-    account,
-    raw,
-    new BN(raw.position_size).toString(10)
-  );
+  const precission = 10000;
+  const size64x61 = new BN(amount * precission)
+    .mul(BASE_MATH_64_61)
+    .div(new BN(precission))
+    .toString(10);
+  const res = await tradeClose(account, raw, size64x61);
   debug("Trade close", res);
 };
 
 export const PositionItem = ({ option }: Props) => {
+  const [amount, setAmount] = useState<number>(0.0);
   const { account } = useAccount();
   const {
     strikePrice,
@@ -52,6 +57,7 @@ export const PositionItem = ({ option }: Props) => {
 
   const desc = `${sideText} ${typeText} with strike $${strikePrice}`;
   const decimals = 4;
+  const min = 0.01;
 
   return (
     <TableRow>
@@ -66,9 +72,45 @@ export const PositionItem = ({ option }: Props) => {
         </Tooltip>
       </TableCell>
       <TableCell align="right">
+        {" "}
+        <TextField
+          id="outlined-number"
+          label="Amount"
+          type="number"
+          size="small"
+          value={amount}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          inputProps={{
+            maxLength: 13,
+            step: "0.01",
+            min,
+          }}
+          onChange={(e) => {
+            const valueIn = parseFloat(e.target.value);
+            debug(positionSize, valueIn);
+            if (isNaN(valueIn)) {
+              setAmount(0);
+              return;
+            }
+            debug(valueIn);
+            if (valueIn > positionSize) {
+              setAmount(positionSize);
+              return;
+            }
+            if (valueIn < min) {
+              setAmount(min);
+              return;
+            }
+            setAmount(valueIn);
+          }}
+        />
+      </TableCell>
+      <TableCell align="right">
         <Button
           variant="contained"
-          onClick={() => handleTradeClose(account, option.raw)}
+          onClick={() => handleTradeClose(account, amount, option.raw)}
         >
           Close
         </Button>

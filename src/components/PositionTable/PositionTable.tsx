@@ -1,14 +1,17 @@
 import { isNonEmptyArray } from "../../utils/utils";
 import {
   Box,
+  Button,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
+import { Cached } from "@mui/icons-material";
 import { useAccount } from "@starknet-react/core";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { PositionItem } from "./PositionItem";
 import { debug } from "../../utils/debugger";
 import { LoadingAnimation } from "../loading";
@@ -18,6 +21,7 @@ import { fetchPositions, initialState, reducer } from "./fetchPositions";
 
 export const PositionTableComponent = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [refresh, toggleRefresh] = useState<boolean>(false);
   const { address, status } = useAccount();
 
   useEffect(() => {
@@ -26,7 +30,7 @@ export const PositionTableComponent = () => {
       fetchPositions(address, dispatch);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
+  }, [status, refresh]);
 
   if (!address)
     return <NoContent text="Connect your wallet to see your positions." />;
@@ -47,10 +51,18 @@ export const PositionTableComponent = () => {
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
       <TableHead>
         <TableRow>
-          <TableCell>Option</TableCell>
+          <TableCell>
+            Option{" "}
+            <Tooltip title="Refresh your position list">
+              <Button onClick={() => toggleRefresh(!refresh)}>
+                <Cached />
+              </Button>
+            </Tooltip>
+          </TableCell>
           <TableCell align="right">Maturity</TableCell>
           <TableCell align="right">Size</TableCell>
           <TableCell align="right">Value</TableCell>
+          <TableCell align="right">Amount</TableCell>
           <TableCell align="right"></TableCell>
         </TableRow>
       </TableHead>
