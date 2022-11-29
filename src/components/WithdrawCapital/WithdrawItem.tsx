@@ -39,7 +39,7 @@ export const WithdrawItem = ({
       <TableCell>{pool}</TableCell>
       <TableCell>{size}</TableCell>
       <TableCell>{value}</TableCell>
-      <TableCell align="right">
+      <TableCell align="center">
         <TextField
           id="outlined-number"
           label="Amount"
@@ -58,7 +58,7 @@ export const WithdrawItem = ({
           onChange={(e) => setAmount(parseFloat(e.target.value))}
         />
       </TableCell>
-      <TableCell align="right">
+      <TableCell align="center">
         <Button
           variant="contained"
           onClick={() => handleWithdraw(account, amount, type, poolInfo)}

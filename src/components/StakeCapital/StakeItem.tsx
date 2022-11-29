@@ -19,7 +19,7 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
   return (
     <TableRow>
       <TableCell>{poolName}</TableCell>
-      <TableCell align="right">
+      <TableCell align="center">
         <TextField
           id="outlined-number"
           label="Amount"
@@ -37,7 +37,7 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
           onChange={(e) => setAmount(parseFloat(e.target.value))}
         />
       </TableCell>
-      <TableCell align="right">
+      <TableCell align="center">
         <Button
           disabled={loading}
           variant="contained"

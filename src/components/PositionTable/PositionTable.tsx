@@ -41,11 +41,11 @@ export const PositionTableComponent = ({ state }: Props) => {
       <TableHead>
         <TableRow>
           <TableCell>Option</TableCell>
-          <TableCell align="right">Maturity</TableCell>
-          <TableCell align="right">Size</TableCell>
-          <TableCell align="right">Value</TableCell>
-          <TableCell align="right">Amount</TableCell>
-          <TableCell align="right"></TableCell>
+          <TableCell align="center">Maturity</TableCell>
+          <TableCell align="center">Size</TableCell>
+          <TableCell align="center">Value</TableCell>
+          <TableCell align="center">Amount</TableCell>
+          <TableCell align="center"></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

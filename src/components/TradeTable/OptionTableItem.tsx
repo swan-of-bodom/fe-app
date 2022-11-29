@@ -90,8 +90,8 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
   return (
     <TableRow>
       <TableCell>${strikePrice}</TableCell>
-      <TableCell align="right">{date}</TableCell>
-      <TableCell align="right">
+      <TableCell align="center">{date}</TableCell>
+      <TableCell align="center">
         {" "}
         <TextField
           id="outlined-number"
@@ -110,7 +110,7 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
           onChange={(e) => setAmount(parseFloat(e.target.value))}
         />
       </TableCell>
-      <TableCell align="right">
+      <TableCell align="center">
         <Button
           variant="contained"
           disabled={tradeState.processing || !account}

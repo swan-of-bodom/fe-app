@@ -14,42 +14,41 @@ import { AccountInterface } from "starknet";
 import BN from "bn.js";
 import { useState } from "react";
 import { BASE_MATH_64_61 } from "../../constants/amm";
+import { tradeSettle } from "../../calls/tradeSettle";
 
 type Props = {
   option: CompositeOption;
 };
 
-const handleTradeClose = async (
+const handleCloseOrSettle = async (
   account: AccountInterface | undefined,
   amount: number,
   raw: RawOption,
-  sendFull: boolean
+  sendFull: boolean,
+  isExpired: boolean
 ) => {
   if (!account || !raw || !raw.position_size || !amount) {
     debug("Could not trade close", { account, raw, amount });
     return;
   }
 
+  let size64x61 = "0";
   if (sendFull) {
     // user is trying to close the whole option
     // send position size from backend as amount to close
-    const res = await tradeClose(
-      account,
-      raw,
-      new BN(raw.position_size).toString(10)
-    );
-    debug("Trade close, full option", res);
-    return;
+    size64x61 = new BN(raw.position_size).toString(10);
+  } else {
+    const precission = 10000;
+    size64x61 = new BN(amount * precission)
+      .mul(BASE_MATH_64_61)
+      .div(new BN(precission))
+      .toString(10);
   }
 
-  const precission = 10000;
-  const size64x61 = new BN(amount * precission)
-    .mul(BASE_MATH_64_61)
-    .div(new BN(precission))
-    .toString(10);
-
-  const res = await tradeClose(account, raw, size64x61);
-  debug("Trade close", res);
+  const action = isExpired ? tradeSettle : tradeClose;
+  debug({ isExpired, action });
+  const res = await action(account, raw, size64x61);
+  debug(`Trade ${isExpired ? "settle" : "close"}`, res);
 };
 
 export const PositionItem = ({ option }: Props) => {
@@ -73,21 +72,24 @@ export const PositionItem = ({ option }: Props) => {
   const desc = `${sideText} ${typeText} with strike $${strikePrice}`;
   const decimals = 4;
   const min = 0.01;
+  const timeNow = new Date().getTime();
+  const isExpired = msMaturity - timeNow <= 0;
 
   return (
     <TableRow>
       <TableCell>{desc}</TableCell>
-      <TableCell align="right">{date}</TableCell>
-      <TableCell align="right">{positionSize.toFixed(decimals)}</TableCell>
-      <TableCell align="right">
+      <TableCell align="center">
+        {isExpired ? `Expired on ${date}` : date}
+      </TableCell>
+      <TableCell align="center">{positionSize.toFixed(decimals)}</TableCell>
+      <TableCell align="center">
         <Tooltip title={positionValue}>
           <span>
             {currency} {positionValue.toFixed(decimals)}
           </span>
         </Tooltip>
       </TableCell>
-      <TableCell align="right">
-        {" "}
+      <TableCell align="center">
         <TextField
           id="outlined-number"
           label="Amount"
@@ -122,19 +124,20 @@ export const PositionItem = ({ option }: Props) => {
           }}
         />
       </TableCell>
-      <TableCell align="right">
+      <TableCell align="center">
         <Button
           variant="contained"
-          onClick={() => {
-            handleTradeClose(
+          onClick={() =>
+            handleCloseOrSettle(
               account,
               amount,
               option.raw,
-              amount === positionSize
-            );
-          }}
+              amount === positionSize,
+              isExpired
+            )
+          }
         >
-          Close
+          {isExpired ? "Settle" : "Close"}
         </Button>
       </TableCell>
     </TableRow>
