@@ -17,9 +17,9 @@ const OptionsTable = ({ options }: Props) => (
     <TableHead>
       <TableRow>
         <TableCell>Strike Price</TableCell>
-        <TableCell align="right">Maturity</TableCell>
-        <TableCell align="right">Amount</TableCell>
-        <TableCell align="right"></TableCell>
+        <TableCell align="center">Maturity</TableCell>
+        <TableCell align="center">Amount</TableCell>
+        <TableCell align="center"></TableCell>
       </TableRow>
     </TableHead>
     <TableBody>

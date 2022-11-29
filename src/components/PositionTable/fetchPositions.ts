@@ -132,9 +132,11 @@ export const fetchPositions = async (
     }
 
     // remove position with size 0 (BE rounding error)
-    const filtered = composite.filter(
-      ({ parsed }) => !!(parsed as ParsedOptionWithPosition).positionSize
-    );
+    const filtered = composite
+      .filter(
+        ({ parsed }) => !!(parsed as ParsedOptionWithPosition).positionSize
+      )
+      .sort((a, b) => a.parsed.maturity - b.parsed.maturity);
 
     debug("Fetched options with position", filtered);
     dispatch({ type: ActionList.Done, payload: filtered });

@@ -26,8 +26,8 @@ export const StakeCapitalParent = () => {
       <TableHead>
         <TableRow>
           <TableCell>Pool</TableCell>
-          <TableCell align="right">Amount</TableCell>
-          <TableCell align="right"></TableCell>
+          <TableCell align="center">Amount</TableCell>
+          <TableCell align="center"></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

@@ -156,9 +156,9 @@ export const WithdrawParent = () => {
         <TableRow>
           <TableCell>Pool</TableCell>
           <TableCell>Value of staked capital</TableCell>
-          <TableCell align="right"># LP Tokens</TableCell>
-          <TableCell align="right">Amount to withdraw</TableCell>
-          <TableCell align="right"></TableCell>
+          <TableCell align="center"># LP Tokens</TableCell>
+          <TableCell align="center">Amount to withdraw</TableCell>
+          <TableCell align="center"></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
