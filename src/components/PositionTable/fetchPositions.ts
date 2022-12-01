@@ -113,14 +113,21 @@ export const fetchPositions = async (
 
   const res = await contract[AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER](
     address
-  ).catch((e: string) => {
+  ).catch((e: Error) => {
     debug("Failed while calling", AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER);
-    debug("error", e);
-    return;
+    return e;
   });
 
-  if (isNonEmptyArray(res)) {
+  if (res instanceof Error) {
+    debug("Fetch resulted in err", res.message);
+    dispatch({ type: ActionList.Error, payload: res.message });
+    return;
+  }
+
+  if (!isNonEmptyArray(res)) {
+    debug("Empty positions response", res);
     dispatch({ type: ActionList.Done, payload: [] });
+    return;
   }
 
   try {

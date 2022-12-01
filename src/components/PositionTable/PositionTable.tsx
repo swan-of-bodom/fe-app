@@ -31,6 +31,11 @@ export const PositionTableComponent = ({ state }: Props) => {
       </Box>
     );
 
+  if (state.error)
+    return (
+      <NoContent text="Something went wrong while getting your positions, please try again later." />
+    );
+
   if (!isNonEmptyArray(state.data))
     return (
       <NoContent text="It seems you are not currently holding any positions." />
