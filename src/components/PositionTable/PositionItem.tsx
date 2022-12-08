@@ -71,7 +71,6 @@ export const PositionItem = ({ option }: Props) => {
 
   const desc = `${sideText} ${typeText} with strike $${strikePrice}`;
   const decimals = 4;
-  const min = 0.01;
   const timeNow = new Date().getTime();
   const isExpired = msMaturity - timeNow <= 0;
 
@@ -102,7 +101,6 @@ export const PositionItem = ({ option }: Props) => {
           inputProps={{
             maxLength: 13,
             step: "0.01",
-            min,
           }}
           onChange={(e) => {
             const valueIn = parseFloat(e.target.value);
@@ -114,10 +112,6 @@ export const PositionItem = ({ option }: Props) => {
             debug(valueIn);
             if (valueIn > positionSize) {
               setAmount(positionSize);
-              return;
-            }
-            if (valueIn < min) {
-              setAmount(min);
               return;
             }
             setAmount(valueIn);
