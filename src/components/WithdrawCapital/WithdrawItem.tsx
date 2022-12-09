@@ -37,8 +37,8 @@ export const WithdrawItem = ({
   return (
     <TableRow>
       <TableCell>{pool}</TableCell>
-      <TableCell>{size}</TableCell>
       <TableCell>{value}</TableCell>
+      <TableCell>{size}</TableCell>
       <TableCell align="center">
         <TextField
           id="outlined-number"
