@@ -27,26 +27,6 @@ export const weiToEth = (bn: BigNumberish, decimalPlaces: number): string => {
   return `${lead}.${dec}`;
 };
 
-export const ethToWei = (eth: number): string => {
-  if (!eth) {
-    return "0";
-  }
-
-  const v = eth.toString(10);
-  const [lead, dec] = v.split(".");
-
-  if (!dec) {
-    return lead + "".padEnd(18, "0");
-  }
-
-  const tail = dec.padEnd(18, "0");
-
-  const withLeadingZeros = lead + tail;
-  const leadingZeros = withLeadingZeros.match(/^0*([0-9]+)/);
-
-  return leadingZeros && leadingZeros?.length > 1 ? leadingZeros[1] : "0";
-};
-
 export const weiTo64x61 = (wei: string): string => {
   const base = new BN(wei);
   const m = new BN(2).pow(new BN(61));
