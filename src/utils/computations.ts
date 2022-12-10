@@ -2,6 +2,7 @@ import { ETH_BASE_VALUE, USD_BASE_VALUE } from "../constants/amm";
 import { OptionSide, OptionType } from "../types/options";
 import BN from "bn.js";
 import { getEthInUsd } from "../calls/currencies";
+import { Float, Int } from "../types/base";
 
 /*  call - prevadi se ETH
     put - prevadi se USD
@@ -32,9 +33,7 @@ const longCall: GetApproveAmount = (size, premia) =>
     .div(new BN(PRECISION));
 
 const shortCall: GetApproveAmount = (size, premia) => {
-  const base = new BN(size * PRECISION)
-    .mul(ETH_BASE_VALUE)
-    .div(new BN(PRECISION));
+  const base = longInteger(size, 18);
 
   const toSubtract = premia
     .mul(new BN(size * PRECISION))
@@ -54,9 +53,7 @@ const longPut: GetApproveAmount = (size, premia) =>
 
 const shortPut: GetApproveAmount = async (size, premia): Promise<BN> => {
   const ethNow = await getEthInUsd();
-  const base = new BN(size * PRECISION * ethNow)
-    .mul(USD_BASE_VALUE)
-    .div(new BN(PRECISION));
+  const base = longInteger(size * ethNow, 6);
 
   const toSubtract = premia
     .mul(new BN(size * PRECISION))
@@ -89,3 +86,25 @@ export const getToApprove = async (
   size: number,
   premia: BN
 ): Promise<BN> => getToApproveFunction(type, side)(size, premia);
+
+export const longInteger = (n: Float, digits: Int): BN => {
+  if (!n) {
+    return new BN(0);
+  }
+  const [lead, dec] = n.toString(10).split(".");
+
+  if (!dec) {
+    return new BN(lead + "".padEnd(digits, "0"));
+  }
+
+  const tail = dec
+    .padEnd(digits, "0") // pad ending with 0s
+    .substring(0, digits); // if more digits than should be, cut them out
+
+  const withLeadingZeros = lead + tail;
+  const leadingZeros = withLeadingZeros.match(/^0*([0-9]+)/);
+
+  return leadingZeros && leadingZeros?.length > 1
+    ? new BN(leadingZeros[1])
+    : new BN(0);
+};

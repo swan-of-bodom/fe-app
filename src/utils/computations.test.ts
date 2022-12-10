@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import { OptionSide, OptionType } from "../types/options";
-import { getToApprove } from "./computations";
+import { getToApprove, longInteger } from "./computations";
 
 type ToApproveDataset = {
   size: number;
@@ -50,7 +50,7 @@ const shortPutDataset: ToApproveDataset[] = [
   },
 ];
 
-describe("calculates correctly approve amount", () => {
+describe("approve amount", () => {
   test("LONG CALL", () => {
     longCallDataset.forEach(async ({ size, premia, correct }) => {
       const res = await getToApprove(
@@ -94,6 +94,36 @@ describe("calculates correctly approve amount", () => {
       );
       expect(res.eq(correct)).toBe(true);
     });
+  });
+});
+
+describe("long integer", () => {
+  test("18 digits, n > 1", () => {
+    const input = 100.00123;
+    const expectedResult = new BN("100001230000000000000");
+    const res = longInteger(input, 18);
+    expect(res.eq(expectedResult)).toBe(true);
+  });
+
+  test("18 digits, n < 1", () => {
+    const input = 0.00000123;
+    const expectedResult = new BN("1230000000000");
+    const res = longInteger(input, 18);
+    expect(res.eq(expectedResult)).toBe(true);
+  });
+
+  test("18 digits, n == 1", () => {
+    const input = 1;
+    const expectedResult = new BN("1000000000000000000");
+    const res = longInteger(input, 18);
+    expect(res.eq(expectedResult)).toBe(true);
+  });
+
+  test("more digits than requested", () => {
+    const input = 0.123456789;
+    const expectedResult = new BN("123");
+    const res = longInteger(input, 3);
+    expect(res.eq(expectedResult)).toBe(true);
   });
 });
 
