@@ -13,11 +13,11 @@ import { isNonEmptyArray } from "../../utils/utils";
 
 import { WithdrawItem } from "./WithdrawItem";
 import { NoContent } from "../TableNoContent";
-import { fetchCapital } from "./fetchCapital";
+import { fetchCapital, StakedCapitalInfo } from "./fetchCapital";
 
 export const WithdrawParent = () => {
   const { account, address } = useAccount();
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<StakedCapitalInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -51,12 +51,12 @@ export const WithdrawParent = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {data.map(({ stakedCapital, numberOfTokens, type, poolInfo }, i) => (
+        {data.map(({ value, numberOfTokens, type, poolInfo }, i) => (
           <WithdrawItem
             key={i}
             account={account}
-            size={stakedCapital}
-            value={numberOfTokens}
+            size={numberOfTokens}
+            value={value}
             type={type}
             poolInfo={poolInfo}
           />

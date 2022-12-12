@@ -50,12 +50,16 @@ export const WithdrawItem = ({
             shrink: true,
           }}
           inputProps={{
-            maxLength: 13,
+            maxLength: 20,
             step: "0.01",
             min: 0,
-            max: 50,
+            max: 1000,
           }}
-          onChange={(e) => setAmount(parseFloat(e.target.value))}
+          onChange={(e) => {
+            const valueIn = parseFloat(e.target.value);
+            debug(valueIn);
+            valueIn > size ? setAmount(size) : setAmount(valueIn);
+          }}
         />
       </TableCell>
       <TableCell align="center">

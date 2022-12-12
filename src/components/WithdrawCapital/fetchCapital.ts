@@ -5,6 +5,7 @@ import { debug } from "../../utils/debugger";
 import { isNonEmptyArray } from "../../utils/utils";
 
 import { getMainContract } from "../../utils/blockchain";
+import { uint256ToBN } from "starknet/dist/utils/uint256";
 
 /*
 
@@ -37,19 +38,16 @@ struct UserPoolInfo {
 
 */
 
-const precision = 10000;
+const precision = 1000000;
 
-type StakedCapitalInfo = {
-  stakedCapital: number;
+export type StakedCapitalInfo = {
+  value: number;
   numberOfTokens: number;
   type: OptionType;
   poolInfo: Object;
 };
 
-const parseUserPool = (
-  arr: any[],
-  address: string
-): Promise<StakedCapitalInfo>[] | null => {
+const parseUserPool = (arr: any[]): StakedCapitalInfo[] | null => {
   debug("Received data", arr, arr.length);
 
   if (!isNonEmptyArray(arr)) {
@@ -58,15 +56,21 @@ const parseUserPool = (
   }
 
   const res = arr.map(
-    async ({ pool_info, value_of_user_stake, size_of_users_tokens }) => {
+    ({ pool_info, value_of_user_stake, size_of_users_tokens }) => {
       debug("Mapping over pools", {
         pool_info,
         value_of_user_stake,
         size_of_users_tokens,
       });
 
-      const stakedCapital =
-        new BN(value_of_user_stake.low)
+      const value =
+        new BN(uint256ToBN(value_of_user_stake))
+          .mul(new BN(precision))
+          .div(ETH_BASE_VALUE)
+          .toNumber() / precision;
+
+      const numberOfTokens =
+        new BN(uint256ToBN(size_of_users_tokens))
           .mul(new BN(precision))
           .div(ETH_BASE_VALUE)
           .toNumber() / precision;
@@ -74,13 +78,9 @@ const parseUserPool = (
       const type = new BN(pool_info?.pool?.option_type).toString(
         10
       ) as OptionType;
-      const numberOfTokens =
-        new BN(size_of_users_tokens.low)
-          .mul(new BN(precision))
-          .div(ETH_BASE_VALUE)
-          .toNumber() / precision;
 
-      return { stakedCapital, numberOfTokens, type, poolInfo: pool_info };
+      debug("Parsed into", { value, numberOfTokens, type });
+      return { value, numberOfTokens, type, poolInfo: pool_info };
     }
   );
 
@@ -111,20 +111,14 @@ export const fetchCapital = async (
     return;
   }
 
-  const promises = parseUserPool(res[0], address);
+  const parsed = parseUserPool(res[0]);
 
-  if (!promises) {
+  if (!parsed) {
     debug("Got null after parsing");
     setLoading(false);
     return;
   }
-
-  const finalData = await Promise.all(promises).catch((e) => {
-    debug("Parse user pool failed", e);
-    return;
-  });
-
-  debug("Final data from pool", finalData);
-  setData(finalData);
+  debug("Final data from pool", parsed);
+  setData(parsed);
   setLoading(false);
 };
