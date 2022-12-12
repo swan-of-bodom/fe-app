@@ -39,6 +39,23 @@
   {
     "members": [
       {
+        "name": "low",
+        "offset": 0,
+        "type": "felt"
+      },
+      {
+        "name": "high",
+        "offset": 1,
+        "type": "felt"
+      }
+    ],
+    "name": "Uint256",
+    "size": 2,
+    "type": "struct"
+  },
+  {
+    "members": [
+      {
         "name": "quote_token_address",
         "offset": 0,
         "type": "felt"
@@ -66,30 +83,18 @@
         "type": "Uint256"
       },
       {
-        "name": "pool_info",
+        "name": "size_of_users_tokens",
         "offset": 2,
+        "type": "Uint256"
+      },
+      {
+        "name": "pool_info",
+        "offset": 4,
         "type": "PoolInfo"
       }
     ],
     "name": "UserPoolInfo",
-    "size": 9,
-    "type": "struct"
-  },
-  {
-    "members": [
-      {
-        "name": "low",
-        "offset": 0,
-        "type": "felt"
-      },
-      {
-        "name": "high",
-        "offset": 1,
-        "type": "felt"
-      }
-    ],
-    "name": "Uint256",
-    "size": 2,
+    "size": 11,
     "type": "struct"
   },
   {
@@ -378,6 +383,235 @@
   {
     "inputs": [
       {
+        "name": "lptoken_address",
+        "type": "felt"
+      }
+    ],
+    "name": "get_value_of_pool_position",
+    "outputs": [
+      {
+        "name": "res",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "option",
+        "type": "Option"
+      },
+      {
+        "name": "position_size",
+        "type": "felt"
+      },
+      {
+        "name": "option_type",
+        "type": "felt"
+      },
+      {
+        "name": "current_volatility",
+        "type": "felt"
+      },
+      {
+        "name": "current_pool_balance",
+        "type": "felt"
+      }
+    ],
+    "name": "get_value_of_position",
+    "outputs": [
+      {
+        "name": "position_value",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "lpt_amt",
+        "type": "Uint256"
+      }
+    ],
+    "name": "get_underlying_for_lptokens",
+    "outputs": [
+      {
+        "name": "underlying_amt",
+        "type": "Uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "quote_token_address",
+        "type": "felt"
+      },
+      {
+        "name": "base_token_address",
+        "type": "felt"
+      },
+      {
+        "name": "option_type",
+        "type": "felt"
+      },
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      }
+    ],
+    "name": "add_lptoken",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "pooled_token_addr",
+        "type": "felt"
+      },
+      {
+        "name": "quote_token_address",
+        "type": "felt"
+      },
+      {
+        "name": "base_token_address",
+        "type": "felt"
+      },
+      {
+        "name": "option_type",
+        "type": "felt"
+      },
+      {
+        "name": "amount",
+        "type": "Uint256"
+      }
+    ],
+    "name": "deposit_liquidity",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "pooled_token_addr",
+        "type": "felt"
+      },
+      {
+        "name": "quote_token_address",
+        "type": "felt"
+      },
+      {
+        "name": "base_token_address",
+        "type": "felt"
+      },
+      {
+        "name": "option_type",
+        "type": "felt"
+      },
+      {
+        "name": "lp_token_amount",
+        "type": "Uint256"
+      }
+    ],
+    "name": "withdraw_liquidity",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "option_side",
+        "type": "felt"
+      },
+      {
+        "name": "strike_price",
+        "type": "felt"
+      },
+      {
+        "name": "maturity",
+        "type": "felt"
+      }
+    ],
+    "name": "expire_option_token_for_pool",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "index",
+        "type": "felt"
+      }
+    ],
+    "name": "remove_option",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "option_side",
+        "type": "felt"
+      },
+      {
+        "name": "maturity",
+        "type": "felt"
+      },
+      {
+        "name": "strike_price",
+        "type": "felt"
+      },
+      {
+        "name": "quote_token_address",
+        "type": "felt"
+      },
+      {
+        "name": "base_token_address",
+        "type": "felt"
+      },
+      {
+        "name": "option_type",
+        "type": "felt"
+      },
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "option_token_address_",
+        "type": "felt"
+      },
+      {
+        "name": "initial_volatility",
+        "type": "felt"
+      }
+    ],
+    "name": "add_option",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "name": "order_i",
         "type": "felt"
       }
@@ -624,6 +858,44 @@
       {
         "name": "lptoken_address",
         "type": "felt"
+      },
+      {
+        "name": "starting_index",
+        "type": "felt"
+      }
+    ],
+    "name": "get_available_options_usable_index",
+    "outputs": [
+      {
+        "name": "usable_index",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "starting_index",
+        "type": "felt"
+      }
+    ],
+    "name": "get_available_lptoken_addresses_usable_index",
+    "outputs": [
+      {
+        "name": "usable_index",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
       }
     ],
     "name": "get_all_options",
@@ -701,56 +973,6 @@
   {
     "inputs": [
       {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_value_of_pool_position",
-    "outputs": [
-      {
-        "name": "res",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "option",
-        "type": "Option"
-      },
-      {
-        "name": "position_size",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "current_volatility",
-        "type": "felt"
-      },
-      {
-        "name": "current_pool_balance",
-        "type": "felt"
-      }
-    ],
-    "name": "get_value_of_position",
-    "outputs": [
-      {
-        "name": "position_value",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "name": "user",
         "type": "felt"
       }
@@ -792,44 +1014,6 @@
         "type": "felt"
       },
       {
-        "name": "starting_index",
-        "type": "felt"
-      }
-    ],
-    "name": "get_available_options_usable_index",
-    "outputs": [
-      {
-        "name": "usable_index",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "starting_index",
-        "type": "felt"
-      }
-    ],
-    "name": "get_available_lptoken_addresses_usable_index",
-    "outputs": [
-      {
-        "name": "usable_index",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
         "name": "option_token_address",
         "type": "felt"
       }
@@ -842,185 +1026,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "lpt_amt",
-        "type": "Uint256"
-      }
-    ],
-    "name": "get_underlying_for_lptokens",
-    "outputs": [
-      {
-        "name": "underlying_amt",
-        "type": "Uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "add_lptoken",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      },
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_token_address_",
-        "type": "felt"
-      },
-      {
-        "name": "initial_volatility",
-        "type": "felt"
-      }
-    ],
-    "name": "add_option",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "index",
-        "type": "felt"
-      }
-    ],
-    "name": "remove_option",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "pooled_token_addr",
-        "type": "felt"
-      },
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "amount",
-        "type": "Uint256"
-      }
-    ],
-    "name": "deposit_liquidity",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "pooled_token_addr",
-        "type": "felt"
-      },
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "lp_token_amount",
-        "type": "Uint256"
-      }
-    ],
-    "name": "withdraw_liquidity",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      }
-    ],
-    "name": "expire_option_token_for_pool",
-    "outputs": [],
     "type": "function"
   },
   {
