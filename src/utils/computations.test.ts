@@ -12,17 +12,17 @@ const longCallDataset: ToApproveDataset[] = [
   {
     size: 1,
     premia: new BN("145645927995050205"),
-    correct: new BN("174775113594060246"),
+    correct: new BN("160210520794555225"),
   },
   {
     size: 3,
     premia: new BN("145645927995050205"),
-    correct: new BN("524325340782180738"),
+    correct: new BN("480631562383665676"),
   },
   {
     size: 0.0001,
     premia: new BN("145645927995050205"),
-    correct: new BN("17477511359406"),
+    correct: new BN("16021052079455"),
   },
 ];
 
