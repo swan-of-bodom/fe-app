@@ -1,5 +1,9 @@
 import BN from "bn.js";
-import { AMM_METHODS, ETH_BASE_VALUE } from "../../constants/amm";
+import {
+  AMM_METHODS,
+  ETH_BASE_VALUE,
+  USD_BASE_VALUE,
+} from "../../constants/amm";
 import { OptionType } from "../../types/options";
 import { debug } from "../../utils/debugger";
 import { isNonEmptyArray } from "../../utils/utils";
@@ -63,21 +67,24 @@ const parseUserPool = (arr: any[]): StakedCapitalInfo[] | null => {
         size_of_users_tokens,
       });
 
+      const type = new BN(pool_info?.pool?.option_type).toString(
+        10
+      ) as OptionType;
+
+      const baseValue =
+        type === OptionType.Call ? ETH_BASE_VALUE : USD_BASE_VALUE;
+
       const value =
         new BN(uint256ToBN(value_of_user_stake))
           .mul(new BN(precision))
-          .div(ETH_BASE_VALUE)
+          .div(baseValue)
           .toNumber() / precision;
 
       const numberOfTokens =
         new BN(uint256ToBN(size_of_users_tokens))
           .mul(new BN(precision))
-          .div(ETH_BASE_VALUE)
+          .div(baseValue)
           .toNumber() / precision;
-
-      const type = new BN(pool_info?.pool?.option_type).toString(
-        10
-      ) as OptionType;
 
       debug("Parsed into", { value, numberOfTokens, type });
       return { value, numberOfTokens, type, poolInfo: pool_info };
