@@ -26,6 +26,9 @@ export const WithdrawParent = () => {
     }
   }, [address]);
 
+  if (!address)
+    return <NoContent text="Connect wallet to see your staked capital." />;
+
   if (loading) {
     return (
       <Box sx={{ padding: "20px" }}>
