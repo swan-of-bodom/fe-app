@@ -1,6 +1,5 @@
 import { Box, Button, Grid, Link, Typography } from "@mui/material";
 import { useConnectors } from "@starknet-react/core";
-import { isNonEmptyArray } from "../../utils/utils";
 import { useState } from "react";
 import { ArgentIcon, BraavosIcon } from "../assets";
 import { SupportedWalletIds } from "../../types/wallet";
@@ -33,47 +32,51 @@ const walletBoxStyle = {
   justifyContent: "center",
   alignItems: "center",
   flexFlow: "column",
-  marginTop: 2,
+  textAlign: "center",
   marginBottom: 4,
-};
-
-export const ModalContent = () => {
-  const { available } = useConnectors();
-
-  if (isNonEmptyArray(available)) {
-    return <WalletBox />;
-  }
-
-  return <p>Nasrat</p>;
 };
 
 const DefaultBox = () => (
   <Box sx={walletBoxStyle}>
     <Typography variant="h6">What is a wallet?</Typography>
     <br />
-    <Typography>
-      StakNet allows you to lorem ipsum walletsum whatevsum...
-    </Typography>
+    <Typography>StarkNet wallets are themselves SmartContracts.</Typography>
   </Box>
 );
 
 const ArgentBox = () => {
   const { available, connect } = useConnectors();
 
-  const isAvailable = available.find(
+  const connector = available.find(
     (wallets) => wallets?.options?.id === SupportedWalletIds.ArgentX
   );
 
+  if (connector) {
+    return (
+      <Box sx={walletBoxStyle}>
+        <Typography>
+          There is an ArgentX wallet associated with this browser.
+        </Typography>
+        <br />
+        <Button variant="contained" onClick={() => connect(connector)}>
+          <ArgentIcon sx={iconStyle} />
+          Connect to ArgentX
+        </Button>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={walletBoxStyle}>
-      <Link href="https://www.argent.xyz/argent-x/">Checkout ArgentX</Link>
-
-      <br />
-      {isAvailable && (
-        <Button variant="contained" onClick={() => connect(isAvailable)}>
-          Connect
-        </Button>
-      )}
+      <Typography variant="h6">Get ArgentX</Typography>
+      <Typography>
+        Every account is a smart contract with built-in multicall. Thanks to
+        account abstraction, unlock new use cases and leverage the true
+        potential of blockchains. <br />
+        <Link target="_blank" href="https://www.argent.xyz/argent-x/">
+          Find out more about ArgentX!
+        </Link>
+      </Typography>
     </Box>
   );
 };
@@ -81,20 +84,37 @@ const ArgentBox = () => {
 const BraavosBox = () => {
   const { available, connect } = useConnectors();
 
-  const isAvailable = available.find(
+  const connector = available.find(
     (wallets) => wallets?.options?.id === SupportedWalletIds.Braavos
   );
+
+  if (connector) {
+    return (
+      <Box sx={walletBoxStyle}>
+        <Typography>
+          There is a Braavos wallet associated with this browser.
+        </Typography>
+        <br />
+        <Button variant="contained" onClick={() => connect(connector)}>
+          <BraavosIcon sx={iconStyle} />
+          Connect to Braavos
+        </Button>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={walletBoxStyle}>
-      <Link href="https://braavos.app/">Checkout Braavos</Link>
-
-      <br />
-
-      {isAvailable && (
-        <Button variant="contained" onClick={() => connect(isAvailable)}>
-          Connect
-        </Button>
-      )}
+      <Typography variant="h6">Get Braavos</Typography>
+      <Typography>
+        The next generation of wallets made for an intuitive and safe start in
+        crypto. Buy, store, and send Manage your tokens wherever you are with a
+        single app.
+        <br />
+        <Link target="_blank" href="https://braavos.app/">
+          Find out more about Braavos
+        </Link>
+      </Typography>
     </Box>
   );
 };
@@ -110,11 +130,11 @@ const BoxSwitch = ({ variant }: BoxSwitchProps) => {
   }
 };
 
-const WalletBox = () => {
+export const WalletBox = () => {
   const [activeBox, setActiveBox] = useState<ActiveBox>(ActiveBox.default);
   return (
     <Grid container spacing={2}>
-      <Grid item xs={4}>
+      <Grid item md={12}>
         <Typography
           sx={{ cursor: "pointer" }}
           onClick={() => setActiveBox(ActiveBox.default)}
@@ -123,9 +143,8 @@ const WalletBox = () => {
           Connect a Wallet
         </Typography>
       </Grid>
-      <Grid item xs={8}></Grid>
 
-      <Grid item xs={4}>
+      <Grid item xs={12} md={4}>
         <Box
           sx={{
             display: "flex",
@@ -147,7 +166,7 @@ const WalletBox = () => {
           </Button>
         </Box>
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={12} md={8}>
         <BoxSwitch variant={activeBox} />
       </Grid>
     </Grid>

@@ -1,5 +1,5 @@
 import { Modal, Paper } from "@mui/material";
-import { ModalContent } from "./Content";
+import { WalletBox } from "./Content";
 
 type Props = {
   open: boolean;
@@ -13,9 +13,9 @@ const style = {
   transform: "translate(-50%, -50%)",
   margin: 2,
   padding: 2,
-  width: 600,
+  maxWidth: 600,
+  minWidth: 300,
   height: 350,
-  p: 4,
 };
 
 export const WalletModal = ({ open, setOpen }: Props) => {
@@ -29,7 +29,7 @@ export const WalletModal = ({ open, setOpen }: Props) => {
       aria-describedby="choose a wallet and connect to it"
     >
       <Paper sx={style} elevation={2}>
-        <ModalContent />
+        <WalletBox />
       </Paper>
     </Modal>
   );
