@@ -4,13 +4,7 @@ import { Abi, AccountInterface } from "starknet";
 import LpAbi from "../../abi/lptoken_abi.json";
 import AmmAbi from "../../abi/amm_abi.json";
 import { OptionType } from "../../types/options";
-import { longInteger } from "../../utils/computations";
-
-const getBaseAmountWei = (amount: number) =>
-  longInteger(amount, 18).toString(16);
-
-const getBaseAmountUsd = (amount: number) =>
-  longInteger(amount, 6).toString(16);
+import { getBaseAmountUsd, getBaseAmountWei } from "../../utils/computations";
 
 export const handleStake = async (
   account: AccountInterface,

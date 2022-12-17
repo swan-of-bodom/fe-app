@@ -117,3 +117,9 @@ export const longInteger = (n: Float, digits: Int): BN => {
     ? new BN(leadingZeros[1])
     : new BN(0);
 };
+
+export const getBaseAmountWei = (amount: number) =>
+  longInteger(amount, 18).toString(16);
+
+export const getBaseAmountUsd = (amount: number) =>
+  longInteger(amount, 6).toString(16);

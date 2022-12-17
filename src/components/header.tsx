@@ -4,7 +4,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router-dom";
 import GlobalStyles from "@mui/material/GlobalStyles";
-import { WalletButton } from "./walletButton";
+import { WalletButton } from "./ConnectWallet/Button";
 import { ReactNode } from "react";
 import { Button } from "@mui/material";
 import { NetworkSwitch } from "./networkSwitch";
@@ -55,7 +55,7 @@ export const Header = () => (
             <img
               width="35px"
               height="35px"
-              src="/android-chrome-192x192.png"
+              src="/logo.svg"
               alt="Carmine logo"
             />
           </RouterLink>
