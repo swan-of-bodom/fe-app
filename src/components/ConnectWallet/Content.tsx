@@ -44,80 +44,34 @@ const DefaultBox = () => (
   </Box>
 );
 
-const ArgentBox = () => {
-  const { available, connect } = useConnectors();
+const ArgentBox = () => (
+  <Box sx={walletBoxStyle}>
+    <Typography variant="h6">Get ArgentX</Typography>
+    <Typography>
+      Every account is a smart contract with built-in multicall. Thanks to
+      account abstraction, unlock new use cases and leverage the true potential
+      of blockchains. <br />
+      <Link target="_blank" href="https://www.argent.xyz/argent-x/">
+        Find out more about ArgentX!
+      </Link>
+    </Typography>
+  </Box>
+);
 
-  const connector = available.find(
-    (wallets) => wallets?.options?.id === SupportedWalletIds.ArgentX
-  );
-
-  if (connector) {
-    return (
-      <Box sx={walletBoxStyle}>
-        <Typography>
-          There is an ArgentX wallet associated with this browser.
-        </Typography>
-        <br />
-        <Button variant="contained" onClick={() => connect(connector)}>
-          <ArgentIcon sx={iconStyle} />
-          Connect to ArgentX
-        </Button>
-      </Box>
-    );
-  }
-
-  return (
-    <Box sx={walletBoxStyle}>
-      <Typography variant="h6">Get ArgentX</Typography>
-      <Typography>
-        Every account is a smart contract with built-in multicall. Thanks to
-        account abstraction, unlock new use cases and leverage the true
-        potential of blockchains. <br />
-        <Link target="_blank" href="https://www.argent.xyz/argent-x/">
-          Find out more about ArgentX!
-        </Link>
-      </Typography>
-    </Box>
-  );
-};
-
-const BraavosBox = () => {
-  const { available, connect } = useConnectors();
-
-  const connector = available.find(
-    (wallets) => wallets?.options?.id === SupportedWalletIds.Braavos
-  );
-
-  if (connector) {
-    return (
-      <Box sx={walletBoxStyle}>
-        <Typography>
-          There is a Braavos wallet associated with this browser.
-        </Typography>
-        <br />
-        <Button variant="contained" onClick={() => connect(connector)}>
-          <BraavosIcon sx={iconStyle} />
-          Connect to Braavos
-        </Button>
-      </Box>
-    );
-  }
-
-  return (
-    <Box sx={walletBoxStyle}>
-      <Typography variant="h6">Get Braavos</Typography>
-      <Typography>
-        The next generation of wallets made for an intuitive and safe start in
-        crypto. Buy, store, and send Manage your tokens wherever you are with a
-        single app.
-        <br />
-        <Link target="_blank" href="https://braavos.app/">
-          Find out more about Braavos
-        </Link>
-      </Typography>
-    </Box>
-  );
-};
+const BraavosBox = () => (
+  <Box sx={walletBoxStyle}>
+    <Typography variant="h6">Get Braavos</Typography>
+    <Typography>
+      The next generation of wallets made for an intuitive and safe start in
+      crypto. Buy, store, and send Manage your tokens wherever you are with a
+      single app.
+      <br />
+      <Link target="_blank" href="https://braavos.app/">
+        Find out more about Braavos
+      </Link>
+    </Typography>
+  </Box>
+);
 
 const BoxSwitch = ({ variant }: BoxSwitchProps) => {
   switch (variant) {
@@ -132,6 +86,18 @@ const BoxSwitch = ({ variant }: BoxSwitchProps) => {
 
 export const WalletBox = () => {
   const [activeBox, setActiveBox] = useState<ActiveBox>(ActiveBox.default);
+  const { available, connect } = useConnectors();
+
+  const handleClick = (id: SupportedWalletIds, activeBox: ActiveBox) => {
+    const connector = available.find((wallets) => wallets?.options?.id === id);
+
+    if (connector) {
+      return connect(connector);
+    }
+
+    setActiveBox(activeBox);
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item md={12}>
@@ -154,13 +120,17 @@ export const WalletBox = () => {
         >
           <Button
             sx={buttonStyle}
-            onClick={() => setActiveBox(ActiveBox.argent)}
+            onClick={() =>
+              handleClick(SupportedWalletIds.ArgentX, ActiveBox.argent)
+            }
           >
             <ArgentIcon sx={iconStyle} /> ArgentX
           </Button>
           <Button
             sx={buttonStyle}
-            onClick={() => setActiveBox(ActiveBox.braavos)}
+            onClick={() =>
+              handleClick(SupportedWalletIds.Braavos, ActiveBox.braavos)
+            }
           >
             <BraavosIcon sx={iconStyle} /> Braavos
           </Button>
