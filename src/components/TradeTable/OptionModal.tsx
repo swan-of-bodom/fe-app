@@ -118,7 +118,10 @@ const OptionBox = ({ option }: OptionBoxProps) => {
       ? new BN((option.parsed as ParsedCallOption).premiaWei)
       : new BN((option.parsed as ParsedPutOption).premiaUsd);
 
-  const currency = optionType === OptionType.Call ? "ETH" : "USD";
+  const displayPremia =
+    optionType === OptionType.Call
+      ? `ETH ${data?.premiaEth && data?.premiaEth.toFixed(5)}`
+      : `$${data?.premiaUsd && data?.premiaUsd.toFixed(5)}`;
 
   debug("Graph data: ", [optionType, optionSide]);
   const graphData =
@@ -223,8 +226,7 @@ const OptionBox = ({ option }: OptionBoxProps) => {
             handleBuy(account, amount, option, currentPremia, updateTradeState)
           }
         >
-          {optionSide === OptionSide.Long ? "Buy" : "Sell"} for {currency}{" "}
-          {loading || !data ? " --" : data.premiaEth.toFixed(5)}
+          {optionSide === OptionSide.Long ? "Buy" : "Sell"} for {displayPremia}
         </Button>
       </Grid>
     </Grid>

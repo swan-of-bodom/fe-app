@@ -82,7 +82,7 @@ export const fetchModalData = async (
     const numPremiaUsd =
       new BN(premiaUsd).mul(new BN(precission)).div(USD_BASE_VALUE).toNumber() /
       precission;
-    const premiaEth = numPremiaUsd * ethInUsd;
+    const premiaEth = numPremiaUsd / ethInUsd;
     res.premiaEth = premiaEth * size;
     res.premiaUsd = numPremiaUsd * size;
     res.basePremiaEth = premiaEth;
