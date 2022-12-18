@@ -1,7 +1,7 @@
 import { Box, CircularProgress } from "@mui/material";
 
 type Props = {
-  size: number;
+  size?: number;
 };
 
 export const LoadingAnimation = ({ size }: Props) => (

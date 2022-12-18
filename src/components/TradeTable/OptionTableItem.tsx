@@ -1,70 +1,29 @@
 import {
   CompositeOption,
-  OptionSide,
   OptionType,
   ParsedCallOption,
   ParsedPutOption,
 } from "../../types/options";
 import { timestampToReadableDate, weiToEth } from "../../utils/utils";
-import { Button, TableCell, TableRow, TextField } from "@mui/material";
-import { approveAndTradeOpen } from "../../calls/tradeOpen";
-import { AccountInterface } from "starknet";
-import { useAccount } from "@starknet-react/core";
-import { useState } from "react";
-import { debug, LogTypes } from "../../utils/debugger";
-import { Float } from "../../types/base";
+import { TableCell, TableRow } from "@mui/material";
 import BN from "bn.js";
 import { USD_BASE_VALUE } from "../../constants/amm";
 
 type OptionPreviewProps = {
   option: CompositeOption;
+  handleClick: () => void;
 };
 
-type TradeState = {
-  failed: boolean;
-  processing: boolean;
+const style = {
+  cursor: "pointer",
+  background: "white",
+  "&:hover": {
+    background: "#eee",
+  },
 };
 
-const handleBuy = async (
-  account: AccountInterface | undefined,
-  amount: Float,
-  option: CompositeOption,
-  optionType: OptionType,
-  optionSide: OptionSide,
-  premia: BN,
-  updateTradeState: (v: TradeState) => void
-) => {
-  if (!account || !amount) {
-    debug(LogTypes.WARN, "Missing some of the inputs:", { account, amount });
-    return;
-  }
-  updateTradeState({ failed: false, processing: true });
-
-  const res = await approveAndTradeOpen(
-    account,
-    option,
-    amount,
-    optionType,
-    optionSide,
-    premia
-  );
-
-  updateTradeState(
-    res
-      ? { failed: false, processing: false }
-      : { failed: true, processing: false }
-  );
-};
-
-const OptionTableItem = ({ option }: OptionPreviewProps) => {
-  const { account } = useAccount();
-  const [amount, setAmount] = useState<number>(0.0);
-  const [tradeState, updateTradeState] = useState<TradeState>({
-    failed: false,
-    processing: false,
-  });
-
-  const { strikePrice, maturity, optionType, optionSide } = option.parsed;
+const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
+  const { strikePrice, maturity, optionType } = option.parsed;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
@@ -88,47 +47,11 @@ const OptionTableItem = ({ option }: OptionPreviewProps) => {
   const currency = optionType === OptionType.Call ? "ETH" : "USD";
 
   return (
-    <TableRow>
+    <TableRow sx={style} onClick={handleClick}>
       <TableCell>${strikePrice}</TableCell>
       <TableCell align="center">{date}</TableCell>
       <TableCell align="center">
-        {" "}
-        <TextField
-          id="outlined-number"
-          label="Amount"
-          type="number"
-          size="small"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            maxLength: 13,
-            step: "0.01",
-            min: 0,
-            max: 50,
-          }}
-          onChange={(e) => setAmount(parseFloat(e.target.value))}
-        />
-      </TableCell>
-      <TableCell align="center">
-        <Button
-          variant="contained"
-          disabled={tradeState.processing || !account}
-          color={tradeState.failed ? "error" : "primary"}
-          onClick={() =>
-            handleBuy(
-              account,
-              amount,
-              option,
-              optionType,
-              optionSide,
-              currentPremia,
-              updateTradeState
-            )
-          }
-        >
-          {`${currency} ${displayPremia}`}
-        </Button>
+        {currency} {displayPremia}
       </TableCell>
     </TableRow>
   );
