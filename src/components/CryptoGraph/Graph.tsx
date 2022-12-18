@@ -20,7 +20,7 @@ import { LoadingAnimation } from "../loading";
 
 export type IHistoricData = Array<number[]>;
 
-const enum Color {
+export const enum Color {
   Green = "#008000",
   Red = "#B22222",
 }
