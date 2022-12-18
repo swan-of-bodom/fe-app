@@ -8,8 +8,8 @@ type TableWrapperProps = {
 export const TableWrapper = (props: TableWrapperProps) => (
   <Paper
     sx={{
-      margin: "16px",
-      padding: "16px",
+      margin: 2,
+      padding: 2,
       width: "100%",
       background: "#F5F5F5",
     }}
