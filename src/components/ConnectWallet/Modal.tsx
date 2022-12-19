@@ -15,7 +15,6 @@ const style = {
   padding: 2,
   maxWidth: 600,
   minWidth: 300,
-  height: 350,
 };
 
 export const WalletModal = ({ open, setOpen }: Props) => {
