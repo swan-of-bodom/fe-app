@@ -3,23 +3,6 @@ import BN from "bn.js";
 import { getEthInUsd } from "../calls/currencies";
 import { Float, Int } from "../types/base";
 
-/*  call - prevadi se ETH
-    put - prevadi se USD
-
-    call opce - approve nad ETH
-    put opce - approve nad USD
-
-    call + put -> pokud long
-    options_size * premium * (1+slippage)
-    short call
-    option size - option size * premium * (1-slippage)
-    - premium v ETH
-    - option size bezrozmerne, ale jakoze v ETH 
-    short put
-    option size * current underlying price - option size * premium * (1-slippage)
-    -> option size - bezrozmerne, ale jakoze v ETH... option size * current underlying price -> v USD (ale jakoze bezrozmerne)
-    -> premium v USD */
-
 type GetApproveAmount = (
   size: number,
   premia: BN,
@@ -116,6 +99,20 @@ export const longInteger = (n: Float, digits: Int): BN => {
   return leadingZeros && leadingZeros?.length > 1
     ? new BN(leadingZeros[1])
     : new BN(0);
+};
+
+const decSeparator = (() => (1.1).toLocaleString().substring(1, 2))();
+
+export const shortInteger = (str: string, digits: Int): Float => {
+  if (!str) {
+    return 0;
+  }
+  const padded = str.padStart(digits, "0");
+  const [head, tail] = [
+    padded.substring(0, padded.length - digits),
+    padded.substring(padded.length - digits),
+  ];
+  return parseFloat(head + decSeparator + tail);
 };
 
 export const getBaseAmountWei = (amount: number) =>

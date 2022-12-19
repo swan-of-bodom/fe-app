@@ -33,7 +33,7 @@ export interface ParsedCallOption extends ParsedOption {
 }
 
 export interface ParsedPutOption extends ParsedOption {
-  premiaUsd: BigNumberish;
+  premiaUsd: string;
 }
 
 export interface ParsedOptionWithPosition extends ParsedOption {
@@ -78,3 +78,5 @@ export type CompositeOptionWithBalance = {
     | ParsedPutOption
     | ParsedOptionWithPosition;
 };
+
+export type OptionStruct = string[];

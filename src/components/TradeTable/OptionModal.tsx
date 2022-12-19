@@ -4,6 +4,8 @@ import {
   Grid,
   Modal,
   Paper,
+  Skeleton,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -60,6 +62,44 @@ const style = {
   transform: "translate(-50%, -50%)",
   margin: 2,
   padding: 2,
+};
+
+type ProfitTableProps = {
+  loading: boolean;
+  strikePrice: number;
+  basePremia: number;
+  premia: number;
+  side: OptionSide;
+};
+
+const ProfitTable = ({
+  strikePrice,
+  basePremia,
+  premia,
+  side,
+}: ProfitTableProps) => {
+  const isLong = side === OptionSide.Long;
+  const limited = "$" + premia.toFixed(2);
+  const unlimited = "Unlimited";
+  const breakEven = "$" + (strikePrice + basePremia).toFixed(2);
+  return (
+    <Table>
+      <TableBody>
+        <TableRow>
+          <TableCell>Maximum profit</TableCell>
+          <TableCell>{isLong ? unlimited : limited}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Maximum loss</TableCell>
+          <TableCell>{!isLong ? unlimited : limited}</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Break even</TableCell>
+          <TableCell>{breakEven}</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  );
 };
 
 const handleBuy = async (
@@ -123,7 +163,6 @@ const OptionBox = ({ option }: OptionBoxProps) => {
       ? `ETH ${data?.premiaEth && data?.premiaEth.toFixed(5)}`
       : `$${data?.premiaUsd && data?.premiaUsd.toFixed(5)}`;
 
-  debug("Graph data: ", [optionType, optionSide]);
   const graphData =
     loading || !data
       ? { plot: [{ usd: 0, market: 0 }], domain: [0, 0] }
@@ -135,6 +174,8 @@ const OptionBox = ({ option }: OptionBoxProps) => {
           amount
         );
 
+  const buttonText = () =>
+    (optionSide === OptionSide.Long ? "Buy" : "Sell") + " for " + displayPremia;
   return (
     <Grid container spacing={2}>
       <Grid item md={12}>
@@ -155,39 +196,21 @@ const OptionBox = ({ option }: OptionBoxProps) => {
         </Box>
       </Grid>
       <Grid item md={5} xs={12}>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell>Maximum profit</TableCell>
-              <TableCell>
-                {optionSide === OptionSide.Long
-                  ? "infinity"
-                  : loading || !data
-                  ? " --"
-                  : "$" + data.premiaUsd.toFixed(2)}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Maximum loss</TableCell>
-              <TableCell>
-                {optionSide === OptionSide.Short
-                  ? "infinity"
-                  : loading || !data
-                  ? " --"
-                  : "$" + data.premiaUsd.toFixed(2)}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Break even</TableCell>
-              <TableCell>
-                {loading || !data
-                  ? " --"
-                  : "$" +
-                    (parseFloat(strikePrice) + data.basePremiaUsd).toFixed(2)}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        {loading || !data ? (
+          <Stack spacing={2}>
+            <Skeleton sx={{ p: 1 }} variant="text" />
+            <Skeleton sx={{ p: 1 }} variant="text" />
+            <Skeleton sx={{ p: 1 }} variant="text" />
+          </Stack>
+        ) : (
+          <ProfitTable
+            loading={loading}
+            premia={data!.premiaUsd}
+            basePremia={data!.basePremiaUsd}
+            strikePrice={parseFloat(strikePrice)}
+            side={optionSide}
+          />
+        )}
       </Grid>
       <Grid item md={7}>
         <Box
@@ -226,7 +249,7 @@ const OptionBox = ({ option }: OptionBoxProps) => {
             handleBuy(account, amount, option, currentPremia, updateTradeState)
           }
         >
-          {optionSide === OptionSide.Long ? "Buy" : "Sell"} for {displayPremia}
+          {loading ? <Skeleton width={150} /> : buttonText()}
         </Button>
       </Grid>
     </Grid>
