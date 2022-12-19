@@ -1,6 +1,4 @@
-import BN from "bn.js";
 import { getEthInUsd } from "../../calls/currencies";
-import { ETH_BASE_VALUE, USD_BASE_VALUE } from "../../constants/amm";
 import {
   CompositeOption,
   ParsedCallOption,
@@ -8,6 +6,9 @@ import {
   OptionType,
 } from "../../types/options";
 import { FinancialData } from "./OptionModal";
+import { getPremia } from "../../calls/getPremia";
+import { debug } from "../../utils/debugger";
+import { shortInteger } from "../../utils/computations";
 
 const ethData = {
   ethInUsd: 0,
@@ -36,7 +37,11 @@ export const fetchModalData = async (
 ) => {
   setLoading(true);
 
-  const ethInUsd = await recentEthInUsd();
+  const [ethInUsd, fetchedPremia] = await Promise.all([
+    recentEthInUsd(),
+    getPremia(option, size, false),
+  ]);
+  debug("Fetched premia:", fetchedPremia);
   const { optionType } = option.parsed;
   const precission = 10000;
 
@@ -59,12 +64,10 @@ export const fetchModalData = async (
           JSON.stringify(option.parsed)
       );
     }
-    const premiaEth =
-      new BN(premiaWei).mul(new BN(precission)).div(ETH_BASE_VALUE).toNumber() /
-      precission;
+    const premiaEth = shortInteger(premiaWei, 18);
     const premiaUsd = premiaEth * ethInUsd;
-    res.premiaEth = premiaEth * size;
-    res.premiaUsd = premiaUsd * size;
+    res.premiaEth = fetchedPremia;
+    res.premiaUsd = fetchedPremia * ethInUsd;
     res.basePremiaEth = premiaEth;
     res.basePremiaUsd = premiaUsd;
   }
@@ -79,12 +82,10 @@ export const fetchModalData = async (
           JSON.stringify(option.parsed)
       );
     }
-    const numPremiaUsd =
-      new BN(premiaUsd).mul(new BN(precission)).div(USD_BASE_VALUE).toNumber() /
-      precission;
+    const numPremiaUsd = shortInteger(premiaUsd, 6);
     const premiaEth = numPremiaUsd / ethInUsd;
-    res.premiaEth = premiaEth * size;
-    res.premiaUsd = numPremiaUsd * size;
+    res.premiaUsd = fetchedPremia;
+    res.premiaEth = fetchedPremia / ethInUsd;
     res.basePremiaEth = premiaEth;
     res.basePremiaUsd = numPremiaUsd;
   }

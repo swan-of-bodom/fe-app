@@ -1029,6 +1029,39 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "name": "_option",
+        "type": "Option"
+      },
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "position_size",
+        "type": "felt"
+      },
+      {
+        "name": "is_closing",
+        "type": "felt"
+      }
+    ],
+    "name": "get_total_premia",
+    "outputs": [
+      {
+        "name": "total_premia_before_fees",
+        "type": "felt"
+      },
+      {
+        "name": "total_premia_including_fees",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "data": [
       {
         "name": "implementation",

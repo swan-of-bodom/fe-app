@@ -80,6 +80,7 @@ export const enum AMM_METHODS {
   DEPOSIT_LIQUIDITY = "deposit_liquidity",
   GET_USER_POOL_INFOS = "get_user_pool_infos",
   WITHDRAW_LIQUIDITY = "withdraw_liquidity",
+  GET_TOTAL_PREMIA = "get_total_premia",
 }
 
 export const SLIPPAGE = 0.1;
