@@ -1,6 +1,9 @@
-import { CompositeOption, OptionSide, OptionType } from "../types/options";
-import { longInteger, shortInteger } from "../utils/computations";
-import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
+import { CompositeOption, OptionType } from "../types/options";
+import {
+  AMM_METHODS,
+  BASE_MATH_64_61,
+  getTokenAddresses,
+} from "../constants/amm";
 import { rawOptionToStruct } from "../utils/parseOption";
 import { getMainContract } from "../utils/blockchain";
 import { debug } from "../utils/debugger";
@@ -13,12 +16,17 @@ type ConvertedData = {
 
 const convertData = (type: OptionType, size: number): ConvertedData => {
   const addresses = getTokenAddresses();
-  if (type === OptionType.Call) {
-    const convertedSize = "0x" + longInteger(size, 18).toString(16);
-    return { convertedSize, lpAddress: addresses.LPTOKEN_CONTRACT_ADDRESS };
-  }
-  const convertedSize = "0x" + longInteger(size, 6).toString(16);
-  return { convertedSize, lpAddress: addresses.LPTOKEN_CONTRACT_ADDRESS_PUT };
+  const lpAddress =
+    type === OptionType.Call
+      ? addresses.LPTOKEN_CONTRACT_ADDRESS
+      : addresses.LPTOKEN_CONTRACT_ADDRESS_PUT;
+
+  const precission = 1000000;
+  const convertedSize = new BN(size * precission)
+    .mul(BASE_MATH_64_61)
+    .div(new BN(precission))
+    .toString(10);
+  return { convertedSize, lpAddress };
 };
 
 export const getPremia = async (
@@ -36,16 +44,23 @@ export const getPremia = async (
 
   const contract = getMainContract();
 
-  debug("Getting total premia with calldata:", calldata);
+  debug("Getting total premia with calldata:", {
+    calldata,
+    flat: JSON.stringify(calldata.flat()),
+  });
 
   const res = await contract[AMM_METHODS.GET_TOTAL_PREMIA](...calldata);
 
   debug("Got total premia:", res);
 
   if (res?.total_premia_including_fees) {
-    const digits = option.parsed.optionType === OptionType.Call ? 18 : 6;
-    const str = new BN(res.total_premia_including_fees).toString(10);
-    return shortInteger(str, digits);
+    const precission = 100000;
+    return (
+      new BN(res.total_premia_including_fees)
+        .mul(new BN(precission))
+        .div(BASE_MATH_64_61)
+        .toNumber() / precission
+    );
   }
 
   return res;
