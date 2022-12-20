@@ -137,20 +137,28 @@ const OptionBox = ({ option }: OptionBoxProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<FinancialData>(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const callWithDelay = useCallback(
+    debounce((size: number, controller: AbortController) => {
+      fetchModalData(size, option, controller.signal)
+        .then((v) => {
+          if (v) {
+            setData(v);
+            setLoading(false);
+          }
+        })
+        .catch((e) => {
+          debug("Failed fetching modal data");
+          debug("warn", e.message);
+        });
+    }),
+    []
+  );
+
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
-    fetchModalData(amount, option, controller.signal)
-      .then((v) => {
-        if (v) {
-          setData(v);
-          setLoading(false);
-        }
-      })
-      .catch((e) => {
-        debug("Failed fetching modal data");
-        debug("warn", e.message);
-      });
+    callWithDelay(amount, controller);
     return () => {
       controller.abort();
     };
