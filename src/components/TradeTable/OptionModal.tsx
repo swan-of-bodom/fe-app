@@ -140,7 +140,6 @@ const OptionBox = ({ option }: OptionBoxProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const callWithDelay = useCallback(
     debounce((size: number, controller: AbortController) => {
-      setLoading(true);
       fetchModalData(size, option, controller.signal)
         .then((v) => {
           if (v) {
@@ -158,6 +157,7 @@ const OptionBox = ({ option }: OptionBoxProps) => {
 
   useEffect(() => {
     const controller = new AbortController();
+    setLoading(true);
     callWithDelay(amount, controller);
     return () => {
       controller.abort();
