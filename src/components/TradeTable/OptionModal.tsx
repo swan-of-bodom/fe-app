@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useAccount } from "@starknet-react/core";
 import BN from "bn.js";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AccountInterface } from "starknet";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
 import { Float } from "../../types/base";
@@ -27,7 +27,7 @@ import {
   ParsedPutOption,
 } from "../../types/options";
 import { debug, LogTypes } from "../../utils/debugger";
-import { timestampToReadableDate } from "../../utils/utils";
+import { debounce, timestampToReadableDate } from "../../utils/utils";
 import { ProfitGraph } from "../CryptoGraph/ProfitGraph";
 import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
@@ -137,8 +137,31 @@ const OptionBox = ({ option }: OptionBoxProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<FinancialData>(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const callWithDelay = useCallback(
+    debounce((size: number, controller: AbortController) => {
+      setLoading(true);
+      fetchModalData(size, option, controller.signal)
+        .then((v) => {
+          if (v) {
+            setData(v);
+            setLoading(false);
+          }
+        })
+        .catch((e) => {
+          debug("Failed fetching modal data");
+          debug("warn", e.message);
+        });
+    }),
+    []
+  );
+
   useEffect(() => {
-    fetchModalData(amount, option, setLoading, setData);
+    const controller = new AbortController();
+    callWithDelay(amount, controller);
+    return () => {
+      controller.abort();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
@@ -197,7 +220,7 @@ const OptionBox = ({ option }: OptionBoxProps) => {
       </Grid>
       <Grid item md={5} xs={12}>
         {loading || !data ? (
-          <Stack spacing={2}>
+          <Stack sx={{ paddingTop: 3 }} spacing={2}>
             <Skeleton sx={{ p: 1 }} variant="text" />
             <Skeleton sx={{ p: 1 }} variant="text" />
             <Skeleton sx={{ p: 1 }} variant="text" />
@@ -241,16 +264,28 @@ const OptionBox = ({ option }: OptionBoxProps) => {
         </Box>
       </Grid>
       <Grid item md={5}>
-        <Button
-          variant="contained"
-          disabled={tradeState.processing || !account || loading}
-          color={tradeState.failed ? "error" : "primary"}
-          onClick={() =>
-            handleBuy(account, amount, option, currentPremia, updateTradeState)
-          }
-        >
-          {loading ? <Skeleton width={150} /> : buttonText()}
-        </Button>
+        {loading ? (
+          <Skeleton>
+            <Button variant="contained">Buy for ETH 0.00001</Button>
+          </Skeleton>
+        ) : (
+          <Button
+            variant="contained"
+            disabled={tradeState.processing || !account || loading}
+            color={tradeState.failed ? "error" : "primary"}
+            onClick={() =>
+              handleBuy(
+                account,
+                amount,
+                option,
+                currentPremia,
+                updateTradeState
+              )
+            }
+          >
+            {buttonText()}
+          </Button>
+        )}
       </Grid>
     </Grid>
   );
