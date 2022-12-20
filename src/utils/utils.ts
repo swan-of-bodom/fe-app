@@ -57,7 +57,7 @@ export const premiaToWei = (bn: BN): string =>
     .div(new BN(2).pow(new BN(61)))
     .toString(10);
 
-export const debounce = (cb: (...args: any[]) => void, delay: number = 500) => {
+export const debounce = (cb: (...args: any[]) => void, delay: number = 750) => {
   let timeout: number;
 
   return (...args: any[]) => {
