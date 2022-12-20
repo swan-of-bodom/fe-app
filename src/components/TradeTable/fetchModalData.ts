@@ -32,18 +32,19 @@ const recentEthInUsd = async () => {
 export const fetchModalData = async (
   size: number,
   option: CompositeOption,
-  setLoading: (b: boolean) => void,
-  setData: (v: FinancialData) => void
-) => {
-  setLoading(true);
-
+  signal: AbortSignal
+): Promise<FinancialData | null> => {
   const [ethInUsd, fetchedPremia] = await Promise.all([
     recentEthInUsd(),
     getPremia(option, size, false),
   ]);
+
+  if (signal.aborted) {
+    return null;
+  }
+
   debug("Fetched premia:", fetchedPremia);
   const { optionType } = option.parsed;
-  const precission = 10000;
 
   const res: FinancialData = {
     premiaUsd: 0,
@@ -52,8 +53,6 @@ export const fetchModalData = async (
     basePremiaEth: 0,
     ethInUsd,
   };
-
-  // TODO: get premia relative to size from AMM endpoint
 
   if (optionType === OptionType.Call) {
     // premia is in Wei
@@ -90,6 +89,5 @@ export const fetchModalData = async (
     res.basePremiaUsd = numPremiaUsd;
   }
 
-  setData(res);
-  setLoading(false);
+  return res;
 };

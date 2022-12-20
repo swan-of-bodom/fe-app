@@ -56,3 +56,14 @@ export const premiaToWei = (bn: BN): string =>
     .mul(new BN(10).pow(new BN(18)))
     .div(new BN(2).pow(new BN(61)))
     .toString(10);
+
+export const debounce = (cb: (...args: any[]) => void, delay: number = 500) => {
+  let timeout: number;
+
+  return (...args: any[]) => {
+    clearTimeout(timeout);
+    timeout = window.setTimeout(() => {
+      cb(...args);
+    }, delay);
+  };
+};
