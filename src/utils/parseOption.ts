@@ -3,6 +3,7 @@ import { getTokenAddresses } from "../constants/amm";
 import {
   CompositeOption,
   OptionSide,
+  OptionStruct,
   OptionType,
   ParsedCallOption,
   ParsedOption,
@@ -62,6 +63,17 @@ export const rawOptionToCalldata = (raw: RawOption, size: string): string[] => {
     size,
     "0x" + new BN(raw.quote_token_address).toString(16),
     "0x" + new BN(raw.base_token_address).toString(16),
+  ];
+};
+
+export const rawOptionToStruct = (raw: RawOption): OptionStruct => {
+  return [
+    "0x" + new BN(raw.option_side).toString(16),
+    new BN(raw.maturity).toString(10),
+    "0x" + new BN(raw.strike_price).toString(16),
+    "0x" + new BN(raw.quote_token_address).toString(16),
+    "0x" + new BN(raw.base_token_address).toString(16),
+    "0x" + new BN(raw.option_type).toString(16),
   ];
 };
 
