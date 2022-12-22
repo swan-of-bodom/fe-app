@@ -14,7 +14,7 @@ import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 // "container_id": "tradingview_3211c"
 
 const style = {
-  height: "400px",
+  height: "min(70vh, 100vw)",
   padding: 1,
   paddingBottom: 4,
 };
@@ -24,8 +24,9 @@ export const ComplexGraph = () => (
     <AdvancedRealTimeChart
       autosize
       symbol="BINANCE:ETHUSD"
-      interval="D"
-      timezone="Etc/UTC"
+      interval="5"
+      range="1D"
+      timezone="Europe/Berlin"
       // eslint-disable-next-line react/style-prop-object
       style="1" // conflict with react style and trading view style
       locale="en"
