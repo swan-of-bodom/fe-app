@@ -1,7 +1,5 @@
 import AppBar from "@mui/material/AppBar";
 import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router-dom";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { WalletButton } from "./ConnectWallet/Button";
@@ -47,23 +45,26 @@ export const Header = () => (
       position="static"
       color="default"
       elevation={0}
-      sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
+      sx={{
+        borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+        padding: 1,
+        flexFlow: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        flexWrap: "wrap",
+      }}
     >
-      <Toolbar sx={{ flexWrap: "wrap" }}>
-        <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-          <RouterLink to="/" style={{ textDecoration: "none" }}>
-            <img
-              width="35px"
-              height="35px"
-              src="/logo.svg"
-              alt="Carmine logo"
-            />
-          </RouterLink>
-        </Typography>
-        <NetworkSwitch />
-        <nav>{navLinks.map((navData, i) => navLink(navData, i))}</nav>
-        <WalletButton />
-      </Toolbar>
+      <RouterLink to="/" style={{ marginRight: "auto" }}>
+        <img
+          width="47.5px"
+          height="47.5px"
+          src="/logo.svg"
+          alt="Carmine logo"
+        />
+      </RouterLink>
+      <NetworkSwitch />
+      {navLinks.map((navData, i) => navLink(navData, i))}
+      <WalletButton />
     </AppBar>
   </>
 );

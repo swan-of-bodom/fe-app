@@ -60,9 +60,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  margin: 2,
   padding: 2,
-  minWidth: "min(500px, 90vw)",
+  minWidth: "min(500px, 95vw)",
 };
 
 type ProfitTableProps = {
@@ -221,11 +220,24 @@ const OptionBox = ({ option }: OptionBoxProps) => {
       </Grid>
       <Grid item md={5} xs={12}>
         {loading || !data ? (
-          <Stack sx={{ paddingTop: 3 }} spacing={2}>
-            <Skeleton sx={{ p: 1 }} variant="text" />
-            <Skeleton sx={{ p: 1 }} variant="text" />
-            <Skeleton sx={{ p: 1 }} variant="text" />
-          </Stack>
+          <Skeleton>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Maximum profit</TableCell>
+                  <TableCell>unlimited</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Maximum loss</TableCell>
+                  <TableCell>unlimited</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Break even</TableCell>
+                  <TableCell>$1000</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Skeleton>
         ) : (
           <ProfitTable
             loading={loading}
@@ -236,7 +248,7 @@ const OptionBox = ({ option }: OptionBoxProps) => {
           />
         )}
       </Grid>
-      <Grid item md={7}>
+      <Grid item md={7} xs={12}>
         <Box
           sx={{
             display: "flex",
@@ -264,7 +276,12 @@ const OptionBox = ({ option }: OptionBoxProps) => {
           />
         </Box>
       </Grid>
-      <Grid item md={5}>
+      <Grid
+        item
+        sx={{ justifyContent: "center", display: "flex" }}
+        md={5}
+        xs={12}
+      >
         {loading ? (
           <Skeleton>
             <Button variant="contained">Buy for ETH 0.00001</Button>

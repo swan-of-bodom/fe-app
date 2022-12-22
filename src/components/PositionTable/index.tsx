@@ -16,8 +16,7 @@ type ElemProps = {
 const PositionTableElem = ({ state }: ElemProps) => (
   <Paper
     sx={{
-      margin: "16px",
-      padding: "16px",
+      padding: 2,
       width: "100%",
       background: "#F5F5F5",
     }}

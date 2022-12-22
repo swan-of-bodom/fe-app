@@ -25,7 +25,7 @@ const OptionsTable = ({ options }: Props) => {
 
   return (
     <>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Strike Price</TableCell>

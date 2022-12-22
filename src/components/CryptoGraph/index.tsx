@@ -17,7 +17,6 @@ const CryptoGraph = () => {
         width: "100%",
         height: "300px",
         background: "#F5F5F5",
-        margin: "16px",
       }}
     >
       <ButtonGroup size="small" aria-label="small button group">

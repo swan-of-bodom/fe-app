@@ -67,8 +67,8 @@ const TradeTable = () => {
   return (
     <Paper
       sx={{
-        margin: "16px",
-        padding: "16px",
+        marginTop: 4,
+        padding: 2,
         width: "100%",
         background: "#F5F5F5",
       }}
