@@ -5,7 +5,6 @@ import {
   Modal,
   Paper,
   Skeleton,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -70,6 +69,7 @@ type ProfitTableProps = {
   basePremia: number;
   premia: number;
   side: OptionSide;
+  type: OptionType;
 };
 
 const ProfitTable = ({
@@ -77,11 +77,17 @@ const ProfitTable = ({
   basePremia,
   premia,
   side,
+  type,
 }: ProfitTableProps) => {
   const isLong = side === OptionSide.Long;
   const limited = "$" + premia.toFixed(2);
   const unlimited = "Unlimited";
-  const breakEven = "$" + (strikePrice + basePremia).toFixed(2);
+  const breakEven =
+    "$" +
+    (type === OptionType.Call
+      ? strikePrice + basePremia
+      : strikePrice - basePremia
+    ).toFixed(2);
   return (
     <Table>
       <TableBody>
@@ -245,6 +251,7 @@ const OptionBox = ({ option }: OptionBoxProps) => {
             basePremia={data!.basePremiaUsd}
             strikePrice={parseFloat(strikePrice)}
             side={optionSide}
+            type={optionType}
           />
         )}
       </Grid>
