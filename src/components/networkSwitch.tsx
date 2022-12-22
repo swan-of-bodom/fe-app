@@ -21,6 +21,10 @@ export const NetworkSwitch = () => {
     window.location.reload();
   };
 
+  // do not show Testnet2 in prod
+  const isDev =
+    new URL(window.location.href).hostname !== "app.carmine.finance";
+
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth size="small">
@@ -36,7 +40,7 @@ export const NetworkSwitch = () => {
             <MenuItem value={Envs.Devnet}>Devnet</MenuItem>
           ) : null}
           <MenuItem value={Envs.Testnet}>Testnet</MenuItem>
-          <MenuItem value={Envs.Testnet2}>Testnet 2</MenuItem>
+          {isDev ? <MenuItem value={Envs.Testnet2}>Testnet 2</MenuItem> : null}
           <MenuItem disabled={true} value={Envs.Mainnet}>
             Mainnet - comming soon!
           </MenuItem>

@@ -15,7 +15,7 @@ export const storeUsedNetwork = (network: Envs): void => {
  */
 export const getUsedNetwork = (): Envs => {
   const network = localStorage.getItem(networkKey);
-  const fallback = Envs.Testnet2;
+  const fallback = Envs.Testnet;
   return Object.values(Envs).includes(network as Envs)
     ? (network as Envs)
     : fallback;

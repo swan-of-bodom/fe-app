@@ -62,6 +62,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   margin: 2,
   padding: 2,
+  minWidth: "min(500px, 90vw)",
 };
 
 type ProfitTableProps = {

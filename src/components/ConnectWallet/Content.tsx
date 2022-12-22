@@ -38,19 +38,25 @@ const walletBoxStyle = {
 
 const DefaultBox = () => (
   <Box sx={walletBoxStyle}>
-    <Typography variant="h6">What is a wallet?</Typography>
-    <br />
-    <Typography>StarkNet wallets are themselves SmartContracts.</Typography>
+    <Typography variant="h5">What is a wallet?</Typography>
+    <Typography>
+      To interact with StarkNet, you will need to deploy an account contract.
+      StarkNet account is represented by a deployed contract that defines the
+      account’s logic.
+      <br />
+      These contracts can be governed and used with a Wallet.
+    </Typography>
   </Box>
 );
 
 const ArgentBox = () => (
   <Box sx={walletBoxStyle}>
-    <Typography variant="h6">Get ArgentX</Typography>
+    <Typography variant="h5">ArgentX</Typography>
     <Typography>
       Every account is a smart contract with built-in multicall. Thanks to
       account abstraction, unlock new use cases and leverage the true potential
-      of blockchains. <br />
+      of blockchains.
+      <br />
       <Link target="_blank" href="https://www.argent.xyz/argent-x/">
         Find out more about ArgentX!
       </Link>
@@ -60,14 +66,15 @@ const ArgentBox = () => (
 
 const BraavosBox = () => (
   <Box sx={walletBoxStyle}>
-    <Typography variant="h6">Get Braavos</Typography>
+    <Typography variant="h5">Braavos</Typography>
     <Typography>
-      The next generation of wallets made for an intuitive and safe start in
-      crypto. Buy, store, and send Manage your tokens wherever you are with a
-      single app.
+      A smart contract based wallet fully focused on StarkNet with innovative
+      features and beautiful UX.
       <br />
-      <Link target="_blank" href="https://braavos.app/">
-        Find out more about Braavos
+      Available for all major browsers, as well as Android and iOS.
+      <br />
+      <Link target="_blank" href="https://braavos.app/download/">
+        Download Braavos
       </Link>
     </Typography>
   </Box>
