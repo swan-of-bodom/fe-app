@@ -48,9 +48,9 @@ const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
 
   return (
     <TableRow sx={style} onClick={handleClick}>
-      <TableCell>${strikePrice}</TableCell>
-      <TableCell align="center">{date}</TableCell>
-      <TableCell align="center">
+      <TableCell sx={{ width: "calc(100%/3)" }}>${strikePrice}</TableCell>
+      <TableCell sx={{ width: "calc(100%/3)" }}>{date}</TableCell>
+      <TableCell sx={{ width: "calc(100%/3)" }}>
         {currency} {displayPremia}
       </TableCell>
     </TableRow>

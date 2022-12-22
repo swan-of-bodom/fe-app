@@ -77,18 +77,16 @@ export const PositionItem = ({ option }: Props) => {
   return (
     <TableRow>
       <TableCell>{desc}</TableCell>
-      <TableCell align="center">
-        {isExpired ? `Expired on ${date}` : date}
-      </TableCell>
-      <TableCell align="center">{positionSize.toFixed(decimals)}</TableCell>
-      <TableCell align="center">
+      <TableCell>{isExpired ? `Expired on ${date}` : date}</TableCell>
+      <TableCell>{positionSize.toFixed(decimals)}</TableCell>
+      <TableCell>
         <Tooltip title={positionValue}>
           <span>
             {currency} {positionValue.toFixed(decimals)}
           </span>
         </Tooltip>
       </TableCell>
-      <TableCell align="center">
+      <TableCell>
         <TextField
           id="outlined-number"
           label="Amount"
@@ -118,7 +116,7 @@ export const PositionItem = ({ option }: Props) => {
           }}
         />
       </TableCell>
-      <TableCell align="center">
+      <TableCell>
         <Button
           variant="contained"
           onClick={() =>
