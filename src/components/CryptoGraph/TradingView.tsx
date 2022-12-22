@@ -16,14 +16,14 @@ import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 const style = {
   height: "400px",
   padding: 1,
+  paddingBottom: 4,
 };
 
 export const ComplexGraph = () => (
   <Paper sx={style} elevation={2}>
     <AdvancedRealTimeChart
-      theme="dark"
       autosize
-      symbol="COINBASE:ETHUSD"
+      symbol="BINANCE:ETHUSD"
       interval="D"
       timezone="Etc/UTC"
       // eslint-disable-next-line react/style-prop-object

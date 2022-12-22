@@ -10,8 +10,8 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
   backgroundColor: "#EEE",
   minHeight: "10vh",
-  margin: "20px",
-  padding: "20px",
+  margin: 2,
+  padding: 2,
 }));
 
 const Home = () => {
