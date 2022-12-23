@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Typography } from "@mui/material";
+import { Link, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { ArrowBack } from "@mui/icons-material";
 
@@ -42,9 +42,9 @@ const StakingExplainedPage = () => {
       <br />
       <Typography>
         You can find more information{" "}
-        <RouterLink to="https://docs.carmine.finance/carmine-options-amm/how-to-use-app/adding-removing-liquidity-to-from-pools">
+        <Link href="https://docs.carmine.finance/carmine-options-amm/how-to-use-app/adding-removing-liquidity-to-from-pools">
           in our documentation.
-        </RouterLink>
+        </Link>
       </Typography>
     </>
   );
