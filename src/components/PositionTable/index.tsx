@@ -1,4 +1,3 @@
-import { Paper, TableContainer } from "@mui/material";
 import { useAccount } from "@starknet-react/core";
 import { useEffect, useReducer } from "react";
 import { debug } from "../../utils/debugger";
