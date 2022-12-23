@@ -16,9 +16,8 @@ type OptionPreviewProps = {
 
 const style = {
   cursor: "pointer",
-  background: "white",
   "&:hover": {
-    background: "#eee",
+    background: "#333",
   },
 };
 
