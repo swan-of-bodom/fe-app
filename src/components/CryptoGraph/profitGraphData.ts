@@ -17,7 +17,7 @@ const longCall = (
 ): GraphData => {
   const step = 0.25;
   const granuality = strikePrice / step;
-  const spread = [0.8 * granuality, 1.2 * granuality];
+  const spread = [0.6 * granuality, 1.4 * granuality];
   const plot = [];
 
   for (let i = spread[0]; i <= spread[1]; i++) {
@@ -59,7 +59,7 @@ const shortCall = (
 ): GraphData => {
   const step = 0.25;
   const granuality = strikePrice / step;
-  const spread = [0.8 * granuality, 1.2 * granuality];
+  const spread = [0.6 * granuality, 1.4 * granuality];
   const plot = [];
 
   for (let i = spread[0]; i <= spread[1]; i++) {
@@ -68,7 +68,7 @@ const shortCall = (
     plot.push({ market: x, usd: y });
   }
 
-  const domain = [plot[plot.length - 1].usd, 3 * plot[0].usd];
+  const domain = [plot[plot.length - 1].usd, 1.5 * plot[0].usd];
 
   const data = { plot, domain };
   debug("Short Call graph data", data);
