@@ -12,7 +12,7 @@ export const TableWrapper = (props: TableWrapperProps) => (
       marginBottom: 2,
       padding: 2,
       width: "100%",
-      background: "#F5F5F5",
+      background: "#393946",
     }}
   >
     <TableContainer elevation={2} component={Paper}>

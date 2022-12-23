@@ -28,7 +28,7 @@ const navLinks = [
 ] as NavLinkProps[];
 
 const navLink = ({ title, link }: NavLinkProps, i: number): ReactNode => (
-  <RouterLink to={link} key={i}>
+  <RouterLink style={{ textDecoration: "none" }} to={link} key={i}>
     <Button sx={{ color: "text.primary", my: 1, mx: 1.5 }} key={i}>
       {title}
     </Button>

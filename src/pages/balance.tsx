@@ -15,8 +15,6 @@ const Balance = () => {
         sx={{
           display: "flex",
           p: 1,
-          bgcolor: "background.paper",
-          borderRadius: 1,
         }}
       >
         <Typography sx={{ flexGrow: 1 }} variant="h4">

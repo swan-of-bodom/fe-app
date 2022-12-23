@@ -1,28 +1,18 @@
 import { Paper } from "@mui/material";
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 
-// "autosize": true,
-// "symbol": "COINBASE:ETHUSD",
-// "interval": "D",
-// "timezone": "Etc/UTC",
-// "theme": "dark",
-// "style": "1",
-// "locale": "en",
-// "toolbar_bg": "#f1f3f6",
-// "enable_publishing": false,
-// "allow_symbol_change": true,
-// "container_id": "tradingview_3211c"
-
 const style = {
   height: "min(70vh, 100vw)",
   padding: 1,
   paddingBottom: 4,
+  background: "#393946",
 };
 
 export const ComplexGraph = () => (
   <Paper sx={style} elevation={2}>
     <AdvancedRealTimeChart
       autosize
+      theme="dark"
       symbol="BINANCE:ETHUSD"
       interval="5"
       range="1D"
