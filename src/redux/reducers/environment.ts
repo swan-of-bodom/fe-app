@@ -5,6 +5,7 @@ export enum Envs {
   Devnet = "Devnet",
   Testnet = "Testnet",
   Testnet2 = "Testnet2",
+  Testdev = "Testdev",
   Mainnet = "Mainnet",
 }
 
