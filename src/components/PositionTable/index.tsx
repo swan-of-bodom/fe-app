@@ -18,7 +18,6 @@ const PositionTableElem = ({ state }: ElemProps) => (
     sx={{
       padding: 2,
       width: "100%",
-      background: "#F5F5F5",
     }}
   >
     <TableContainer elevation={2} component={Paper}>

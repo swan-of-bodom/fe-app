@@ -70,7 +70,6 @@ const TradeTable = () => {
         marginTop: 4,
         padding: 2,
         width: "100%",
-        background: "#F5F5F5",
       }}
     >
       <Button
