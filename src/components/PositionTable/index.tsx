@@ -4,6 +4,7 @@ import { useEffect, useReducer } from "react";
 import { debug } from "../../utils/debugger";
 import { fetchPositions, initialState, reducer, State } from "./fetchPositions";
 import { PositionTableComponent } from "./PositionTable";
+import { TableWrapper } from "../TableWrapper";
 
 type Props = {
   refresh: boolean;
@@ -14,16 +15,9 @@ type ElemProps = {
 };
 
 const PositionTableElem = ({ state }: ElemProps) => (
-  <Paper
-    sx={{
-      padding: 2,
-      width: "100%",
-    }}
-  >
-    <TableContainer elevation={2} component={Paper}>
-      <PositionTableComponent state={state} />
-    </TableContainer>
-  </Paper>
+  <TableWrapper>
+    <PositionTableComponent state={state} />
+  </TableWrapper>
 );
 
 const PositionTable = ({ refresh }: Props) => {

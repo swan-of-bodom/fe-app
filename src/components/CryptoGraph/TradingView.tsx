@@ -5,6 +5,7 @@ const style = {
   height: "min(70vh, 100vw)",
   padding: 1,
   paddingBottom: 4,
+  background: "#393946",
 };
 
 export const ComplexGraph = () => (
