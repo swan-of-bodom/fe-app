@@ -270,7 +270,6 @@ const OptionBox = ({ option }: OptionBoxProps) => {
             label="Option size"
             type="number"
             size="small"
-            value={amount}
             InputLabelProps={{
               shrink: true,
             }}
