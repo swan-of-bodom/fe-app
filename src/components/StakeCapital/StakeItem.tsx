@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AccountInterface } from "starknet";
 import { OptionType } from "../../types/options";
 import { handleStake } from "./handleStake";
+import { handleNumericChangeFactory } from "../../utils/inputHandling";
 
 type Props = {
   account: AccountInterface;
@@ -11,7 +12,10 @@ type Props = {
 
 export const StakeCapitalItem = ({ account, type }: Props) => {
   const [amount, setAmount] = useState<number>(0);
+  const [text, setText] = useState<string>("0");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const handleChange = handleNumericChangeFactory(setText, setAmount);
 
   const poolName =
     type === OptionType.Call ? "Call Pool (ETH)" : "Put Pool (USD)";
@@ -23,18 +27,16 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
         <TextField
           id="outlined-number"
           label="Amount"
-          type="number"
+          type="text"
           size="small"
+          value={text}
           InputLabelProps={{
             shrink: true,
           }}
           inputProps={{
-            maxLength: 13,
-            step: "0.01",
-            min: 0,
-            max: 50,
+            inputMode: "decimal",
           }}
-          onChange={(e) => setAmount(parseFloat(e.target.value))}
+          onChange={handleChange}
         />
       </TableCell>
       <TableCell align="center">

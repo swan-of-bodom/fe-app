@@ -4,6 +4,7 @@ import { debug } from "../../utils/debugger";
 import { AccountInterface } from "starknet";
 import { withdrawCall } from "./withdrawCall";
 import { OptionType } from "../../types/options";
+import { handleNumericChangeFactory } from "../../utils/inputHandling";
 
 const handleWithdraw = async (
   account: AccountInterface,
@@ -32,6 +33,11 @@ export const WithdrawItem = ({
   poolInfo,
 }: Props) => {
   const [amount, setAmount] = useState<number>(0);
+  const [text, setText] = useState<string>("0");
+
+  const cb = (n: number): number => (n > size ? size : n);
+  const handleChange = handleNumericChangeFactory(setText, setAmount, cb);
+
   const pool = type === OptionType.Call ? "Call" : "Put";
 
   return (
@@ -43,23 +49,16 @@ export const WithdrawItem = ({
         <TextField
           id="outlined-number"
           label="Amount"
-          type="number"
+          type="text"
           size="small"
-          value={amount}
+          value={text}
           InputLabelProps={{
             shrink: true,
           }}
           inputProps={{
-            maxLength: 20,
-            step: "0.01",
-            min: 0,
-            max: 1000,
+            inputMode: "decimal",
           }}
-          onChange={(e) => {
-            const valueIn = parseFloat(e.target.value);
-            debug(valueIn);
-            valueIn > size ? setAmount(size) : setAmount(valueIn);
-          }}
+          onChange={handleChange}
         />
       </TableCell>
       <TableCell>

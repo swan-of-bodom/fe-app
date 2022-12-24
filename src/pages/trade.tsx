@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Typography } from "@mui/material";
 import TradeTable from "../components/TradeTable";
-import CryptoGraph from "../components/CryptoGraph";
 import { ComplexGraph } from "../components/CryptoGraph/TradingView";
 
 const TradePage = () => {
@@ -12,7 +11,6 @@ const TradePage = () => {
   return (
     <>
       <Typography variant="h4">Buy Options</Typography>
-      {/* <CryptoGraph /> */}
       <ComplexGraph />
       <TradeTable />
     </>

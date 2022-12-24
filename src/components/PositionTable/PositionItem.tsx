@@ -15,6 +15,7 @@ import BN from "bn.js";
 import { useState } from "react";
 import { BASE_MATH_64_61 } from "../../constants/amm";
 import { tradeSettle } from "../../calls/tradeSettle";
+import { handleNumericChangeFactory } from "../../utils/inputHandling";
 
 type Props = {
   option: CompositeOption;
@@ -53,7 +54,11 @@ const handleCloseOrSettle = async (
 
 export const PositionItem = ({ option }: Props) => {
   const [amount, setAmount] = useState<number>(0.0);
+  const [text, setText] = useState<string>("0");
+  const cb = (n: number): number => (n > positionSize ? positionSize : n);
+  const handleChange = handleNumericChangeFactory(setText, setAmount, cb);
   const { account } = useAccount();
+
   const {
     strikePrice,
     optionSide,
@@ -90,30 +95,16 @@ export const PositionItem = ({ option }: Props) => {
         <TextField
           id="outlined-number"
           label="Amount"
-          type="number"
+          type="text"
           size="small"
-          value={amount}
+          value={text}
           InputLabelProps={{
             shrink: true,
           }}
           inputProps={{
-            maxLength: 13,
-            step: "0.01",
+            inputMode: "decimal",
           }}
-          onChange={(e) => {
-            const valueIn = parseFloat(e.target.value);
-            debug(positionSize, valueIn);
-            if (isNaN(valueIn)) {
-              setAmount(0);
-              return;
-            }
-            debug(valueIn);
-            if (valueIn > positionSize) {
-              setAmount(positionSize);
-              return;
-            }
-            setAmount(valueIn);
-          }}
+          onChange={handleChange}
         />
       </TableCell>
       <TableCell>

@@ -36,6 +36,19 @@ const testnet2Tokens = {
     "0x060ddab9f1646a521b9bc00c942ccb01b8e6a8f0a9637fbd96fd7e7aea27d9b8",
 };
 
+const testdevTokens = {
+  ETH_ADDRESS:
+    "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+  USD_ADDRESS:
+    "0x5a643907b9a4bc6a55e9069c4fd5fd1f5c79a22470690f75556c4736e34426",
+  MAIN_CONTRACT_ADDRESS:
+    "0x05cade694670f80dca1195c77766b643dce01f511eca2b7250ef113b57b994ec",
+  LPTOKEN_CONTRACT_ADDRESS:
+    "0x0149a0249403aa85859297ac2e3c96b7ca38f2b36d7a34212dcfbc92e8d66eb1",
+  LPTOKEN_CONTRACT_ADDRESS_PUT:
+    "0x077868613647e04cfa11593f628598e93071d52ca05f1e89a70add4bb3470897",
+};
+
 export const getTokenAddresses = (): TokenAddresses => {
   const currentEnv = store.getState().environmentSwitch.currentEnv;
 
@@ -56,6 +69,9 @@ export const getTokenAddresses = (): TokenAddresses => {
 
     case Envs.Testnet2:
       return testnet2Tokens;
+
+    case Envs.Testdev:
+      return testdevTokens;
 
     case Envs.Mainnet:
       // TODO: return mainnet tokens when on mainnet

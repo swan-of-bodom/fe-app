@@ -43,6 +43,14 @@ export const getProvider = (): ProviderInterface | undefined => {
         },
       });
 
+    case Envs.Testdev:
+      // no options for testnet
+      return new Provider({
+        sequencer: {
+          network: "goerli-alpha",
+        },
+      });
+
     case Envs.Mainnet:
       // TODO: add mainnet options
       return new Provider();

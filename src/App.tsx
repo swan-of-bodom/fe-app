@@ -19,6 +19,7 @@ import { getProvider } from "./utils/environment";
 import StakePage from "./pages/stake";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { baseTheme } from "./style/themes";
+import StakingExplainedPage from "./pages/stakeInfo";
 
 const App = () => {
   const connectors = Object.values(SupportedWalletIds).map(
@@ -41,6 +42,10 @@ const App = () => {
                 <Route path="/trade" element={<TradePage />} />
                 <Route path="/position" element={<BalancePage />} />
                 <Route path="/staking" element={<StakePage />} />
+                <Route
+                  path="/staking-explained"
+                  element={<StakingExplainedPage />}
+                />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>
