@@ -45,7 +45,7 @@ export const WithdrawItem = ({
       <TableCell>{pool}</TableCell>
       <TableCell>{value}</TableCell>
       <TableCell>{size}</TableCell>
-      <TableCell>
+      <TableCell sx={{ minWidth: "100px" }}>
         <TextField
           id="outlined-number"
           label="Amount"
