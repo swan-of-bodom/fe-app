@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { ArrowBack } from "@mui/icons-material";
 
@@ -9,7 +9,7 @@ const StakingExplainedPage = () => {
   });
 
   return (
-    <>
+    <Box sx={{ maxWidth: "66ch" }}>
       <RouterLink
         style={{ textDecoration: "none", color: "inherit" }}
         to="/staking"
@@ -46,7 +46,7 @@ const StakingExplainedPage = () => {
           in our documentation.
         </Link>
       </Typography>
-    </>
+    </Box>
   );
 };
 

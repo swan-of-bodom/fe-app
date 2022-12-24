@@ -1,6 +1,8 @@
 import { Box, Link } from "@mui/material";
 
-const Icon = (to: string, src: string, alt: string, padding?: number) => (
+type IconProps = { to: string; src: string; alt: string; padding?: number };
+
+const Icon = ({ to, src, alt, padding }: IconProps) => (
   <Link href={to}>
     <img
       src={src}
@@ -43,6 +45,8 @@ const socialList = [
 
 export const Socials = () => (
   <Box sx={style}>
-    {socialList.map(({ to, src, alt, padding }) => Icon(to, src, alt, padding))}
+    {socialList.map(({ to, src, alt, padding }, i) => (
+      <Icon to={to} src={src} alt={alt} padding={padding} key={i} />
+    ))}
   </Box>
 );

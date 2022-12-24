@@ -34,7 +34,9 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
             min: 0,
             max: 50,
           }}
-          onChange={(e) => setAmount(parseFloat(e.target.value))}
+          onChange={(e) =>
+            setAmount(parseFloat(e.target.value?.replace(",", ".")))
+          }
         />
       </TableCell>
       <TableCell align="center">

@@ -92,13 +92,13 @@ export const PositionItem = ({ option }: Props) => {
           label="Amount"
           type="number"
           size="small"
-          value={amount}
           InputLabelProps={{
             shrink: true,
           }}
           inputProps={{
             maxLength: 13,
             step: "0.01",
+            inputmode: "decimal",
           }}
           onChange={(e) => {
             const valueIn = parseFloat(e.target.value);

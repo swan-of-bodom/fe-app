@@ -275,11 +275,16 @@ const OptionBox = ({ option }: OptionBoxProps) => {
             }}
             inputProps={{
               maxLength: 13,
-              step: "0.01",
+              step: "any",
               min: 0,
               max: 50,
+              inputMode: "decimal",
             }}
-            onChange={(e) => setAmount(parseFloat(e.target.value))}
+            onChange={(e) => {
+              const valueIn = e.target.value;
+              const parsed = parseFloat(valueIn?.replace(/[^0-9]/, "."));
+              isNaN(parsed) ? setAmount(1.0) : setAmount(parsed);
+            }}
           />
         </Box>
       </Grid>

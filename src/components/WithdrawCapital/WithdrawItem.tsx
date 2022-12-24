@@ -45,7 +45,6 @@ export const WithdrawItem = ({
           label="Amount"
           type="number"
           size="small"
-          value={amount}
           InputLabelProps={{
             shrink: true,
           }}
@@ -54,9 +53,10 @@ export const WithdrawItem = ({
             step: "0.01",
             min: 0,
             max: 1000,
+            inputmode: "decimal",
           }}
           onChange={(e) => {
-            const valueIn = parseFloat(e.target.value);
+            const valueIn = parseFloat(e.target.value?.replace(",", "."));
             debug(valueIn);
             valueIn > size ? setAmount(size) : setAmount(valueIn);
           }}
