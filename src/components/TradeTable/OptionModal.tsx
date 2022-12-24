@@ -30,6 +30,7 @@ import { debounce, timestampToReadableDate } from "../../utils/utils";
 import { ProfitGraph } from "../CryptoGraph/ProfitGraph";
 import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
+import { handleNumericChangeFactory } from "../../utils/inputHandling";
 
 type ModalProps = {
   open: boolean;
@@ -140,9 +141,12 @@ const handleBuy = async (
 
 const OptionBox = ({ option }: OptionBoxProps) => {
   const { account } = useAccount();
-  const [amount, setAmount] = useState<number>(1.0);
+  const [amount, setAmount] = useState<number>(1);
+  const [inputText, setInputText] = useState<string>("1");
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<FinancialData>(null);
+
+  const handleChange = handleNumericChangeFactory(setInputText, setAmount);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const callWithDelay = useCallback(
@@ -266,25 +270,17 @@ const OptionBox = ({ option }: OptionBoxProps) => {
         >
           <Typography sx={{ display: "block" }}>Option size</Typography>
           <TextField
-            id="outlined-number"
             label="Option size"
-            type="number"
+            type="text"
             size="small"
+            value={inputText}
             InputLabelProps={{
               shrink: true,
             }}
             inputProps={{
-              maxLength: 13,
-              step: "any",
-              min: 0,
-              max: 50,
               inputMode: "decimal",
             }}
-            onChange={(e) => {
-              const valueIn = e.target.value;
-              const parsed = parseFloat(valueIn?.replace(/[^0-9]/, "."));
-              isNaN(parsed) ? setAmount(1.0) : setAmount(parsed);
-            }}
+            onChange={handleChange}
           />
         </Box>
       </Grid>
