@@ -22,7 +22,7 @@ export const StakeCapitalParent = () => {
   if (!account) return <NoContent />;
 
   return (
-    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <Table aria-label="simple table">
       <TableHead>
         <TableRow>
           <TableCell>Pool</TableCell>
