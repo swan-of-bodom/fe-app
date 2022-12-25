@@ -23,7 +23,7 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
   return (
     <TableRow>
       <TableCell>{poolName}</TableCell>
-      <TableCell align="center">
+      <TableCell sx={{ minWidth: "100px" }} align="center">
         <TextField
           id="outlined-number"
           label="Amount"

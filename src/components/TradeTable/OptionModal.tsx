@@ -90,6 +90,7 @@ const ProfitTable = ({
       ? strikePrice + basePremia
       : strikePrice - basePremia
     ).toFixed(2);
+  debug({ strikePrice, basePremia, breakEven });
   return (
     <Table>
       <TableBody>
