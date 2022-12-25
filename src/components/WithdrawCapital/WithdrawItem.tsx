@@ -35,7 +35,7 @@ export const WithdrawItem = ({
   const [amount, setAmount] = useState<number>(0);
   const [text, setText] = useState<string>("0");
 
-  const cb = (n: number): number => (n > size ? size : n);
+  const cb = (n: number): number => (n >= size ? size : n);
   const handleChange = handleNumericChangeFactory(setText, setAmount, cb);
 
   const pool = type === OptionType.Call ? "Call" : "Put";

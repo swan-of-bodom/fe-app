@@ -14,7 +14,7 @@ export const handleNumericChangeFactory = (
     }
     if (cb) {
       const res = cb(parsed);
-      setInputText("" + res);
+      setInputText(res === parsed ? validatedInput : res.toString());
       setAmount(res);
       return;
     }
