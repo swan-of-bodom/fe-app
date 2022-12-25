@@ -26,7 +26,8 @@ const longCall = (
     plot.push({ market: x, usd: y });
   }
 
-  const domain = [plot[0].usd * 1.5, plot[plot.length - 1].usd];
+  const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
+  const domain = [first - 0.2 * last, last];
 
   return { plot, domain };
 };
@@ -47,7 +48,8 @@ const longPut = (
     plot.push({ market: x, usd: y });
   }
 
-  const domain = [-0.5 * strikePrice, plot[0].usd];
+  const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
+  const domain = [last - 0.3 * first, first];
 
   return { plot, domain };
 };
@@ -68,11 +70,10 @@ const shortCall = (
     plot.push({ market: x, usd: y });
   }
 
-  const domain = [plot[plot.length - 1].usd, 1.5 * plot[0].usd];
+  const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
+  const domain = [last, first - 0.3 * last];
 
-  const data = { plot, domain };
-  debug("Short Call graph data", data);
-  return data;
+  return { plot, domain };
 };
 
 const shortPut = (
@@ -91,7 +92,8 @@ const shortPut = (
     plot.push({ market: x, usd: y });
   }
 
-  const domain = [plot[0].usd, 0.5 * strikePrice];
+  const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
+  const domain = [first, last - 0.3 * first];
 
   return { plot, domain };
 };
