@@ -101,8 +101,6 @@ export const longInteger = (n: Float, digits: Int): BN => {
     : new BN(0);
 };
 
-const decSeparator = (() => (1.1).toLocaleString().substring(1, 2))();
-
 export const shortInteger = (str: string, digits: Int): Float => {
   if (!str) {
     return 0;
@@ -112,7 +110,8 @@ export const shortInteger = (str: string, digits: Int): Float => {
     padded.substring(0, padded.length - digits),
     padded.substring(padded.length - digits),
   ];
-  return parseFloat(head + decSeparator + tail);
+
+  return parseFloat(head + "." + tail);
 };
 
 export const getBaseAmountWei = (amount: number) =>

@@ -9,7 +9,7 @@ const StakingExplainedPage = () => {
   });
 
   return (
-    <Box sx={{ maxWidth: "66ch" }}>
+    <Box sx={{ maxWidth: "66ch", fontSize: "18px" }}>
       <RouterLink
         style={{ textDecoration: "none", color: "inherit" }}
         to="/staking"
