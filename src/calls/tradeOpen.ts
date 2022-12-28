@@ -35,6 +35,12 @@ export const approveAndTradeOpen = async (
     return null;
   });
 
+  debug("to Approve:", {
+    size,
+    premia: new BN(premia).toString(10),
+    toApprove: new BN(toApprove!).toString(10),
+  });
+
   if (!toApprove) {
     return false;
   }
