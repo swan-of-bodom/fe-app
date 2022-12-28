@@ -31,6 +31,7 @@ import { ProfitGraph } from "../CryptoGraph/ProfitGraph";
 import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
+import { longInteger } from "../../utils/computations";
 
 type ModalProps = {
   open: boolean;
@@ -188,10 +189,12 @@ const OptionBox = ({ option }: OptionBoxProps) => {
   const msMaturity = maturity * 1000;
   const date = timestampToReadableDate(msMaturity);
 
-  const currentPremia: BN =
-    optionType === OptionType.Call
-      ? new BN((option.parsed as ParsedCallOption).premiaWei)
-      : new BN((option.parsed as ParsedPutOption).premiaUsd);
+  const digits = optionType === OptionType.Call ? 18 : 6;
+  const currentPremia: BN = data?.premiaEth
+    ? optionType === OptionType.Call
+      ? longInteger(data!.premiaEth, digits)
+      : longInteger(data!.premiaUsd, digits)
+    : new BN(0);
 
   const displayPremia =
     optionType === OptionType.Call

@@ -12,30 +12,24 @@ type GetApproveAmount = (
 export const PRECISION = 10000;
 
 const longCall: GetApproveAmount = (size, premia, slippage) =>
-  new BN(size * PRECISION)
-    .mul(premia)
+  premia
     .mul(new BN(100 + slippage)) // slippage
-    .div(new BN(100))
-    .div(new BN(PRECISION));
+    .div(new BN(100));
 
 const shortCall: GetApproveAmount = (size, premia, slippage) => {
   const base = longInteger(size, 18);
 
   const toSubtract = premia
-    .mul(new BN(size * PRECISION))
     .mul(new BN(100 - slippage)) // slippage
-    .div(new BN(100))
-    .div(new BN(PRECISION));
+    .div(new BN(100));
 
   return base.sub(toSubtract);
 };
 
 const longPut: GetApproveAmount = (size, premia, slippage) =>
-  new BN(size * PRECISION)
-    .mul(premia)
+  premia
     .mul(new BN(100 + slippage)) // slippage
-    .div(new BN(100))
-    .div(new BN(PRECISION));
+    .div(new BN(100));
 
 const shortPut: GetApproveAmount = async (
   size,
@@ -46,10 +40,8 @@ const shortPut: GetApproveAmount = async (
   const base = longInteger(size * ethNow, 6);
 
   const toSubtract = premia
-    .mul(new BN(size * PRECISION))
     .mul(new BN(100 - slippage)) // slippage
-    .div(new BN(100))
-    .div(new BN(PRECISION));
+    .div(new BN(100));
 
   return base.sub(toSubtract);
 };
