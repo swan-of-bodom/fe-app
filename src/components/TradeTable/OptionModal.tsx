@@ -11,6 +11,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useAccount } from "@starknet-react/core";
 import BN from "bn.js";
@@ -20,12 +21,17 @@ import { approveAndTradeOpen } from "../../calls/tradeOpen";
 import { Float } from "../../types/base";
 import { CompositeOption, OptionSide, OptionType } from "../../types/options";
 import { debug, LogTypes } from "../../utils/debugger";
-import { debounce, timestampToReadableDate } from "../../utils/utils";
+import {
+  debounce,
+  isDarkTheme,
+  timestampToReadableDate,
+} from "../../utils/utils";
 import { ProfitGraph } from "../CryptoGraph/ProfitGraph";
 import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { longInteger } from "../../utils/computations";
+import { ThemeVariants } from "../../style/themes";
 
 type ModalProps = {
   open: boolean;
@@ -49,16 +55,6 @@ export type FinancialData = {
   basePremiaEth: number;
   ethInUsd: number;
 } | null;
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  padding: 2,
-  minWidth: "min(500px, 95vw)",
-  background: "black",
-};
 
 type ProfitTableProps = {
   loading: boolean;
@@ -317,6 +313,18 @@ const OptionBox = ({ option }: OptionBoxProps) => {
 
 export const OptionModal = ({ open, setOpen, option }: ModalProps) => {
   const handleClose = () => setOpen(false);
+  const theme = useTheme();
+
+  const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    padding: 2,
+    minWidth: "min(500px, 95vw)",
+    background: isDarkTheme(theme) ? "black" : "white",
+    border: `solid 1px ${theme.palette.primary.main}`,
+  };
 
   return (
     <Modal

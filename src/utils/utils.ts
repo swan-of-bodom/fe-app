@@ -1,6 +1,8 @@
 import BN from "bn.js";
 import { BigNumberish } from "starknet/utils/number";
 import { USD_BASE_VALUE } from "../constants/amm";
+import { Theme } from "@mui/system";
+import { ThemeVariants } from "../style/themes";
 
 export const isNonEmptyArray = (v: unknown): v is Array<any> =>
   !!(v && Array.isArray(v) && v.length > 0);
@@ -68,6 +70,5 @@ export const debounce = (cb: (...args: any[]) => void, delay: number = 750) => {
   };
 };
 
-export const isDarkMode = (): boolean =>
-  window.matchMedia &&
-  window.matchMedia("(prefers-color-scheme: dark)").matches;
+export const isDarkTheme = (theme: Theme) =>
+  theme.palette.mode === ThemeVariants.dark;

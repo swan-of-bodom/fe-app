@@ -5,23 +5,27 @@ import {
   ParsedPutOption,
 } from "../../types/options";
 import { timestampToReadableDate, weiToEth } from "../../utils/utils";
-import { TableCell, TableRow } from "@mui/material";
+import { TableCell, TableRow, useTheme } from "@mui/material";
 import BN from "bn.js";
 import { USD_BASE_VALUE } from "../../constants/amm";
+import { ThemeVariants } from "../../style/themes";
 
 type OptionPreviewProps = {
   option: CompositeOption;
   handleClick: () => void;
 };
 
-const style = {
-  cursor: "pointer",
-  "&:hover": {
-    background: "#333",
-  },
-};
-
 const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
+  const theme = useTheme();
+
+  const greyGrade = theme.palette.mode === ThemeVariants.dark ? 800 : 300;
+
+  const style = {
+    cursor: "pointer",
+    "&:hover": {
+      background: theme.palette.grey[greyGrade],
+    },
+  };
   const { strikePrice, maturity, optionType } = option.parsed;
   const msMaturity = maturity * 1000;
 
