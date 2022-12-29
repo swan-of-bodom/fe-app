@@ -21,7 +21,11 @@ import { approveAndTradeOpen } from "../../calls/tradeOpen";
 import { Float } from "../../types/base";
 import { CompositeOption, OptionSide, OptionType } from "../../types/options";
 import { debug, LogTypes } from "../../utils/debugger";
-import { debounce, timestampToReadableDate } from "../../utils/utils";
+import {
+  debounce,
+  isDarkTheme,
+  timestampToReadableDate,
+} from "../../utils/utils";
 import { ProfitGraph } from "../CryptoGraph/ProfitGraph";
 import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
@@ -318,7 +322,7 @@ export const OptionModal = ({ open, setOpen, option }: ModalProps) => {
     transform: "translate(-50%, -50%)",
     padding: 2,
     minWidth: "min(500px, 95vw)",
-    background: theme.palette.mode === ThemeVariants.dark ? "black" : "white",
+    background: isDarkTheme(theme) ? "black" : "white",
     border: `solid 1px ${theme.palette.primary.main}`,
   };
 
