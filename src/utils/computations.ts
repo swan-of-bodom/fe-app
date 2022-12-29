@@ -1,13 +1,13 @@
 import { OptionSide, OptionType } from "../types/options";
 import BN from "bn.js";
-import { getEthInUsd } from "../calls/currencies";
 import { Float, Int } from "../types/base";
 
 type GetApproveAmount = (
   size: number,
   premia: BN,
-  slippage: number
-) => BN | Promise<BN>;
+  slippage: number,
+  strike?: number
+) => BN;
 
 export const PRECISION = 10000;
 
@@ -31,13 +31,11 @@ const longPut: GetApproveAmount = (size, premia, slippage) =>
     .mul(new BN(100 + slippage)) // slippage
     .div(new BN(100));
 
-const shortPut: GetApproveAmount = async (
-  size,
-  premia,
-  slippage
-): Promise<BN> => {
-  const ethNow = await getEthInUsd();
-  const base = longInteger(size * ethNow, 6);
+const shortPut: GetApproveAmount = (size, premia, slippage, strike): BN => {
+  if (!strike) {
+    throw new Error("Short Put get to approve did not receive strike price");
+  }
+  const base = longInteger(size * strike, 6);
 
   const toSubtract = premia
     .mul(new BN(100 - slippage)) // slippage
@@ -64,12 +62,13 @@ const getToApproveFunction = (
   }
 };
 
-export const getToApprove = async (
+export const getToApprove = (
   type: OptionType,
   side: OptionSide,
   size: number,
-  premia: BN
-): Promise<BN> => getToApproveFunction(type, side)(size, premia, 10);
+  premia: BN,
+  strike?: number
+): BN => getToApproveFunction(type, side)(size, premia, 10, strike);
 
 export const longInteger = (n: Float, digits: Int): BN => {
   if (!n) {

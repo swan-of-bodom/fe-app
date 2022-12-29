@@ -25,15 +25,13 @@ export const approveAndTradeOpen = async (
   const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
     getTokenAddresses();
 
-  const toApprove = await getToApprove(
+  const toApprove = getToApprove(
     optionType,
     optionSide,
     size,
-    premia
-  ).catch((e) => {
-    debug("Getting amount to approve failed:", e.message);
-    return null;
-  });
+    premia,
+    parseInt(option.parsed.strikePrice, 10)
+  );
 
   debug("to Approve:", {
     size,

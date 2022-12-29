@@ -14,16 +14,6 @@ const longCallDataset: ToApproveDataset[] = [
     premia: new BN("145645927995050205"),
     correct: new BN("160210520794555225"),
   },
-  {
-    size: 3,
-    premia: new BN("145645927995050205"),
-    correct: new BN("480631562383665676"),
-  },
-  {
-    size: 0.0001,
-    premia: new BN("145645927995050205"),
-    correct: new BN("16021052079455"),
-  },
 ];
 
 const shortCallDataset: ToApproveDataset[] = [
@@ -46,51 +36,50 @@ const shortPutDataset: ToApproveDataset[] = [
   {
     size: 1,
     premia: new BN("178503892"),
-    correct: new BN("1136346498"),
+    correct: new BN("1039346498"),
   },
 ];
 
 describe("approve amount", () => {
   test("LONG CALL", () => {
-    longCallDataset.forEach(async ({ size, premia, correct }) => {
-      const res = await getToApprove(
+    longCallDataset.forEach(({ size, premia, correct }) => {
+      const res = getToApprove(
         OptionType.Call,
         OptionSide.Long,
         size,
-        premia
+        premia,
+        1000 // strike price is only relevant for short put
       );
+      console.log({
+        res: res.toString(10),
+        correct: correct.toString(10),
+        premia: premia.toString(10),
+        size,
+      });
+
       expect(res.eq(correct)).toBe(true);
     });
   });
   test("SHORT CALL", () => {
-    shortCallDataset.forEach(async ({ size, premia, correct }) => {
-      const res = await getToApprove(
-        OptionType.Call,
-        OptionSide.Short,
-        size,
-        premia
-      );
+    shortCallDataset.forEach(({ size, premia, correct }) => {
+      const res = getToApprove(OptionType.Call, OptionSide.Short, size, premia);
       expect(res.eq(correct)).toBe(true);
     });
   });
   test("LONG PUT", () => {
-    longPutDataset.forEach(async ({ size, premia, correct }) => {
-      const res = await getToApprove(
-        OptionType.Put,
-        OptionSide.Long,
-        size,
-        premia
-      );
+    longPutDataset.forEach(({ size, premia, correct }) => {
+      const res = getToApprove(OptionType.Put, OptionSide.Long, size, premia);
       expect(res.eq(correct)).toBe(true);
     });
   });
   test("SHORT PUT", () => {
-    shortPutDataset.forEach(async ({ size, premia, correct }) => {
-      const res = await getToApprove(
+    shortPutDataset.forEach(({ size, premia, correct }) => {
+      const res = getToApprove(
         OptionType.Put,
         OptionSide.Short,
         size,
-        premia
+        premia,
+        1200
       );
       expect(res.eq(correct)).toBe(true);
     });
