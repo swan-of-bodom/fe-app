@@ -18,13 +18,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AccountInterface } from "starknet";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
 import { Float } from "../../types/base";
-import {
-  CompositeOption,
-  OptionSide,
-  OptionType,
-  ParsedCallOption,
-  ParsedPutOption,
-} from "../../types/options";
+import { CompositeOption, OptionSide, OptionType } from "../../types/options";
 import { debug, LogTypes } from "../../utils/debugger";
 import { debounce, timestampToReadableDate } from "../../utils/utils";
 import { ProfitGraph } from "../CryptoGraph/ProfitGraph";

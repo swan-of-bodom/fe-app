@@ -1,14 +1,9 @@
 import { OptionSide, OptionType } from "../../types/options";
-import { debug } from "../../utils/debugger";
 
 export type GraphData = {
   plot: Array<{ usd: number; market: number }>;
   domain: number[];
 };
-
-// strike 1300
-// premia 50
-// size 1
 
 const longCall = (
   strikePrice: number,
