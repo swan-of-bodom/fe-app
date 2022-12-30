@@ -1,9 +1,9 @@
 import { CompositeOption, OptionSide, OptionType } from "../../types/options";
-import { Box, Button, Paper, TableContainer } from "@mui/material";
+import { Box, Button, Paper, TableContainer, useTheme } from "@mui/material";
 import { useEffect, useReducer, useState } from "react";
 import { isFresh } from "../../utils/parseOption";
 import OptionsTable from "./OptionsTable";
-import { isNonEmptyArray } from "../../utils/utils";
+import { isDarkTheme, isNonEmptyArray } from "../../utils/utils";
 import { LoadingAnimation } from "../loading";
 import { NoContent } from "../TableNoContent";
 import { fetchOptions } from "./fetchOptions";
@@ -47,6 +47,7 @@ const TradeTable = () => {
   const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
   const [type, setCallPut] = useState<OptionType>(OptionType.Call);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const theme = useTheme();
 
   useEffect(() => {
     if (!state.loading) {
@@ -70,7 +71,9 @@ const TradeTable = () => {
         marginTop: 4,
         padding: 2,
         width: "100%",
-        background: "#393946",
+        ...(isDarkTheme(theme) && {
+          background: "#393946",
+        }),
       }}
     >
       <Button

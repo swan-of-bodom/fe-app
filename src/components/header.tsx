@@ -5,6 +5,8 @@ import { WalletButton } from "./ConnectWallet/Button";
 import { ReactNode } from "react";
 import { Box, Button } from "@mui/material";
 import { NetworkSwitch } from "./networkSwitch";
+import { ThemeVariants } from "../style/themes";
+import { ThemeButton } from "./ThemeButton";
 
 type NavLinkProps = {
   title: string;
@@ -34,7 +36,12 @@ const navLink = ({ title, link }: NavLinkProps, i: number): ReactNode => (
   </RouterLink>
 );
 
-export const Header = () => (
+type HeaderProps = {
+  mode: ThemeVariants;
+  toggleMode: (v: ThemeVariants) => void;
+};
+
+export const Header = ({ mode, toggleMode }: HeaderProps) => (
   <>
     <GlobalStyles
       styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
@@ -69,6 +76,7 @@ export const Header = () => (
             alt="Carmine logo"
           />
         </RouterLink>
+        <ThemeButton mode={mode} toggleMode={toggleMode} />
         <NetworkSwitch />
         {navLinks.map((navData, i) => navLink(navData, i))}
         <WalletButton />
