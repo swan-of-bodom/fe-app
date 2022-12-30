@@ -28,10 +28,6 @@ const lightTheme: ThemeOptions = {
 export const getTheme = (c: ThemeVariants) =>
   c === ThemeVariants.dark ? createTheme(darkTheme) : createTheme(lightTheme);
 
-const isDarkMode = (): boolean =>
-  window.matchMedia &&
-  window.matchMedia("(prefers-color-scheme: dark)").matches;
-
 const THEME_KEY = "theme-variant";
 
 export const storeTheme = (newTheme: ThemeVariants): void => {
@@ -47,8 +43,5 @@ export const getInitialTheme = (): ThemeVariants => {
   ) {
     return fromLocalStorage as ThemeVariants;
   }
-  if (isDarkMode()) {
-    return ThemeVariants.dark;
-  }
-  return ThemeVariants.light;
+  return ThemeVariants.dark;
 };
