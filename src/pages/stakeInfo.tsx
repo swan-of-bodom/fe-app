@@ -8,15 +8,24 @@ const StakingExplainedPage = () => {
     document.title = "Staking Explained | Carmine Finance";
   });
 
+  const containerStyle = { maxWidth: "66ch", fontSize: "18px" };
+
+  const linkStyle = {
+    textDecoration: "none",
+    color: "inherit",
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  };
+
   return (
-    <Box sx={{ maxWidth: "66ch", fontSize: "18px" }}>
-      <RouterLink
-        style={{ textDecoration: "none", color: "inherit" }}
-        to="/staking"
-      >
-        <ArrowBack />
+    <Box sx={containerStyle}>
+      <RouterLink style={linkStyle} to="/staking">
+        <ArrowBack />{" "}
+        <Typography sx={{ paddingLeft: 2 }} variant="h4">
+          Staking Explained
+        </Typography>
       </RouterLink>
-      <Typography variant="h4">Staking Explained</Typography>
       <br />
       <Typography>
         Staking capital in a liquidity pool means that you are providing
