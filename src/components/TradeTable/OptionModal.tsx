@@ -31,7 +31,6 @@ import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { longInteger } from "../../utils/computations";
-import { ThemeVariants } from "../../style/themes";
 
 type ModalProps = {
   open: boolean;
