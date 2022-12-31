@@ -27,7 +27,6 @@ export const Positions = () => {
       <Box
         sx={{
           display: "flex",
-          p: 1,
         }}
       >
         <Typography sx={{ flexGrow: 1 }} variant="h4">
@@ -39,6 +38,10 @@ export const Positions = () => {
           </Button>
         </Tooltip>
       </Box>
+      <Typography sx={{ maxWidth: "66ch" }}>
+        These options have not matured yet. You can either close your position
+        or wait for the maturity.
+      </Typography>
       <TableWrapper>
         <LiveTable state={state} />
       </TableWrapper>
