@@ -1,5 +1,7 @@
 import { ProviderOptions } from "starknet";
 import { StarknetChainId } from "starknet/constants";
+import { Settings } from "../types/environment";
+import { ThemeVariants } from "../style/themes";
 
 export const devProviderOptions: ProviderOptions = {
   sequencer: {
@@ -8,4 +10,9 @@ export const devProviderOptions: ProviderOptions = {
     gatewayUrl: process.env.REACT_APP_GATEWAY,
     chainId: process.env.REACT_APP_CHAIN_ID as StarknetChainId,
   },
+};
+
+export const defaultSettings: Settings = {
+  autoconnect: false,
+  theme: ThemeVariants.dark,
 };

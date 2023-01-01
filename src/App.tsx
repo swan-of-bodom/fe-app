@@ -18,16 +18,19 @@ import { StarknetConfig } from "@starknet-react/core";
 import { getProvider } from "./utils/environment";
 import StakePage from "./pages/stake";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { ThemeVariants, getInitialTheme, getTheme } from "./style/themes";
+import { ThemeVariants, getTheme } from "./style/themes";
 import StakingExplainedPage from "./pages/stakeInfo";
 import { useMemo, useState } from "react";
+import Settings from "./pages/settings";
+import { retrieveSettings } from "./utils/environment";
 
 const App = () => {
   const connectors = Object.values(SupportedWalletIds).map(
     (id) => new InjectedConnector({ options: { id } })
   );
 
-  const [mode, toggleMode] = useState<ThemeVariants>(getInitialTheme());
+  const settings = retrieveSettings();
+  const [mode, toggleMode] = useState<ThemeVariants>(settings.theme);
   const theme = useMemo(() => getTheme(mode), [mode]);
   return (
     <ThemeProvider theme={theme}>
@@ -36,10 +39,10 @@ const App = () => {
         <StarknetConfig
           defaultProvider={getProvider()}
           connectors={connectors}
-          autoConnect={false}
+          autoConnect={settings.autoconnect}
         >
           <Router>
-            <Layout mode={mode} toggleMode={toggleMode}>
+            <Layout>
               <Routes>
                 <Route path="/" element={<TradePage />} />
                 <Route path="/trade" element={<TradePage />} />
@@ -48,6 +51,10 @@ const App = () => {
                 <Route
                   path="/staking-explained"
                   element={<StakingExplainedPage />}
+                />
+                <Route
+                  path="/settings"
+                  element={<Settings toggleTheme={toggleMode} />}
                 />
                 <Route path="*" element={<NotFound />} />
               </Routes>
