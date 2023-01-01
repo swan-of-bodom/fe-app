@@ -6,7 +6,7 @@ export const handleNumericChangeFactory = (
   cb?: (v: number) => number
 ) => {
   return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const valueIn = e.target.value;
+    const valueIn = e.target.value.replace(",", ".");
 
     if (!/^\d*\.{0,1}\d*$/.test(valueIn)) {
       return;
