@@ -8,17 +8,19 @@ import {
   TableRow,
 } from "@mui/material";
 import { useAccount } from "@starknet-react/core";
-import { PositionItem } from "./PositionItem";
+import { InMoneyItem } from "./InMoneyItem";
 import { LoadingAnimation } from "../loading";
 import { NoContent } from "../TableNoContent";
 
 import { State } from "./fetchPositions";
+import { CompositeOption } from "../../types/options";
+import { isFresh } from "../../utils/parseOption";
 
 type Props = {
   state: State;
 };
 
-export const PositionTableComponent = ({ state }: Props) => {
+export const InMoneyTable = ({ state }: Props) => {
   const { address } = useAccount();
 
   if (!address)
@@ -38,7 +40,17 @@ export const PositionTableComponent = ({ state }: Props) => {
 
   if (!isNonEmptyArray(state.data))
     return (
-      <NoContent text="It seems you are not currently holding any positions." />
+      <NoContent text="It seems you are not currently holding any in-the-the-money options." />
+    );
+
+  const inOptions = state.data.filter(
+    ({ raw, parsed }: CompositeOption) =>
+      !isFresh(raw) && !!parsed?.positionValue
+  );
+
+  if (!isNonEmptyArray(inOptions))
+    return (
+      <NoContent text="It seems you are not currently holding any in-the-the-money options." />
     );
 
   return (
@@ -46,16 +58,15 @@ export const PositionTableComponent = ({ state }: Props) => {
       <TableHead>
         <TableRow>
           <TableCell>Option</TableCell>
-          <TableCell>Maturity</TableCell>
+          <TableCell>Expiry</TableCell>
           <TableCell>Size</TableCell>
           <TableCell>Value</TableCell>
-          <TableCell>Amount</TableCell>
           <TableCell></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {state.data.map((o, i: number) => (
-          <PositionItem option={o} key={i} />
+        {inOptions.map((o, i: number) => (
+          <InMoneyItem option={o} key={i} />
         ))}
       </TableBody>
     </Table>

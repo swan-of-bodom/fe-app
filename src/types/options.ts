@@ -26,6 +26,10 @@ export interface ParsedOption {
   quoteToken: string;
   baseToken: string;
   tokenAddress?: string;
+  premiaWei?: string;
+  premiaUsd?: string;
+  positionSize?: number;
+  positionValue?: number;
 }
 
 export interface ParsedCallOption extends ParsedOption {

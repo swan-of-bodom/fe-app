@@ -52,7 +52,7 @@ const handleCloseOrSettle = async (
   debug(`Trade ${isExpired ? "settle" : "close"}`, res);
 };
 
-export const PositionItem = ({ option }: Props) => {
+export const LiveItem = ({ option }: Props) => {
   const [amount, setAmount] = useState<number>(0.0);
   const [text, setText] = useState<string>("0");
   const cb = (n: number): number => (n > positionSize ? positionSize : n);
@@ -95,7 +95,6 @@ export const PositionItem = ({ option }: Props) => {
         <TextField
           id="outlined-number"
           label="Amount"
-          type="text"
           size="small"
           value={text}
           InputLabelProps={{
@@ -107,7 +106,7 @@ export const PositionItem = ({ option }: Props) => {
           onChange={handleChange}
         />
       </TableCell>
-      <TableCell>
+      <TableCell align="right">
         <Button
           variant="contained"
           onClick={() =>
