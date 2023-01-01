@@ -60,7 +60,7 @@ export const WithdrawItem = ({
           onChange={handleChange}
         />
       </TableCell>
-      <TableCell>
+      <TableCell align="right">
         <Button
           variant="contained"
           onClick={() => handleWithdraw(account, amount, type, poolInfo)}
