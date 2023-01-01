@@ -49,7 +49,6 @@ export const WithdrawItem = ({
         <TextField
           id="outlined-number"
           label="Amount"
-          type="text"
           size="small"
           value={text}
           InputLabelProps={{

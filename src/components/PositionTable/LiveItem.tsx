@@ -95,7 +95,6 @@ export const LiveItem = ({ option }: Props) => {
         <TextField
           id="outlined-number"
           label="Amount"
-          type="text"
           size="small"
           value={text}
           InputLabelProps={{
