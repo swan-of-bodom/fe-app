@@ -1,7 +1,9 @@
 import { ProviderInterface } from "starknet";
 import { Provider } from "starknet";
-import { devProviderOptions } from "../constants/environment";
+import { defaultSettings, devProviderOptions } from "../constants/environment";
 import { Envs } from "../redux/reducers/environment";
+import { Settings } from "../types/environment";
+import { debug } from "./debugger";
 
 const networkKey = "starknet-network";
 
@@ -58,5 +60,29 @@ export const getProvider = (): ProviderInterface | undefined => {
     default:
       // when in doubt, use testnet
       return new Provider();
+  }
+};
+
+const SETTINGS_KEY = "app-settings";
+
+export const storeSetting = (s: Settings) => {
+  try {
+    window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+  } catch (error) {
+    debug("Failed to store setting to local storage");
+    console.error(error);
+  }
+};
+
+export const retrieveSettings = (): Settings => {
+  const s = window.localStorage.getItem(SETTINGS_KEY);
+  if (!s) {
+    return defaultSettings;
+  }
+  try {
+    return JSON.parse(s) as Settings;
+  } catch (e: any) {
+    debug("Failed to retrieve settings", e?.message);
+    return defaultSettings;
   }
 };
