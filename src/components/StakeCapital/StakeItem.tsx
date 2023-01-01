@@ -27,7 +27,6 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
         <TextField
           id="outlined-number"
           label="Amount"
-          type="text"
           size="small"
           value={text}
           InputLabelProps={{
