@@ -5,10 +5,11 @@ import {
   ParsedPutOption,
 } from "../../types/options";
 import { timestampToReadableDate, weiToEth } from "../../utils/utils";
-import { TableCell, TableRow, useTheme } from "@mui/material";
+import { Box, TableCell, TableRow, useTheme } from "@mui/material";
 import BN from "bn.js";
 import { USD_BASE_VALUE } from "../../constants/amm";
 import { ThemeVariants } from "../../style/themes";
+import TouchAppIcon from "@mui/icons-material/TouchApp";
 
 type OptionPreviewProps = {
   option: CompositeOption;
@@ -53,8 +54,24 @@ const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
     <TableRow sx={style} onClick={handleClick}>
       <TableCell sx={{ width: "calc(100%/3)" }}>${strikePrice}</TableCell>
       <TableCell sx={{ width: "calc(100%/3)" }}>{date}</TableCell>
-      <TableCell sx={{ width: "calc(100%/3)" }}>
-        {currency} {displayPremia}
+      <TableCell
+        sx={{
+          width: "calc(100%/3)",
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+          }}
+        >
+          {currency} {displayPremia}
+          <TouchAppIcon
+            sx={{ ml: "auto", color: theme.palette.primary.main }}
+          />
+        </Box>
       </TableCell>
     </TableRow>
   );

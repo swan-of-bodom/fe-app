@@ -38,7 +38,7 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
           onChange={handleChange}
         />
       </TableCell>
-      <TableCell align="center">
+      <TableCell align="right">
         <Button
           disabled={loading}
           variant="contained"
