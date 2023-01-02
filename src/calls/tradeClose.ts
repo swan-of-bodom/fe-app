@@ -4,6 +4,8 @@ import { Abi, AccountInterface } from "starknet";
 import { RawOption } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug, LogTypes } from "../utils/debugger";
+import { invalidatePositions } from "../queries/client";
+import { afterTransaction } from "../utils/blockchain";
 
 export const tradeClose = async (
   account: AccountInterface,
@@ -18,6 +20,9 @@ export const tradeClose = async (
     };
     debug("Executing following call:", call);
     const res = await account.execute(call, [AmmAbi] as Abi[]);
+    if (res?.transaction_hash) {
+      afterTransaction(res.transaction_hash, invalidatePositions);
+    }
     return res;
   } catch (e) {
     debug(LogTypes.ERROR, e);

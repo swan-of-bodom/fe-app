@@ -5,6 +5,8 @@ import LpAbi from "../../abi/lptoken_abi.json";
 import AmmAbi from "../../abi/amm_abi.json";
 import { OptionType } from "../../types/options";
 import { getBaseAmountUsd, getBaseAmountWei } from "../../utils/computations";
+import { afterTransaction } from "../../utils/blockchain";
+import { invalidateStake } from "../../queries/client";
 
 export const handleStake = async (
   account: AccountInterface,
@@ -47,7 +49,7 @@ export const handleStake = async (
     approveCalldata,
     depositLiquidityCalldata,
   ]);
-  const multicall = await account
+  const res = await account
     .execute([approveCalldata, depositLiquidityCalldata], [
       LpAbi,
       AmmAbi,
@@ -55,8 +57,13 @@ export const handleStake = async (
     .catch((e: Error) => {
       debug('"Stake capital" user rejected or failed');
       debug("error", e.message);
-      return e;
+      return;
     });
-  debug("Deposit liquidity response", multicall);
+  debug("Deposit liquidity response", res);
+
+  if (res?.transaction_hash) {
+    afterTransaction(res.transaction_hash, invalidateStake);
+  }
+
   setLoading(false);
 };

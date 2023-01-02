@@ -1,5 +1,3 @@
-import { debug } from "../utils/debugger";
-
 export const handleNumericChangeFactory = (
   setInputText: (v: string) => void,
   setAmount: (v: number) => void,
@@ -13,7 +11,6 @@ export const handleNumericChangeFactory = (
     }
 
     const parsed = parseFloat(valueIn);
-    debug("Input handling", { valueIn, parsed });
 
     if (valueIn === ".") {
       setInputText("0.");
