@@ -13,6 +13,8 @@ import { toHex } from "starknet/utils/number";
 
 import AmmAbi from "../abi/amm_abi.json";
 import LpAbi from "../abi/lptoken_abi.json";
+import { afterTransaction } from "../utils/blockchain";
+import { invalidatePositions } from "../queries/client";
 
 export const approveAndTradeOpen = async (
   account: AccountInterface,
@@ -62,7 +64,7 @@ export const approveAndTradeOpen = async (
 
   let success = true;
 
-  await account
+  const res = await account
     .execute([approveCalldata, tradeOpenCalldata], [LpAbi, AmmAbi] as Abi[])
     .catch((e) => {
       debug("Trade open rejected or failed", e.message);
@@ -70,6 +72,10 @@ export const approveAndTradeOpen = async (
     });
 
   debug("Done trading, sucess:", success);
+
+  if (res?.transaction_hash) {
+    afterTransaction(res.transaction_hash, invalidatePositions);
+  }
 
   return success;
 };
