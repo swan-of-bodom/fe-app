@@ -1,14 +1,18 @@
 import { useAccount } from "@starknet-react/core";
 import { FunctionComponent } from "react";
 import { fetchPositions } from "./fetchPositions";
-import { LiveTable } from "./LiveTable";
 import { TableWrapper } from "../TableWrapper";
-import { InMoneyTable } from "./InMoneyTable";
-import { OutOfMoneyTable } from "./OutOfMoneyTable";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { NoContent } from "../TableNoContent";
+import { LoadingAnimation } from "../loading";
+import { CompositeOption } from "../../types/options";
+import { isFresh } from "../../utils/parseOption";
+import { TableElement } from "./TableElement";
+import { LiveItem } from "./LiveItem";
+import { InMoneyItem } from "./InMoneyItem";
+import { OutOfMoneyItem } from "./OutOfMoneyItem";
 
 type PositionsTemplateProps = {
   Live: FunctionComponent;
@@ -22,9 +26,7 @@ const PositionsTemplate = ({
   OutOfMoney,
 }: PositionsTemplateProps) => (
   <>
-    <Typography sx={{ flexGrow: 1 }} variant="h4">
-      Options Balance
-    </Typography>
+    <Typography variant="h4">Options Balance</Typography>
 
     <Typography sx={{ maxWidth: "66ch" }}>
       These options have not matured yet. You can either close your position or
@@ -57,13 +59,76 @@ type PropsAddress = {
 };
 
 const PositionsWithAddress = ({ address }: PropsAddress) => {
-  const props = useQuery([QueryKeys.position, address], fetchPositions);
+  const { isLoading, isError, isFetching, data } = useQuery(
+    [QueryKeys.position, address],
+    fetchPositions
+  );
+
+  if (isLoading) {
+    const child = () => (
+      <Box sx={{ padding: "20px" }}>
+        <LoadingAnimation size={40} />
+      </Box>
+    );
+    return (
+      <PositionsTemplate Live={child} InMoney={child} OutOfMoney={child} />
+    );
+  }
+
+  if (isError) {
+    const child = () =>
+      NoContent({
+        text: "Something went wrong while getting your positions, please try again later",
+      });
+    return (
+      <PositionsTemplate Live={child} InMoney={child} OutOfMoney={child} />
+    );
+  }
+
+  const liveOptions = data
+    ? data.filter(({ raw }: CompositeOption) => isFresh(raw))
+    : [];
+
+  const inOptions = data
+    ? data.filter(
+        ({ raw, parsed }: CompositeOption) =>
+          !isFresh(raw) && !!parsed?.positionValue
+      )
+    : [];
+
+  const outOptions = data
+    ? data.filter(
+        ({ raw, parsed }: CompositeOption) =>
+          !isFresh(raw) && !parsed?.positionValue
+      )
+    : [];
 
   return (
     <PositionsTemplate
-      Live={() => LiveTable(props)}
-      InMoney={() => InMoneyTable(props)}
-      OutOfMoney={() => OutOfMoneyTable(props)}
+      Live={() =>
+        TableElement({
+          isFetching,
+          data: liveOptions,
+          titles: ["Option", "Maturity", "Size", "Value", "Amount"],
+          ItemElem: LiveItem,
+        })
+      }
+      InMoney={() =>
+        TableElement({
+          isFetching,
+          data: inOptions,
+          titles: ["Option", "Expiry", "Size", "Value"],
+          ItemElem: InMoneyItem,
+        })
+      }
+      OutOfMoney={() =>
+        TableElement({
+          isFetching,
+          data: outOptions,
+          titles: ["Option", "Expiry", "Size"],
+          ItemElem: OutOfMoneyItem,
+        })
+      }
     />
   );
 };
