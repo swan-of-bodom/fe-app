@@ -10,6 +10,7 @@ import { isNonEmptyArray } from "../../utils/utils";
 
 import { getMainContract } from "../../utils/blockchain";
 import { uint256ToBN } from "starknet/dist/utils/uint256";
+import { QueryFunctionContext } from "react-query";
 
 /*
 
@@ -94,27 +95,22 @@ const parseUserPool = (arr: any[]): StakedCapitalInfo[] | null => {
   return res;
 };
 
-export const fetchCapital = async (
-  address: string,
-  setData: (v: any) => void,
-  setLoading: (v: boolean) => void
-) => {
-  setLoading(true);
+export const fetchCapital = async ({
+  queryKey,
+}: QueryFunctionContext<[string, string | undefined]>): Promise<
+  StakedCapitalInfo[] | undefined
+> => {
+  const address = queryKey[1];
+
   const contract = getMainContract();
   const res = await contract[AMM_METHODS.GET_USER_POOL_INFOS](address).catch(
     (e: string) => {
-      debug("Failed while calling", AMM_METHODS.GET_USER_POOL_INFOS);
-      debug("error", e);
-      setLoading(false);
-      return;
+      throw Error("Failed while calling");
     }
   );
 
-  debug(AMM_METHODS.GET_USER_POOL_INFOS, "call returned", res);
-
   if (!isNonEmptyArray(res) || !isNonEmptyArray(res[0])) {
     debug("Got empty response while fetching capital");
-    setLoading(false);
     return;
   }
 
@@ -122,10 +118,8 @@ export const fetchCapital = async (
 
   if (!parsed) {
     debug("Got null after parsing");
-    setLoading(false);
     return;
   }
   debug("Final data from pool", parsed);
-  setData(parsed);
-  setLoading(false);
+  return parsed;
 };

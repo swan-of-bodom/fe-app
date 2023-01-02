@@ -23,17 +23,17 @@ import StakingExplainedPage from "./pages/stakeInfo";
 import { useMemo, useState } from "react";
 import Settings from "./pages/settings";
 import { retrieveSettings } from "./utils/environment";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "react-query";
+import { queryClient } from "./queries/client";
 
 const App = () => {
   const connectors = Object.values(SupportedWalletIds).map(
     (id) => new InjectedConnector({ options: { id } })
   );
-  const queryClient = new QueryClient();
-
   const settings = retrieveSettings();
   const [mode, toggleMode] = useState<ThemeVariants>(settings.theme);
   const theme = useMemo(() => getTheme(mode), [mode]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
