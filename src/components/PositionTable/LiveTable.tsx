@@ -11,41 +11,34 @@ import { useAccount } from "@starknet-react/core";
 import { LiveItem } from "./LiveItem";
 import { LoadingAnimation } from "../loading";
 import { NoContent } from "../TableNoContent";
-
-import { State } from "./fetchPositions";
 import { CompositeOption } from "../../types/options";
 import { isFresh } from "../../utils/parseOption";
+import { QueryCompositeList } from "../../types/common";
 
-type Props = {
-  state: State;
-};
-
-export const LiveTable = ({ state }: Props) => {
+export const LiveTable = ({ isLoading, isError, data }: QueryCompositeList) => {
   const { address } = useAccount();
 
   if (!address)
     return <NoContent text="Connect your wallet to see your positions." />;
 
-  if (state.loading)
+  if (isLoading)
     return (
       <Box sx={{ padding: "20px" }}>
         <LoadingAnimation size={40} />
       </Box>
     );
 
-  if (state.error)
+  if (isError)
     return (
       <NoContent text="Something went wrong while getting your positions, please try again later." />
     );
 
-  if (!isNonEmptyArray(state.data))
+  if (!isNonEmptyArray(data))
     return (
       <NoContent text="It seems you are not currently holding any positions." />
     );
 
-  const liveOptions = state.data.filter(({ raw }: CompositeOption) =>
-    isFresh(raw)
-  );
+  const liveOptions = data.filter(({ raw }: CompositeOption) => isFresh(raw));
 
   if (!isNonEmptyArray(liveOptions))
     return (

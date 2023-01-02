@@ -1,26 +1,22 @@
 import { useAccount } from "@starknet-react/core";
-import { useEffect, useReducer, useState } from "react";
-import { debug } from "../../utils/debugger";
-import { fetchPositions, initialState, reducer } from "./fetchPositions";
+import { useState } from "react";
+import { fetchPositions } from "./fetchPositions";
 import { LiveTable } from "./LiveTable";
 import { TableWrapper } from "../TableWrapper";
 import { InMoneyTable } from "./InMoneyTable";
 import { OutOfMoneyTable } from "./OutOfMoneyTable";
 import { Cached } from "@mui/icons-material";
 import { Box, Typography, Button, Tooltip } from "@mui/material";
+import { useQuery } from "react-query";
+import { QueryKeys } from "../../queries/keys";
 
 export const Positions = () => {
   const [refresh, toggleRefresh] = useState<boolean>(false);
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { address, status } = useAccount();
-
-  useEffect(() => {
-    if (status === "connected" && address && !state.loading) {
-      debug("Fetching positons");
-      fetchPositions(address, dispatch);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, refresh]);
+  const { address } = useAccount();
+  const { isLoading, isError, data } = useQuery(
+    [QueryKeys.position, address],
+    fetchPositions
+  );
 
   return (
     <>
@@ -43,7 +39,7 @@ export const Positions = () => {
         or wait for the maturity.
       </Typography>
       <TableWrapper>
-        <LiveTable state={state} />
+        <LiveTable isLoading={isLoading} isError={isError} data={data} />
       </TableWrapper>
       <Typography variant="h4">Expired - Profit</Typography>
       <Typography sx={{ maxWidth: "66ch" }}>
@@ -51,7 +47,7 @@ export const Positions = () => {
         settling.
       </Typography>
       <TableWrapper>
-        <InMoneyTable state={state} />
+        <InMoneyTable isLoading={isLoading} isError={isError} data={data} />
       </TableWrapper>
       <Typography variant="h4">Expired - No Profit</Typography>
       <Typography sx={{ maxWidth: "66ch" }}>
@@ -59,7 +55,7 @@ export const Positions = () => {
         from settling them. Settling these options will simply remove them.
       </Typography>
       <TableWrapper>
-        <OutOfMoneyTable state={state} />
+        <OutOfMoneyTable isLoading={isLoading} isError={isError} data={data} />
       </TableWrapper>
     </>
   );

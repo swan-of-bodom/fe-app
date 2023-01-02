@@ -9,42 +9,7 @@ import {
 import { getMainContract } from "../../utils/blockchain";
 import { debug } from "../../utils/debugger";
 import { isNonEmptyArray } from "../../utils/utils";
-
-export enum ActionList {
-  Error = "ERROR",
-  Loading = "LOADING",
-  Done = "DONE",
-}
-
-export type Action = {
-  type: ActionList;
-  payload?: any;
-};
-
-export type State = {
-  loading: boolean;
-  error: string;
-  data: CompositeOption[];
-};
-
-export const initialState = {
-  loading: false,
-  error: "",
-  data: [],
-};
-
-export const reducer = (state: State, action: Action) => {
-  switch (action.type) {
-    case ActionList.Loading:
-      return { ...state, error: "", loading: true };
-    case ActionList.Error:
-      return { ...state, error: action.payload, loading: false };
-    case ActionList.Done:
-      return { ...state, error: "", loading: false, data: action.payload };
-    default:
-      return state;
-  }
-};
+import { QueryFunctionContext } from "react-query";
 
 const parsePosition = (arr: BN[]): CompositeOption => {
   const raw = {
@@ -103,39 +68,34 @@ export const parseBatchOfOptions = (arr: BN[]): CompositeOption[] => {
   return options;
 };
 
-export const fetchPositions = async (
-  address: string,
-  dispatch: (action: Action) => void
-) => {
-  dispatch({ type: ActionList.Loading });
-
+export const fetchPositions = async ({
+  queryKey,
+}: QueryFunctionContext<[string, string | undefined]>): Promise<
+  CompositeOption[]
+> => {
+  const address = queryKey[1];
+  if (!address) {
+    throw Error("No address");
+  }
   const contract = getMainContract();
 
   const res = await contract[AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER](
     address
   ).catch((e: Error) => {
     debug("Failed while calling", AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER);
-    return e;
+    throw Error(e.message);
   });
-
-  if (res instanceof Error) {
-    debug("Fetch resulted in err", res.message);
-    dispatch({ type: ActionList.Error, payload: res.message });
-    return;
-  }
 
   if (!isNonEmptyArray(res)) {
     debug("Empty positions response", res);
-    dispatch({ type: ActionList.Done, payload: [] });
-    return;
+    return [];
   }
 
   try {
     const composite = parseBatchOfOptions(res[0]);
 
     if (!isNonEmptyArray(composite)) {
-      dispatch({ type: ActionList.Done, payload: [] });
-      return;
+      return [];
     }
 
     // remove position with size 0 (BE rounding error)
@@ -146,9 +106,9 @@ export const fetchPositions = async (
       .sort((a, b) => a.parsed.maturity - b.parsed.maturity);
 
     debug("Fetched options with position", filtered);
-    dispatch({ type: ActionList.Done, payload: filtered });
+    return filtered;
   } catch (e: unknown) {
     debug("Failed to parse positions", res);
-    debug((e as Error)?.message);
+    throw Error("Failed to parse positions");
   }
 };
