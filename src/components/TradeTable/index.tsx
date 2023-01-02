@@ -32,7 +32,7 @@ const Content = ({ options, type, side, loading, error }: ContentProps) => {
       </Box>
     );
 
-  if (error) return <NoContent text="Option not available at the moment." />;
+  if (error) return <NoContent text="Option not available at the moment" />;
 
   return (
     <>

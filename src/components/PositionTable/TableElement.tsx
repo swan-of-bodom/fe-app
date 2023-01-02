@@ -20,7 +20,7 @@ type Props = {
 export const TableElement = ({ isFetching, data, titles, ItemElem }: Props) => {
   if (!isNonEmptyArray(data))
     return (
-      <NoContent text="It seems you are not currently holding any positions." />
+      <NoContent text="It seems you are not currently holding any positions" />
     );
 
   return (
