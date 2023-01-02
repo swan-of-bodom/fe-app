@@ -7,29 +7,25 @@ import {
   TableRow,
 } from "@mui/material";
 import { useAccount } from "@starknet-react/core";
-import { useEffect, useState } from "react";
 import { LoadingAnimation } from "../loading";
 import { isNonEmptyArray } from "../../utils/utils";
 
 import { WithdrawItem } from "./WithdrawItem";
 import { NoContent } from "../TableNoContent";
-import { fetchCapital, StakedCapitalInfo } from "./fetchCapital";
+import { fetchCapital } from "./fetchCapital";
+import { useQuery } from "react-query";
+import { QueryKeys } from "../../queries/keys";
+import { AccountInterface } from "starknet";
 
-export const WithdrawParent = () => {
-  const { account, address } = useAccount();
-  const [data, setData] = useState<StakedCapitalInfo[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+type Props = { address: string; account: AccountInterface };
 
-  useEffect(() => {
-    if (address) {
-      fetchCapital(address, setData, setLoading);
-    }
-  }, [address]);
+const WithdrawParentWithAccount = ({ address, account }: Props) => {
+  const { isLoading, isError, isFetching, data } = useQuery(
+    [QueryKeys.stake, address],
+    fetchCapital
+  );
 
-  if (!address)
-    return <NoContent text="Connect wallet to see your staked capital." />;
-
-  if (loading) {
+  if (isLoading) {
     return (
       <Box sx={{ padding: "20px" }}>
         <LoadingAnimation size={40} />
@@ -37,10 +33,11 @@ export const WithdrawParent = () => {
     );
   }
 
-  if (!isNonEmptyArray(data))
-    return <NoContent text="You currently do not have any staked capital." />;
+  if (isError)
+    return <NoContent text="Something went wrong, please try again later" />;
 
-  if (!account) return <NoContent text="No account." />;
+  if (!isNonEmptyArray(data))
+    return <NoContent text="You currently do not have any staked capital" />;
 
   return (
     <Table aria-label="simple table">
@@ -50,7 +47,9 @@ export const WithdrawParent = () => {
           <TableCell>Value of staked capital</TableCell>
           <TableCell># LP Tokens</TableCell>
           <TableCell>Amount to withdraw</TableCell>
-          <TableCell></TableCell>
+          <TableCell align="right">
+            {isFetching && <LoadingAnimation size={30} />}
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -67,4 +66,13 @@ export const WithdrawParent = () => {
       </TableBody>
     </Table>
   );
+};
+
+export const WithdrawParent = () => {
+  const { account, address } = useAccount();
+
+  if (!address || !account)
+    return <NoContent text="Connect wallet to see your staked capital" />;
+
+  return <WithdrawParentWithAccount account={account} address={address} />;
 };

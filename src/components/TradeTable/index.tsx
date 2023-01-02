@@ -1,13 +1,15 @@
 import { CompositeOption, OptionSide, OptionType } from "../../types/options";
 import { Box, Button, Paper, TableContainer, useTheme } from "@mui/material";
-import { useEffect, useReducer, useState } from "react";
+import { useState } from "react";
 import { isFresh } from "../../utils/parseOption";
 import OptionsTable from "./OptionsTable";
-import { isDarkTheme, isNonEmptyArray } from "../../utils/utils";
+import { isDarkTheme } from "../../utils/utils";
 import { LoadingAnimation } from "../loading";
 import { NoContent } from "../TableNoContent";
 import { fetchOptions } from "./fetchOptions";
-import { initialState, reducer } from "./fetchOptions";
+import { useQuery } from "react-query";
+import { QueryKeys } from "../../queries/keys";
+import { debug } from "../../utils/debugger";
 
 const getText = (type: OptionType, side: OptionSide) =>
   `We currently do not have any ${
@@ -19,7 +21,7 @@ type ContentProps = {
   type: OptionType;
   side: OptionSide;
   loading: boolean;
-  error: string;
+  error: boolean;
 };
 
 const Content = ({ options, type, side, loading, error }: ContentProps) => {
@@ -30,7 +32,7 @@ const Content = ({ options, type, side, loading, error }: ContentProps) => {
       </Box>
     );
 
-  if (error) return <NoContent text="Option not available at the moment." />;
+  if (error) return <NoContent text="Option not available at the moment" />;
 
   return (
     <>
@@ -44,20 +46,16 @@ const Content = ({ options, type, side, loading, error }: ContentProps) => {
 };
 
 const TradeTable = () => {
+  const { isLoading, isError, data } = useQuery(QueryKeys.trade, fetchOptions);
+
+  debug("React query data", { isLoading, isError, data });
+
   const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
   const [type, setCallPut] = useState<OptionType>(OptionType.Call);
-  const [state, dispatch] = useReducer(reducer, initialState);
   const theme = useTheme();
 
-  useEffect(() => {
-    if (!state.loading) {
-      fetchOptions(dispatch);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const filtered = isNonEmptyArray(state.data)
-    ? state.data.filter(
+  const filtered = data
+    ? data.filter(
         ({ raw, parsed }) =>
           isFresh(raw) &&
           parsed.optionSide === side &&
@@ -105,8 +103,8 @@ const TradeTable = () => {
           options={filtered}
           side={side}
           type={type}
-          loading={state.loading}
-          error={state.error}
+          loading={isLoading}
+          error={isError}
         />
       </TableContainer>
     </Paper>

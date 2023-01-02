@@ -4,6 +4,8 @@ import { OptionType } from "../../types/options";
 import { debug } from "../../utils/debugger";
 import AmmAbi from "../../abi/amm_abi.json";
 import { getBaseAmountUsd, getBaseAmountWei } from "../../utils/computations";
+import { invalidateStake } from "../../queries/client";
+import { afterTransaction } from "../../utils/blockchain";
 
 // "pooled_token_addr",
 // "quote_token_address",
@@ -42,5 +44,10 @@ export const withdrawCall = async (
     debug("Withdraw rejected by user or failed\n", e.message);
     return e;
   });
+
+  if (res?.transaction_hash) {
+    afterTransaction(res.transaction_hash, invalidateStake);
+  }
+
   debug("Withdraw response", res);
 };
