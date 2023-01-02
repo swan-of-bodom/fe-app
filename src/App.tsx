@@ -23,46 +23,50 @@ import StakingExplainedPage from "./pages/stakeInfo";
 import { useMemo, useState } from "react";
 import Settings from "./pages/settings";
 import { retrieveSettings } from "./utils/environment";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const App = () => {
   const connectors = Object.values(SupportedWalletIds).map(
     (id) => new InjectedConnector({ options: { id } })
   );
+  const queryClient = new QueryClient();
 
   const settings = retrieveSettings();
   const [mode, toggleMode] = useState<ThemeVariants>(settings.theme);
   const theme = useMemo(() => getTheme(mode), [mode]);
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Provider store={store}>
-        <StarknetConfig
-          defaultProvider={getProvider()}
-          connectors={connectors}
-          autoConnect={settings.autoconnect}
-        >
-          <Router>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<TradePage />} />
-                <Route path="/trade" element={<TradePage />} />
-                <Route path="/position" element={<BalancePage />} />
-                <Route path="/staking" element={<StakePage />} />
-                <Route
-                  path="/staking-explained"
-                  element={<StakingExplainedPage />}
-                />
-                <Route
-                  path="/settings"
-                  element={<Settings toggleTheme={toggleMode} />}
-                />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
-          </Router>
-        </StarknetConfig>
-      </Provider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Provider store={store}>
+          <StarknetConfig
+            defaultProvider={getProvider()}
+            connectors={connectors}
+            autoConnect={settings.autoconnect}
+          >
+            <Router>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<TradePage />} />
+                  <Route path="/trade" element={<TradePage />} />
+                  <Route path="/position" element={<BalancePage />} />
+                  <Route path="/staking" element={<StakePage />} />
+                  <Route
+                    path="/staking-explained"
+                    element={<StakingExplainedPage />}
+                  />
+                  <Route
+                    path="/settings"
+                    element={<Settings toggleTheme={toggleMode} />}
+                  />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+            </Router>
+          </StarknetConfig>
+        </Provider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 };
 

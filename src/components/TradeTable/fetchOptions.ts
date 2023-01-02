@@ -5,45 +5,7 @@ import { isNonEmptyArray } from "../../utils/utils";
 import { getMainContract } from "../../utils/blockchain";
 import { CompositeOption } from "../../types/options";
 
-export enum ActionList {
-  Error = "ERROR",
-  Loading = "LOADING",
-  Done = "DONE",
-}
-
-export type Action = {
-  type: ActionList;
-  payload?: any;
-};
-
-export type State = {
-  loading: boolean;
-  error: string;
-  data: CompositeOption[];
-};
-
-export const initialState = {
-  loading: false,
-  error: "",
-  data: [],
-};
-
-export const reducer = (state: State, action: Action) => {
-  switch (action.type) {
-    case ActionList.Loading:
-      return { ...state, error: "", loading: true };
-    case ActionList.Error:
-      return { ...state, error: action.payload, loading: false };
-    case ActionList.Done:
-      return { ...state, error: "", loading: false, data: action.payload };
-    default:
-      return state;
-  }
-};
-
-export const fetchOptions = async (dispatch: (action: Action) => void) => {
-  dispatch({ type: ActionList.Loading });
-
+export const fetchOptions = async (): Promise<CompositeOption[]> => {
   const { LPTOKEN_CONTRACT_ADDRESS, LPTOKEN_CONTRACT_ADDRESS_PUT } =
     getTokenAddresses();
 
@@ -70,8 +32,7 @@ export const fetchOptions = async (dispatch: (action: Action) => void) => {
   });
 
   if (call === null && put === null) {
-    dispatch({ type: ActionList.Error, payload: "Failed to fetch options" });
-    return;
+    throw Error("Failed to fetch options");
   }
 
   const options = [];
@@ -85,11 +46,10 @@ export const fetchOptions = async (dispatch: (action: Action) => void) => {
   }
 
   if (!isNonEmptyArray(options)) {
-    dispatch({ type: ActionList.Done, payload: [] });
-    return;
+    return [];
   }
 
   const compositeOptions = parseBatchOfOptions(options);
   debug("Parsed fetched options", compositeOptions);
-  dispatch({ type: ActionList.Done, payload: compositeOptions });
+  return compositeOptions;
 };
