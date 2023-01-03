@@ -1,42 +1,34 @@
-import { Button, TableCell, TableRow, TextField } from "@mui/material";
+import {
+  Button,
+  ButtonGroup,
+  TableCell,
+  TableRow,
+  TextField,
+} from "@mui/material";
 import { useState } from "react";
-import { debug } from "../../utils/debugger";
 import { AccountInterface } from "starknet";
 import { withdrawCall } from "./withdrawCall";
 import { OptionType } from "../../types/options";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
-
-const handleWithdraw = async (
-  account: AccountInterface,
-  amount: number,
-  type: OptionType,
-  poolInfo: Object
-) => {
-  debug("Withdrawing", amount);
-  debug("POOL INFO", poolInfo);
-  withdrawCall(account, amount, type);
-};
 
 type Props = {
   account: AccountInterface;
   size: number;
   value: number;
   type: OptionType;
-  poolInfo: Object;
 };
 
-export const WithdrawItem = ({
-  account,
-  size,
-  value,
-  type,
-  poolInfo,
-}: Props) => {
+export const WithdrawItem = ({ account, size, value, type }: Props) => {
   const [amount, setAmount] = useState<number>(0);
   const [text, setText] = useState<string>("0");
+  const [processing, setProcessing] = useState<boolean>(false);
 
   const cb = (n: number): number => (n >= size ? size : n);
   const handleChange = handleNumericChangeFactory(setText, setAmount, cb);
+  const handleWithdraw = () =>
+    withdrawCall(account, amount, type, setProcessing);
+  const handleWithdrawAll = () =>
+    withdrawCall(account, size, type, setProcessing);
 
   const pool = type === OptionType.Call ? "Call" : "Put";
 
@@ -61,12 +53,21 @@ export const WithdrawItem = ({
         />
       </TableCell>
       <TableCell align="right">
-        <Button
+        <ButtonGroup
+          disableElevation
           variant="contained"
-          onClick={() => handleWithdraw(account, amount, type, poolInfo)}
+          aria-label="Disabled elevation buttons"
+          disabled={processing}
         >
-          Withdraw
-        </Button>
+          {processing ? (
+            <Button>Processing...</Button>
+          ) : (
+            <>
+              <Button onClick={handleWithdraw}>Withdraw</Button>
+              <Button onClick={handleWithdrawAll}>All</Button>
+            </>
+          )}
+        </ButtonGroup>
       </TableCell>
     </TableRow>
   );

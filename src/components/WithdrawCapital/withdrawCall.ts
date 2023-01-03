@@ -16,8 +16,10 @@ import { afterTransaction } from "../../utils/blockchain";
 export const withdrawCall = async (
   account: AccountInterface,
   amount: number,
-  type: OptionType
+  type: OptionType,
+  setProcessing: (b: boolean) => void
 ) => {
+  setProcessing(true);
   const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
     getTokenAddresses();
 
@@ -42,12 +44,13 @@ export const withdrawCall = async (
   debug(`Calling ${AMM_METHODS.WITHDRAW_LIQUIDITY}`, withdraw);
   const res = await account.execute(withdraw, [AmmAbi] as Abi[]).catch((e) => {
     debug("Withdraw rejected by user or failed\n", e.message);
-    return e;
+    setProcessing(false);
   });
 
   if (res?.transaction_hash) {
-    afterTransaction(res.transaction_hash, invalidateStake);
+    afterTransaction(res.transaction_hash, () => {
+      invalidateStake();
+      setProcessing(false);
+    });
   }
-
-  debug("Withdraw response", res);
 };
