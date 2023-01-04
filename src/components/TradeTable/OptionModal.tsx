@@ -16,9 +16,7 @@ import {
 import { useAccount } from "@starknet-react/core";
 import BN from "bn.js";
 import { useCallback, useEffect, useState } from "react";
-import { AccountInterface } from "starknet";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
-import { Float } from "../../types/base";
 import { CompositeOption, OptionSide, OptionType } from "../../types/options";
 import { debug, LogTypes } from "../../utils/debugger";
 import {
@@ -101,41 +99,16 @@ const ProfitTable = ({
   );
 };
 
-const handleBuy = async (
-  account: AccountInterface | undefined,
-  amount: Float,
-  option: CompositeOption,
-  premia: BN,
-  updateTradeState: (v: TradeState) => void
-) => {
-  if (!account || !amount) {
-    debug(LogTypes.WARN, "Missing some of the inputs:", { account, amount });
-    return;
-  }
-  updateTradeState({ failed: false, processing: true });
-
-  const res = await approveAndTradeOpen(
-    account,
-    option,
-    amount,
-    option.parsed.optionType,
-    option.parsed.optionSide,
-    premia
-  );
-
-  updateTradeState(
-    res
-      ? { failed: false, processing: false }
-      : { failed: true, processing: false }
-  );
-};
-
 const OptionBox = ({ option }: OptionBoxProps) => {
   const { account } = useAccount();
   const [amount, setAmount] = useState<number>(1);
   const [inputText, setInputText] = useState<string>("1");
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<FinancialData>(null);
+  const [tradeState, updateTradeState] = useState<TradeState>({
+    failed: false,
+    processing: false,
+  });
 
   const handleChange = handleNumericChangeFactory(setInputText, setAmount);
 
@@ -167,11 +140,6 @@ const OptionBox = ({ option }: OptionBoxProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
-  const [tradeState, updateTradeState] = useState<TradeState>({
-    failed: false,
-    processing: false,
-  });
-
   const { strikePrice, maturity, optionType, optionSide } = option.parsed;
   const side = optionSide === OptionSide.Long ? "Long" : "Short";
   const type = optionType === OptionType.Call ? "Call" : "Put";
@@ -200,6 +168,26 @@ const OptionBox = ({ option }: OptionBoxProps) => {
           data.premiaUsd,
           amount
         );
+
+  const handleBuy = async () => {
+    if (!account || !amount) {
+      debug(LogTypes.WARN, "Missing some of the inputs:", { account, amount });
+      return;
+    }
+    updateTradeState({ failed: false, processing: true });
+
+    const cb = () => updateTradeState({ failed: false, processing: false });
+
+    approveAndTradeOpen(
+      account,
+      option,
+      amount,
+      option.parsed.optionType,
+      option.parsed.optionSide,
+      currentPremia,
+      cb
+    ).catch(() => updateTradeState({ failed: true, processing: false }));
+  };
 
   const buttonText = () =>
     (optionSide === OptionSide.Long ? "Buy" : "Sell") + " for " + displayPremia;
@@ -292,17 +280,9 @@ const OptionBox = ({ option }: OptionBoxProps) => {
             variant="contained"
             disabled={tradeState.processing || !account || loading}
             color={tradeState.failed ? "error" : "primary"}
-            onClick={() =>
-              handleBuy(
-                account,
-                amount,
-                option,
-                currentPremia,
-                updateTradeState
-              )
-            }
+            onClick={handleBuy}
           >
-            {buttonText()}
+            {tradeState.processing ? "Processing..." : buttonText()}
           </Button>
         )}
       </Grid>

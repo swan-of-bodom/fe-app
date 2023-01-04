@@ -22,7 +22,8 @@ export const approveAndTradeOpen = async (
   size: number,
   optionType: OptionType,
   optionSide: OptionSide,
-  premia: BN
+  premia: BN,
+  cb: () => void
 ): Promise<boolean> => {
   const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
     getTokenAddresses();
@@ -42,7 +43,7 @@ export const approveAndTradeOpen = async (
   });
 
   if (!toApprove) {
-    return false;
+    throw Error("Failed getting to approve");
   }
 
   const size64x61 = new BN(size * PRECISION)
@@ -62,20 +63,23 @@ export const approveAndTradeOpen = async (
     calldata: rawOptionToCalldata(option.raw, size64x61),
   };
 
-  let success = true;
-
   const res = await account
     .execute([approveCalldata, tradeOpenCalldata], [LpAbi, AmmAbi] as Abi[])
     .catch((e) => {
       debug("Trade open rejected or failed", e.message);
-      success = false;
+      throw Error("Trade open rejected or failed");
     });
 
-  debug("Done trading, sucess:", success);
+  debug("Done trading", res);
 
   if (res?.transaction_hash) {
-    afterTransaction(res.transaction_hash, invalidatePositions);
+    afterTransaction(res.transaction_hash, () => {
+      invalidatePositions();
+      cb();
+    });
+  } else {
+    throw Error("Trade open failed unexpectedly");
   }
 
-  return success;
+  return true;
 };

@@ -62,8 +62,11 @@ export const handleStake = async (
   debug("Deposit liquidity response", res);
 
   if (res?.transaction_hash) {
-    afterTransaction(res.transaction_hash, invalidateStake);
+    afterTransaction(res.transaction_hash, () => {
+      invalidateStake();
+      setLoading(false);
+    });
+  } else {
+    setLoading(false);
   }
-
-  setLoading(false);
 };
