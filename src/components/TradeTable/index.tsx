@@ -3,7 +3,7 @@ import { Box, Button, Paper, TableContainer, useTheme } from "@mui/material";
 import { useState } from "react";
 import { isFresh } from "../../utils/parseOption";
 import OptionsTable from "./OptionsTable";
-import { isDarkTheme } from "../../utils/utils";
+import { isCall, isDarkTheme, isLong } from "../../utils/utils";
 import { LoadingAnimation } from "../loading";
 import { NoContent } from "../TableNoContent";
 import { fetchOptions } from "./fetchOptions";
@@ -12,9 +12,9 @@ import { QueryKeys } from "../../queries/keys";
 import { debug } from "../../utils/debugger";
 
 const getText = (type: OptionType, side: OptionSide) =>
-  `We currently do not have any ${
-    side === OptionSide.Long ? "long" : "short"
-  } ${type === OptionType.Call ? "call" : "put"} options.`;
+  `We currently do not have any ${isLong(side) ? "long" : "short"} ${
+    isCall(type) ? "call" : "put"
+  } options.`;
 
 type ContentProps = {
   options: CompositeOption[];
@@ -75,25 +75,25 @@ const TradeTable = () => {
       }}
     >
       <Button
-        variant={side === OptionSide.Long ? "contained" : "outlined"}
+        variant={isLong(side) ? "contained" : "outlined"}
         onClick={() => setLongShort(OptionSide.Long)}
       >
         Long
       </Button>
       <Button
-        variant={side === OptionSide.Long ? "outlined" : "contained"}
+        variant={isLong(side) ? "outlined" : "contained"}
         onClick={() => setLongShort(OptionSide.Short)}
       >
         Short
       </Button>
       <Button
-        variant={type === OptionType.Call ? "contained" : "outlined"}
+        variant={isCall(type) ? "contained" : "outlined"}
         onClick={() => setCallPut(OptionType.Call)}
       >
         Call
       </Button>
       <Button
-        variant={type === OptionType.Call ? "outlined" : "contained"}
+        variant={isCall(type) ? "outlined" : "contained"}
         onClick={() => setCallPut(OptionType.Put)}
       >
         Put

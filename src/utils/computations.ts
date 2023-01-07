@@ -104,9 +104,3 @@ export const shortInteger = (str: string, digits: Int): Float => {
 
   return parseFloat(head + "." + tail);
 };
-
-export const getBaseAmountWei = (amount: number) =>
-  longInteger(amount, 18).toString(16);
-
-export const getBaseAmountUsd = (amount: number) =>
-  longInteger(amount, 6).toString(16);

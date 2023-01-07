@@ -1,4 +1,3 @@
-import { BigNumberish } from "starknet/utils/number";
 import { getTokenAddresses } from "../constants/amm";
 import {
   CompositeOption,
@@ -13,34 +12,27 @@ import {
 } from "../types/options";
 import { debug, LogTypes } from "./debugger";
 import BN from "bn.js";
-import { premiaToUsd, premiaToWei } from "./utils";
+import { premiaToUsd, premiaToWei, toHex } from "./utils";
+import { bnToOptionSide, bnToOptionType } from "./conversions";
 
-const math61toInt = (bn: BigNumberish): number =>
+const math61toInt = (bn: BN): number =>
   new BN(bn).div(new BN(2).pow(new BN(61))).toNumber();
 
 export const intToMath61 = (n: number): string =>
   (n * 2 ** 61).toLocaleString("fullwide", { useGrouping: false });
-
-export const bnToInt = (n: BigNumberish): number => new BN(n).toNumber();
-
-const bnToOptionSide = (n: BigNumberish): OptionSide =>
-  new BN(n).toNumber() === 1 ? OptionSide.Short : OptionSide.Long;
-
-const bnToOptionType = (n: BigNumberish): OptionType =>
-  new BN(n).toNumber() === 1 ? OptionType.Put : OptionType.Call;
 
 export const parseRawOption = (raw: RawOption): ParsedOption => {
   try {
     return {
       optionSide: bnToOptionSide(raw.option_side),
       optionType: bnToOptionType(raw.option_type),
-      maturity: bnToInt(raw.maturity),
-      baseToken: "0x" + new BN(raw.base_token_address).toString(16),
-      quoteToken: "0x" + new BN(raw.quote_token_address).toString(16),
+      maturity: new BN(raw.maturity).toNumber(),
+      baseToken: toHex(raw.base_token_address),
+      quoteToken: toHex(raw.quote_token_address),
       strikePrice: math61toInt(raw.strike_price).toString(),
       tokenAddress:
         raw.token_address && new BN(raw.token_address).gtn(1)
-          ? "0x" + new BN(raw.token_address).toString(16)
+          ? toHex(raw.token_address)
           : undefined,
     };
   } catch (e) {
@@ -56,24 +48,24 @@ export const composeOption = (raw: RawOption): CompositeOption => ({
 
 export const rawOptionToCalldata = (raw: RawOption, size: string): string[] => {
   return [
-    "0x" + new BN(raw.option_type).toString(16),
-    "0x" + new BN(raw.strike_price).toString(16),
+    toHex(raw.option_type),
+    toHex(raw.strike_price),
     new BN(raw.maturity).toString(10),
-    "0x" + new BN(raw.option_side).toString(16),
+    toHex(raw.option_side),
     size,
-    "0x" + new BN(raw.quote_token_address).toString(16),
-    "0x" + new BN(raw.base_token_address).toString(16),
+    toHex(raw.quote_token_address),
+    toHex(raw.base_token_address),
   ];
 };
 
 export const rawOptionToStruct = (raw: RawOption): OptionStruct => {
   return [
-    "0x" + new BN(raw.option_side).toString(16),
+    toHex(raw.option_side),
     new BN(raw.maturity).toString(10),
-    "0x" + new BN(raw.strike_price).toString(16),
-    "0x" + new BN(raw.quote_token_address).toString(16),
-    "0x" + new BN(raw.base_token_address).toString(16),
-    "0x" + new BN(raw.option_type).toString(16),
+    toHex(raw.strike_price),
+    toHex(raw.quote_token_address),
+    toHex(raw.base_token_address),
+    toHex(raw.option_type),
   ];
 };
 
@@ -89,7 +81,7 @@ export const rawOptionToTokenAddressCalldata = (raw: RawOption): string[] => {
 };
 
 export const isFresh = (raw: RawOption): boolean =>
-  bnToInt(raw.maturity) * 1000 > new Date().getTime();
+  new BN(raw.maturity).toNumber() * 1000 > new Date().getTime();
 
 export const hasBalance = (raw: RawOption): raw is RawOptionWithBalance =>
   !!(raw?.balance && new BN(raw.balance).gtn(0));

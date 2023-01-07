@@ -1,16 +1,16 @@
 import BN from "bn.js";
-import { BigNumberish } from "starknet/utils/number";
-import { USD_BASE_VALUE } from "../constants/amm";
+import { USD_BASE_VALUE, getTokenAddresses } from "../constants/amm";
 import { Theme } from "@mui/system";
 import { ThemeVariants } from "../style/themes";
+import { OptionSide, OptionType } from "../types/options";
 
 export const isNonEmptyArray = (v: unknown): v is Array<any> =>
   !!(v && Array.isArray(v) && v.length > 0);
 
-export const handleBlockChainResponse = (v: unknown): BigNumberish | null =>
+export const handleBlockChainResponse = (v: unknown): BN | null =>
   v && isNonEmptyArray(v) ? v[0] : null;
 
-export const weiToEth = (bn: BigNumberish, decimalPlaces: number): string => {
+export const weiToEth = (bn: BN, decimalPlaces: number): string => {
   const v: string = Number(bn)
     .toLocaleString("fullwide", { useGrouping: false })
     .padStart(19, "0");
@@ -72,3 +72,12 @@ export const debounce = (cb: (...args: any[]) => void, delay: number = 750) => {
 
 export const isDarkTheme = (theme: Theme) =>
   theme.palette.mode === ThemeVariants.dark;
+
+export const isCall = (type: OptionType): boolean => type === OptionType.Call;
+
+export const isLong = (side: OptionSide): boolean => side === OptionSide.Long;
+
+export const currencyAddresByType = (type: OptionType) =>
+  getTokenAddresses()[isCall(type) ? "ETH_ADDRESS" : "USD_ADDRESS"];
+
+export const toHex = (v: BN) => "0x" + v.toString(16);

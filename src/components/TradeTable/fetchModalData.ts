@@ -34,12 +34,17 @@ export const fetchModalData = async (
   option: CompositeOption,
   signal: AbortSignal
 ): Promise<FinancialData | null> => {
+  let failed = false;
+
   const [ethInUsd, fetchedPremia] = await Promise.all([
     recentEthInUsd(),
     getPremia(option, size, false),
-  ]);
+  ]).catch(() => {
+    failed = true;
+    return [];
+  });
 
-  if (signal.aborted) {
+  if (signal.aborted || failed) {
     return null;
   }
 

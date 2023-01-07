@@ -4,9 +4,10 @@ import { Abi, AccountInterface } from "starknet";
 import LpAbi from "../../abi/lptoken_abi.json";
 import AmmAbi from "../../abi/amm_abi.json";
 import { OptionType } from "../../types/options";
-import { getBaseAmountUsd, getBaseAmountWei } from "../../utils/computations";
+import { getBaseAmountUsd, getBaseAmountWei } from "../../utils/conversions";
 import { afterTransaction } from "../../utils/blockchain";
 import { invalidateStake } from "../../queries/client";
+import { currencyAddresByType, isCall } from "../../utils/utils";
 
 export const handleStake = async (
   account: AccountInterface,
@@ -19,16 +20,17 @@ export const handleStake = async (
   );
   setLoading(true);
 
-  const baseAmount =
-    type === OptionType.Call
-      ? getBaseAmountWei(amount)
-      : getBaseAmountUsd(amount);
+  const baseAmount = isCall(type)
+    ? getBaseAmountWei(amount)
+    : getBaseAmountUsd(amount);
 
-  const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
+  const { USD_ADDRESS, ETH_ADDRESS, MAIN_CONTRACT_ADDRESS } =
     getTokenAddresses();
 
+  const currencyAddress = currencyAddresByType(type);
+
   const approveCalldata = {
-    contractAddress: type === OptionType.Call ? ETH_ADDRESS : USD_ADDRESS,
+    contractAddress: currencyAddress,
     entrypoint: AMM_METHODS.APPROVE,
     calldata: [MAIN_CONTRACT_ADDRESS, "0x" + baseAmount, 0],
   };
@@ -37,7 +39,7 @@ export const handleStake = async (
     contractAddress: MAIN_CONTRACT_ADDRESS,
     entrypoint: AMM_METHODS.DEPOSIT_LIQUIDITY,
     calldata: [
-      type === OptionType.Call ? ETH_ADDRESS : USD_ADDRESS, // ETH pro call pool , USD pro put pool
+      currencyAddress,
       USD_ADDRESS,
       ETH_ADDRESS,
       type,

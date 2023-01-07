@@ -1,14 +1,8 @@
-import {
-  CompositeOption,
-  OptionSide,
-  OptionType,
-  ParsedOptionWithPosition,
-} from "../../types/options";
-import { timestampToReadableDate } from "../../utils/utils";
+import { CompositeOption, ParsedOptionWithPosition } from "../../types/options";
+import { isCall, isLong, timestampToReadableDate } from "../../utils/utils";
 import { Button, TableCell, TableRow } from "@mui/material";
 import { debug } from "../../utils/debugger";
 import { useAccount } from "@starknet-react/core";
-import BN from "bn.js";
 import { tradeSettle } from "../../calls/tradeSettle";
 import { useState } from "react";
 import { invalidatePositions } from "../../queries/client";
@@ -29,9 +23,7 @@ export const OutOfMoneyItem = ({ option }: Props) => {
     }
     setProcessing(true);
 
-    const size64x61 = new BN(option.raw.position_size).toString(10);
-
-    tradeSettle(account, option.raw, size64x61)
+    tradeSettle(account, option)
       .then((res) => {
         if (res?.transaction_hash) {
           afterTransaction(res.transaction_hash, () => {
@@ -50,8 +42,8 @@ export const OutOfMoneyItem = ({ option }: Props) => {
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
-  const typeText = optionType === OptionType.Put ? "Put" : "Call";
-  const sideText = optionSide === OptionSide.Long ? "Long" : "Short";
+  const typeText = isCall(optionType) ? "Call" : "Put";
+  const sideText = isLong(optionSide) ? "Long" : "Short";
 
   const desc = `${sideText} ${typeText} with strike $${strikePrice}`;
   const decimals = 4;

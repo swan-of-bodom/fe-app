@@ -3,7 +3,7 @@ import { AMM_METHODS, getTokenAddresses } from "../../constants/amm";
 import { OptionType } from "../../types/options";
 import { debug } from "../../utils/debugger";
 import AmmAbi from "../../abi/amm_abi.json";
-import { getBaseAmountUsd, getBaseAmountWei } from "../../utils/computations";
+import { getBaseAmountUsd, getBaseAmountWei } from "../../utils/conversions";
 import { invalidateStake } from "../../queries/client";
 import { afterTransaction } from "../../utils/blockchain";
 

@@ -1,7 +1,7 @@
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import AmmAbi from "../abi/amm_abi.json";
 import { Abi, AccountInterface } from "starknet";
-import { RawOption } from "../types/options";
+import { CompositeOption } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug, LogTypes } from "../utils/debugger";
 import { invalidatePositions } from "../queries/client";
@@ -9,14 +9,14 @@ import { afterTransaction } from "../utils/blockchain";
 
 export const tradeClose = async (
   account: AccountInterface,
-  rawOption: RawOption,
-  amount: string
+  option: CompositeOption,
+  size: string
 ) => {
   try {
     const call = {
       contractAddress: getTokenAddresses().MAIN_CONTRACT_ADDRESS,
       entrypoint: AMM_METHODS.TRADE_CLOSE,
-      calldata: rawOptionToCalldata(rawOption, amount),
+      calldata: rawOptionToCalldata(option.raw, size),
     };
     debug("Executing following call:", call);
     const res = await account.execute(call, [AmmAbi] as Abi[]);
