@@ -1,13 +1,8 @@
 import { CompositeOption } from "../types/options";
-import {
-  AMM_METHODS,
-  BASE_MATH_64_61,
-  getTokenAddresses,
-} from "../constants/amm";
+import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { rawOptionToStruct } from "../utils/parseOption";
 import { getMainContract } from "../utils/blockchain";
 import { debug } from "../utils/debugger";
-import { BN } from "bn.js";
 import { convertSizeToUint256 } from "../utils/conversions";
 import { isCall } from "../utils/utils";
 import { math64x61toDecimal } from "../utils/units";
@@ -28,19 +23,12 @@ export const getPremia = async (
 
   const contract = getMainContract();
 
-  debug("Getting total premia with calldata:", {
-    calldata,
-    flat: JSON.stringify(calldata.flat()),
-  });
-
   const res = await contract[AMM_METHODS.GET_TOTAL_PREMIA](...calldata).catch(
     (e: Error) => {
       debug("Failed to get total premia", e.message);
       throw Error(e.message);
     }
   );
-
-  debug("Got total premia:", res);
 
   if (!res?.total_premia_including_fees) {
     throw Error("Response did not included total_premia_including_fees");
@@ -50,7 +38,7 @@ export const getPremia = async (
     res.total_premia_including_fees
   );
 
-  debug("Converted premia with fees", convertedPremiaWithFees);
+  debug("Converted premia:", convertedPremiaWithFees);
 
   return convertedPremiaWithFees;
 };

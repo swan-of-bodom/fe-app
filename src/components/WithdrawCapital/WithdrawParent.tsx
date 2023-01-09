@@ -53,11 +53,11 @@ const WithdrawParentWithAccount = ({ address, account }: Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {data.map(({ value, numberOfTokens, type }, i) => (
+        {data.map(({ value, size, type }, i) => (
           <WithdrawItem
             key={i}
             account={account}
-            size={numberOfTokens}
+            size={size}
             value={value}
             type={type}
           />

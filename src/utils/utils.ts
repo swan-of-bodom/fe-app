@@ -1,5 +1,10 @@
 import BN from "bn.js";
-import { USD_BASE_VALUE, getTokenAddresses } from "../constants/amm";
+import {
+  ETH_DIGITS,
+  USD_BASE_VALUE,
+  USD_DIGITS,
+  getTokenAddresses,
+} from "../constants/amm";
 import { Theme } from "@mui/system";
 import { ThemeVariants } from "../style/themes";
 import { OptionSide, OptionType } from "../types/options";
@@ -79,5 +84,8 @@ export const isLong = (side: OptionSide): boolean => side === OptionSide.Long;
 
 export const currencyAddresByType = (type: OptionType) =>
   getTokenAddresses()[isCall(type) ? "ETH_ADDRESS" : "USD_ADDRESS"];
+
+export const digitsByType = (type: OptionType) =>
+  isCall(type) ? ETH_DIGITS : USD_DIGITS;
 
 export const toHex = (v: BN) => "0x" + v.toString(16);

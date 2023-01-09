@@ -1,15 +1,11 @@
 import BN from "bn.js";
-import {
-  AMM_METHODS,
-  ETH_BASE_VALUE,
-  USD_BASE_VALUE,
-} from "../../constants/amm";
+import { AMM_METHODS } from "../../constants/amm";
 import { OptionType } from "../../types/options";
 import { debug } from "../../utils/debugger";
 import { isNonEmptyArray } from "../../utils/utils";
 
 import { getMainContract } from "../../utils/blockchain";
-import { uint256ToBN } from "starknet/dist/utils/uint256";
+import { Uint256 } from "starknet/dist/utils/uint256";
 import { QueryFunctionContext } from "react-query";
 
 /*
@@ -43,11 +39,9 @@ struct UserPoolInfo {
 
 */
 
-const precision = 1000000;
-
 export type StakedCapitalInfo = {
-  value: number;
-  numberOfTokens: number;
+  value: Uint256;
+  size: Uint256;
   type: OptionType;
   poolInfo: Object;
 };
@@ -72,23 +66,12 @@ const parseUserPool = (arr: any[]): StakedCapitalInfo[] | null => {
         10
       ) as OptionType;
 
-      const baseValue =
-        type === OptionType.Call ? ETH_BASE_VALUE : USD_BASE_VALUE;
-
-      const value =
-        new BN(uint256ToBN(value_of_user_stake))
-          .mul(new BN(precision))
-          .div(baseValue)
-          .toNumber() / precision;
-
-      const numberOfTokens =
-        new BN(uint256ToBN(size_of_users_tokens))
-          .mul(new BN(precision))
-          .div(baseValue)
-          .toNumber() / precision;
-
-      debug("Parsed into", { value, numberOfTokens, type });
-      return { value, numberOfTokens, type, poolInfo: pool_info };
+      return {
+        value: value_of_user_stake,
+        size: size_of_users_tokens,
+        type,
+        poolInfo: pool_info,
+      };
     }
   );
 

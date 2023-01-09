@@ -50,13 +50,6 @@ describe("approve amount", () => {
         premia,
         1000 // strike price is only relevant for short put
       );
-      console.log({
-        res: res.toString(10),
-        correct: correct.toString(10),
-        premia: premia.toString(10),
-        size,
-      });
-
       expect(res.eq(correct)).toBe(true);
     });
   });
@@ -112,6 +105,13 @@ describe("long integer", () => {
     const input = 0.123456789;
     const expectedResult = new BN("123");
     const res = longInteger(input, 3);
+    expect(res.eq(expectedResult)).toBe(true);
+  });
+
+  test("scientific notation", () => {
+    const input = 1.0679258529442e-7;
+    const expectedResult = new BN("106792585294");
+    const res = longInteger(input, 18);
     expect(res.eq(expectedResult)).toBe(true);
   });
 });

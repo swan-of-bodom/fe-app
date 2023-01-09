@@ -21,6 +21,7 @@ import { CompositeOption, OptionSide, OptionType } from "../../types/options";
 import { debug, LogTypes } from "../../utils/debugger";
 import {
   debounce,
+  isCall,
   isDarkTheme,
   timestampToReadableDate,
 } from "../../utils/utils";
@@ -29,6 +30,7 @@ import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { longInteger } from "../../utils/computations";
+import { ETH_DIGITS, USD_DIGITS } from "../../constants/amm";
 
 type ModalProps = {
   open: boolean;
@@ -146,11 +148,9 @@ const OptionBox = ({ option }: OptionBoxProps) => {
   const msMaturity = maturity * 1000;
   const date = timestampToReadableDate(msMaturity);
 
-  const digits = optionType === OptionType.Call ? 18 : 6;
+  const digits = isCall(optionType) ? ETH_DIGITS : USD_DIGITS;
   const currentPremia: BN = data?.premiaEth
-    ? optionType === OptionType.Call
-      ? longInteger(data!.premiaEth, digits)
-      : longInteger(data!.premiaUsd, digits)
+    ? longInteger(data!.premiaEth, digits)
     : new BN(0);
 
   const displayPremia =

@@ -46,7 +46,6 @@ export const fetchModalData = async (
     return null;
   }
 
-  debug("Fetched premia:", fetchedPremia);
   const { optionType } = option.parsed;
 
   const res: FinancialData = {
@@ -91,6 +90,8 @@ export const fetchModalData = async (
     res.basePremiaEth = premiaEth;
     res.basePremiaUsd = numPremiaUsd;
   }
+
+  debug("Calculated financial data", res);
 
   return res;
 };

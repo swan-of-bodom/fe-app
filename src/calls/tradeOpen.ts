@@ -4,7 +4,7 @@ import { CompositeOption, OptionSide, OptionType } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug } from "../utils/debugger";
 import BN from "bn.js";
-import { getToApprove } from "../utils/computations";
+import { getToApprove, longInteger } from "../utils/computations";
 import { convertSizeToInt } from "../utils/conversions";
 
 import AmmAbi from "../abi/amm_abi.json";
@@ -24,6 +24,11 @@ export const approveAndTradeOpen = async (
 ): Promise<boolean> => {
   const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
     getTokenAddresses();
+
+  debug("Approve and TradeOpen", {
+    size: longInteger(size, 18).toString(10),
+    premia: premia.toString(10),
+  });
 
   const toApprove = getToApprove(
     optionType,
