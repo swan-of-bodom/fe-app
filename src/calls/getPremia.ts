@@ -10,6 +10,7 @@ import { debug } from "../utils/debugger";
 import { BN } from "bn.js";
 import { convertSizeToUint256 } from "../utils/conversions";
 import { isCall } from "../utils/utils";
+import { math64x61toDecimal } from "../utils/units";
 
 export const getPremia = async (
   option: CompositeOption,
@@ -45,11 +46,11 @@ export const getPremia = async (
     throw Error("Response did not included total_premia_including_fees");
   }
 
-  const precission = 100000;
-  return (
-    new BN(res.total_premia_including_fees)
-      .mul(new BN(precission))
-      .div(BASE_MATH_64_61)
-      .toNumber() / precission
+  const convertedPremiaWithFees = math64x61toDecimal(
+    res.total_premia_including_fees
   );
+
+  debug("Converted premia with fees", convertedPremiaWithFees);
+
+  return convertedPremiaWithFees;
 };

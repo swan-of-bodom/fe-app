@@ -1,16 +1,24 @@
-export const handleNumericChangeFactory = (
-  setInputText: (v: string) => void,
-  setAmount: (v: number) => void,
-  cb?: (v: number) => number
-) => {
-  return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+const MAX = 9999;
+
+export const handleNumericChangeFactory =
+  (
+    setInputText: (v: string) => void,
+    setAmount: (v: number) => void,
+    cb?: (v: number) => number
+  ) =>
+  (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const valueIn = e.target.value.replace(",", ".");
 
-    if (!/^\d*\.{0,1}\d*$/.test(valueIn)) {
+    // smallest allowed number: 0.000001
+    if (!/^\d*\.{0,1}\d{0,6}$/.test(valueIn)) {
       return;
     }
 
     const parsed = parseFloat(valueIn);
+
+    if (parsed > MAX) {
+      return;
+    }
 
     if (valueIn === ".") {
       setInputText("0.");
@@ -32,4 +40,3 @@ export const handleNumericChangeFactory = (
     setInputText(valueIn);
     setAmount(parsed);
   };
-};
