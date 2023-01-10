@@ -41,3 +41,6 @@ export const intToMath64x61 = (n: Int, digits: number): Math64x61 =>
 
 export const decimalToUint256 = (n: Decimal, digits: number): Uint256 =>
   bnToUint256(longInteger(n, digits));
+
+export const uint256toDecimal = (n: BN, digits: number): Decimal =>
+  shortInteger(n.toString(10), digits);

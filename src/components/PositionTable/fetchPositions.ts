@@ -1,15 +1,12 @@
 import BN from "bn.js";
-import {
-  AMM_METHODS,
-  ETH_BASE_VALUE,
-  USD_BASE_VALUE,
-} from "../../constants/amm";
+import { AMM_METHODS } from "../../constants/amm";
 import { CompositeOption, ParsedOptionWithPosition } from "../../types/options";
 import { getMainContract } from "../../utils/blockchain";
 import { debug } from "../../utils/debugger";
-import { isCall, isNonEmptyArray, toHex } from "../../utils/utils";
+import { digitsByType, isNonEmptyArray, toHex } from "../../utils/utils";
 import { QueryFunctionContext } from "react-query";
 import { bnToOptionSide, bnToOptionType } from "../../utils/conversions";
+import { math64x61toDecimal, uint256toDecimal } from "../../utils/units";
 
 const parsePosition = (arr: BN[]): CompositeOption => {
   const raw = {
@@ -23,8 +20,6 @@ const parsePosition = (arr: BN[]): CompositeOption => {
     value_of_position: arr[8],
   };
 
-  const precision = 1000000;
-
   const optionType = bnToOptionType(raw.option_type);
   const optionSide = bnToOptionSide(raw.option_side);
   const maturity = new BN(raw.maturity).toNumber();
@@ -33,18 +28,13 @@ const parsePosition = (arr: BN[]): CompositeOption => {
     .toString(10);
   const quoteToken = toHex(raw.quote_token_address);
   const baseToken = toHex(raw.base_token_address);
-  // int
-  const positionSize =
-    new BN(raw.position_size)
-      .mul(new BN(precision))
-      .div(isCall(optionType) ? ETH_BASE_VALUE : USD_BASE_VALUE)
-      .toNumber() / precision;
+  // Uint256 - just one part
+  const positionSize = uint256toDecimal(
+    raw.position_size,
+    digitsByType(optionType)
+  );
   // math64_61
-  const positionValue =
-    new BN(raw.value_of_position)
-      .mul(new BN(precision))
-      .div(new BN(2).pow(new BN(61)))
-      .toNumber() / precision;
+  const positionValue = math64x61toDecimal(raw.value_of_position.toString(10));
 
   const parsed = {
     optionSide,
@@ -124,7 +114,7 @@ export const fetchPositions = async ({
     debug("Fetched options with position", filtered);
     return filtered;
   } catch (e: unknown) {
-    debug("Failed to parse positions", res);
+    debug("Failed to parse positions", e);
     throw Error(typeof e === "string" ? e : "Failed to parse positions");
   }
 };
