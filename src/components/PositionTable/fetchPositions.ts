@@ -63,7 +63,10 @@ const parsePosition = (arr: BN[]): CompositeOption => {
 };
 
 export const parseBatchOfOptions = (arr: BN[]): CompositeOption[] => {
-  debug("Parsing positions", arr);
+  debug(
+    "Parsing positions",
+    arr.map((v) => v.toString(10))
+  );
   const a = 9;
   const l = arr.length;
   const options = [];
@@ -106,6 +109,11 @@ export const fetchPositions = async ({
       return [];
     }
 
+    debug("Parsed positions", {
+      composite,
+      stringified: JSON.stringify(composite),
+    });
+
     // remove position with size 0 (BE rounding error)
     const filtered = composite
       .filter(
@@ -117,6 +125,6 @@ export const fetchPositions = async ({
     return filtered;
   } catch (e: unknown) {
     debug("Failed to parse positions", res);
-    throw Error("Failed to parse positions");
+    throw Error(typeof e === "string" ? e : "Failed to parse positions");
   }
 };
