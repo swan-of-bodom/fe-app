@@ -89,3 +89,9 @@ export const digitsByType = (type: OptionType) =>
   isCall(type) ? ETH_DIGITS : USD_DIGITS;
 
 export const toHex = (v: BN) => "0x" + v.toString(16);
+
+export const assert = (condition: boolean, message?: string): void => {
+  if (!condition) {
+    throw new Error("Assertion failed " + message);
+  }
+};

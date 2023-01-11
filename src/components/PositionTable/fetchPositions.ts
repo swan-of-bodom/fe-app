@@ -1,73 +1,10 @@
-import BN from "bn.js";
-import { AMM_METHODS } from "../../constants/amm";
 import { CompositeOption, ParsedOptionWithPosition } from "../../types/options";
-import { getMainContract } from "../../utils/blockchain";
 import { debug } from "../../utils/debugger";
-import { digitsByType, isNonEmptyArray, toHex } from "../../utils/utils";
+import { isNonEmptyArray } from "../../utils/utils";
 import { QueryFunctionContext } from "react-query";
-import { bnToOptionSide, bnToOptionType } from "../../utils/conversions";
-import { math64x61toDecimal, uint256toDecimal } from "../../utils/units";
-
-const parsePosition = (arr: BN[]): CompositeOption => {
-  const raw = {
-    option_side: arr[0],
-    maturity: arr[1],
-    strike_price: arr[2],
-    quote_token_address: arr[3],
-    base_token_address: arr[4],
-    option_type: arr[5],
-    position_size: arr[6],
-    value_of_position: arr[8],
-  };
-
-  const optionType = bnToOptionType(raw.option_type);
-  const optionSide = bnToOptionSide(raw.option_side);
-  const maturity = new BN(raw.maturity).toNumber();
-  const strikePrice = new BN(raw.strike_price)
-    .div(new BN(2).pow(new BN(61)))
-    .toString(10);
-  const quoteToken = toHex(raw.quote_token_address);
-  const baseToken = toHex(raw.base_token_address);
-  // Uint256 - just one part
-  const positionSize = uint256toDecimal(
-    raw.position_size,
-    digitsByType(optionType)
-  );
-  // math64_61
-  const positionValue = math64x61toDecimal(raw.value_of_position.toString(10));
-
-  const parsed = {
-    optionSide,
-    optionType,
-    maturity,
-    strikePrice,
-    positionSize,
-    positionValue,
-    quoteToken,
-    baseToken,
-  };
-
-  debug({ raw, parsed });
-
-  return { raw, parsed };
-};
-
-export const parseBatchOfOptions = (arr: BN[]): CompositeOption[] => {
-  debug(
-    "Parsing positions",
-    arr.map((v) => v.toString(10))
-  );
-  const a = 9;
-  const l = arr.length;
-  const options = [];
-
-  for (let i = 0; i < l / a; i++) {
-    const cur = arr.slice(i * a, (i + 1) * a);
-    options.push(parsePosition(cur));
-  }
-
-  return options;
-};
+import { getOptionsWithPositionOfUser } from "../../calls/getOptionsWithPosition";
+import { parseBatchOfOptions } from "../../utils/optionParsers/batch";
+import { parseOptionWithPosition } from "../../utils/optionParsers/parseOptionWithPosition";
 
 export const fetchPositions = async ({
   queryKey,
@@ -78,31 +15,15 @@ export const fetchPositions = async ({
   if (!address) {
     throw Error("No address");
   }
-  const contract = getMainContract();
-
-  const res = await contract[AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER](
-    address
-  ).catch((e: Error) => {
-    debug("Failed while calling", AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER);
-    throw Error(e.message);
-  });
-
-  if (!isNonEmptyArray(res)) {
-    debug("Empty positions response", res);
-    return [];
-  }
 
   try {
-    const composite = parseBatchOfOptions(res[0]);
+    const rawData = await getOptionsWithPositionOfUser(address);
+
+    const composite = parseBatchOfOptions(rawData, 9, parseOptionWithPosition);
 
     if (!isNonEmptyArray(composite)) {
       return [];
     }
-
-    debug("Parsed positions", {
-      composite,
-      stringified: JSON.stringify(composite),
-    });
 
     // remove position with size 0 (BE rounding error)
     const filtered = composite

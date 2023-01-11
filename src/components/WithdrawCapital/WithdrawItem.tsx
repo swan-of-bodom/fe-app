@@ -17,7 +17,6 @@ import { ETH_DIGITS, USD_DIGITS } from "../../constants/amm";
 import { shortInteger } from "../../utils/computations";
 import { Uint256, uint256ToBN } from "starknet/dist/utils/uint256";
 import { decimalToUint256 } from "../../utils/units";
-import { debug } from "../../utils/debugger";
 
 type Props = {
   account: AccountInterface;
