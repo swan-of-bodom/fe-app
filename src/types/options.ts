@@ -44,33 +44,6 @@ export type OptionWithUsersPosition = [
   Math64x61
 ];
 
-export interface ParsedOption {
-  optionType: OptionType;
-  strikePrice: string;
-  maturity: number;
-  optionSide: OptionSide;
-  quoteToken: string;
-  baseToken: string;
-  tokenAddress?: string;
-  premiaWei?: string;
-  premiaUsd?: string;
-  positionSize?: number;
-  positionValue?: number;
-}
-
-export interface ParsedCallOption extends ParsedOption {
-  premiaWei: string;
-}
-
-export interface ParsedPutOption extends ParsedOption {
-  premiaUsd: string;
-}
-
-export interface ParsedOptionWithPosition extends ParsedOption {
-  positionSize: number;
-  positionValue: number;
-}
-
 export interface RawOption {
   option_side: BN;
   maturity: BN;
@@ -84,30 +57,6 @@ export interface RawOption {
   position_size?: BN;
   value_of_position?: BN;
 }
-
-export interface RawOptionWithBalance extends RawOption {
-  balance: BN;
-}
-
-export type OptionTradeArguments = ParsedOption & { optionSize: string };
-
-export type CompositeOption = {
-  raw: RawOption;
-  parsed:
-    | ParsedOption
-    | ParsedCallOption
-    | ParsedPutOption
-    | ParsedOptionWithPosition;
-};
-
-export type CompositeOptionWithBalance = {
-  raw: RawOptionWithBalance;
-  parsed:
-    | ParsedOption
-    | ParsedCallOption
-    | ParsedPutOption
-    | ParsedOptionWithPosition;
-};
 
 export interface RawOptionBase {
   option_side: OptionSideBN;

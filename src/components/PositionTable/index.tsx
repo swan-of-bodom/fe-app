@@ -107,6 +107,7 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
           data: liveOptions,
           titles: ["Option", "Maturity", "Size", "Value", "Amount"],
           ItemElem: LiveItem,
+          desc: "live",
         })
       }
       InMoney={() =>
@@ -115,6 +116,7 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
           data: inOptions,
           titles: ["Option", "Expiry", "Size", "Value"],
           ItemElem: InMoneyItem,
+          desc: "expired with profit",
         })
       }
       OutOfMoney={() =>
@@ -123,6 +125,7 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
           data: outOptions,
           titles: ["Option", "Expiry", "Size"],
           ItemElem: OutOfMoneyItem,
+          desc: "expired without profit",
         })
       }
     />
