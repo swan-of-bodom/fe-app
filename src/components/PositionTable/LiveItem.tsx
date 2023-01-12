@@ -1,4 +1,4 @@
-import { CompositeOption, ParsedOptionWithPosition } from "../../types/options";
+import { OptionWithPosition } from "../../types/options";
 import { isCall, isLong, timestampToReadableDate } from "../../utils/utils";
 import {
   Button,
@@ -16,10 +16,9 @@ import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { afterTransaction } from "../../utils/blockchain";
 import { invalidatePositions } from "../../queries/client";
 import { convertSizeToInt, fullSizeInt } from "../../utils/conversions";
-import BN from "bn.js";
 
 type Props = {
-  option: CompositeOption;
+  option: OptionWithPosition;
 };
 
 export const LiveItem = ({ option }: Props) => {
@@ -37,7 +36,7 @@ export const LiveItem = ({ option }: Props) => {
     maturity,
     positionSize,
     positionValue,
-  } = option.parsed as ParsedOptionWithPosition;
+  } = option.parsed;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
@@ -52,7 +51,7 @@ export const LiveItem = ({ option }: Props) => {
   const isExpired = msMaturity - timeNow <= 0;
 
   const close = (size: string) => {
-    if (!account || !option?.raw?.position_size || !size) {
+    if (!account || !size) {
       debug("Could not trade close", { account, raw: option?.raw, size });
       return;
     }
@@ -73,20 +72,9 @@ export const LiveItem = ({ option }: Props) => {
       });
   };
 
-  const handleClose = () => {
-    const convertedSize = convertSizeToInt(amount, option.parsed.optionType);
-    close(convertedSize);
-  };
+  const handleClose = () => close(convertSizeToInt(amount));
 
-  const handleCloseAll = () => {
-    if (!option?.raw?.position_size) {
-      return;
-    }
-    debug("position size", option?.raw?.position_size);
-    debug(new BN(option?.raw?.position_size).toString(10));
-
-    close(fullSizeInt(option));
-  };
+  const handleCloseAll = () => close(fullSizeInt(option));
 
   return (
     <TableRow>

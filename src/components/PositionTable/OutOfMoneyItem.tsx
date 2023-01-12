@@ -1,4 +1,4 @@
-import { CompositeOption, ParsedOptionWithPosition } from "../../types/options";
+import { OptionWithPosition } from "../../types/options";
 import { isCall, isLong, timestampToReadableDate } from "../../utils/utils";
 import { Button, TableCell, TableRow } from "@mui/material";
 import { debug } from "../../utils/debugger";
@@ -9,7 +9,7 @@ import { invalidatePositions } from "../../queries/client";
 import { afterTransaction } from "../../utils/blockchain";
 
 type Props = {
-  option: CompositeOption;
+  option: OptionWithPosition;
 };
 
 export const OutOfMoneyItem = ({ option }: Props) => {
@@ -38,7 +38,7 @@ export const OutOfMoneyItem = ({ option }: Props) => {
   };
 
   const { strikePrice, optionSide, optionType, maturity, positionSize } =
-    option.parsed as ParsedOptionWithPosition;
+    option.parsed;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);

@@ -1,4 +1,4 @@
-import { CompositeOption, ParsedOptionWithPosition } from "../../types/options";
+import { OptionWithPosition } from "../../types/options";
 import { isCall, isLong, timestampToReadableDate } from "../../utils/utils";
 import { Button, TableCell, TableRow, Tooltip } from "@mui/material";
 import { debug } from "../../utils/debugger";
@@ -9,7 +9,7 @@ import { afterTransaction } from "../../utils/blockchain";
 import { useState } from "react";
 
 type Props = {
-  option: CompositeOption;
+  option: OptionWithPosition;
 };
 
 export const InMoneyItem = ({ option }: Props) => {
@@ -44,7 +44,7 @@ export const InMoneyItem = ({ option }: Props) => {
     maturity,
     positionSize,
     positionValue,
-  } = option.parsed as ParsedOptionWithPosition;
+  } = option.parsed;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);

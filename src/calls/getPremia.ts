@@ -1,4 +1,4 @@
-import { CompositeOption } from "../types/options";
+import { Option } from "../types/options";
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { rawOptionToStruct } from "../utils/parseOption";
 import { getMainContract } from "../utils/blockchain";
@@ -8,7 +8,7 @@ import { isCall } from "../utils/utils";
 import { math64x61toDecimal } from "../utils/units";
 
 export const getPremia = async (
-  option: CompositeOption,
+  option: Option,
   size: number,
   isClosing: boolean
 ): Promise<number> => {
@@ -16,7 +16,7 @@ export const getPremia = async (
   const lpAddress = isCall(option.parsed.optionType)
     ? addresses.LPTOKEN_CONTRACT_ADDRESS
     : addresses.LPTOKEN_CONTRACT_ADDRESS_PUT;
-  const convertedSize = convertSizeToUint256(size, option.parsed.optionType);
+  const convertedSize = convertSizeToUint256(size);
   const isClosingString = isClosing ? "0x1" : "0x0";
   const optionStruct = rawOptionToStruct(option.raw);
   const calldata = [optionStruct, lpAddress, convertedSize, isClosingString];

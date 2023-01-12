@@ -1,6 +1,6 @@
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { Abi, AccountInterface } from "starknet";
-import { CompositeOption, OptionSide, OptionType } from "../types/options";
+import { Option, OptionSide, OptionType } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug } from "../utils/debugger";
 import BN from "bn.js";
@@ -15,7 +15,7 @@ import { isCall } from "../utils/utils";
 
 export const approveAndTradeOpen = async (
   account: AccountInterface,
-  option: CompositeOption,
+  option: Option,
   size: number,
   optionType: OptionType,
   optionSide: OptionSide,
@@ -48,7 +48,7 @@ export const approveAndTradeOpen = async (
     throw Error("Failed getting to approve");
   }
 
-  const convertedSize = convertSizeToInt(size, optionType);
+  const convertedSize = convertSizeToInt(size);
 
   const approveCalldata = {
     contractAddress: isCall(optionType) ? ETH_ADDRESS : USD_ADDRESS,

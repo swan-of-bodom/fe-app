@@ -17,7 +17,7 @@ import { useAccount } from "@starknet-react/core";
 import BN from "bn.js";
 import { useCallback, useEffect, useState } from "react";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
-import { CompositeOption, OptionSide, OptionType } from "../../types/options";
+import { OptionSide, OptionType, OptionWithPremia } from "../../types/options";
 import { debug, LogTypes } from "../../utils/debugger";
 import {
   debounce,
@@ -35,11 +35,11 @@ import { ETH_DIGITS, USD_DIGITS } from "../../constants/amm";
 type ModalProps = {
   open: boolean;
   setOpen: (b: boolean) => void;
-  option: CompositeOption;
+  option: OptionWithPremia;
 };
 
 type OptionBoxProps = {
-  option: CompositeOption;
+  option: OptionWithPremia;
 };
 
 type TradeState = {

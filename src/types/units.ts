@@ -10,3 +10,7 @@ export type Decimal = number;
 
 export type IntBN = BN;
 export type Math64x61BN = BN;
+export type Uint256BN = BN;
+export type OptionSideBN = BN;
+export type OptionTypeBN = BN;
+export type AddressBN = BN;

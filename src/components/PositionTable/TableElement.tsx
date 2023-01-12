@@ -7,14 +7,14 @@ import {
   TableRow,
 } from "@mui/material";
 import { NoContent } from "../TableNoContent";
-import { CompositeOption } from "../../types/options";
+import { OptionWithPosition } from "../../types/options";
 import { LoadingAnimation } from "../loading";
 
 type Props = {
-  ItemElem: ({ option }: { option: CompositeOption }) => JSX.Element;
+  ItemElem: ({ option }: { option: OptionWithPosition }) => JSX.Element;
   titles: string[];
   isFetching: boolean;
-  data: CompositeOption[];
+  data: OptionWithPosition[];
 };
 
 export const TableElement = ({ isFetching, data, titles, ItemElem }: Props) => {

@@ -1,18 +1,11 @@
-import {
-  CompositeOption,
-  OptionType,
-  ParsedCallOption,
-  ParsedPutOption,
-} from "../../types/options";
-import { timestampToReadableDate, weiToEth } from "../../utils/utils";
+import { OptionWithPremia } from "../../types/options";
+import { isCall, timestampToReadableDate } from "../../utils/utils";
 import { Box, TableCell, TableRow, useTheme } from "@mui/material";
-import BN from "bn.js";
-import { USD_BASE_VALUE } from "../../constants/amm";
 import { ThemeVariants } from "../../style/themes";
 import TouchAppIcon from "@mui/icons-material/TouchApp";
 
 type OptionPreviewProps = {
-  option: CompositeOption;
+  option: OptionWithPremia;
   handleClick: () => void;
 };
 
@@ -32,23 +25,8 @@ const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
 
   const date = timestampToReadableDate(msMaturity);
 
-  const currentPremia: BN =
-    optionType === OptionType.Call
-      ? new BN((option.parsed as ParsedCallOption).premiaWei)
-      : new BN((option.parsed as ParsedPutOption).premiaUsd);
-
-  const digits = 4;
-  const displayPremia =
-    optionType === OptionType.Call
-      ? weiToEth(currentPremia, digits)
-      : (
-          currentPremia
-            .mul(new BN(10 ** digits))
-            .div(USD_BASE_VALUE)
-            .toNumber() /
-          10 ** digits
-        ).toFixed(digits);
-  const currency = optionType === OptionType.Call ? "ETH" : "USD";
+  const displayPremia = option.parsed.premiaDecimal.toFixed(4);
+  const currency = isCall(optionType) ? "ETH" : "USD";
 
   return (
     <TableRow sx={style} onClick={handleClick}>

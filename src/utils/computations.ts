@@ -2,7 +2,6 @@ import { OptionSide, OptionType } from "../types/options";
 import BN from "bn.js";
 import { Decimal } from "../types/units";
 import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
-import { debug } from "./debugger";
 
 type GetApproveAmount = (
   size: number,

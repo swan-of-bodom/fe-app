@@ -1,20 +1,33 @@
 import BN from "bn.js";
-import { CompositeOption } from "../../types/options";
-import { premiaToWei, premiaToUsd, assert, isCall } from "../utils";
+import { Option, OptionWithPremia } from "../../types/options";
+import { assert, digitsByType } from "../utils";
 import { parseOption } from "./parseOption";
+import { intToDecimal, math64x61ToInt } from "../units";
 
-export const parseNonExpiredOption = (arr: BN[]): CompositeOption => {
+export const parseNonExpiredOption = (arr: BN[]): OptionWithPremia => {
   const expectedLength = 7;
 
   assert(arr.length === expectedLength, "non expired option length");
 
-  const option: CompositeOption = parseOption(arr.slice(0, 6));
+  const option: Option = parseOption(arr.slice(0, 6));
 
-  option.raw.premia = arr[6];
+  const premia = arr[6];
+  const digits = digitsByType(option.parsed.optionType);
+  const premiaBase = math64x61ToInt(premia.toString(10), digits);
 
-  isCall(option.parsed.optionType)
-    ? (option.parsed.premiaWei = premiaToWei(option.raw.premia))
-    : (option.parsed.premiaUsd = premiaToUsd(option.raw.premia));
+  const premiaDecimal = intToDecimal(premiaBase, digits);
 
-  return option;
+  const optionWithPremia: OptionWithPremia = {
+    raw: {
+      ...option.raw,
+      premia,
+    },
+    parsed: {
+      ...option.parsed,
+      premiaBase,
+      premiaDecimal,
+    },
+  };
+
+  return optionWithPremia;
 };

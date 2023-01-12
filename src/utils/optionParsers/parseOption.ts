@@ -1,10 +1,10 @@
 import BN from "bn.js";
-import { CompositeOption } from "../../types/options";
+import { Option } from "../../types/options";
 import { bnToOptionType, bnToOptionSide } from "../conversions";
 import { math64x61toDecimal } from "../units";
 import { toHex, assert } from "../utils";
 
-export const parseOption = (arr: BN[]): CompositeOption => {
+export const parseOption = (arr: BN[]): Option => {
   const expectedLength = 6;
 
   assert(arr.length === expectedLength, "option with position length");

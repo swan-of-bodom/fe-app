@@ -1,19 +1,19 @@
 import { debug } from "../../utils/debugger";
-import { CompositeOption } from "../../types/options";
+import { OptionWithPremia } from "../../types/options";
 import { getNonExpiredOptions } from "../../calls/getNonExpiredOptions";
 import { parseBatchOfOptions } from "../../utils/optionParsers/batch";
 import { parseNonExpiredOption } from "../../utils/optionParsers/parseNonExpiredOption";
 
-export const fetchOptions = async (): Promise<CompositeOption[]> => {
+export const fetchOptions = async (): Promise<OptionWithPremia[]> => {
   const rawData = await getNonExpiredOptions();
 
-  const compositeOptions = parseBatchOfOptions(
+  const optionsWithPremia = parseBatchOfOptions(
     rawData,
     7,
     parseNonExpiredOption
   );
 
-  debug("Parsed fetched options", compositeOptions);
+  debug("Parsed fetched options", optionsWithPremia);
 
-  return compositeOptions;
+  return optionsWithPremia;
 };

@@ -14,6 +14,13 @@ import {
   Uint256LeadingNumber,
   Uint256TailZero,
   Hex,
+  Decimal,
+  AddressBN,
+  IntBN,
+  Math64x61BN,
+  OptionSideBN,
+  OptionTypeBN,
+  Uint256BN,
 } from "./units";
 
 export enum OptionType {
@@ -28,7 +35,7 @@ export enum OptionSide {
 
 export type OptionStruct = [Hex, Int, Math64x61, Address, Address, Hex];
 
-export type OptionWithPremia = [...OptionStruct, Math64x61];
+export type _OptionWithPremia = [...OptionStruct, Math64x61];
 
 export type OptionWithUsersPosition = [
   ...OptionStruct,
@@ -101,3 +108,55 @@ export type CompositeOptionWithBalance = {
     | ParsedPutOption
     | ParsedOptionWithPosition;
 };
+
+export interface RawOptionBase {
+  option_side: OptionSideBN;
+  maturity: IntBN;
+  strike_price: Math64x61BN;
+  quote_token_address: AddressBN;
+  base_token_address: AddressBN;
+  option_type: OptionTypeBN;
+}
+
+export interface ParsedOptionBase {
+  optionSide: OptionSide;
+  maturity: Decimal;
+  strikePrice: string;
+  quoteToken: string;
+  baseToken: string;
+  optionType: OptionType;
+}
+
+export interface Option {
+  raw: RawOptionBase;
+  parsed: ParsedOptionBase;
+}
+
+export interface RawOptionWithPosition extends RawOptionBase {
+  position_size: Uint256BN;
+  value_of_position: Math64x61BN;
+}
+
+export interface ParsedOptionWithPosition extends ParsedOptionBase {
+  positionSize: Decimal;
+  positionValue: Decimal;
+}
+
+export interface OptionWithPosition {
+  raw: RawOptionWithPosition;
+  parsed: ParsedOptionWithPosition;
+}
+
+export interface RawOptionWithPremia extends RawOptionBase {
+  premia: Math64x61BN;
+}
+
+export interface ParsedOptionWithPremia extends ParsedOptionBase {
+  premiaBase: string;
+  premiaDecimal: Decimal;
+}
+
+export interface OptionWithPremia {
+  raw: RawOptionWithPremia;
+  parsed: ParsedOptionWithPremia;
+}

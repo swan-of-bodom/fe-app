@@ -1,14 +1,8 @@
 import { getEthInUsd } from "../../calls/currencies";
-import {
-  CompositeOption,
-  ParsedCallOption,
-  ParsedPutOption,
-  OptionType,
-} from "../../types/options";
+import { OptionType, OptionWithPremia } from "../../types/options";
 import { FinancialData } from "./OptionModal";
 import { getPremia } from "../../calls/getPremia";
 import { debug } from "../../utils/debugger";
-import { shortInteger } from "../../utils/computations";
 
 const ethData = {
   ethInUsd: 0,
@@ -31,7 +25,7 @@ const recentEthInUsd = async () => {
 
 export const fetchModalData = async (
   size: number,
-  option: CompositeOption,
+  option: OptionWithPremia,
   signal: AbortSignal
 ): Promise<FinancialData | null> => {
   const [ethInUsd, fetchedPremia] = await Promise.all([
@@ -48,50 +42,40 @@ export const fetchModalData = async (
 
   const { optionType } = option.parsed;
 
-  const res: FinancialData = {
-    premiaUsd: 0,
-    premiaEth: 0,
-    basePremiaUsd: 0,
-    basePremiaEth: 0,
-    ethInUsd,
-  };
-
   if (optionType === OptionType.Call) {
-    // premia is in Wei
-    const { premiaWei } = option.parsed as ParsedCallOption;
-    if (!premiaWei) {
-      throw Error(
-        "Parsed Call Option did not contain premiaWei " +
-          JSON.stringify(option.parsed)
-      );
-    }
-    const premiaEth = shortInteger(premiaWei, 18);
-    const premiaUsd = premiaEth * ethInUsd;
-    res.premiaEth = fetchedPremia;
-    res.premiaUsd = fetchedPremia * ethInUsd;
-    res.basePremiaEth = premiaEth;
-    res.basePremiaUsd = premiaUsd;
+    const basePremiaEth = option.parsed.premiaDecimal;
+    const basePremiaUsd = basePremiaEth * ethInUsd;
+
+    const res: FinancialData = {
+      premiaEth: fetchedPremia,
+      premiaUsd: fetchedPremia * ethInUsd,
+      basePremiaEth,
+      basePremiaUsd,
+      ethInUsd,
+    };
+
+    debug("Calculated financial data for Call", res);
+
+    return res;
   }
 
   if (optionType === OptionType.Put) {
-    // premia is in Usd
-    const { premiaUsd } = option.parsed as ParsedPutOption;
+    const basePremiaUsd = option.parsed.premiaDecimal;
+    const basePremiaEth = basePremiaUsd / ethInUsd;
 
-    if (!premiaUsd) {
-      throw Error(
-        "Parsed Put Option did not contain premiaWei " +
-          JSON.stringify(option.parsed)
-      );
-    }
-    const numPremiaUsd = shortInteger(premiaUsd, 6);
-    const premiaEth = numPremiaUsd / ethInUsd;
-    res.premiaUsd = fetchedPremia;
-    res.premiaEth = fetchedPremia / ethInUsd;
-    res.basePremiaEth = premiaEth;
-    res.basePremiaUsd = numPremiaUsd;
+    const res: FinancialData = {
+      premiaEth: fetchedPremia,
+      premiaUsd: fetchedPremia / ethInUsd,
+      basePremiaEth,
+      basePremiaUsd,
+      ethInUsd,
+    };
+
+    debug("Calculated financial data for Put", res);
+
+    return res;
   }
 
-  debug("Calculated financial data", res);
-
-  return res;
+  // Unreachable
+  return null;
 };

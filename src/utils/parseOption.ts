@@ -1,4 +1,4 @@
-import { OptionStruct, RawOption } from "../types/options";
+import { OptionStruct, RawOption, RawOptionBase } from "../types/options";
 import BN from "bn.js";
 import { toHex } from "./utils";
 
@@ -14,7 +14,7 @@ export const rawOptionToCalldata = (raw: RawOption, size: string): string[] => {
   ];
 };
 
-export const rawOptionToStruct = (raw: RawOption): OptionStruct => {
+export const rawOptionToStruct = (raw: RawOptionBase): OptionStruct => {
   return [
     toHex(raw.option_side),
     new BN(raw.maturity).toString(10),

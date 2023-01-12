@@ -1,31 +1,38 @@
 import BN from "bn.js";
-import { CompositeOption } from "../../types/options";
+import { Option, OptionWithPosition } from "../../types/options";
 import { math64x61toDecimal, uint256toDecimal } from "../units";
-import { digitsByType, assert } from "../utils";
+import { assert } from "../utils";
 import { parseOption } from "./parseOption";
+import { ETH_DIGITS } from "../../constants/amm";
 
-export const parseOptionWithPosition = (arr: BN[]): CompositeOption => {
+export const parseOptionWithPosition = (arr: BN[]): OptionWithPosition => {
   const expectedLength = 9;
 
   assert(arr.length === expectedLength, "option with position length");
 
-  const option: CompositeOption = parseOption(arr.slice(0, 6));
+  const option: Option = parseOption(arr.slice(0, 6));
 
-  option.raw.position_size = arr[6];
-  option.raw.value_of_position = arr[8];
+  const position_size = arr[6];
+  const value_of_position = arr[8];
 
   // Uint256 - just one part
-  const positionSize = uint256toDecimal(
-    option.raw.position_size,
-    digitsByType(option.parsed.optionType)
-  );
+  // ETH_DIGITS for token count
+  const positionSize = uint256toDecimal(position_size, ETH_DIGITS);
   // math64_61
-  const positionValue = math64x61toDecimal(
-    option.raw.value_of_position.toString(10)
-  );
+  const positionValue = math64x61toDecimal(value_of_position.toString(10));
 
-  option.parsed.positionSize = positionSize;
-  option.parsed.positionValue = positionValue;
+  const optionWithPosition: OptionWithPosition = {
+    raw: {
+      ...option.raw,
+      position_size,
+      value_of_position,
+    },
+    parsed: {
+      ...option.parsed,
+      positionSize,
+      positionValue,
+    },
+  };
 
-  return option;
+  return optionWithPosition;
 };

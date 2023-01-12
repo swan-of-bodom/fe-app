@@ -1,7 +1,7 @@
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import AmmAbi from "../abi/amm_abi.json";
 import { Abi, AccountInterface } from "starknet";
-import { CompositeOption } from "../types/options";
+import { OptionWithPosition } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug, LogTypes } from "../utils/debugger";
 import { invalidatePositions } from "../queries/client";
@@ -10,7 +10,7 @@ import { fullSizeInt } from "../utils/conversions";
 
 export const tradeSettle = async (
   account: AccountInterface,
-  option: CompositeOption
+  option: OptionWithPosition
 ) => {
   try {
     const call = {

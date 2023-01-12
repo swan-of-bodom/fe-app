@@ -1,10 +1,8 @@
-import { CompositeOption } from "../../types/options";
-
-export const parseBatchOfOptions = <T>(
+export const parseBatchOfOptions = <T, R>(
   arr: T[],
   batchSize: number,
-  parsingFunction: (v: T[]) => CompositeOption
-): CompositeOption[] => {
+  parsingFunction: (v: T[]) => R
+): R[] => {
   const l = arr.length;
 
   if (l % batchSize !== 0) {

@@ -1,4 +1,4 @@
-import { CompositeOption, OptionSide, OptionType } from "../../types/options";
+import { OptionSide, OptionType, OptionWithPremia } from "../../types/options";
 import { Box, Button, Paper, TableContainer, useTheme } from "@mui/material";
 import { useState } from "react";
 import { isFresh } from "../../utils/parseOption";
@@ -17,7 +17,7 @@ const getText = (type: OptionType, side: OptionSide) =>
   } options.`;
 
 type ContentProps = {
-  options: CompositeOption[];
+  options: OptionWithPremia[];
   type: OptionType;
   side: OptionSide;
   loading: boolean;

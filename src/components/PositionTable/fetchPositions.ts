@@ -1,4 +1,4 @@
-import { CompositeOption, ParsedOptionWithPosition } from "../../types/options";
+import { OptionWithPosition } from "../../types/options";
 import { debug } from "../../utils/debugger";
 import { isNonEmptyArray } from "../../utils/utils";
 import { QueryFunctionContext } from "react-query";
@@ -9,7 +9,7 @@ import { parseOptionWithPosition } from "../../utils/optionParsers/parseOptionWi
 export const fetchPositions = async ({
   queryKey,
 }: QueryFunctionContext<[string, string | undefined]>): Promise<
-  CompositeOption[]
+  OptionWithPosition[]
 > => {
   const address = queryKey[1];
   if (!address) {
@@ -19,17 +19,15 @@ export const fetchPositions = async ({
   try {
     const rawData = await getOptionsWithPositionOfUser(address);
 
-    const composite = parseBatchOfOptions(rawData, 9, parseOptionWithPosition);
+    const options = parseBatchOfOptions(rawData, 9, parseOptionWithPosition);
 
-    if (!isNonEmptyArray(composite)) {
+    if (!isNonEmptyArray(options)) {
       return [];
     }
 
     // remove position with size 0 (BE rounding error)
-    const filtered = composite
-      .filter(
-        ({ parsed }) => !!(parsed as ParsedOptionWithPosition).positionSize
-      )
+    const filtered = options
+      .filter(({ parsed }) => !!parsed.positionSize)
       .sort((a, b) => a.parsed.maturity - b.parsed.maturity);
 
     debug("Fetched options with position", filtered);
