@@ -2,6 +2,7 @@ import { OptionSide, OptionType } from "../types/options";
 import BN from "bn.js";
 import { Decimal } from "../types/units";
 import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
+import { FinancialData } from "../components/TradeTable/OptionModal";
 
 type GetApproveAmount = (
   size: number,
@@ -117,4 +118,36 @@ export const shortInteger = (str: string, digits: number): Decimal => {
   ];
 
   return parseFloat(head + "." + tail);
+};
+
+export const financialDataEth = (
+  basePremiaEth: number,
+  premiaEth: number,
+  ethInUsd: number
+): FinancialData => {
+  const basePremiaUsd = basePremiaEth * ethInUsd;
+
+  return {
+    premiaEth,
+    premiaUsd: premiaEth * ethInUsd,
+    basePremiaEth,
+    basePremiaUsd,
+    ethInUsd,
+  };
+};
+
+export const financialDataUsd = (
+  basePremiaUsd: number,
+  premiaUsd: number,
+  ethInUsd: number
+): FinancialData => {
+  const basePremiaEth = basePremiaUsd / ethInUsd;
+
+  return {
+    premiaEth: premiaUsd / ethInUsd,
+    premiaUsd,
+    basePremiaEth,
+    basePremiaUsd,
+    ethInUsd,
+  };
 };

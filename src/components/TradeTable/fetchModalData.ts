@@ -1,8 +1,10 @@
 import { getEthInUsd } from "../../calls/currencies";
-import { OptionType, OptionWithPremia } from "../../types/options";
+import { OptionWithPremia } from "../../types/options";
 import { FinancialData } from "./OptionModal";
 import { getPremia } from "../../calls/getPremia";
 import { debug } from "../../utils/debugger";
+import { isCall } from "../../utils/utils";
+import { financialDataEth, financialDataUsd } from "../../utils/computations";
 
 const ethData = {
   ethInUsd: 0,
@@ -27,7 +29,7 @@ export const fetchModalData = async (
   size: number,
   option: OptionWithPremia,
   signal: AbortSignal
-): Promise<FinancialData | null> => {
+): Promise<FinancialData> => {
   const [ethInUsd, fetchedPremia] = await Promise.all([
     recentEthInUsd(),
     getPremia(option, size, false),
@@ -40,42 +42,9 @@ export const fetchModalData = async (
     return null;
   }
 
-  const { optionType } = option.parsed;
+  const { optionType, premiaDecimal } = option.parsed;
 
-  if (optionType === OptionType.Call) {
-    const basePremiaEth = option.parsed.premiaDecimal;
-    const basePremiaUsd = basePremiaEth * ethInUsd;
-
-    const res: FinancialData = {
-      premiaEth: fetchedPremia,
-      premiaUsd: fetchedPremia * ethInUsd,
-      basePremiaEth,
-      basePremiaUsd,
-      ethInUsd,
-    };
-
-    debug("Calculated financial data for Call", res);
-
-    return res;
-  }
-
-  if (optionType === OptionType.Put) {
-    const basePremiaUsd = option.parsed.premiaDecimal;
-    const basePremiaEth = basePremiaUsd / ethInUsd;
-
-    const res: FinancialData = {
-      premiaEth: fetchedPremia * ethInUsd,
-      premiaUsd: fetchedPremia,
-      basePremiaEth,
-      basePremiaUsd,
-      ethInUsd,
-    };
-
-    debug("Calculated financial data for Put", res);
-
-    return res;
-  }
-
-  // Unreachable
-  return null;
+  return isCall(optionType)
+    ? financialDataEth(premiaDecimal, fetchedPremia, ethInUsd)
+    : financialDataUsd(premiaDecimal, fetchedPremia, ethInUsd);
 };
