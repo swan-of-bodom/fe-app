@@ -64,8 +64,8 @@ export const fetchModalData = async (
     const basePremiaEth = basePremiaUsd / ethInUsd;
 
     const res: FinancialData = {
-      premiaEth: fetchedPremia,
-      premiaUsd: fetchedPremia / ethInUsd,
+      premiaEth: fetchedPremia * ethInUsd,
+      premiaUsd: fetchedPremia,
       basePremiaEth,
       basePremiaUsd,
       ethInUsd,
