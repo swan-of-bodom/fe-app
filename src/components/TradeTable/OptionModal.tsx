@@ -149,14 +149,12 @@ const OptionBox = ({ option }: OptionBoxProps) => {
   const date = timestampToReadableDate(msMaturity);
 
   const digits = isCall(optionType) ? ETH_DIGITS : USD_DIGITS;
-  const currentPremia: BN = data?.premiaEth
-    ? longInteger(data!.premiaEth, digits)
-    : new BN(0);
+  const premia = isCall(optionType) ? data?.premiaEth : data?.premiaUsd;
+  const currentPremia: BN = premia ? longInteger(premia, digits) : new BN(0);
 
-  const displayPremia =
-    optionType === OptionType.Call
-      ? `ETH ${data?.premiaEth && data?.premiaEth.toFixed(5)}`
-      : `$${data?.premiaUsd && data?.premiaUsd.toFixed(5)}`;
+  const displayPremia = isCall(optionType)
+    ? `ETH ${data?.premiaEth && data?.premiaEth.toFixed(5)}`
+    : `$${data?.premiaUsd && data?.premiaUsd.toFixed(5)}`;
 
   const graphData =
     loading || !data
@@ -191,6 +189,7 @@ const OptionBox = ({ option }: OptionBoxProps) => {
 
   const buttonText = () =>
     (optionSide === OptionSide.Long ? "Buy" : "Sell") + " for " + displayPremia;
+
   return (
     <Grid container spacing={2}>
       <Grid item md={12}>
