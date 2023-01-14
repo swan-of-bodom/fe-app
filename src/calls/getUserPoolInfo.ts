@@ -1,5 +1,5 @@
 import { AMM_METHODS } from "../constants/amm";
-import { RawUserPoolInfo, UserPoolInfo } from "../types/pool";
+import { ResponseUserPoolInfo, UserPoolInfo } from "../types/pool";
 import { getMainContract } from "../utils/blockchain";
 import { isInstanceOfUserPoolInfo } from "../utils/poolParser/isInstanceOfPool";
 import { parseUserPoolInfo } from "../utils/poolParser/parsePool";
@@ -19,8 +19,8 @@ export const getUserPoolInfo = async (
     return [];
   }
 
-  const validated: RawUserPoolInfo[] = res[0].filter(
-    (v: unknown): v is RawUserPoolInfo => isInstanceOfUserPoolInfo(v)
+  const validated: ResponseUserPoolInfo[] = res[0].filter(
+    (v: unknown): v is ResponseUserPoolInfo => isInstanceOfUserPoolInfo(v)
   );
 
   const parsed = validated.map((v) => parseUserPoolInfo(v));

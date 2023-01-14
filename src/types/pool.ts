@@ -27,16 +27,14 @@ export interface Pool {
   parsed: ParsedPool;
 }
 
-export interface RawPoolInfo {
-  pool: RawPool;
+export interface RawPoolInfo extends RawPool {
   lptoken_address: AddressBN;
   staked_capital: Uint256; // lpool_balance
   unlocked_capital: Uint256;
   value_of_pool_position: Math64x61BN;
 }
 
-export interface ParsedPoolInfo {
-  pool: Pool;
+export interface ParsedPoolInfo extends ParsedPool {
   lptokenAddress: Address;
   stakedCapital: Int; // lpool_balance
   unlockedCapital: Int;
@@ -48,14 +46,12 @@ export interface PoolInfo {
   parsed: ParsedPoolInfo;
 }
 
-export interface RawUserPoolInfo {
-  pool_info: RawPoolInfo;
+export interface RawUserPoolInfo extends RawPoolInfo {
   value_of_user_stake: Uint256;
   size_of_users_tokens: Uint256;
 }
 
-export interface ParsedUserPoolInfo {
-  poolInfo: PoolInfo;
+export interface ParsedUserPoolInfo extends ParsedPoolInfo {
   valueOfUserStakeBase: Int;
   valueOfUserStakeDecimal: Decimal;
   sizeOfUsersTokensBase: Int;
@@ -65,6 +61,26 @@ export interface ParsedUserPoolInfo {
 export interface UserPoolInfo {
   raw: RawUserPoolInfo;
   parsed: ParsedUserPoolInfo;
+}
+
+export interface ResponsePool {
+  quote_token_address: AddressBN;
+  base_token_address: AddressBN;
+  option_type: BN;
+}
+
+export interface ResponsePoolInfo {
+  pool: ResponsePool;
+  lptoken_address: AddressBN;
+  staked_capital: Uint256; // lpool_balance
+  unlocked_capital: Uint256;
+  value_of_pool_position: Math64x61BN;
+}
+
+export interface ResponseUserPoolInfo {
+  pool_info: ResponsePoolInfo;
+  value_of_user_stake: Uint256;
+  size_of_users_tokens: Uint256;
 }
 
 export interface UserPoolDisplayData {

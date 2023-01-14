@@ -42,13 +42,13 @@ const WithdrawParentWithAccount = ({ address, account }: Props) => {
 
   const itemDataList = data.map(({ parsed }): UserPoolDisplayData => {
     const {
-      poolInfo,
+      optionType: type,
       valueOfUserStakeBase,
       valueOfUserStakeDecimal,
       sizeOfUsersTokensBase,
       sizeOfUsersTokensDecimal,
     } = parsed;
-    const type = poolInfo.parsed.pool.parsed.optionType;
+
     return {
       size: sizeOfUsersTokensDecimal,
       fullSize: sizeOfUsersTokensBase,

@@ -1,27 +1,29 @@
-import { RawPool, RawPoolInfo, RawUserPoolInfo } from "../../types/pool";
+import { inputBaseClasses } from "@mui/material";
+import {
+  ResponsePool,
+  ResponsePoolInfo,
+  ResponseUserPoolInfo,
+} from "../../types/pool";
 import { debug } from "../debugger";
 
-export const isInstanceOfPool = (input: unknown): input is RawPool => {
-  debug("isInstanceOfPool", input);
+export const isInstanceOfPool = (input: unknown): input is ResponsePool => {
   if (!input) {
     return false;
   }
 
   const { quote_token_address, base_token_address, option_type } =
-    input as RawPool;
+    input as ResponsePool;
 
   if (!quote_token_address || !base_token_address || !option_type) {
     return false;
   }
 
-  debug("isInstanceOfPool - validated");
-
   return true;
 };
 
-export const isInstanceOfPoolInfo = (input: unknown): input is RawPoolInfo => {
-  debug("isInstanceOfPoolInfo", input);
-
+export const isInstanceOfPoolInfo = (
+  input: unknown
+): input is ResponsePoolInfo => {
   if (!input) {
     return false;
   }
@@ -32,12 +34,10 @@ export const isInstanceOfPoolInfo = (input: unknown): input is RawPoolInfo => {
     staked_capital,
     unlocked_capital,
     value_of_pool_position,
-  } = input as RawPoolInfo;
-
+  } = input as ResponsePoolInfo;
   if (!isInstanceOfPool(pool)) {
     return false;
   }
-
   if (
     !lptoken_address ||
     !value_of_pool_position ||
@@ -46,24 +46,22 @@ export const isInstanceOfPoolInfo = (input: unknown): input is RawPoolInfo => {
   ) {
     return false;
   }
-  debug("isInstanceOfPoolInfo - validated");
 
   return true;
 };
 
 export const isInstanceOfUserPoolInfo = (
   input: unknown
-): input is RawUserPoolInfo => {
+): input is ResponseUserPoolInfo => {
   debug("isInstanceOfUserPoolInfo", input);
 
-  if (!input) {
+  if (!inputBaseClasses) {
     return false;
   }
 
   const { pool_info, value_of_user_stake, size_of_users_tokens } =
-    input as RawUserPoolInfo;
+    input as ResponseUserPoolInfo;
 
-  debug("pool_info", pool_info);
   if (!isInstanceOfPoolInfo(pool_info)) {
     return false;
   }
