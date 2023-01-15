@@ -1,6 +1,5 @@
 import { getEthInUsd } from "../../calls/currencies";
-import { OptionWithPremia } from "../../types/options";
-import { FinancialData } from "./OptionModal";
+import { FinancialData, OptionWithPremia } from "../../types/options";
 import { getPremia } from "../../calls/getPremia";
 import { debug } from "../../utils/debugger";
 import { isCall } from "../../utils/utils";
@@ -29,7 +28,7 @@ export const fetchModalData = async (
   size: number,
   option: OptionWithPremia,
   signal: AbortSignal
-): Promise<FinancialData> => {
+): Promise<FinancialData | null> => {
   const [ethInUsd, fetchedPremia] = await Promise.all([
     recentEthInUsd(),
     getPremia(option, size, false),
@@ -37,6 +36,8 @@ export const fetchModalData = async (
     debug("Failed fetching ETH or premia", e.message);
     throw Error("Failed fetching");
   });
+
+  debug("Fetched ETH and premia", { ethInUsd, fetchedPremia });
 
   if (signal.aborted) {
     return null;

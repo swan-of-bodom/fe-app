@@ -1,8 +1,7 @@
-import { OptionSide, OptionType } from "../types/options";
+import { FinancialData, OptionSide, OptionType } from "../types/options";
 import BN from "bn.js";
 import { Decimal } from "../types/units";
 import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
-import { FinancialData } from "../components/TradeTable/OptionModal";
 
 type GetApproveAmount = (
   size: number,

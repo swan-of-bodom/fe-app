@@ -109,3 +109,11 @@ export interface OptionWithPremia {
   raw: RawOptionWithPremia;
   parsed: ParsedOptionWithPremia;
 }
+
+export type FinancialData = {
+  premiaUsd: number;
+  premiaEth: number;
+  basePremiaUsd: number;
+  basePremiaEth: number;
+  ethInUsd: number;
+};
