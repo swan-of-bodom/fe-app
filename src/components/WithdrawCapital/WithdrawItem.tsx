@@ -1,54 +1,64 @@
-import { Button, TableCell, TableRow, TextField } from "@mui/material";
+import {
+  Button,
+  ButtonGroup,
+  TableCell,
+  TableRow,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
-import { debug } from "../../utils/debugger";
 import { AccountInterface } from "starknet";
 import { withdrawCall } from "./withdrawCall";
-import { OptionType } from "../../types/options";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
+import { UserPoolDisplayData } from "../../types/pool";
+import BN from "bn.js";
+import { debug } from "../../utils/debugger";
+import { isCall } from "../../utils/utils";
 
-const handleWithdraw = async (
-  account: AccountInterface,
-  amount: number,
-  type: OptionType,
-  poolInfo: Object
-) => {
-  debug("Withdrawing", amount);
-  debug("POOL INFO", poolInfo);
-  withdrawCall(account, amount, type);
-};
-
-type Props = {
+interface Props extends UserPoolDisplayData {
   account: AccountInterface;
-  size: number;
-  value: number;
-  type: OptionType;
-  poolInfo: Object;
-};
+}
 
-export const WithdrawItem = ({
-  account,
-  size,
-  value,
-  type,
-  poolInfo,
-}: Props) => {
+export const WithdrawItem = ({ account, value, fullSize, type }: Props) => {
   const [amount, setAmount] = useState<number>(0);
   const [text, setText] = useState<string>("0");
+  const [processing, setProcessing] = useState<boolean>(false);
 
-  const cb = (n: number): number => (n >= size ? size : n);
+  const cb = (n: number): number => (n >= 100 ? 100 : n);
   const handleChange = handleNumericChangeFactory(setText, setAmount, cb);
 
-  const pool = type === OptionType.Call ? "Call" : "Put";
+  const precission = 10000;
+  const relativeSize = new BN(amount * precission)
+    .mul(new BN(fullSize))
+    .div(new BN(100 * precission))
+    .toString(10);
+  debug("Relative size", relativeSize);
+  const handleWithdraw = () =>
+    withdrawCall(account, setProcessing, type, relativeSize);
+  const handleWithdrawAll = () =>
+    withdrawCall(account, setProcessing, type, fullSize);
+
+  const [pool, currency] = isCall(type) ? ["Call", "Ξ"] : ["Put", "$"];
+
+  const displayDigits = 5;
+  const displayValue = currency + " " + value.toFixed(displayDigits);
 
   return (
     <TableRow>
       <TableCell>{pool}</TableCell>
-      <TableCell>{value}</TableCell>
-      <TableCell>{size}</TableCell>
+      <TableCell>
+        <Tooltip title={String(value) === displayValue ? "" : value}>
+          <Typography>{displayValue}</Typography>
+        </Tooltip>
+      </TableCell>
+      <TableCell>
+        <Typography>{fullSize}</Typography>
+      </TableCell>
       <TableCell sx={{ minWidth: "100px" }}>
         <TextField
           id="outlined-number"
-          label="Amount"
+          label="Percentage %"
           size="small"
           value={text}
           InputLabelProps={{
@@ -61,12 +71,21 @@ export const WithdrawItem = ({
         />
       </TableCell>
       <TableCell align="right">
-        <Button
+        <ButtonGroup
+          disableElevation
           variant="contained"
-          onClick={() => handleWithdraw(account, amount, type, poolInfo)}
+          aria-label="Disabled elevation buttons"
+          disabled={processing}
         >
-          Withdraw
-        </Button>
+          {processing ? (
+            <Button>Processing...</Button>
+          ) : (
+            <>
+              <Button onClick={handleWithdraw}>Withdraw</Button>
+              <Button onClick={handleWithdrawAll}>Max</Button>
+            </>
+          )}
+        </ButtonGroup>
       </TableCell>
     </TableRow>
   );

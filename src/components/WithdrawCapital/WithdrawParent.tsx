@@ -16,6 +16,7 @@ import { fetchCapital } from "./fetchCapital";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { AccountInterface } from "starknet";
+import { UserPoolDisplayData } from "../../types/pool";
 
 type Props = { address: string; account: AccountInterface };
 
@@ -39,6 +40,24 @@ const WithdrawParentWithAccount = ({ address, account }: Props) => {
   if (!isNonEmptyArray(data))
     return <NoContent text="You currently do not have any staked capital" />;
 
+  const itemDataList = data.map(({ parsed }): UserPoolDisplayData => {
+    const {
+      optionType: type,
+      valueOfUserStakeBase,
+      valueOfUserStakeDecimal,
+      sizeOfUsersTokensBase,
+      sizeOfUsersTokensDecimal,
+    } = parsed;
+
+    return {
+      size: sizeOfUsersTokensDecimal,
+      fullSize: sizeOfUsersTokensBase,
+      value: valueOfUserStakeDecimal,
+      fullValue: valueOfUserStakeBase,
+      type,
+    };
+  });
+
   return (
     <Table aria-label="simple table">
       <TableHead>
@@ -53,14 +72,15 @@ const WithdrawParentWithAccount = ({ address, account }: Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {data.map(({ value, numberOfTokens, type, poolInfo }, i) => (
+        {itemDataList.map(({ value, fullValue, size, fullSize, type }, i) => (
           <WithdrawItem
             key={i}
             account={account}
-            size={numberOfTokens}
+            size={size}
+            fullSize={fullSize}
             value={value}
+            fullValue={fullValue}
             type={type}
-            poolInfo={poolInfo}
           />
         ))}
       </TableBody>

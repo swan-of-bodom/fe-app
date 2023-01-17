@@ -7,20 +7,27 @@ import {
   TableRow,
 } from "@mui/material";
 import { NoContent } from "../TableNoContent";
-import { CompositeOption } from "../../types/options";
+import { OptionWithPosition } from "../../types/options";
 import { LoadingAnimation } from "../loading";
 
 type Props = {
-  ItemElem: ({ option }: { option: CompositeOption }) => JSX.Element;
+  ItemElem: ({ option }: { option: OptionWithPosition }) => JSX.Element;
   titles: string[];
   isFetching: boolean;
-  data: CompositeOption[];
+  data: OptionWithPosition[];
+  desc: string;
 };
 
-export const TableElement = ({ isFetching, data, titles, ItemElem }: Props) => {
+export const TableElement = ({
+  isFetching,
+  data,
+  titles,
+  ItemElem,
+  desc,
+}: Props) => {
   if (!isNonEmptyArray(data))
     return (
-      <NoContent text="It seems you are not currently holding any positions" />
+      <NoContent text={`You are currently not holding any ${desc} options`} />
     );
 
   return (

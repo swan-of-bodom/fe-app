@@ -1,31 +1,34 @@
-import {
-  AMM_METHODS,
-  BASE_MATH_64_61,
-  getTokenAddresses,
-} from "../constants/amm";
+import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { Abi, AccountInterface } from "starknet";
-import { CompositeOption, OptionSide, OptionType } from "../types/options";
+import { Option, OptionSide, OptionType } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug } from "../utils/debugger";
 import BN from "bn.js";
-import { getToApprove, PRECISION } from "../utils/computations";
-import { toHex } from "starknet/utils/number";
+import { getToApprove, longInteger } from "../utils/computations";
+import { convertSizeToInt } from "../utils/conversions";
 
 import AmmAbi from "../abi/amm_abi.json";
 import LpAbi from "../abi/lptoken_abi.json";
 import { afterTransaction } from "../utils/blockchain";
 import { invalidatePositions } from "../queries/client";
+import { isCall } from "../utils/utils";
 
 export const approveAndTradeOpen = async (
   account: AccountInterface,
-  option: CompositeOption,
+  option: Option,
   size: number,
   optionType: OptionType,
   optionSide: OptionSide,
-  premia: BN
+  premia: BN,
+  cb: () => void
 ): Promise<boolean> => {
   const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
     getTokenAddresses();
+
+  debug("Approve and TradeOpen", {
+    size: longInteger(size, 18).toString(10),
+    premia: premia.toString(10),
+  });
 
   const toApprove = getToApprove(
     optionType,
@@ -42,40 +45,44 @@ export const approveAndTradeOpen = async (
   });
 
   if (!toApprove) {
-    return false;
+    throw Error("Failed getting to approve");
   }
 
-  const size64x61 = new BN(size * PRECISION)
-    .mul(BASE_MATH_64_61)
-    .div(new BN(PRECISION))
-    .toString(10);
+  const convertedSize = convertSizeToInt(size);
 
   const approveCalldata = {
-    contractAddress: optionType === OptionType.Call ? ETH_ADDRESS : USD_ADDRESS,
+    contractAddress: isCall(optionType) ? ETH_ADDRESS : USD_ADDRESS,
     entrypoint: AMM_METHODS.APPROVE,
-    calldata: [MAIN_CONTRACT_ADDRESS, toHex(new BN(toApprove)), 0],
+    calldata: [MAIN_CONTRACT_ADDRESS, new BN(toApprove).toString(10), "0"],
   };
+
+  debug("Trade open approve calldata", approveCalldata);
 
   const tradeOpenCalldata = {
     contractAddress: MAIN_CONTRACT_ADDRESS,
     entrypoint: AMM_METHODS.TRADE_OPEN,
-    calldata: rawOptionToCalldata(option.raw, size64x61),
+    calldata: rawOptionToCalldata(option.raw, convertedSize),
   };
 
-  let success = true;
+  debug("Trade open trade calldata", tradeOpenCalldata);
 
   const res = await account
     .execute([approveCalldata, tradeOpenCalldata], [LpAbi, AmmAbi] as Abi[])
     .catch((e) => {
       debug("Trade open rejected or failed", e.message);
-      success = false;
+      throw Error("Trade open rejected or failed");
     });
 
-  debug("Done trading, sucess:", success);
+  debug("Done trading", res);
 
   if (res?.transaction_hash) {
-    afterTransaction(res.transaction_hash, invalidatePositions);
+    afterTransaction(res.transaction_hash, () => {
+      invalidatePositions();
+      cb();
+    });
+  } else {
+    throw Error("Trade open failed unexpectedly");
   }
 
-  return success;
+  return true;
 };

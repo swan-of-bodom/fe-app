@@ -1,60 +1,30 @@
+import { OptionWithPosition } from "../../types/options";
+import { isCall, isLong, timestampToReadableDate } from "../../utils/utils";
 import {
-  CompositeOption,
-  OptionSide,
-  OptionType,
-  ParsedOptionWithPosition,
-  RawOption,
-} from "../../types/options";
-import { timestampToReadableDate } from "../../utils/utils";
-import { Button, TableCell, TableRow, TextField, Tooltip } from "@mui/material";
+  Button,
+  ButtonGroup,
+  TableCell,
+  TableRow,
+  TextField,
+  Tooltip,
+} from "@mui/material";
 import { debug } from "../../utils/debugger";
 import { tradeClose } from "../../calls/tradeClose";
 import { useAccount } from "@starknet-react/core";
-import { AccountInterface } from "starknet";
-import BN from "bn.js";
 import { useState } from "react";
-import { BASE_MATH_64_61 } from "../../constants/amm";
-import { tradeSettle } from "../../calls/tradeSettle";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
+import { afterTransaction } from "../../utils/blockchain";
+import { invalidatePositions } from "../../queries/client";
+import { convertSizeToInt, fullSizeInt } from "../../utils/conversions";
 
 type Props = {
-  option: CompositeOption;
-};
-
-const handleCloseOrSettle = async (
-  account: AccountInterface | undefined,
-  amount: number,
-  raw: RawOption,
-  sendFull: boolean,
-  isExpired: boolean
-) => {
-  if (!account || !raw || !raw.position_size || !amount) {
-    debug("Could not trade close", { account, raw, amount });
-    return;
-  }
-
-  let size64x61 = "0";
-  if (sendFull) {
-    // user is trying to close the whole option
-    // send position size from backend as amount to close
-    size64x61 = new BN(raw.position_size).toString(10);
-  } else {
-    const precission = 10000;
-    size64x61 = new BN(amount * precission)
-      .mul(BASE_MATH_64_61)
-      .div(new BN(precission))
-      .toString(10);
-  }
-
-  const action = isExpired ? tradeSettle : tradeClose;
-  debug({ isExpired, action });
-  const res = await action(account, raw, size64x61);
-  debug(`Trade ${isExpired ? "settle" : "close"}`, res);
+  option: OptionWithPosition;
 };
 
 export const LiveItem = ({ option }: Props) => {
   const [amount, setAmount] = useState<number>(0.0);
   const [text, setText] = useState<string>("0");
+  const [processing, setProcessing] = useState<boolean>(false);
   const cb = (n: number): number => (n > positionSize ? positionSize : n);
   const handleChange = handleNumericChangeFactory(setText, setAmount, cb);
   const { account } = useAccount();
@@ -66,18 +36,45 @@ export const LiveItem = ({ option }: Props) => {
     maturity,
     positionSize,
     positionValue,
-  } = option.parsed as ParsedOptionWithPosition;
+  } = option.parsed;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
-  const typeText = optionType === OptionType.Put ? "Put" : "Call";
-  const sideText = optionSide === OptionSide.Long ? "Long" : "Short";
-  const currency = optionType === OptionType.Put ? "USD" : "ETH";
+  const [typeText, currency] = isCall(optionType)
+    ? ["Call", "ETH"]
+    : ["Put", "USD"];
+  const sideText = isLong(optionSide) ? "Long" : "Short";
 
   const desc = `${sideText} ${typeText} with strike $${strikePrice}`;
   const decimals = 4;
   const timeNow = new Date().getTime();
   const isExpired = msMaturity - timeNow <= 0;
+
+  const close = (size: string) => {
+    if (!account || !size) {
+      debug("Could not trade close", { account, raw: option?.raw, size });
+      return;
+    }
+
+    setProcessing(true);
+
+    tradeClose(account, option, size)
+      .then((res) => {
+        if (res?.transaction_hash) {
+          afterTransaction(res.transaction_hash, () => {
+            invalidatePositions();
+            setProcessing(false);
+          });
+        }
+      })
+      .catch(() => {
+        setProcessing(false);
+      });
+  };
+
+  const handleClose = () => close(convertSizeToInt(amount));
+
+  const handleCloseAll = () => close(fullSizeInt(option));
 
   return (
     <TableRow>
@@ -107,20 +104,21 @@ export const LiveItem = ({ option }: Props) => {
         />
       </TableCell>
       <TableCell align="right">
-        <Button
+        <ButtonGroup
+          disableElevation
           variant="contained"
-          onClick={() =>
-            handleCloseOrSettle(
-              account,
-              amount,
-              option.raw,
-              amount === positionSize,
-              isExpired
-            )
-          }
+          aria-label="Disabled elevation buttons"
+          disabled={processing}
         >
-          {isExpired ? "Settle" : "Close"}
-        </Button>
+          {processing ? (
+            <Button>Processing...</Button>
+          ) : (
+            <>
+              <Button onClick={handleClose}>Close</Button>
+              <Button onClick={handleCloseAll}>Max</Button>
+            </>
+          )}
+        </ButtonGroup>
       </TableCell>
     </TableRow>
   );

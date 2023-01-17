@@ -10,13 +10,11 @@ import {
   ReferenceLine,
 } from "recharts";
 import { isNonEmptyArray } from "../../utils/utils";
-import { LoadingAnimation } from "../loading";
 import { Color } from "./Graph";
 import { GraphData } from "./profitGraphData";
 
 type ProfitGraphProps = {
   data: GraphData;
-  loading?: boolean;
 };
 
 const CustomTooltip = memo(
@@ -40,15 +38,11 @@ const CustomTooltip = memo(
   (prev, next) => prev === next
 );
 
-export const ProfitGraph = ({ data, loading }: ProfitGraphProps) => {
+export const ProfitGraph = ({ data }: ProfitGraphProps) => {
   const [color, setColor] = useState<Color>(Color.Green);
   const { plot, domain } = data;
   const xAxisTicks = [plot[0].market, plot[plot.length - 1].market];
   const yAxisTicks = [plot[0].usd, 0, plot[plot.length - 1].usd];
-
-  if (loading) {
-    return <LoadingAnimation />;
-  }
 
   return (
     <ResponsiveContainer width="100%" height="100%">

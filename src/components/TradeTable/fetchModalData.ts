@@ -1,14 +1,9 @@
 import { getEthInUsd } from "../../calls/currencies";
-import {
-  CompositeOption,
-  ParsedCallOption,
-  ParsedPutOption,
-  OptionType,
-} from "../../types/options";
-import { FinancialData } from "./OptionModal";
+import { FinancialData, OptionWithPremia } from "../../types/options";
 import { getPremia } from "../../calls/getPremia";
 import { debug } from "../../utils/debugger";
-import { shortInteger } from "../../utils/computations";
+import { isCall } from "../../utils/utils";
+import { financialDataEth, financialDataUsd } from "../../utils/computations";
 
 const ethData = {
   ethInUsd: 0,
@@ -31,63 +26,26 @@ const recentEthInUsd = async () => {
 
 export const fetchModalData = async (
   size: number,
-  option: CompositeOption,
+  option: OptionWithPremia,
   signal: AbortSignal
 ): Promise<FinancialData | null> => {
   const [ethInUsd, fetchedPremia] = await Promise.all([
     recentEthInUsd(),
     getPremia(option, size, false),
-  ]);
+  ]).catch((e: Error) => {
+    debug("Failed fetching ETH or premia", e.message);
+    throw Error("Failed fetching");
+  });
+
+  debug("Fetched ETH and premia", { ethInUsd, fetchedPremia });
 
   if (signal.aborted) {
     return null;
   }
 
-  debug("Fetched premia:", fetchedPremia);
-  const { optionType } = option.parsed;
+  const { optionType, premiaDecimal } = option.parsed;
 
-  const res: FinancialData = {
-    premiaUsd: 0,
-    premiaEth: 0,
-    basePremiaUsd: 0,
-    basePremiaEth: 0,
-    ethInUsd,
-  };
-
-  if (optionType === OptionType.Call) {
-    // premia is in Wei
-    const { premiaWei } = option.parsed as ParsedCallOption;
-    if (!premiaWei) {
-      throw Error(
-        "Parsed Call Option did not contain premiaWei " +
-          JSON.stringify(option.parsed)
-      );
-    }
-    const premiaEth = shortInteger(premiaWei, 18);
-    const premiaUsd = premiaEth * ethInUsd;
-    res.premiaEth = fetchedPremia;
-    res.premiaUsd = fetchedPremia * ethInUsd;
-    res.basePremiaEth = premiaEth;
-    res.basePremiaUsd = premiaUsd;
-  }
-
-  if (optionType === OptionType.Put) {
-    // premia is in Usd
-    const { premiaUsd } = option.parsed as ParsedPutOption;
-
-    if (!premiaUsd) {
-      throw Error(
-        "Parsed Put Option did not contain premiaWei " +
-          JSON.stringify(option.parsed)
-      );
-    }
-    const numPremiaUsd = shortInteger(premiaUsd, 6);
-    const premiaEth = numPremiaUsd / ethInUsd;
-    res.premiaUsd = fetchedPremia;
-    res.premiaEth = fetchedPremia / ethInUsd;
-    res.basePremiaEth = premiaEth;
-    res.basePremiaUsd = numPremiaUsd;
-  }
-
-  return res;
+  return isCall(optionType)
+    ? financialDataEth(premiaDecimal, fetchedPremia, ethInUsd)
+    : financialDataUsd(premiaDecimal, fetchedPremia, ethInUsd);
 };

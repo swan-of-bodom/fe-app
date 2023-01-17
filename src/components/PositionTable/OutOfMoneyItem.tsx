@@ -1,47 +1,49 @@
-import {
-  CompositeOption,
-  OptionSide,
-  OptionType,
-  ParsedOptionWithPosition,
-  RawOption,
-} from "../../types/options";
-import { timestampToReadableDate } from "../../utils/utils";
+import { OptionWithPosition } from "../../types/options";
+import { isCall, isLong, timestampToReadableDate } from "../../utils/utils";
 import { Button, TableCell, TableRow } from "@mui/material";
 import { debug } from "../../utils/debugger";
 import { useAccount } from "@starknet-react/core";
-import { AccountInterface } from "starknet";
-import BN from "bn.js";
 import { tradeSettle } from "../../calls/tradeSettle";
+import { useState } from "react";
+import { invalidatePositions } from "../../queries/client";
+import { afterTransaction } from "../../utils/blockchain";
 
 type Props = {
-  option: CompositeOption;
-};
-
-const handleSettle = async (
-  account: AccountInterface | undefined,
-  raw: RawOption
-) => {
-  if (!account || !raw || !raw.position_size) {
-    debug("Could not trade close", { account, raw });
-    return;
-  }
-
-  const size64x61 = new BN(raw.position_size).toString(10);
-
-  const res = await tradeSettle(account, raw, size64x61);
-  debug("Trade settle", res);
+  option: OptionWithPosition;
 };
 
 export const OutOfMoneyItem = ({ option }: Props) => {
   const { account } = useAccount();
+  const [processing, setProcessing] = useState<boolean>(false);
+
+  const handleSettle = () => {
+    if (!account || !option?.raw?.position_size) {
+      debug("Could not trade close", { account, raw: option?.raw });
+      return;
+    }
+    setProcessing(true);
+
+    tradeSettle(account, option)
+      .then((res) => {
+        if (res?.transaction_hash) {
+          afterTransaction(res.transaction_hash, () => {
+            invalidatePositions();
+            setProcessing(false);
+          });
+        }
+      })
+      .catch(() => {
+        setProcessing(false);
+      });
+  };
 
   const { strikePrice, optionSide, optionType, maturity, positionSize } =
-    option.parsed as ParsedOptionWithPosition;
+    option.parsed;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
-  const typeText = optionType === OptionType.Put ? "Put" : "Call";
-  const sideText = optionSide === OptionSide.Long ? "Long" : "Short";
+  const typeText = isCall(optionType) ? "Call" : "Put";
+  const sideText = isLong(optionSide) ? "Long" : "Short";
 
   const desc = `${sideText} ${typeText} with strike $${strikePrice}`;
   const decimals = 4;
@@ -53,10 +55,11 @@ export const OutOfMoneyItem = ({ option }: Props) => {
       <TableCell>{positionSize.toFixed(decimals)}</TableCell>
       <TableCell align="right">
         <Button
+          disabled={processing}
           variant="contained"
-          onClick={() => handleSettle(account, option.raw)}
+          onClick={handleSettle}
         >
-          {"Settle"}
+          {processing ? "Processing..." : "Settle"}
         </Button>
       </TableCell>
     </TableRow>

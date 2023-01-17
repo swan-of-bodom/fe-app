@@ -5,20 +5,20 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { CompositeOption } from "../../types/options";
+import { OptionWithPremia } from "../../types/options";
 import { OptionModal } from "./OptionModal";
 import OptionsTableItem from "./OptionTableItem";
 import { useState } from "react";
 
 type Props = {
-  options: CompositeOption[];
+  options: OptionWithPremia[];
 };
 
 const OptionsTable = ({ options }: Props) => {
-  const [modalOption, setModalOption] = useState<CompositeOption>(options[0]);
+  const [modalOption, setModalOption] = useState<OptionWithPremia>(options[0]);
   const [open, setOpen] = useState<boolean>(false);
 
-  const handleOptionClick = (o: CompositeOption) => {
+  const handleOptionClick = (o: OptionWithPremia) => {
     setModalOption(o);
     setOpen(true);
   };

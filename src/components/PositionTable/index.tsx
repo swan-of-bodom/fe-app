@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { NoContent } from "../TableNoContent";
 import { LoadingAnimation } from "../loading";
-import { CompositeOption } from "../../types/options";
+import { OptionWithPosition } from "../../types/options";
 import { isFresh } from "../../utils/parseOption";
 import { TableElement } from "./TableElement";
 import { LiveItem } from "./LiveItem";
@@ -64,17 +64,6 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
     fetchPositions
   );
 
-  if (isLoading) {
-    const child = () => (
-      <Box sx={{ padding: "20px" }}>
-        <LoadingAnimation size={40} />
-      </Box>
-    );
-    return (
-      <PositionsTemplate Live={child} InMoney={child} OutOfMoney={child} />
-    );
-  }
-
   if (isError) {
     const child = () =>
       NoContent({
@@ -85,23 +74,30 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
     );
   }
 
-  const liveOptions = data
-    ? data.filter(({ raw }: CompositeOption) => isFresh(raw))
-    : [];
+  if (isLoading || !data) {
+    const child = () => (
+      <Box sx={{ padding: "20px" }}>
+        <LoadingAnimation size={40} />
+      </Box>
+    );
+    return (
+      <PositionsTemplate Live={child} InMoney={child} OutOfMoney={child} />
+    );
+  }
 
-  const inOptions = data
-    ? data.filter(
-        ({ raw, parsed }: CompositeOption) =>
-          !isFresh(raw) && !!parsed?.positionValue
-      )
-    : [];
+  const liveOptions = data.filter(({ raw }: OptionWithPosition) =>
+    isFresh(raw)
+  );
 
-  const outOptions = data
-    ? data.filter(
-        ({ raw, parsed }: CompositeOption) =>
-          !isFresh(raw) && !parsed?.positionValue
-      )
-    : [];
+  const inOptions = data.filter(
+    ({ raw, parsed }: OptionWithPosition) =>
+      !isFresh(raw) && !!parsed.positionValue
+  );
+
+  const outOptions = data.filter(
+    ({ raw, parsed }: OptionWithPosition) =>
+      !isFresh(raw) && !parsed.positionValue
+  );
 
   return (
     <PositionsTemplate
@@ -111,6 +107,7 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
           data: liveOptions,
           titles: ["Option", "Maturity", "Size", "Value", "Amount"],
           ItemElem: LiveItem,
+          desc: "live",
         })
       }
       InMoney={() =>
@@ -119,6 +116,7 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
           data: inOptions,
           titles: ["Option", "Expiry", "Size", "Value"],
           ItemElem: InMoneyItem,
+          desc: "expired with profit",
         })
       }
       OutOfMoney={() =>
@@ -127,6 +125,7 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
           data: outOptions,
           titles: ["Option", "Expiry", "Size"],
           ItemElem: OutOfMoneyItem,
+          desc: "expired without profit",
         })
       }
     />
