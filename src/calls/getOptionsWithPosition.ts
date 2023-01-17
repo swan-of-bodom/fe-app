@@ -16,7 +16,7 @@ export const getOptionsWithPositionOfUser = async (
     throw Error(e.message);
   });
 
-  if (isNonEmptyArray(res)) {
+  if (isNonEmptyArray(res) && isNonEmptyArray(res[0])) {
     return res[0];
   }
   return [];

@@ -5,6 +5,10 @@ export const parseBatchOfOptions = <T, R>(
 ): R[] => {
   const l = arr.length;
 
+  if (l === 0) {
+    return [];
+  }
+
   if (l % batchSize !== 0) {
     throw Error("Failed to parse batch, sizes mismatch" + JSON.stringify(arr));
   }
