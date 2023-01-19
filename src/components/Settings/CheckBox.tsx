@@ -1,35 +1,20 @@
 import { Grid, Switch, Typography } from "@mui/material";
 import { ThemeVariants } from "../../style/themes";
-import { ChangeEvent, useState } from "react";
-import { retrieveSettings, storeSetting } from "../../utils/environment";
+import { ChangeEvent } from "react";
+import { RootState } from "../../redux/store";
+import { updateSettings } from "../../redux/actions";
+import { useSelector } from "react-redux";
 
-type Props = {
-  toggleTheme: (t: ThemeVariants) => void;
-};
-
-export const CheckBox = ({ toggleTheme }: Props) => {
-  const { autoconnect: defaultAutoconnect, theme: defaultTheme } =
-    retrieveSettings();
-  const [autoconnect, setAutoconnect] = useState<boolean>(defaultAutoconnect);
-  const [theme, setTheme] = useState<boolean>(
-    defaultTheme === ThemeVariants.dark
-  );
+export const CheckBox = () => {
+  const { theme, autoconnect } = useSelector((s: RootState) => s.settings);
 
   const handleAutoconnect = (e: ChangeEvent, checked: boolean) => {
-    setAutoconnect(checked);
-    storeSetting({
-      theme: theme ? ThemeVariants.dark : ThemeVariants.light,
-      autoconnect: checked,
-    });
+    updateSettings({ autoconnect: checked });
   };
 
   const handleTheme = (e: ChangeEvent, checked: boolean) => {
-    setTheme(checked);
-    toggleTheme(checked ? ThemeVariants.dark : ThemeVariants.light);
-    storeSetting({
-      theme: checked ? ThemeVariants.dark : ThemeVariants.light,
-      autoconnect,
-    });
+    const newTheme = checked ? ThemeVariants.dark : ThemeVariants.light;
+    updateSettings({ theme: newTheme });
   };
 
   const style = {
@@ -48,7 +33,7 @@ export const CheckBox = ({ toggleTheme }: Props) => {
       <Grid item xs={4} md={2}>
         <Switch
           inputProps={{ "aria-label": "controlled" }}
-          checked={theme}
+          checked={theme === ThemeVariants.dark}
           onChange={handleTheme}
           color="primary"
         />

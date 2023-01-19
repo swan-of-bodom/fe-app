@@ -1,11 +1,8 @@
 import { Typography } from "@mui/material";
 import { useEffect } from "react";
 import { CheckBox } from "../components/Settings/CheckBox";
-import { ThemeVariants } from "../style/themes";
 
-type Props = { toggleTheme: (t: ThemeVariants) => void };
-
-const Settings = ({ toggleTheme }: Props) => {
+const Settings = () => {
   useEffect(() => {
     document.title = "Settings | Carmine Finance";
   });
@@ -18,7 +15,7 @@ const Settings = ({ toggleTheme }: Props) => {
         device and only if the usage of local storage is available.
       </Typography>
       <br />
-      <CheckBox toggleTheme={toggleTheme} />
+      <CheckBox />
     </>
   );
 };

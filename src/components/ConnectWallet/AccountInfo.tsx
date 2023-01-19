@@ -1,7 +1,6 @@
 import { Button, Tooltip, Typography } from "@mui/material";
 import { Connector } from "@starknet-react/core";
 import { SupportedWalletIds } from "../../types/wallet";
-import { debug } from "../../utils/debugger";
 import { ArgentIcon, BraavosIcon } from "../assets";
 
 type AccountInfoProps = {
@@ -31,7 +30,6 @@ export const AccountInfo = ({
   const start = address.substring(0, letters);
   const end = address.substring(address.length - letters);
 
-  debug(connector);
   return (
     <Tooltip title={"Disconnect"}>
       <Button onClick={disconnect} variant="outlined" sx={containerStyle}>
