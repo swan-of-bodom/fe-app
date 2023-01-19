@@ -1,13 +1,13 @@
 import { Provider, ProviderOptions } from "starknet";
 import { NetworkName } from "../types/network";
-import { StarknetChainId } from "starknet/constants";
+import { constants } from "starknet";
 
 const devnetOptions = {
   sequencer: {
     baseUrl: process.env.REACT_APP_GATEWAY!,
     feederGatewayUrl: "feeder_gateway",
     gatewayUrl: process.env.REACT_APP_GATEWAY,
-    chainId: process.env.REACT_APP_CHAIN_ID as StarknetChainId,
+    chainId: process.env.REACT_APP_CHAIN_ID as constants.StarknetChainId,
   },
 };
 
