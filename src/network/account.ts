@@ -5,6 +5,7 @@ import {
   ConnectedStarknetWindowObject,
 } from "get-starknet-core";
 import { debug } from "../utils/debugger";
+import { store } from "../redux/store";
 
 const isConnectedWallet = (
   wallet: StarknetWindowObject
@@ -16,13 +17,15 @@ const isConnectedWallet = (
   return false;
 };
 
-export const connect = (wallet: StarknetWindowObject) =>
-  wallet.enable().then(() => {
+export const connect = (wallet: StarknetWindowObject) => {
+  const sn = getStarknet();
+  sn.enable(wallet).then(() => {
     if (isConnectedWallet(wallet)) {
       updateNetwork({ wallet });
       debug("Wallet connected", wallet);
     }
   });
+};
 
 export const disconnect = () => {
   const sn = getStarknet();
@@ -30,4 +33,22 @@ export const disconnect = () => {
     updateNetwork({ wallet: undefined });
     debug("Wallet disconnected");
   });
+};
+
+export const connectToLatest = async () => {
+  const { wallet } = store.getState().network;
+
+  if (wallet) {
+    // already connected
+    return;
+  }
+
+  const sn = getStarknet();
+  const latestWallet = await sn.getLastConnectedWallet();
+
+  debug("Latest wallet", latestWallet);
+
+  if (latestWallet) {
+    return connect(latestWallet);
+  }
 };
