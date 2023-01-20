@@ -2,18 +2,18 @@ import { OptionWithPosition } from "../../types/options";
 import { isCall, isLong, timestampToReadableDate } from "../../utils/utils";
 import { Button, TableCell, TableRow, Tooltip } from "@mui/material";
 import { debug } from "../../utils/debugger";
-import { useAccount } from "@starknet-react/core";
 import { tradeSettle } from "../../calls/tradeSettle";
 import { invalidatePositions } from "../../queries/client";
 import { afterTransaction } from "../../utils/blockchain";
 import { useState } from "react";
+import { useAccount } from "../../hooks/useAccount";
 
 type Props = {
   option: OptionWithPosition;
 };
 
 export const InMoneyItem = ({ option }: Props) => {
-  const { account } = useAccount();
+  const account = useAccount();
   const [processing, setProcessing] = useState<boolean>(false);
 
   const handleSettle = () => {

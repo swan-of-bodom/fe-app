@@ -10,12 +10,12 @@ import {
 } from "@mui/material";
 import { debug } from "../../utils/debugger";
 import { tradeClose } from "../../calls/tradeClose";
-import { useAccount } from "@starknet-react/core";
 import { useState } from "react";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { afterTransaction } from "../../utils/blockchain";
 import { invalidatePositions } from "../../queries/client";
 import { convertSizeToInt, fullSizeInt } from "../../utils/conversions";
+import { useAccount } from "../../hooks/useAccount";
 
 type Props = {
   option: OptionWithPosition;
@@ -27,7 +27,7 @@ export const LiveItem = ({ option }: Props) => {
   const [processing, setProcessing] = useState<boolean>(false);
   const cb = (n: number): number => (n > positionSize ? positionSize : n);
   const handleChange = handleNumericChangeFactory(setText, setAmount, cb);
-  const { account } = useAccount();
+  const account = useAccount();
 
   const {
     strikePrice,

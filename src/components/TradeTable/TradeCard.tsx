@@ -8,7 +8,6 @@ import {
   debounce,
 } from "@mui/material";
 import { LoadingAnimation } from "../loading";
-import { useAccount } from "@starknet-react/core";
 import BN from "bn.js";
 import { useState, useCallback, useEffect } from "react";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
@@ -22,6 +21,7 @@ import { ProfitGraph } from "../CryptoGraph/ProfitGraph";
 import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
 import { ProfitTable, ProfitTableSkeleton } from "./ProfitTable";
+import { useAccount } from "../../hooks/useAccount";
 
 type TemplateProps = {
   title: string;
@@ -112,7 +112,7 @@ type TradeCardProps = {
 };
 
 export const TradeCard = ({ option }: TradeCardProps) => {
-  const { account } = useAccount();
+  const account = useAccount();
   const [amount, setAmount] = useState<number>(1);
   const [inputText, setInputText] = useState<string>("1");
   const [loading, setLoading] = useState<boolean>(true);

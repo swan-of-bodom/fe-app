@@ -8,6 +8,7 @@ const getInitialNetworkState = (): NetworkState => {
   const provider = getProviderByNetwork(networkName);
 
   return {
+    wallet: undefined,
     provider,
     network: {
       name: networkName,
@@ -21,9 +22,6 @@ export const network = createSlice({
   reducers: {
     updateNetworkState: (state, action: { payload: Partial<NetworkState> }) => {
       state = { ...state, ...action.payload };
-      if (action.payload.network) {
-        // update network state
-      }
       return state;
     },
   },

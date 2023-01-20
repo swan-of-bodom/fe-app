@@ -1,4 +1,3 @@
-import { useAccount } from "@starknet-react/core";
 import { FunctionComponent } from "react";
 import { fetchPositions } from "./fetchPositions";
 import { TableWrapper } from "../TableWrapper";
@@ -13,6 +12,7 @@ import { TableElement } from "./TableElement";
 import { LiveItem } from "./LiveItem";
 import { InMoneyItem } from "./InMoneyItem";
 import { OutOfMoneyItem } from "./OutOfMoneyItem";
+import { useAccount } from "../../hooks/useAccount";
 
 type PositionsTemplateProps = {
   Live: FunctionComponent;
@@ -133,9 +133,9 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
 };
 
 export const Positions = () => {
-  const { address } = useAccount();
+  const account = useAccount();
 
-  if (!address) {
+  if (!account) {
     const child = () =>
       NoContent({ text: "Connect your wallet to see your positions" });
     return (
@@ -143,5 +143,5 @@ export const Positions = () => {
     );
   }
 
-  return <PositionsWithAddress address={address} />;
+  return <PositionsWithAddress address={account.address} />;
 };

@@ -1,3 +1,4 @@
+import { ConnectedStarknetWindowObject } from "get-starknet-core";
 import { Provider } from "starknet";
 
 export enum NetworkName {
@@ -12,6 +13,7 @@ export interface Network {
 }
 
 export interface NetworkState {
+  wallet?: ConnectedStarknetWindowObject;
   provider: Provider;
   network: Network;
 }
