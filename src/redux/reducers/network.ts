@@ -1,18 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { retrieveSettings } from "../../utils/settings";
 import { NetworkState } from "../../types/network";
-import { getProviderByNetwork } from "../../network/provider";
+import {
+  getNetworkObjectByNetworkName,
+  getProviderByNetwork,
+} from "../../network/provider";
 
 const getInitialNetworkState = (): NetworkState => {
   const networkName = retrieveSettings().network;
   const provider = getProviderByNetwork(networkName);
 
   return {
-    wallet: undefined,
+    walletId: undefined,
     provider,
-    network: {
-      name: networkName,
-    },
+    network: getNetworkObjectByNetworkName(networkName),
   };
 };
 

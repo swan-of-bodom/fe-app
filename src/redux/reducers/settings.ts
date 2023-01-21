@@ -9,9 +9,6 @@ export const settings = createSlice({
     updateSettingsState: (state, action: { payload: Partial<Settings> }) => {
       state = { ...state, ...action.payload };
       storeSetting(state);
-      if (action.payload.network) {
-        // update network state
-      }
       return state;
     },
   },

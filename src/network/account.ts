@@ -6,9 +6,10 @@ import {
 } from "get-starknet-core";
 import { debug } from "../utils/debugger";
 import { store } from "../redux/store";
+import { SupportedWalletIds } from "../types/wallet";
 
 const isConnectedWallet = (
-  wallet: StarknetWindowObject
+  wallet: StarknetWindowObject | undefined
 ): wallet is ConnectedStarknetWindowObject => {
   if (wallet && wallet.isConnected && wallet.account) {
     return true;
@@ -17,12 +18,37 @@ const isConnectedWallet = (
   return false;
 };
 
+export const getWallet = (): ConnectedStarknetWindowObject | undefined => {
+  const { walletId } = store.getState().network;
+
+  if (!walletId) {
+    return undefined;
+  }
+
+  const wallet =
+    walletId === SupportedWalletIds.ArgentX
+      ? window.starknet_argentX
+      : window.starknet_braavos;
+
+  if (isConnectedWallet(wallet)) {
+    return wallet;
+  }
+  return undefined;
+};
+
 export const connect = (wallet: StarknetWindowObject) => {
   const sn = getStarknet();
   sn.enable(wallet).then(() => {
-    if (isConnectedWallet(wallet)) {
-      updateNetwork({ wallet });
-      debug("Wallet connected", wallet);
+    if (!isConnectedWallet(wallet)) {
+      return;
+    }
+    updateNetwork({ walletId: wallet.id as SupportedWalletIds });
+    debug("Wallet connected", wallet);
+
+    const { chainId } = store.getState().network.network;
+
+    if (chainId !== wallet.account.chainId) {
+      debug("NETWORK MISMATCH");
     }
   });
 };
@@ -30,15 +56,15 @@ export const connect = (wallet: StarknetWindowObject) => {
 export const disconnect = () => {
   const sn = getStarknet();
   sn.disconnect().then((res) => {
-    updateNetwork({ wallet: undefined });
+    updateNetwork({ walletId: undefined });
     debug("Wallet disconnected");
   });
 };
 
 export const connectToLatest = async () => {
-  const { wallet } = store.getState().network;
+  const { walletId } = store.getState().network;
 
-  if (wallet) {
+  if (walletId) {
     // already connected
     return;
   }
