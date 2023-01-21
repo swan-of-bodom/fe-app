@@ -1,4 +1,4 @@
-import { updateNetwork } from "../redux/actions";
+import { openNetworkMismatchDialog, updateNetwork } from "../redux/actions";
 import {
   StarknetWindowObject,
   getStarknet,
@@ -36,6 +36,14 @@ export const getWallet = (): ConnectedStarknetWindowObject | undefined => {
   return undefined;
 };
 
+export const disconnect = () => {
+  const sn = getStarknet();
+  sn.disconnect().then((res) => {
+    updateNetwork({ walletId: undefined });
+    debug("Wallet disconnected");
+  });
+};
+
 export const connect = (wallet: StarknetWindowObject) => {
   const sn = getStarknet();
   sn.enable(wallet).then(() => {
@@ -49,15 +57,8 @@ export const connect = (wallet: StarknetWindowObject) => {
 
     if (chainId !== wallet.account.chainId) {
       debug("NETWORK MISMATCH");
+      openNetworkMismatchDialog();
     }
-  });
-};
-
-export const disconnect = () => {
-  const sn = getStarknet();
-  sn.disconnect().then((res) => {
-    updateNetwork({ walletId: undefined });
-    debug("Wallet disconnected");
   });
 };
 

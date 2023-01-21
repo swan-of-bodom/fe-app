@@ -9,3 +9,12 @@ export const updateSettings = (v: Partial<Settings>) =>
 
 export const updateNetwork = (v: Partial<NetworkState>) =>
   store.dispatch(updateNetworkState(v));
+
+const toggleNetworkMismatchDialog = (open: boolean) =>
+  store.dispatch(updateNetworkState({ networkMismatchDialogOpen: open }));
+
+export const openNetworkMismatchDialog = () =>
+  toggleNetworkMismatchDialog(true);
+
+export const closeNetworkMismatchDialog = () =>
+  toggleNetworkMismatchDialog(false);
