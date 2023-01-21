@@ -19,4 +19,5 @@ export interface NetworkState {
   provider: Provider;
   network: Network;
   networkMismatchDialogOpen: boolean;
+  walletConnectDialogOpen: boolean;
 }

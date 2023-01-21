@@ -18,3 +18,10 @@ export const openNetworkMismatchDialog = () =>
 
 export const closeNetworkMismatchDialog = () =>
   toggleNetworkMismatchDialog(false);
+
+const toggleWalletConnectDialog = (open: boolean) =>
+  store.dispatch(updateNetworkState({ walletConnectDialogOpen: open }));
+
+export const openWalletConnectDialog = () => toggleWalletConnectDialog(true);
+
+export const closeWalletConnectDialog = () => toggleWalletConnectDialog(false);

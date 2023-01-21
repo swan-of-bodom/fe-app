@@ -3,6 +3,7 @@ import { SupportedWalletIds } from "../../types/wallet";
 import { ArgentIcon, BraavosIcon } from "../assets";
 import { useWallet } from "../../hooks/useWallet";
 import { disconnect } from "../../network/account";
+import { closeWalletConnectDialog } from "../../redux/actions";
 
 const iconStyle = {
   width: 30,
@@ -14,11 +15,7 @@ const containerStyle = {
   alignItems: "center",
 };
 
-type Props = {
-  close: () => void;
-};
-
-export const AccountInfo = ({ close }: Props) => {
+export const AccountInfo = () => {
   const wallet = useWallet();
 
   if (!wallet) {
@@ -27,7 +24,7 @@ export const AccountInfo = ({ close }: Props) => {
 
   const handleDisconnect = () => {
     disconnect();
-    close();
+    closeWalletConnectDialog();
   };
 
   const { account, id } = wallet;

@@ -32,16 +32,22 @@ export const NetworkMismatchDialog = () => {
     >
       <Paper sx={style}>
         <DialogTitle id="alert-dialog-title">
-          Your wallet is on different Network than the dApp
+          Wallet - dApp network mismatch
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Please, either change the network that the dApp is using, or the
-            network that your wallet is using.
+            Your wallet appears to be connected to a different network than this
+            application. Please ensure that your wallet is connected to the same
+            network as the app, or change the network that the app is using, in
+            order to proceed.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeNetworkMismatchDialog} autoFocus>
+          <Button
+            variant="contained"
+            onClick={closeNetworkMismatchDialog}
+            autoFocus
+          >
             Close
           </Button>
         </DialogActions>

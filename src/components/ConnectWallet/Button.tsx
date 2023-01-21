@@ -1,31 +1,30 @@
 import { Button } from "@mui/material";
 import { Wallet } from "@mui/icons-material";
-import { useState } from "react";
 import { WalletModal } from "./Modal";
 import { AccountInfo } from "./AccountInfo";
 import { useAccount } from "../../hooks/useAccount";
+import { openWalletConnectDialog } from "../../redux/actions";
 
 const buttonStyle = {
   minWidth: "170px",
 };
 
 export const WalletButton = () => {
-  const [open, setOpen] = useState<boolean>(false);
   const account = useAccount();
-
-  const handleOpen = () => setOpen(true);
-
-  const handleClose = () => setOpen(false);
 
   if (account) {
     // wallet connected
-    return <AccountInfo close={handleClose} />;
+    return <AccountInfo />;
   }
 
   return (
     <>
-      <WalletModal open={open} setOpen={setOpen} />
-      <Button variant="outlined" sx={buttonStyle} onClick={handleOpen}>
+      <WalletModal />
+      <Button
+        variant="outlined"
+        sx={buttonStyle}
+        onClick={openWalletConnectDialog}
+      >
         <Wallet />
         Connect Wallet
       </Button>

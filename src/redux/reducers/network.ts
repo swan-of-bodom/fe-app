@@ -15,6 +15,7 @@ const getInitialNetworkState = (): NetworkState => {
     provider,
     network: getNetworkObjectByNetworkName(networkName),
     networkMismatchDialogOpen: false,
+    walletConnectDialogOpen: false,
   };
 };
 

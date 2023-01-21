@@ -1,4 +1,8 @@
-import { openNetworkMismatchDialog, updateNetwork } from "../redux/actions";
+import {
+  closeWalletConnectDialog,
+  openNetworkMismatchDialog,
+  updateNetwork,
+} from "../redux/actions";
 import {
   StarknetWindowObject,
   getStarknet,
@@ -56,7 +60,9 @@ export const connect = (wallet: StarknetWindowObject) => {
     const { chainId } = store.getState().network.network;
 
     if (chainId !== wallet.account.chainId) {
-      debug("NETWORK MISMATCH");
+      debug("Wallet - App network mismatch, opening dialog");
+      disconnect();
+      closeWalletConnectDialog();
       openNetworkMismatchDialog();
     }
   });
