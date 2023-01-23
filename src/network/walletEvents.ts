@@ -5,20 +5,33 @@ import {
 import { store } from "../redux/store";
 import { NetworkName } from "../types/network";
 import { openNetworkMismatchDialog } from "../redux/actions";
+import { debug } from "../utils/debugger";
 
-export const walletNetworkChangeHandler: NetworkChangeEventHandler = (e) => {
-  const isWalletMainnet = e === "SN_MAIN" || e === "mainnet-alpha";
-  const isAppMainnet =
-    store.getState().settings.network === NetworkName.Mainnet;
+export const walletNetworkChangeHandlerFactory =
+  (wallet: StarknetWindowObject): NetworkChangeEventHandler =>
+  (e) => {
+    const { network, settings } = store.getState();
+    const { id } = wallet;
 
-  if (isWalletMainnet === isAppMainnet) {
-    // all is well, do nothing
-    return;
-  }
+    if (network.walletId !== id) {
+      // not currently connected wallet
+      return;
+    }
 
-  // network mismatch - open the dialog
-  openNetworkMismatchDialog();
-};
+    // "SN_MAIN" is used by ArgentX, "mainnet-alpha" is used by Braavos
+    const isWalletMainnet = e === "SN_MAIN" || e === "mainnet-alpha";
+    const isAppMainnet = settings.network === NetworkName.Mainnet;
+
+    if (isWalletMainnet === isAppMainnet) {
+      // all is well, do nothing
+      return;
+    }
+
+    debug("Network change event fired from", id);
+
+    // network mismatch - open the dialog
+    openNetworkMismatchDialog();
+  };
 
 type EventList = {
   event: string;
@@ -37,7 +50,9 @@ export const addWalletEventHandlers = (wallet: StarknetWindowObject) => {
     // this event listener is already added - do nothing
     return;
   }
-  wallet.on("networkChanged", walletNetworkChangeHandler);
+
+  const handler = walletNetworkChangeHandlerFactory(wallet);
+  wallet.on("networkChanged", handler);
   eventList.push({
     event: "networkChanged",
     walletId: wallet.id,

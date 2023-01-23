@@ -49,7 +49,10 @@ export const disconnect = () => {
   });
 };
 
-export const connect = (wallet: StarknetWindowObject) => {
+export const connect = (
+  wallet: StarknetWindowObject,
+  fromLatest: boolean = false
+) => {
   const sn = getStarknet();
   sn.enable(wallet).then(() => {
     if (!isConnectedWallet(wallet)) {
@@ -64,7 +67,10 @@ export const connect = (wallet: StarknetWindowObject) => {
       debug("Wallet - App network mismatch, opening dialog");
       disconnect();
       closeWalletConnectDialog();
-      openNetworkMismatchDialog();
+      if (!fromLatest) {
+        // do not open on app start
+        openNetworkMismatchDialog();
+      }
       return;
     }
 
@@ -86,6 +92,6 @@ export const connectToLatest = async () => {
   debug("Latest wallet", latestWallet);
 
   if (latestWallet) {
-    return connect(latestWallet);
+    return connect(latestWallet, true);
   }
 };
