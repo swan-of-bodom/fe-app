@@ -6,9 +6,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useAccount } from "@starknet-react/core";
 import { OptionType } from "../../types/options";
 import { StakeCapitalItem } from "./StakeItem";
+import { useAccount } from "../../hooks/useAccount";
 
 const NoContent = () => (
   <Box sx={{ textAlign: "center" }}>
@@ -17,7 +17,7 @@ const NoContent = () => (
 );
 
 export const StakeCapitalParent = () => {
-  const { account } = useAccount();
+  const account = useAccount();
 
   if (!account) return <NoContent />;
 

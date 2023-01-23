@@ -2,7 +2,7 @@ import BN from "bn.js";
 import { Decimal, Int, Math64x61 } from "../types/units";
 import { longInteger, shortInteger } from "./computations";
 import { BASE_MATH_64_61 } from "../constants/amm";
-import { Uint256, bnToUint256 } from "starknet/dist/utils/uint256";
+import { uint256 } from "starknet";
 
 const PRECISSION_DIGITS = 20;
 const PRECISSION_BASE_VALUE = new BN(10).pow(new BN(PRECISSION_DIGITS));
@@ -39,8 +39,8 @@ export const intToMath64x61 = (n: Int, digits: number): Math64x61 =>
     .div(new BN(10).pow(new BN(digits)))
     .toString(10);
 
-export const decimalToUint256 = (n: Decimal, digits: number): Uint256 =>
-  bnToUint256(longInteger(n, digits));
+export const decimalToUint256 = (n: Decimal, digits: number): uint256.Uint256 =>
+  uint256.bnToUint256(longInteger(n, digits));
 
 export const uint256toDecimal = (n: BN, digits: number): Decimal =>
   shortInteger(n.toString(10), digits);
