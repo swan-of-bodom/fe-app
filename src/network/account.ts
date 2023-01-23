@@ -11,6 +11,7 @@ import {
 import { debug } from "../utils/debugger";
 import { store } from "../redux/store";
 import { SupportedWalletIds } from "../types/wallet";
+import { addWalletEventHandlers } from "./walletEvents";
 
 const isConnectedWallet = (
   wallet: StarknetWindowObject | undefined
@@ -64,7 +65,10 @@ export const connect = (wallet: StarknetWindowObject) => {
       disconnect();
       closeWalletConnectDialog();
       openNetworkMismatchDialog();
+      return;
     }
+
+    addWalletEventHandlers(wallet);
   });
 };
 
