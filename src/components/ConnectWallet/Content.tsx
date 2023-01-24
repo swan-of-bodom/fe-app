@@ -1,8 +1,10 @@
 import { Box, Button, Grid, Link, Typography } from "@mui/material";
-import { useConnectors } from "@starknet-react/core";
 import { useState } from "react";
 import { ArgentIcon, BraavosIcon } from "../assets";
 import { SupportedWalletIds } from "../../types/wallet";
+import { connect } from "../../network/account";
+import { debug } from "../../utils/debugger";
+import { getStarknet } from "get-starknet-core";
 
 enum ActiveBox {
   default,
@@ -93,10 +95,13 @@ const BoxSwitch = ({ variant }: BoxSwitchProps) => {
 
 export const WalletBox = () => {
   const [activeBox, setActiveBox] = useState<ActiveBox>(ActiveBox.default);
-  const { available, connect } = useConnectors();
 
-  const handleClick = (id: SupportedWalletIds, activeBox: ActiveBox) => {
-    const connector = available.find((wallets) => wallets?.options?.id === id);
+  const handleClick = async (id: SupportedWalletIds, activeBox: ActiveBox) => {
+    const sn = getStarknet();
+    const available = await sn.getAvailableWallets();
+    const connector = available.find((wallet) => wallet.id === id);
+
+    debug("Connector", connector);
 
     if (connector) {
       return connect(connector);

@@ -1,43 +1,30 @@
-import { useAccount, useConnectors } from "@starknet-react/core";
 import { Button } from "@mui/material";
 import { Wallet } from "@mui/icons-material";
-import { useState } from "react";
 import { WalletModal } from "./Modal";
 import { AccountInfo } from "./AccountInfo";
+import { useAccount } from "../../hooks/useAccount";
+import { openWalletConnectDialog } from "../../redux/actions";
 
 const buttonStyle = {
   minWidth: "170px",
 };
 
 export const WalletButton = () => {
-  const [open, setOpen] = useState<boolean>(false);
-  const { connector, address } = useAccount();
-  const { disconnect } = useConnectors();
+  const account = useAccount();
 
-  const handleConnect = () => {
-    setOpen(true);
-  };
-
-  const handleDisconnect = () => {
-    disconnect();
-    setOpen(false);
-  };
-
-  if (connector?.options.id && address) {
+  if (account) {
     // wallet connected
-    return (
-      <AccountInfo
-        connector={connector}
-        address={address}
-        disconnect={handleDisconnect}
-      />
-    );
+    return <AccountInfo />;
   }
 
   return (
     <>
-      <WalletModal open={open} setOpen={setOpen} />
-      <Button variant="outlined" sx={buttonStyle} onClick={handleConnect}>
+      <WalletModal />
+      <Button
+        variant="outlined"
+        sx={buttonStyle}
+        onClick={openWalletConnectDialog}
+      >
         <Wallet />
         Connect Wallet
       </Button>

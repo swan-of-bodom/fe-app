@@ -6,7 +6,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useAccount } from "@starknet-react/core";
 import { LoadingAnimation } from "../loading";
 import { isNonEmptyArray } from "../../utils/utils";
 
@@ -17,6 +16,7 @@ import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { AccountInterface } from "starknet";
 import { UserPoolDisplayData } from "../../types/pool";
+import { useAccount } from "../../hooks/useAccount";
 
 type Props = { address: string; account: AccountInterface };
 
@@ -89,10 +89,12 @@ const WithdrawParentWithAccount = ({ address, account }: Props) => {
 };
 
 export const WithdrawParent = () => {
-  const { account, address } = useAccount();
+  const account = useAccount();
 
-  if (!address || !account)
+  if (!account)
     return <NoContent text="Connect wallet to see your staked capital" />;
 
-  return <WithdrawParentWithAccount account={account} address={address} />;
+  return (
+    <WithdrawParentWithAccount account={account} address={account.address} />
+  );
 };

@@ -1,14 +1,9 @@
 import { Button, Tooltip, Typography } from "@mui/material";
-import { Connector } from "@starknet-react/core";
 import { SupportedWalletIds } from "../../types/wallet";
-import { debug } from "../../utils/debugger";
 import { ArgentIcon, BraavosIcon } from "../assets";
-
-type AccountInfoProps = {
-  connector: Connector;
-  address: string;
-  disconnect: () => void;
-};
+import { useWallet } from "../../hooks/useWallet";
+import { disconnect } from "../../network/account";
+import { closeWalletConnectDialog } from "../../redux/actions";
 
 const iconStyle = {
   width: 30,
@@ -20,21 +15,28 @@ const containerStyle = {
   alignItems: "center",
 };
 
-export const AccountInfo = ({
-  connector,
-  address,
-  disconnect,
-}: AccountInfoProps) => {
-  const { id } = connector.options;
+export const AccountInfo = () => {
+  const wallet = useWallet();
+
+  if (!wallet) {
+    return null;
+  }
+
+  const handleDisconnect = () => {
+    disconnect();
+    closeWalletConnectDialog();
+  };
+
+  const { account, id } = wallet;
+  const { address } = account;
 
   const letters = 5;
   const start = address.substring(0, letters);
   const end = address.substring(address.length - letters);
 
-  debug(connector);
   return (
     <Tooltip title={"Disconnect"}>
-      <Button onClick={disconnect} variant="outlined" sx={containerStyle}>
+      <Button onClick={handleDisconnect} variant="outlined" sx={containerStyle}>
         <>
           {id === SupportedWalletIds.ArgentX && <ArgentIcon sx={iconStyle} />}
           {id === SupportedWalletIds.Braavos && <BraavosIcon sx={iconStyle} />}

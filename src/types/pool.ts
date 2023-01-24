@@ -8,7 +8,7 @@ import {
   Math64x61,
   Math64x61BN,
 } from "./units";
-import { Uint256 } from "starknet/dist/utils/uint256";
+import { uint256 } from "starknet";
 
 export interface RawPool {
   quote_token_address: AddressBN;
@@ -29,8 +29,8 @@ export interface Pool {
 
 export interface RawPoolInfo extends RawPool {
   lptoken_address: AddressBN;
-  staked_capital: Uint256; // lpool_balance
-  unlocked_capital: Uint256;
+  staked_capital: uint256.Uint256; // lpool_balance
+  unlocked_capital: uint256.Uint256;
   value_of_pool_position: Math64x61BN;
 }
 
@@ -47,8 +47,8 @@ export interface PoolInfo {
 }
 
 export interface RawUserPoolInfo extends RawPoolInfo {
-  value_of_user_stake: Uint256;
-  size_of_users_tokens: Uint256;
+  value_of_user_stake: uint256.Uint256;
+  size_of_users_tokens: uint256.Uint256;
 }
 
 export interface ParsedUserPoolInfo extends ParsedPoolInfo {
@@ -72,15 +72,15 @@ export interface ResponsePool {
 export interface ResponsePoolInfo {
   pool: ResponsePool;
   lptoken_address: AddressBN;
-  staked_capital: Uint256; // lpool_balance
-  unlocked_capital: Uint256;
+  staked_capital: uint256.Uint256; // lpool_balance
+  unlocked_capital: uint256.Uint256;
   value_of_pool_position: Math64x61BN;
 }
 
 export interface ResponseUserPoolInfo {
   pool_info: ResponsePoolInfo;
-  value_of_user_stake: Uint256;
-  size_of_users_tokens: Uint256;
+  value_of_user_stake: uint256.Uint256;
+  size_of_users_tokens: uint256.Uint256;
 }
 
 export interface UserPoolDisplayData {

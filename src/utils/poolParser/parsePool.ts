@@ -10,7 +10,7 @@ import {
 import { bnToOptionType } from "../conversions";
 import { intToDecimal, uint256toDecimal } from "../units";
 import { digitsByType, toHex } from "../utils";
-import { uint256ToBN } from "starknet/dist/utils/uint256";
+import { uint256 } from "starknet";
 
 export const parsePool = (raw: ResponsePool): Pool => {
   const parsed = {
@@ -25,8 +25,10 @@ export const parsePoolInfo = (response: ResponsePoolInfo): PoolInfo => {
   const pool = parsePool(response.pool);
   const parsed = {
     lptokenAddress: toHex(response.lptoken_address),
-    stakedCapital: uint256ToBN(response.staked_capital).toString(10),
-    unlockedCapital: uint256ToBN(response.unlocked_capital).toString(10),
+    stakedCapital: uint256.uint256ToBN(response.staked_capital).toString(10),
+    unlockedCapital: uint256
+      .uint256ToBN(response.unlocked_capital)
+      .toString(10),
     valueOfPoolPosition: response.value_of_pool_position.toString(10),
     ...pool.parsed,
   };
@@ -50,8 +52,8 @@ export const parseUserPoolInfo = (
   response: ResponseUserPoolInfo
 ): UserPoolInfo => {
   const poolInfo = parsePoolInfo(response.pool_info);
-  const valueBN = uint256ToBN(response.value_of_user_stake);
-  const sizeBN = uint256ToBN(response.size_of_users_tokens);
+  const valueBN = uint256.uint256ToBN(response.value_of_user_stake);
+  const sizeBN = uint256.uint256ToBN(response.size_of_users_tokens);
   const sizeOfUsersTokensDecimal = uint256toDecimal(sizeBN, ETH_DIGITS);
   const valueOfUserStakeBase = valueBN.toString(10);
   const valueOfUserStakeDecimal = intToDecimal(

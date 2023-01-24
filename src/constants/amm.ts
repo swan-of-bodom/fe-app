@@ -1,6 +1,6 @@
 import BN from "bn.js";
-import { Envs } from "../redux/reducers/environment";
 import { store } from "../redux/store";
+import { NetworkName } from "../types/network";
 
 type TokenAddresses = {
   ETH_ADDRESS: string;
@@ -23,19 +23,6 @@ const testnetTokens = {
     "0x0030fe5d12635ed696483a824eca301392b3f529e06133b42784750503a24972",
 };
 
-const testnet2Tokens = {
-  ETH_ADDRESS:
-    "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-  USD_ADDRESS:
-    "0x5a643907b9a4bc6a55e9069c4fd5fd1f5c79a22470690f75556c4736e34426",
-  MAIN_CONTRACT_ADDRESS:
-    "0x07e1c9397cc53d1cdf062db6fc8fe5fea9b004e797e4a3e6860ce1090d0586a3",
-  LPTOKEN_CONTRACT_ADDRESS:
-    "0x00d032817160d5bc6619bed74b392dbdf865c7362e7209acb4853c6e32236983",
-  LPTOKEN_CONTRACT_ADDRESS_PUT:
-    "0x060ddab9f1646a521b9bc00c942ccb01b8e6a8f0a9637fbd96fd7e7aea27d9b8",
-};
-
 const testdevTokens = {
   ETH_ADDRESS:
     "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
@@ -49,37 +36,26 @@ const testdevTokens = {
     "0x077868613647e04cfa11593f628598e93071d52ca05f1e89a70add4bb3470897",
 };
 
+const devnetTokens = {
+  ETH_ADDRESS: process.env.REACT_APP_ETH_ADDRESS!,
+  USD_ADDRESS: process.env.REACT_APP_USD_ADDRESS!,
+  MAIN_CONTRACT_ADDRESS: process.env.REACT_APP_MAIN_CONTRACT_ADDRESS!,
+  LPTOKEN_CONTRACT_ADDRESS: process.env.REACT_APP_LPTOKEN_CONTRACT_ADDRESS!,
+  LPTOKEN_CONTRACT_ADDRESS_PUT:
+    process.env.REACT_APP_LPTOKEN_CONTRACT_ADDRESS_PUT!,
+};
+
+const networkToTokenMap = new Map<NetworkName, TokenAddresses>([
+  [NetworkName.Devnet, devnetTokens],
+  [NetworkName.Testnet, testnetTokens],
+  [NetworkName.Testdev, testdevTokens],
+  [NetworkName.Mainnet, testnetTokens], // TODO: update when mainnet
+]);
+
 export const getTokenAddresses = (): TokenAddresses => {
-  const currentEnv = store.getState().environmentSwitch.currentEnv;
+  const network = store.getState().network.network.name;
 
-  switch (currentEnv) {
-    case Envs.Devnet:
-      return {
-        ETH_ADDRESS: process.env.REACT_APP_ETH_ADDRESS!,
-        USD_ADDRESS: process.env.REACT_APP_USD_ADDRESS!,
-        MAIN_CONTRACT_ADDRESS: process.env.REACT_APP_MAIN_CONTRACT_ADDRESS!,
-        LPTOKEN_CONTRACT_ADDRESS:
-          process.env.REACT_APP_LPTOKEN_CONTRACT_ADDRESS!,
-        LPTOKEN_CONTRACT_ADDRESS_PUT:
-          process.env.REACT_APP_LPTOKEN_CONTRACT_ADDRESS_PUT!,
-      };
-
-    case Envs.Testnet:
-      return testnetTokens;
-
-    case Envs.Testnet2:
-      return testnet2Tokens;
-
-    case Envs.Testdev:
-      return testdevTokens;
-
-    case Envs.Mainnet:
-      // TODO: return mainnet tokens when on mainnet
-      return testnetTokens;
-
-    default:
-      return testnetTokens;
-  }
+  return networkToTokenMap.get(network) as TokenAddresses;
 };
 
 export const enum AMM_METHODS {

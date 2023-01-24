@@ -1,14 +1,12 @@
 import { Modal, Paper, useTheme } from "@mui/material";
 import { WalletBox } from "./Content";
 import { isDarkTheme } from "../../utils/utils";
+import { useWalletConnectDialogOpen } from "../../hooks/useWalletConnectDialogOpen";
+import { closeWalletConnectDialog } from "../../redux/actions";
 
-type Props = {
-  open: boolean;
-  setOpen: (b: boolean) => void;
-};
+export const WalletModal = () => {
+  const open = useWalletConnectDialogOpen();
 
-export const WalletModal = ({ open, setOpen }: Props) => {
-  const handleClose = () => setOpen(false);
   const theme = useTheme();
   const style = {
     position: "absolute" as "absolute",
@@ -25,7 +23,7 @@ export const WalletModal = ({ open, setOpen }: Props) => {
   return (
     <Modal
       open={open}
-      onClose={handleClose}
+      onClose={closeWalletConnectDialog}
       aria-labelledby="wallet connection modal"
       aria-describedby="choose a wallet and connect to it"
     >
