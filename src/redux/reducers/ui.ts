@@ -1,26 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export enum DialogContentElem {
+  Wallet = "Wallet",
+  NetworkMismatch = "NetworkMismatch",
+  Slippage = "Slippage",
+}
+
 export interface UiState {
-  networkMismatchDialogOpen: boolean;
-  walletConnectDialogOpen: boolean;
+  dialogOpen: boolean;
+  dialogContent: DialogContentElem;
 }
 
 export const ui = createSlice({
   name: "ui",
   initialState: {
-    networkMismatchDialogOpen: false,
-    walletConnectDialogOpen: false,
+    dialogOpen: false,
+    dialogContent: DialogContentElem.Wallet,
   },
   reducers: {
-    toggleNetworkMismatch: (state, action: { payload: boolean }) => {
-      state.networkMismatchDialogOpen = action.payload;
-      return state;
-    },
-    toggleWalletConnect: (state, action: { payload: boolean }) => {
-      state.walletConnectDialogOpen = action.payload;
+    toggleDialog: (state, action: { payload: Partial<UiState> }) => {
+      state.dialogOpen = !!action.payload.dialogOpen;
+      if (action.payload.dialogContent) {
+        state.dialogContent = action.payload.dialogContent;
+      }
       return state;
     },
   },
 });
 
-export const { toggleNetworkMismatch, toggleWalletConnect } = ui.actions;
+export const { toggleDialog } = ui.actions;

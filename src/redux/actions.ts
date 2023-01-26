@@ -1,9 +1,9 @@
-import { updateSettingsState } from "./reducers/settings";
+import { setSlippageState, updateSettingsState } from "./reducers/settings";
 import { updateNetworkState } from "./reducers/network";
+import { DialogContentElem, toggleDialog } from "./reducers/ui";
 import { store } from "./store";
 import { Settings } from "../types/settings";
 import { NetworkState } from "../types/network";
-import { toggleNetworkMismatch, toggleWalletConnect } from "./reducers/ui";
 
 export const updateSettings = (v: Partial<Settings>) =>
   store.dispatch(updateSettingsState(v));
@@ -11,18 +11,28 @@ export const updateSettings = (v: Partial<Settings>) =>
 export const updateNetwork = (v: Partial<NetworkState>) =>
   store.dispatch(updateNetworkState(v));
 
-const toggleNetworkMismatchDialog = (open: boolean) =>
-  store.dispatch(toggleNetworkMismatch(open));
+export const closeDialog = () =>
+  store.dispatch(
+    toggleDialog({
+      dialogOpen: false,
+    })
+  );
+
+const openDialogWithContent = (content: DialogContentElem) =>
+  store.dispatch(
+    toggleDialog({
+      dialogOpen: true,
+      dialogContent: content,
+    })
+  );
 
 export const openNetworkMismatchDialog = () =>
-  toggleNetworkMismatchDialog(true);
+  openDialogWithContent(DialogContentElem.NetworkMismatch);
 
-export const closeNetworkMismatchDialog = () =>
-  toggleNetworkMismatchDialog(false);
+export const openWalletConnectDialog = () =>
+  openDialogWithContent(DialogContentElem.Wallet);
 
-const toggleWalletConnectDialog = (open: boolean) =>
-  store.dispatch(toggleWalletConnect(open));
+export const openSlippageDialog = () =>
+  openDialogWithContent(DialogContentElem.Slippage);
 
-export const openWalletConnectDialog = () => toggleWalletConnectDialog(true);
-
-export const closeWalletConnectDialog = () => toggleWalletConnectDialog(false);
+export const setSlippage = (n: number) => store.dispatch(setSlippageState(n));

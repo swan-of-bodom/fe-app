@@ -5,6 +5,7 @@ import { SupportedWalletIds } from "../../types/wallet";
 import { connect } from "../../network/account";
 import { debug } from "../../utils/debugger";
 import { getStarknet } from "get-starknet-core";
+import { closeDialog } from "../../redux/actions";
 
 enum ActiveBox {
   default,
@@ -104,7 +105,9 @@ export const WalletBox = () => {
     debug("Connector", connector);
 
     if (connector) {
-      return connect(connector);
+      connect(connector);
+      closeDialog();
+      return;
     }
 
     setActiveBox(activeBox);

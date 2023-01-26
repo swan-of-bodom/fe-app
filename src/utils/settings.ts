@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS: Settings = {
   autoconnect: true,
   theme: ThemeVariants.dark,
   network: NetworkName.Testnet,
+  slippage: 5,
 };
 
 export const validateSettings = (v: unknown): v is Settings => {
@@ -16,14 +17,16 @@ export const validateSettings = (v: unknown): v is Settings => {
     !v ||
     !Object.hasOwn(v, "autoconnect") ||
     !Object.hasOwn(v, "theme") ||
-    !Object.hasOwn(v, "network")
+    !Object.hasOwn(v, "network") ||
+    !Object.hasOwn(v, "slippage")
   ) {
     return false;
   }
 
   if (
     !Object.values(ThemeVariants).includes((v as Settings).theme) ||
-    !Object.values(NetworkName).includes((v as Settings).network)
+    !Object.values(NetworkName).includes((v as Settings).network) ||
+    typeof (v as Settings).slippage !== "number"
   ) {
     return false;
   }

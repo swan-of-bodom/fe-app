@@ -3,7 +3,6 @@ import { SupportedWalletIds } from "../../types/wallet";
 import { ArgentIcon, BraavosIcon } from "../assets";
 import { useWallet } from "../../hooks/useWallet";
 import { disconnect } from "../../network/account";
-import { closeWalletConnectDialog } from "../../redux/actions";
 
 const iconStyle = {
   width: 30,
@@ -24,7 +23,6 @@ export const AccountInfo = () => {
 
   const handleDisconnect = () => {
     disconnect();
-    closeWalletConnectDialog();
   };
 
   const { account, id } = wallet;
