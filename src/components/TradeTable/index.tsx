@@ -78,7 +78,7 @@ const TradeTable = () => {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "space-between",
         }}
       >
         <div>

@@ -62,11 +62,11 @@ export const connect = (
     if (chainId !== wallet.account.chainId) {
       debug("Wallet - App network mismatch, opening dialog");
       disconnect();
-      if (!fromLatest) {
-        // do not open on app start
-        openNetworkMismatchDialog();
+      if (fromLatest) {
+        // do not open the dialog if the page is loading/just loaded
+        return;
       }
-      return;
+      openNetworkMismatchDialog();
     }
 
     addWalletEventHandlers(wallet);

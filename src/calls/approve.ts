@@ -1,5 +1,5 @@
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
-import { Abi, AccountInterface } from "starknet";
+import { AccountInterface } from "starknet";
 import { number } from "starknet";
 import LpAbi from "../abi/lptoken_abi.json";
 import { debug, LogTypes } from "../utils/debugger";
@@ -21,7 +21,7 @@ export const approve = async (
       entrypoint: AMM_METHODS.APPROVE,
       calldata: [MAIN_CONTRACT_ADDRESS, number.toHex(new BN(amount)), 0],
     };
-    const res = await account.execute(call, [LpAbi] as Abi[]);
+    const res = await account.execute(call, [LpAbi]);
     return res;
   } catch (e) {
     debug(LogTypes.ERROR, e);

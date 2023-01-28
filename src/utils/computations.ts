@@ -2,29 +2,17 @@ import { FinancialData, OptionSide, OptionType } from "../types/options";
 import BN from "bn.js";
 import { Decimal } from "../types/units";
 import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
+import { store } from "../redux/store";
+import { isCall, isLong } from "./utils";
 
-type GetApproveAmount = (
-  size: number,
-  premia: BN,
-  slippage: number,
-  strike?: number
-) => BN;
+type GetApproveAmount = (size: number, premia: BN, strike?: number) => BN;
 
 export const PRECISION = 10000;
 
-const longCall: GetApproveAmount = (size, premia, slippage) =>
-  premia
-    .mul(new BN(100 + slippage)) // slippage
-    .div(new BN(100));
-
-const shortCall: GetApproveAmount = (size, premia, slippage) => {
+const shortCall: GetApproveAmount = (size, premia) => {
   const base = longInteger(size, ETH_DIGITS);
 
-  const toSubtract = premia
-    .mul(new BN(100 - slippage)) // slippage
-    .div(new BN(100));
-
-  const res = base.sub(toSubtract);
+  const res = base.sub(premia);
 
   if (res.ltn(0)) {
     // if this is true, users can get more money
@@ -35,40 +23,25 @@ const shortCall: GetApproveAmount = (size, premia, slippage) => {
   return res;
 };
 
-const longPut: GetApproveAmount = (size, premia, slippage) =>
-  premia
-    .mul(new BN(100 + slippage)) // slippage
-    .div(new BN(100));
-
-const shortPut: GetApproveAmount = (size, premia, slippage, strike): BN => {
+const shortPut: GetApproveAmount = (size, premia, strike): BN => {
   if (!strike) {
     throw new Error("Short Put get to approve did not receive strike price");
   }
   const base = longInteger(size * strike, USD_DIGITS);
 
-  const toSubtract = premia
-    .mul(new BN(100 - slippage)) // slippage
-    .div(new BN(100));
-
-  return base.sub(toSubtract);
+  return base.sub(premia);
 };
 
-const getToApproveFunction = (
-  type: OptionType,
-  side: OptionSide
-): GetApproveAmount => {
-  switch (type + side) {
-    case OptionType.Call + OptionSide.Long:
-      return longCall;
-    case OptionType.Call + OptionSide.Short:
-      return shortCall;
-    case OptionType.Put + OptionSide.Long:
-      return longPut;
-    case OptionType.Put + OptionSide.Short:
-      return shortPut;
-    default: // if none of the above - throw error
-      throw Error("Got invalid type/side values");
-  }
+export const getPremiaWithSlippage = (premia: BN, side: OptionSide): BN => {
+  const { slippage } = store.getState().settings;
+  const fullInBasisPoints = 10000;
+  // slippage is in percentage, with 2 decimal precission
+  const slippageInBasisPoints = Math.round(slippage * 100);
+  const numerator =
+    fullInBasisPoints +
+    (isLong(side) ? slippageInBasisPoints : -slippageInBasisPoints);
+
+  return premia.mul(new BN(numerator)).div(new BN(fullInBasisPoints));
 };
 
 export const getToApprove = (
@@ -77,7 +50,23 @@ export const getToApprove = (
   size: number,
   premia: BN,
   strike?: number
-): BN => getToApproveFunction(type, side)(size, premia, 10, strike);
+): BN => {
+  const premiaWithSlippage = getPremiaWithSlippage(premia, side);
+
+  if (isLong(side)) {
+    // long call / long put - premia with slippage
+    return premiaWithSlippage;
+  }
+
+  if (isCall(type)) {
+    // short call - locked capital minus premia with slippage
+    return shortCall(size, premia);
+  }
+
+  // short put - locked capital minus premia with slippage
+  // locked capital is size * strike price
+  return shortPut(size, premia, strike);
+};
 
 export const longInteger = (n: Decimal, digits: number): BN => {
   if (!n) {

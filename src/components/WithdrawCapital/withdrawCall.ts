@@ -1,4 +1,4 @@
-import { Abi, AccountInterface } from "starknet";
+import { AccountInterface } from "starknet";
 import { AMM_METHODS, getTokenAddresses } from "../../constants/amm";
 import { OptionType } from "../../types/options";
 import { debug } from "../../utils/debugger";
@@ -37,7 +37,7 @@ export const withdrawCall = async (
     calldata,
   };
   debug(`Calling ${AMM_METHODS.WITHDRAW_LIQUIDITY}`, withdraw);
-  const res = await account.execute(withdraw, [AmmAbi] as Abi[]).catch((e) => {
+  const res = await account.execute(withdraw, [AmmAbi]).catch((e) => {
     debug("Withdraw rejected by user or failed\n", e.message);
     setProcessing(false);
   });

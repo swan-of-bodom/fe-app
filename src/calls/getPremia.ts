@@ -19,7 +19,13 @@ export const getPremia = async (
   const convertedSize = convertSizeToUint256(size);
   const isClosingString = isClosing ? "0x1" : "0x0";
   const optionStruct = rawOptionToStruct(option.raw);
-  const calldata = [optionStruct, lpAddress, convertedSize, isClosingString];
+
+  const calldata = [
+    Object.values(optionStruct),
+    lpAddress,
+    convertedSize,
+    isClosingString,
+  ];
 
   const contract = getMainContract();
 
