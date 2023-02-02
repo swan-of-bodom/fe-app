@@ -236,8 +236,6 @@ const WithOption = ({ option }: Props) => {
     type
   );
 
-  debug("Problematic stuff", { data, premia, premiaWithSlippage, max });
-
   return (
     <Template
       handleChange={handleChange}
@@ -277,7 +275,7 @@ const WithOption = ({ option }: Props) => {
             <Typography>{displayPremiaWithSlippage}</Typography>
           </Box>
         </Box>
-        <Button variant="contained" onClick={() => close(new BN(premia))}>
+        <Button variant="contained" onClick={() => close(new BN(data))}>
           Close selected
         </Button>
       </Box>
@@ -296,8 +294,6 @@ export const ClosePosition = () => {
       </>
     );
   }
-
-  debug("Option from multimodal", option);
 
   const type = isCall(option.parsed.optionType) ? "Call" : "Put";
   const title = `$${option.parsed.strikePrice} ${type}`;
