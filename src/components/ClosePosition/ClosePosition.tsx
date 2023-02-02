@@ -236,8 +236,6 @@ const WithOption = ({ option }: Props) => {
     type
   );
 
-  debug("Problematic stuff", { data, premia, premiaWithSlippage, max });
-
   return (
     <Template
       handleChange={handleChange}
@@ -296,8 +294,6 @@ export const ClosePosition = () => {
       </>
     );
   }
-
-  debug("Option from multimodal", option);
 
   const type = isCall(option.parsed.optionType) ? "Call" : "Put";
   const title = `$${option.parsed.strikePrice} ${type}`;

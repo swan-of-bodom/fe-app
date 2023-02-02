@@ -1,6 +1,5 @@
 import { Table, TableBody, TableRow, TableCell, Skeleton } from "@mui/material";
 import { OptionSide, OptionType } from "../../types/options";
-import { debug } from "../../utils/debugger";
 import { isCall } from "../../utils/utils";
 
 type ProfitTableTemplateProps = {
@@ -69,7 +68,7 @@ export const ProfitTable = ({
       ? strikePrice + basePremia
       : strikePrice - basePremia
     ).toFixed(2);
-  debug({ strikePrice, basePremia, breakEven });
+
   return (
     <ProfitTableTemplate
       limited={limited}

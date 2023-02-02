@@ -19,12 +19,6 @@ export const tradeClose = async (
 ) => {
   const { optionSide, optionType } = option.parsed;
 
-  debug({
-    premia,
-    size,
-    premiaSlippage: getPremiaWithSlippage(premia, optionSide).toString(10),
-  });
-
   try {
     // one hour from now
     const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
