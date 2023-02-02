@@ -4,6 +4,7 @@ import { getPremia } from "../../calls/getPremia";
 import { debug } from "../../utils/debugger";
 import { isCall } from "../../utils/utils";
 import { financialDataEth, financialDataUsd } from "../../utils/computations";
+import { math64x61toDecimal } from "../../utils/units";
 
 const ethData = {
   ethInUsd: 0,
@@ -45,7 +46,9 @@ export const fetchModalData = async (
 
   const { optionType, premiaDecimal } = option.parsed;
 
+  const convertedPremia = math64x61toDecimal(fetchedPremia);
+
   return isCall(optionType)
-    ? financialDataEth(premiaDecimal, fetchedPremia, ethInUsd)
-    : financialDataUsd(premiaDecimal, fetchedPremia, ethInUsd);
+    ? financialDataEth(premiaDecimal, convertedPremia, ethInUsd)
+    : financialDataUsd(premiaDecimal, convertedPremia, ethInUsd);
 };

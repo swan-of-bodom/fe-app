@@ -1,9 +1,14 @@
 import { setSlippageState, updateSettingsState } from "./reducers/settings";
 import { updateNetworkState } from "./reducers/network";
-import { DialogContentElem, toggleDialog } from "./reducers/ui";
+import {
+  DialogContentElem,
+  setCloseOptionState,
+  toggleDialog,
+} from "./reducers/ui";
 import { store } from "./store";
 import { Settings } from "../types/settings";
 import { NetworkState } from "../types/network";
+import { OptionWithPosition } from "../types/options";
 
 export const updateSettings = (v: Partial<Settings>) =>
   store.dispatch(updateSettingsState(v));
@@ -35,4 +40,10 @@ export const openWalletConnectDialog = () =>
 export const openSlippageDialog = () =>
   openDialogWithContent(DialogContentElem.Slippage);
 
+export const openCloseOptionDialog = () =>
+  openDialogWithContent(DialogContentElem.CloseOption);
+
 export const setSlippage = (n: number) => store.dispatch(setSlippageState(n));
+
+export const setCloseOption = (option: OptionWithPosition) =>
+  store.dispatch(setCloseOptionState(option));

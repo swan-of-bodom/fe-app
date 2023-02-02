@@ -10,6 +10,7 @@ import { useSlippage } from "../../hooks/useSlippage";
 import { setSlippage } from "../../redux/actions";
 import { ChangeEvent, useState } from "react";
 import { debug } from "../../utils/debugger";
+import { CustomDialogTitle } from "../MultiDialog/MultiDialog";
 
 export const SlippageContent = () => {
   const currentSlippage = useSlippage();
@@ -59,12 +60,11 @@ export const SlippageContent = () => {
     setInputText(String(n));
   };
 
+  const title = `Slippage tolerance ${currentSlippage}%`;
+
   return (
     <>
-      <Typography sx={{ m: 2 }} variant="h6">
-        Slippage tolerance {currentSlippage}%
-      </Typography>
-      <Divider variant="middle" />
+      <CustomDialogTitle title={title} />
       <Box
         sx={{
           display: "flex",

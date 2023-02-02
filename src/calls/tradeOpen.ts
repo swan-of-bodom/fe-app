@@ -54,13 +54,13 @@ export const approveAndTradeOpen = async (
 
   const convertedSize = convertSizeToInt(size);
 
-  const approveCalldata = {
+  const approveArgs = {
     contractAddress: isCall(optionType) ? ETH_ADDRESS : USD_ADDRESS,
     entrypoint: AMM_METHODS.APPROVE,
     calldata: [MAIN_CONTRACT_ADDRESS, new BN(toApprove).toString(10), "0"],
   };
 
-  debug("Trade open approve calldata", approveCalldata);
+  debug("Trade open approve calldata", approveArgs);
 
   // one hour from now
   const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
@@ -81,7 +81,7 @@ export const approveAndTradeOpen = async (
   debug("Trade open trade calldata", tradeOpenArgs);
 
   const res = await account
-    .execute([approveCalldata, tradeOpenArgs], [LpAbi, AmmAbi])
+    .execute([approveArgs, tradeOpenArgs], [LpAbi, AmmAbi])
     .catch((e) => {
       debug("Trade open rejected or failed", e.message);
       throw Error("Trade open rejected or failed");

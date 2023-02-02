@@ -5,13 +5,14 @@ import { getMainContract } from "../utils/blockchain";
 import { debug } from "../utils/debugger";
 import { convertSizeToUint256 } from "../utils/conversions";
 import { isCall } from "../utils/utils";
-import { math64x61toDecimal } from "../utils/units";
+import { Math64x61 } from "../types/units";
+import { isBN } from "bn.js";
 
 export const getPremia = async (
   option: Option,
   size: number,
   isClosing: boolean
-): Promise<number> => {
+): Promise<Math64x61> => {
   const addresses = getTokenAddresses();
   const lpAddress = isCall(option.parsed.optionType)
     ? addresses.LPTOKEN_CONTRACT_ADDRESS
@@ -36,15 +37,9 @@ export const getPremia = async (
     }
   );
 
-  if (!res?.total_premia_including_fees) {
+  if (!isBN(res?.total_premia_including_fees)) {
     throw Error("Response did not included total_premia_including_fees");
   }
 
-  const convertedPremiaWithFees = math64x61toDecimal(
-    res.total_premia_including_fees
-  );
-
-  debug("Converted premia:", convertedPremiaWithFees);
-
-  return convertedPremiaWithFees;
+  return res.total_premia_including_fees.toString(10);
 };
