@@ -4,6 +4,7 @@ import { Decimal } from "../types/units";
 import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
 import { store } from "../redux/store";
 import { isCall, isLong } from "./utils";
+import { debug } from "./debugger";
 
 type GetApproveAmount = (size: number, premia: BN, strike?: number) => BN;
 
@@ -41,7 +42,15 @@ export const getPremiaWithSlippage = (premia: BN, side: OptionSide): BN => {
     fullInBasisPoints +
     (isLong(side) ? slippageInBasisPoints : -slippageInBasisPoints);
 
-  return premia.mul(new BN(numerator)).div(new BN(fullInBasisPoints));
+  const res = premia.mul(new BN(numerator)).div(new BN(fullInBasisPoints));
+
+  debug("Slippage calculator", {
+    slippageInBasisPoints,
+    numerator,
+    premia: premia.toString(10),
+    res: res.toString(10),
+  });
+  return res;
 };
 
 export const getToApprove = (

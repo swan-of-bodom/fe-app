@@ -277,7 +277,7 @@ const WithOption = ({ option }: Props) => {
             <Typography>{displayPremiaWithSlippage}</Typography>
           </Box>
         </Box>
-        <Button variant="contained" onClick={() => close(new BN(premia))}>
+        <Button variant="contained" onClick={() => close(new BN(data))}>
           Close selected
         </Button>
       </Box>

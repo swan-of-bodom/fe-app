@@ -35,11 +35,7 @@ export const LiveItem = ({ option }: Props) => {
   };
 
   return (
-    <TableRow
-      sx={{
-        cursor: "pointer",
-      }}
-    >
+    <TableRow>
       <TableCell>{desc}</TableCell>
       <TableCell>{isExpired ? `Expired on ${date}` : date}</TableCell>
       <TableCell>{positionSize.toFixed(decimals)}</TableCell>
