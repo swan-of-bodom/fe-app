@@ -10,6 +10,7 @@ import { fetchOptions } from "./fetchOptions";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { debug } from "../../utils/debugger";
+import { SlippageButton } from "../Slippage/SlippageButton";
 
 const getText = (type: OptionType, side: OptionSide) =>
   `We currently do not have any ${isLong(side) ? "long" : "short"} ${
@@ -74,30 +75,40 @@ const TradeTable = () => {
         }),
       }}
     >
-      <Button
-        variant={isLong(side) ? "contained" : "outlined"}
-        onClick={() => setLongShort(OptionSide.Long)}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
       >
-        Long
-      </Button>
-      <Button
-        variant={isLong(side) ? "outlined" : "contained"}
-        onClick={() => setLongShort(OptionSide.Short)}
-      >
-        Short
-      </Button>
-      <Button
-        variant={isCall(type) ? "contained" : "outlined"}
-        onClick={() => setCallPut(OptionType.Call)}
-      >
-        Call
-      </Button>
-      <Button
-        variant={isCall(type) ? "outlined" : "contained"}
-        onClick={() => setCallPut(OptionType.Put)}
-      >
-        Put
-      </Button>
+        <div>
+          <Button
+            variant={isLong(side) ? "contained" : "outlined"}
+            onClick={() => setLongShort(OptionSide.Long)}
+          >
+            Long
+          </Button>
+          <Button
+            variant={isLong(side) ? "outlined" : "contained"}
+            onClick={() => setLongShort(OptionSide.Short)}
+          >
+            Short
+          </Button>
+          <Button
+            variant={isCall(type) ? "contained" : "outlined"}
+            onClick={() => setCallPut(OptionType.Call)}
+          >
+            Call
+          </Button>
+          <Button
+            variant={isCall(type) ? "outlined" : "contained"}
+            onClick={() => setCallPut(OptionType.Put)}
+          >
+            Put
+          </Button>
+        </div>
+        <SlippageButton />
+      </Box>
       <TableContainer elevation={2} component={Paper}>
         <Content
           options={filtered}

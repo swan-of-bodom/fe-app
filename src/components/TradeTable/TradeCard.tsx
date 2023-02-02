@@ -206,15 +206,9 @@ export const TradeCard = ({ option }: TradeCardProps) => {
 
     const cb = () => updateTradeState({ failed: false, processing: false });
 
-    approveAndTradeOpen(
-      account,
-      option,
-      amount,
-      option.parsed.optionType,
-      option.parsed.optionSide,
-      currentPremia,
-      cb
-    ).catch(() => updateTradeState({ failed: true, processing: false }));
+    approveAndTradeOpen(account, option, amount, currentPremia, cb).catch(() =>
+      updateTradeState({ failed: true, processing: false })
+    );
   };
 
   const buttonText = () =>

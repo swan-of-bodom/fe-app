@@ -1,6 +1,5 @@
 import { Button } from "@mui/material";
 import { Wallet } from "@mui/icons-material";
-import { WalletModal } from "./Modal";
 import { AccountInfo } from "./AccountInfo";
 import { useAccount } from "../../hooks/useAccount";
 import { openWalletConnectDialog } from "../../redux/actions";
@@ -18,16 +17,13 @@ export const WalletButton = () => {
   }
 
   return (
-    <>
-      <WalletModal />
-      <Button
-        variant="outlined"
-        sx={buttonStyle}
-        onClick={openWalletConnectDialog}
-      >
-        <Wallet />
-        Connect Wallet
-      </Button>
-    </>
+    <Button
+      variant="outlined"
+      sx={buttonStyle}
+      onClick={openWalletConnectDialog}
+    >
+      <Wallet />
+      Connect Wallet
+    </Button>
   );
 };

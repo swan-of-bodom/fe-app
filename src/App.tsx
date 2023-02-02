@@ -10,7 +10,7 @@ import StakingExplainedPage from "./pages/stakeInfo";
 import Settings from "./pages/settings";
 import { Controller } from "./Controller";
 import { CssBaseline } from "@mui/material";
-import { NetworkMismatchDialog } from "./components/NetworkMismatchDialog/NetworkMismatchDialog";
+import { MultiDialog } from "./components/MultiDialog/MultiDialog";
 
 const App = () => (
   <Provider store={store}>
@@ -32,7 +32,7 @@ const App = () => (
           </Routes>
         </Layout>
       </Router>
-      <NetworkMismatchDialog />
+      <MultiDialog />
     </Controller>
   </Provider>
 );

@@ -32,7 +32,7 @@ const PositionsTemplate = ({
       These options have not matured yet. You can either close your position or
       wait for the maturity.
     </Typography>
-    <TableWrapper>
+    <TableWrapper slippage>
       <Live />
     </TableWrapper>
     <Typography variant="h4">Expired - Profit</Typography>
@@ -105,7 +105,7 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
         TableElement({
           isFetching,
           data: liveOptions,
-          titles: ["Option", "Maturity", "Size", "Value", "Amount"],
+          titles: ["Option", "Maturity", "Size", "Value"],
           ItemElem: LiveItem,
           desc: "live",
         })

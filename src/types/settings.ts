@@ -5,4 +5,5 @@ export interface Settings {
   autoconnect: boolean;
   theme: ThemeVariants;
   network: NetworkName;
+  slippage: number;
 }

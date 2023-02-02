@@ -1,34 +1,13 @@
 import { OptionWithPosition } from "../../types/options";
 import { isCall, isLong, timestampToReadableDate } from "../../utils/utils";
-import {
-  Button,
-  ButtonGroup,
-  TableCell,
-  TableRow,
-  TextField,
-  Tooltip,
-} from "@mui/material";
-import { debug } from "../../utils/debugger";
-import { tradeClose } from "../../calls/tradeClose";
-import { useState } from "react";
-import { handleNumericChangeFactory } from "../../utils/inputHandling";
-import { afterTransaction } from "../../utils/blockchain";
-import { invalidatePositions } from "../../queries/client";
-import { convertSizeToInt, fullSizeInt } from "../../utils/conversions";
-import { useAccount } from "../../hooks/useAccount";
+import { Button, TableCell, TableRow, Tooltip } from "@mui/material";
+import { openCloseOptionDialog, setCloseOption } from "../../redux/actions";
 
 type Props = {
   option: OptionWithPosition;
 };
 
 export const LiveItem = ({ option }: Props) => {
-  const [amount, setAmount] = useState<number>(0.0);
-  const [text, setText] = useState<string>("0");
-  const [processing, setProcessing] = useState<boolean>(false);
-  const cb = (n: number): number => (n > positionSize ? positionSize : n);
-  const handleChange = handleNumericChangeFactory(setText, setAmount, cb);
-  const account = useAccount();
-
   const {
     strikePrice,
     optionSide,
@@ -50,34 +29,17 @@ export const LiveItem = ({ option }: Props) => {
   const timeNow = new Date().getTime();
   const isExpired = msMaturity - timeNow <= 0;
 
-  const close = (size: string) => {
-    if (!account || !size) {
-      debug("Could not trade close", { account, raw: option?.raw, size });
-      return;
-    }
-
-    setProcessing(true);
-
-    tradeClose(account, option, size)
-      .then((res) => {
-        if (res?.transaction_hash) {
-          afterTransaction(res.transaction_hash, () => {
-            invalidatePositions();
-            setProcessing(false);
-          });
-        }
-      })
-      .catch(() => {
-        setProcessing(false);
-      });
+  const handleClick = () => {
+    setCloseOption(option);
+    openCloseOptionDialog();
   };
 
-  const handleClose = () => close(convertSizeToInt(amount));
-
-  const handleCloseAll = () => close(fullSizeInt(option));
-
   return (
-    <TableRow>
+    <TableRow
+      sx={{
+        cursor: "pointer",
+      }}
+    >
       <TableCell>{desc}</TableCell>
       <TableCell>{isExpired ? `Expired on ${date}` : date}</TableCell>
       <TableCell>{positionSize.toFixed(decimals)}</TableCell>
@@ -88,37 +50,10 @@ export const LiveItem = ({ option }: Props) => {
           </span>
         </Tooltip>
       </TableCell>
-      <TableCell sx={{ minWidth: "100px" }}>
-        <TextField
-          id="outlined-number"
-          label="Amount"
-          size="small"
-          value={text}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            inputMode: "decimal",
-          }}
-          onChange={handleChange}
-        />
-      </TableCell>
       <TableCell align="right">
-        <ButtonGroup
-          disableElevation
-          variant="contained"
-          aria-label="Disabled elevation buttons"
-          disabled={processing}
-        >
-          {processing ? (
-            <Button>Processing...</Button>
-          ) : (
-            <>
-              <Button onClick={handleClose}>Close</Button>
-              <Button onClick={handleCloseAll}>Max</Button>
-            </>
-          )}
-        </ButtonGroup>
+        <Button variant="contained" onClick={handleClick}>
+          Close
+        </Button>
       </TableCell>
     </TableRow>
   );
