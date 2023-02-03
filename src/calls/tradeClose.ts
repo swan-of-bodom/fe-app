@@ -15,13 +15,22 @@ export const tradeClose = async (
   account: AccountInterface,
   option: OptionWithPosition,
   premia: Math64x61,
-  size: number
+  size: number,
+  isClosing: boolean
 ) => {
   const { optionSide } = option.parsed;
 
   try {
     // one hour from now
     const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
+
+    const premiaWithSlippage = getPremiaWithSlippage(
+      new BN(premia),
+      optionSide,
+      isClosing
+    ).toString(10);
+
+    debug({ premiaWithSlippage, premia });
 
     const call = {
       contractAddress: getTokenAddresses().MAIN_CONTRACT_ADDRESS,
@@ -31,7 +40,7 @@ export const tradeClose = async (
           option.raw,
           longInteger(size, digitsByType(option.parsed.optionType)).toString(10)
         ),
-        getPremiaWithSlippage(new BN(premia), optionSide).toString(10),
+        premiaWithSlippage,
         deadline,
       ],
     };

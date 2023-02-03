@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Divider,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, ButtonGroup, TextField, Typography } from "@mui/material";
 import { useSlippage } from "../../hooks/useSlippage";
 import { setSlippage } from "../../redux/actions";
 import { ChangeEvent, useState } from "react";
