@@ -20,7 +20,7 @@ import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { useDebounce } from "../../hooks/useDebounce";
 import { math64x61toDecimal, math64x61ToInt } from "../../utils/units";
 import BN from "bn.js";
-import { digitsByType, isCall, isLong } from "../../utils/utils";
+import { digitsByType, isCall } from "../../utils/utils";
 import { getPremiaWithSlippage, shortInteger } from "../../utils/computations";
 import { tradeClose } from "../../calls/tradeClose";
 import { invalidatePositions } from "../../queries/client";
@@ -144,7 +144,7 @@ const WithOption = ({ option }: Props) => {
       return;
     }
 
-    tradeClose(account, option, premia, size).then((res) => {
+    tradeClose(account, option, premia, size, true).then((res) => {
       if (res?.transaction_hash) {
         afterTransaction(res.transaction_hash, () => {
           invalidatePositions();
@@ -222,7 +222,8 @@ const WithOption = ({ option }: Props) => {
   const premiaWithSlippage = shortInteger(
     getPremiaWithSlippage(
       new BN(math64x61ToInt(data, digits)),
-      isLong(side) ? OptionSide.Short : OptionSide.Long
+      side,
+      true
     ).toString(10),
     digits
   );

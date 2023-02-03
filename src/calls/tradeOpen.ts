@@ -71,7 +71,7 @@ export const approveAndTradeOpen = async (
     calldata: [
       ...rawOptionToCalldata(option.raw, convertedSize),
       intToMath64x61(
-        getPremiaWithSlippage(premia, optionSide).toString(10),
+        getPremiaWithSlippage(premia, optionSide, false).toString(10),
         digitsByType(optionType)
       ),
       deadline,

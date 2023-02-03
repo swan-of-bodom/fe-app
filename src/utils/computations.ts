@@ -32,14 +32,20 @@ const shortPut: GetApproveAmount = (size, premia, strike): BN => {
   return base.sub(premia);
 };
 
-export const getPremiaWithSlippage = (premia: BN, side: OptionSide): BN => {
+export const getPremiaWithSlippage = (
+  premia: BN,
+  side: OptionSide,
+  isClosing: boolean
+): BN => {
   const { slippage } = store.getState().settings;
   const fullInBasisPoints = 10000;
   // slippage is in percentage, with 2 decimal precission
   const slippageInBasisPoints = Math.round(slippage * 100);
   const numerator =
     fullInBasisPoints +
-    (isLong(side) ? slippageInBasisPoints : -slippageInBasisPoints);
+    (isLong(side) !== isClosing
+      ? slippageInBasisPoints
+      : -slippageInBasisPoints);
 
   return premia.mul(new BN(numerator)).div(new BN(fullInBasisPoints));
 };
@@ -51,7 +57,7 @@ export const getToApprove = (
   premia: BN,
   strike?: number
 ): BN => {
-  const premiaWithSlippage = getPremiaWithSlippage(premia, side);
+  const premiaWithSlippage = getPremiaWithSlippage(premia, side, false);
 
   if (isLong(side)) {
     // long call / long put - premia with slippage

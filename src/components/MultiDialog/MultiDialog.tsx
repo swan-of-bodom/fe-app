@@ -8,7 +8,6 @@ import {
   DialogActions,
   DialogContentText,
   IconButton,
-  Typography,
 } from "@mui/material";
 import { isDarkTheme } from "../../utils/utils";
 import { useDialog } from "../../hooks/useDialog";
