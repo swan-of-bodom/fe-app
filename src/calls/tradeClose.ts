@@ -7,17 +7,17 @@ import { debug, LogTypes } from "../utils/debugger";
 import { invalidatePositions } from "../queries/client";
 import { afterTransaction } from "../utils/blockchain";
 import { getPremiaWithSlippage, longInteger } from "../utils/computations";
-import { intToMath64x61 } from "../utils/units";
 import { digitsByType } from "../utils/utils";
+import { Math64x61 } from "../types/units";
 import BN from "bn.js";
 
 export const tradeClose = async (
   account: AccountInterface,
   option: OptionWithPosition,
-  premia: BN,
+  premia: Math64x61,
   size: number
 ) => {
-  const { optionSide, optionType } = option.parsed;
+  const { optionSide } = option.parsed;
 
   try {
     // one hour from now
@@ -31,10 +31,7 @@ export const tradeClose = async (
           option.raw,
           longInteger(size, digitsByType(option.parsed.optionType)).toString(10)
         ),
-        intToMath64x61(
-          getPremiaWithSlippage(premia, optionSide).toString(10),
-          digitsByType(optionType)
-        ),
+        getPremiaWithSlippage(new BN(premia), optionSide).toString(10),
         deadline,
       ],
     };

@@ -28,6 +28,7 @@ import { afterTransaction } from "../../utils/blockchain";
 import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
 import { useEth } from "../../hooks/useCurrency";
+import { Math64x61 } from "../../types/units";
 
 const premiaToDisplayValue = (
   premia: number,
@@ -133,7 +134,7 @@ const WithOption = ({ option }: Props) => {
     setInputText(String(n));
   };
 
-  const close = (premia: BN) => {
+  const close = (premia: Math64x61) => {
     if (!account || !size) {
       debug("Could not trade close", {
         account,
@@ -279,7 +280,7 @@ const WithOption = ({ option }: Props) => {
             </Typography>
           </Box>
         </Box>
-        <Button variant="contained" onClick={() => close(new BN(data))}>
+        <Button variant="contained" onClick={() => close(data)}>
           Close selected
         </Button>
       </Box>
