@@ -15,6 +15,7 @@ import { UserPoolDisplayData } from "../../types/pool";
 import BN from "bn.js";
 import { debug } from "../../utils/debugger";
 import { isCall } from "../../utils/utils";
+import { POOL_NAMES } from "../../constants/texts";
 
 interface Props extends UserPoolDisplayData {
   account: AccountInterface;
@@ -39,7 +40,9 @@ export const WithdrawItem = ({ account, value, fullSize, type }: Props) => {
   const handleWithdrawAll = () =>
     withdrawCall(account, setProcessing, type, fullSize);
 
-  const [pool, currency] = isCall(type) ? ["Call", "Ξ"] : ["Put", "$"];
+  const [pool, currency] = isCall(type)
+    ? [POOL_NAMES.CALL, "Ξ"]
+    : [POOL_NAMES.PUT, "$"];
 
   const displayDigits = 5;
   const displayValue = currency + " " + value.toFixed(displayDigits);
