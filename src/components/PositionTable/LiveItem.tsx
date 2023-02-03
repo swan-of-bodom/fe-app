@@ -25,6 +25,7 @@ export const LiveItem = ({ option }: Props) => {
   const sideText = isLong(optionSide) ? "Long" : "Short";
 
   const desc = `${sideText} ${typeText} with strike $${strikePrice}`;
+  const sizeTooltipMessage = option.raw.position_size.toString(10) + " tokens";
   const decimals = 4;
   const timeNow = new Date().getTime();
   const isExpired = msMaturity - timeNow <= 0;
@@ -38,7 +39,11 @@ export const LiveItem = ({ option }: Props) => {
     <TableRow>
       <TableCell>{desc}</TableCell>
       <TableCell>{isExpired ? `Expired on ${date}` : date}</TableCell>
-      <TableCell>{positionSize.toFixed(decimals)}</TableCell>
+      <TableCell>
+        <Tooltip title={sizeTooltipMessage}>
+          <span>{positionSize.toFixed(decimals)}</span>
+        </Tooltip>
+      </TableCell>
       <TableCell>
         <Tooltip title={positionValue}>
           <span>

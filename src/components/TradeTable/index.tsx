@@ -78,7 +78,15 @@ const TradeTable = () => {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
+          [theme.breakpoints.down("md")]: {
+            flexFlow: "column",
+            gap: 2,
+            alignItems: "flex-start",
+          },
+          [theme.breakpoints.up("md")]: {
+            flexFlow: "row",
+            justifyContent: "space-between",
+          },
         }}
       >
         <div>

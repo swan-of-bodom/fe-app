@@ -261,8 +261,8 @@ const WithOption = ({ option }: Props) => {
               justifyContent: "space-between",
             }}
           >
-            <Typography>Total Received</Typography>
-            <Typography>{displayPremia}</Typography>
+            <Typography sx={{ fontSize: "1.2rem" }}>Total Received</Typography>
+            <Typography sx={{ fontSize: "1.2rem" }}>{displayPremia}</Typography>
           </Box>
           <Box
             sx={{
@@ -271,8 +271,12 @@ const WithOption = ({ option }: Props) => {
               justifyContent: "space-between",
             }}
           >
-            <Typography>Slippage {slippage}% limit</Typography>
-            <Typography>{displayPremiaWithSlippage}</Typography>
+            <Typography sx={{ fontSize: "1rem" }} variant="caption">
+              Slippage {slippage}% limit
+            </Typography>
+            <Typography sx={{ fontSize: "1rem" }} variant="caption">
+              {displayPremiaWithSlippage}
+            </Typography>
           </Box>
         </Box>
         <Button variant="contained" onClick={() => close(new BN(data))}>
