@@ -4,6 +4,8 @@ import { AccountInterface } from "starknet";
 import { OptionType } from "../../types/options";
 import { handleStake } from "./handleStake";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
+import { isCall } from "../../utils/utils";
+import { POOL_NAMES } from "../../constants/texts";
 
 type Props = {
   account: AccountInterface;
@@ -17,8 +19,7 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
 
   const handleChange = handleNumericChangeFactory(setText, setAmount);
 
-  const poolName =
-    type === OptionType.Call ? "Call Pool (ETH)" : "Put Pool (USD)";
+  const poolName = isCall(type) ? POOL_NAMES.CALL : POOL_NAMES.PUT;
 
   return (
     <TableRow>
