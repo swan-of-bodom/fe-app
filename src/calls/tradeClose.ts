@@ -1,3 +1,4 @@
+import { ETH_DIGITS } from "./../constants/amm";
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import AmmAbi from "../abi/amm_abi.json";
 import { AccountInterface } from "starknet";
@@ -7,7 +8,6 @@ import { debug, LogTypes } from "../utils/debugger";
 import { invalidatePositions } from "../queries/client";
 import { afterTransaction } from "../utils/blockchain";
 import { getPremiaWithSlippage, longInteger } from "../utils/computations";
-import { digitsByType } from "../utils/utils";
 import { Math64x61 } from "../types/units";
 import BN from "bn.js";
 
@@ -38,7 +38,7 @@ export const tradeClose = async (
       calldata: [
         ...rawOptionToCalldata(
           option.raw,
-          longInteger(size, digitsByType(option.parsed.optionType)).toString(10)
+          longInteger(size, ETH_DIGITS).toString(10)
         ),
         premiaWithSlippage,
         deadline,
