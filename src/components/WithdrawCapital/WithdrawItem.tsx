@@ -16,6 +16,8 @@ import BN from "bn.js";
 import { debug } from "../../utils/debugger";
 import { isCall } from "../../utils/utils";
 import { POOL_NAMES } from "../../constants/texts";
+import { showToast } from "../../redux/actions";
+import { ToastType } from "../../redux/reducers/ui";
 
 interface Props extends UserPoolDisplayData {
   account: AccountInterface;
@@ -35,8 +37,13 @@ export const WithdrawItem = ({ account, value, fullSize, type }: Props) => {
     .div(new BN(100 * precission))
     .toString(10);
   debug("Relative size", relativeSize);
-  const handleWithdraw = () =>
+  const handleWithdraw = () => {
+    if (!amount) {
+      showToast("Cannot withdraw 0", ToastType.Warn);
+      return;
+    }
     withdrawCall(account, setProcessing, type, relativeSize);
+  };
   const handleWithdrawAll = () =>
     withdrawCall(account, setProcessing, type, fullSize);
 

@@ -29,6 +29,8 @@ import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
 import { useEth } from "../../hooks/useCurrency";
 import { Math64x61 } from "../../types/units";
+import { showToast } from "../../redux/actions";
+import { ToastType } from "../../redux/reducers/ui";
 
 const premiaToDisplayValue = (
   premia: number,
@@ -148,6 +150,7 @@ const WithOption = ({ option }: Props) => {
       if (res?.transaction_hash) {
         afterTransaction(res.transaction_hash, () => {
           invalidatePositions();
+          showToast("Position closed successfully", ToastType.Success);
         });
       }
     });

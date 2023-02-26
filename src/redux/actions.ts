@@ -3,6 +3,8 @@ import { updateNetworkState } from "./reducers/network";
 import {
   DialogContentElem,
   setCloseOptionState,
+  setToastState,
+  ToastType,
   toggleDialog,
 } from "./reducers/ui";
 import { store } from "./store";
@@ -47,3 +49,8 @@ export const setSlippage = (n: number) => store.dispatch(setSlippageState(n));
 
 export const setCloseOption = (option: OptionWithPosition) =>
   store.dispatch(setCloseOptionState(option));
+
+export const showToast = (message: string, type: ToastType = ToastType.Info) =>
+  store.dispatch(setToastState({ message, open: true, type }));
+
+export const hideToast = () => store.dispatch(setToastState({ open: false }));

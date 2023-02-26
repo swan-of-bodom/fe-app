@@ -6,6 +6,8 @@ import AmmAbi from "../../abi/amm_abi.json";
 import { invalidateStake } from "../../queries/client";
 import { afterTransaction } from "../../utils/blockchain";
 import { isCall } from "../../utils/utils";
+import { showToast } from "../../redux/actions";
+import { ToastType } from "../../redux/reducers/ui";
 
 export const withdrawCall = async (
   account: AccountInterface,
@@ -46,6 +48,7 @@ export const withdrawCall = async (
     afterTransaction(res.transaction_hash, () => {
       invalidateStake();
       setProcessing(false);
+      showToast("Successfully withdrew capital", ToastType.Success);
     });
   }
 };

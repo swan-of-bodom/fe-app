@@ -11,6 +11,7 @@ import Settings from "./pages/settings";
 import { Controller } from "./Controller";
 import { CssBaseline } from "@mui/material";
 import { MultiDialog } from "./components/MultiDialog/MultiDialog";
+import { Toast } from "./components/Toast/Toast";
 
 const App = () => (
   <Provider store={store}>
@@ -33,6 +34,7 @@ const App = () => (
         </Layout>
       </Router>
       <MultiDialog />
+      <Toast />
     </Controller>
   </Provider>
 );

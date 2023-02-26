@@ -8,9 +8,23 @@ export enum DialogContentElem {
   CloseOption = "CloseOption",
 }
 
+export enum ToastType {
+  Warn = "warn",
+  Info = "info",
+  Success = "success",
+  Error = "error",
+}
+
+export type ToastState = {
+  message: string;
+  open: boolean;
+  type: ToastType;
+};
+
 export interface UiState {
   dialogOpen: boolean;
   dialogContent: DialogContentElem;
+  toastState: ToastState;
   activeCloseOption?: OptionWithPosition;
 }
 
@@ -19,6 +33,7 @@ export const ui = createSlice({
   initialState: {
     dialogOpen: false,
     dialogContent: DialogContentElem.Wallet,
+    toastState: { message: "", type: ToastType.Info, open: false },
   } as UiState,
   reducers: {
     toggleDialog: (state, action: { payload: Partial<UiState> }) => {
@@ -32,7 +47,11 @@ export const ui = createSlice({
       state.activeCloseOption = action.payload;
       return state;
     },
+    setToastState: (state, action: { payload: Partial<ToastState> }) => {
+      state.toastState = { ...state.toastState, ...action.payload };
+      return state;
+    },
   },
 });
 
-export const { toggleDialog, setCloseOptionState } = ui.actions;
+export const { toggleDialog, setCloseOptionState, setToastState } = ui.actions;
