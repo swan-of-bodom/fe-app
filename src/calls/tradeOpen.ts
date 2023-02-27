@@ -1,29 +1,33 @@
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
-import { Abi, AccountInterface } from "starknet";
-import { Option, OptionSide, OptionType } from "../types/options";
+import { AccountInterface } from "starknet";
+import { Option } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug } from "../utils/debugger";
 import BN from "bn.js";
-import { getToApprove, longInteger } from "../utils/computations";
+import {
+  getPremiaWithSlippage,
+  getToApprove,
+  longInteger,
+} from "../utils/computations";
 import { convertSizeToInt } from "../utils/conversions";
 
 import AmmAbi from "../abi/amm_abi.json";
 import LpAbi from "../abi/lptoken_abi.json";
 import { afterTransaction } from "../utils/blockchain";
 import { invalidatePositions } from "../queries/client";
-import { isCall } from "../utils/utils";
+import { digitsByType, isCall } from "../utils/utils";
+import { intToMath64x61 } from "../utils/units";
 
 export const approveAndTradeOpen = async (
   account: AccountInterface,
   option: Option,
   size: number,
-  optionType: OptionType,
-  optionSide: OptionSide,
   premia: BN,
   cb: () => void
 ): Promise<boolean> => {
   const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
     getTokenAddresses();
+  const { optionType, optionSide } = option.parsed;
 
   debug("Approve and TradeOpen", {
     size: longInteger(size, 18).toString(10),
@@ -50,24 +54,34 @@ export const approveAndTradeOpen = async (
 
   const convertedSize = convertSizeToInt(size);
 
-  const approveCalldata = {
+  const approveArgs = {
     contractAddress: isCall(optionType) ? ETH_ADDRESS : USD_ADDRESS,
     entrypoint: AMM_METHODS.APPROVE,
     calldata: [MAIN_CONTRACT_ADDRESS, new BN(toApprove).toString(10), "0"],
   };
 
-  debug("Trade open approve calldata", approveCalldata);
+  debug("Trade open approve calldata", approveArgs);
 
-  const tradeOpenCalldata = {
+  // one hour from now
+  const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
+
+  const tradeOpenArgs = {
     contractAddress: MAIN_CONTRACT_ADDRESS,
     entrypoint: AMM_METHODS.TRADE_OPEN,
-    calldata: rawOptionToCalldata(option.raw, convertedSize),
+    calldata: [
+      ...rawOptionToCalldata(option.raw, convertedSize),
+      intToMath64x61(
+        getPremiaWithSlippage(premia, optionSide, false).toString(10),
+        digitsByType(optionType)
+      ),
+      deadline,
+    ],
   };
 
-  debug("Trade open trade calldata", tradeOpenCalldata);
+  debug("Trade open trade calldata", tradeOpenArgs);
 
   const res = await account
-    .execute([approveCalldata, tradeOpenCalldata], [LpAbi, AmmAbi] as Abi[])
+    .execute([approveArgs, tradeOpenArgs], [LpAbi, AmmAbi])
     .catch((e) => {
       debug("Trade open rejected or failed", e.message);
       throw Error("Trade open rejected or failed");

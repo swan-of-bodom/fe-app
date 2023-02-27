@@ -1,8 +1,4 @@
-import {
-  closeWalletConnectDialog,
-  openNetworkMismatchDialog,
-  updateNetwork,
-} from "../redux/actions";
+import { openNetworkMismatchDialog, updateNetwork } from "../redux/actions";
 import {
   StarknetWindowObject,
   getStarknet,
@@ -43,13 +39,16 @@ export const getWallet = (): ConnectedStarknetWindowObject | undefined => {
 
 export const disconnect = () => {
   const sn = getStarknet();
-  sn.disconnect().then((res) => {
+  sn.disconnect().then(() => {
     updateNetwork({ walletId: undefined });
     debug("Wallet disconnected");
   });
 };
 
-export const connect = (wallet: StarknetWindowObject) => {
+export const connect = (
+  wallet: StarknetWindowObject,
+  fromLatest: boolean = false
+) => {
   const sn = getStarknet();
   sn.enable(wallet).then(() => {
     if (!isConnectedWallet(wallet)) {
@@ -63,9 +62,11 @@ export const connect = (wallet: StarknetWindowObject) => {
     if (chainId !== wallet.account.chainId) {
       debug("Wallet - App network mismatch, opening dialog");
       disconnect();
-      closeWalletConnectDialog();
+      if (fromLatest) {
+        // do not open the dialog if the page is loading/just loaded
+        return;
+      }
       openNetworkMismatchDialog();
-      return;
     }
 
     addWalletEventHandlers(wallet);
@@ -86,6 +87,6 @@ export const connectToLatest = async () => {
   debug("Latest wallet", latestWallet);
 
   if (latestWallet) {
-    return connect(latestWallet);
+    return connect(latestWallet, true);
   }
 };

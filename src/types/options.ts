@@ -3,8 +3,6 @@ import {
   Math64x61,
   Address,
   Int,
-  Uint256LeadingNumber,
-  Uint256TailZero,
   Hex,
   Decimal,
   AddressBN,
@@ -25,16 +23,14 @@ export enum OptionSide {
   Short = "1",
 }
 
-export type OptionStruct = [Hex, Int, Math64x61, Address, Address, Hex];
-
-export type _OptionWithPremia = [...OptionStruct, Math64x61];
-
-export type OptionWithUsersPosition = [
-  ...OptionStruct,
-  Uint256LeadingNumber,
-  Uint256TailZero,
-  Math64x61
-];
+export interface OptionStruct {
+  option_type: Hex;
+  strike_price: Math64x61;
+  maturity: Int;
+  option_side: Hex;
+  quote_token_address: Address;
+  base_token_address: Address;
+}
 
 export interface RawOption {
   option_side: BN;

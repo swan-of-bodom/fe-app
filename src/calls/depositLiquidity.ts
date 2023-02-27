@@ -1,6 +1,6 @@
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { debug } from "../utils/debugger";
-import { Abi, AccountInterface } from "starknet";
+import { AccountInterface } from "starknet";
 import LpAbi from "../abi/lptoken_abi.json";
 import AmmAbi from "../abi/amm_abi.json";
 import { OptionType } from "../types/options";
@@ -37,10 +37,7 @@ export const depositLiquidity = async (
   ]);
 
   const res = await account
-    .execute([approveCalldata, depositLiquidityCalldata], [
-      LpAbi,
-      AmmAbi,
-    ] as Abi[])
+    .execute([approveCalldata, depositLiquidityCalldata], [LpAbi, AmmAbi])
     .catch((e: Error) => {
       debug('"Stake capital" user rejected or failed');
       debug("error", e.message);

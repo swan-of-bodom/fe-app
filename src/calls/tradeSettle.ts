@@ -1,6 +1,6 @@
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import AmmAbi from "../abi/amm_abi.json";
-import { Abi, AccountInterface } from "starknet";
+import { AccountInterface } from "starknet";
 import { OptionWithPosition } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug, LogTypes } from "../utils/debugger";
@@ -19,7 +19,7 @@ export const tradeSettle = async (
       calldata: rawOptionToCalldata(option.raw, fullSizeInt(option)),
     };
     debug("Executing following call:", call);
-    const res = await account.execute(call, [AmmAbi] as Abi[]);
+    const res = await account.execute(call, [AmmAbi]);
     if (res?.transaction_hash) {
       afterTransaction(res.transaction_hash, invalidatePositions);
     }

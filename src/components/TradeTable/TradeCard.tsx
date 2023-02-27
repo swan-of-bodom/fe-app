@@ -22,6 +22,8 @@ import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
 import { ProfitTable, ProfitTableSkeleton } from "./ProfitTable";
 import { useAccount } from "../../hooks/useAccount";
+import { showToast } from "../../redux/actions";
+import { ToastType } from "../../redux/reducers/ui";
 
 type TemplateProps = {
   title: string;
@@ -198,23 +200,26 @@ export const TradeCard = ({ option }: TradeCardProps) => {
   );
 
   const handleBuy = async () => {
-    if (!account || !amount) {
-      debug(LogTypes.WARN, "Missing some of the inputs:", { account, amount });
+    if (!account) {
+      debug(LogTypes.WARN, "No account", account);
       return;
     }
+
+    if (!amount) {
+      showToast("Cannot trade size 0", ToastType.Warn);
+      return;
+    }
+
     updateTradeState({ failed: false, processing: true });
 
-    const cb = () => updateTradeState({ failed: false, processing: false });
+    const cb = () => {
+      updateTradeState({ failed: false, processing: false });
+      showToast("Successfully opened position", ToastType.Success);
+    };
 
-    approveAndTradeOpen(
-      account,
-      option,
-      amount,
-      option.parsed.optionType,
-      option.parsed.optionSide,
-      currentPremia,
-      cb
-    ).catch(() => updateTradeState({ failed: true, processing: false }));
+    approveAndTradeOpen(account, option, amount, currentPremia, cb).catch(() =>
+      updateTradeState({ failed: true, processing: false })
+    );
   };
 
   const buttonText = () =>

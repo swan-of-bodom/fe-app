@@ -11,7 +11,11 @@ export const settings = createSlice({
       storeSetting(state);
       return state;
     },
+    setSlippageState: (state, action: { payload: number }) => {
+      state.slippage = action.payload;
+      return state;
+    },
   },
 });
 
-export const { updateSettingsState } = settings.actions;
+export const { updateSettingsState, setSlippageState } = settings.actions;

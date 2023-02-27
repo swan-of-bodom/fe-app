@@ -400,6 +400,14 @@
       {
         "name": "base_token_address",
         "type": "felt"
+      },
+      {
+        "name": "limit_total_premia",
+        "type": "felt"
+      },
+      {
+        "name": "tx_deadline",
+        "type": "felt"
       }
     ],
     "name": "trade_open",
@@ -439,6 +447,14 @@
       },
       {
         "name": "base_token_address",
+        "type": "felt"
+      },
+      {
+        "name": "limit_total_premia",
+        "type": "felt"
+      },
+      {
+        "name": "tx_deadline",
         "type": "felt"
       }
     ],
@@ -727,6 +743,29 @@
       }
     ],
     "name": "add_option",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "lptoken_address",
+        "type": "felt"
+      },
+      {
+        "name": "option_side",
+        "type": "felt"
+      },
+      {
+        "name": "maturity",
+        "type": "felt"
+      },
+      {
+        "name": "strike_price",
+        "type": "felt"
+      }
+    ],
+    "name": "migrate_option_position",
     "outputs": [],
     "type": "function"
   },
@@ -1032,6 +1071,29 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "get_trading_halt",
+    "outputs": [
+      {
+        "name": "res",
+        "type": "felt"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "new_status",
+        "type": "felt"
+      }
+    ],
+    "name": "set_trading_halt",
+    "outputs": [],
     "type": "function"
   },
   {

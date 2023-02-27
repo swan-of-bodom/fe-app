@@ -1,4 +1,4 @@
-import { Abi, AccountInterface } from "starknet";
+import { AccountInterface } from "starknet";
 import { AMM_METHODS, getTokenAddresses } from "../../constants/amm";
 import { OptionType } from "../../types/options";
 import { debug } from "../../utils/debugger";
@@ -6,6 +6,8 @@ import AmmAbi from "../../abi/amm_abi.json";
 import { invalidateStake } from "../../queries/client";
 import { afterTransaction } from "../../utils/blockchain";
 import { isCall } from "../../utils/utils";
+import { showToast } from "../../redux/actions";
+import { ToastType } from "../../redux/reducers/ui";
 
 export const withdrawCall = async (
   account: AccountInterface,
@@ -37,7 +39,7 @@ export const withdrawCall = async (
     calldata,
   };
   debug(`Calling ${AMM_METHODS.WITHDRAW_LIQUIDITY}`, withdraw);
-  const res = await account.execute(withdraw, [AmmAbi] as Abi[]).catch((e) => {
+  const res = await account.execute(withdraw, [AmmAbi]).catch((e) => {
     debug("Withdraw rejected by user or failed\n", e.message);
     setProcessing(false);
   });
@@ -46,6 +48,7 @@ export const withdrawCall = async (
     afterTransaction(res.transaction_hash, () => {
       invalidateStake();
       setProcessing(false);
+      showToast("Successfully withdrew capital", ToastType.Success);
     });
   }
 };

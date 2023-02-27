@@ -7,6 +7,8 @@ import { invalidatePositions } from "../../queries/client";
 import { afterTransaction } from "../../utils/blockchain";
 import { useState } from "react";
 import { useAccount } from "../../hooks/useAccount";
+import { showToast } from "../../redux/actions";
+import { ToastType } from "../../redux/reducers/ui";
 
 type Props = {
   option: OptionWithPosition;
@@ -29,6 +31,7 @@ export const InMoneyItem = ({ option }: Props) => {
           afterTransaction(res.transaction_hash, () => {
             invalidatePositions();
             setProcessing(false);
+            showToast("Successfully settled position", ToastType.Success);
           });
         }
       })

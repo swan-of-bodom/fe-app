@@ -1,13 +1,16 @@
-import { Paper, TableContainer, useTheme } from "@mui/material";
+import { Box, Paper, TableContainer, useTheme } from "@mui/material";
 import { ReactNode } from "react";
 import { isDarkTheme } from "../utils/utils";
+import { SlippageButton } from "./Slippage/SlippageButton";
 
 type TableWrapperProps = {
+  slippage?: boolean;
   children: ReactNode;
 };
 
 export const TableWrapper = (props: TableWrapperProps) => {
   const theme = useTheme();
+  const { slippage, children } = props;
   return (
     <Paper
       sx={{
@@ -20,8 +23,13 @@ export const TableWrapper = (props: TableWrapperProps) => {
         }),
       }}
     >
+      {slippage && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <SlippageButton />
+        </Box>
+      )}
       <TableContainer elevation={2} component={Paper}>
-        {props.children}
+        {children}
       </TableContainer>
     </Paper>
   );
