@@ -17,6 +17,7 @@ import { WalletBox } from "../ConnectWallet/Content";
 import { SlippageContent } from "../Slippage/SlippageContent";
 import { Close } from "@mui/icons-material";
 import { ClosePosition } from "../ClosePosition/ClosePosition";
+import { WalletInfo } from "../WalletInfo/WalletInfo";
 
 const NetworkMismatch = () => (
   <>
@@ -90,6 +91,7 @@ export const MultiDialog = () => {
         {dialogContent === DialogContentElem.Slippage && <SlippageContent />}
         {dialogContent === DialogContentElem.Wallet && <WalletBox />}
         {dialogContent === DialogContentElem.CloseOption && <ClosePosition />}
+        {dialogContent === DialogContentElem.Account && <WalletInfo />}
       </Paper>
     </Dialog>
   );

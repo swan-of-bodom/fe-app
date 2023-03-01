@@ -10,6 +10,8 @@ import { afterTransaction } from "../utils/blockchain";
 import { getPremiaWithSlippage, longInteger } from "../utils/computations";
 import { Math64x61 } from "../types/units";
 import BN from "bn.js";
+import { addTx, markTxAsDone } from "../redux/actions";
+import { TransactionActions } from "../redux/reducers/transactions";
 
 export const tradeClose = async (
   account: AccountInterface,
@@ -47,7 +49,12 @@ export const tradeClose = async (
     debug("Executing following call:", call);
     const res = await account.execute(call, [AmmAbi]);
     if (res?.transaction_hash) {
-      afterTransaction(res.transaction_hash, invalidatePositions);
+      const hash = res.transaction_hash;
+      addTx(hash, TransactionActions.TradeClose);
+      afterTransaction(hash, () => {
+        markTxAsDone(hash);
+        invalidatePositions();
+      });
     }
     return res;
   } catch (e) {

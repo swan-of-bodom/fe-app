@@ -11,6 +11,12 @@ import { store } from "./store";
 import { Settings } from "../types/settings";
 import { NetworkState } from "../types/network";
 import { OptionWithPosition } from "../types/options";
+import {
+  addTxReducer,
+  markTxAsDoneReducer,
+  Transaction,
+  TransactionActions,
+} from "./reducers/transactions";
 
 export const updateSettings = (v: Partial<Settings>) =>
   store.dispatch(updateSettingsState(v));
@@ -45,6 +51,9 @@ export const openSlippageDialog = () =>
 export const openCloseOptionDialog = () =>
   openDialogWithContent(DialogContentElem.CloseOption);
 
+export const openAccountDialog = () =>
+  openDialogWithContent(DialogContentElem.Account);
+
 export const setSlippage = (n: number) => store.dispatch(setSlippageState(n));
 
 export const setCloseOption = (option: OptionWithPosition) =>
@@ -54,3 +63,16 @@ export const showToast = (message: string, type: ToastType = ToastType.Info) =>
   store.dispatch(setToastState({ message, open: true, type }));
 
 export const hideToast = () => store.dispatch(setToastState({ open: false }));
+
+export const addTx = (hash: string, action: TransactionActions) => {
+  const tx: Transaction = {
+    hash,
+    action,
+    done: false,
+    timestamp: new Date().getTime(),
+  };
+  store.dispatch(addTxReducer(tx));
+};
+
+export const markTxAsDone = (hash: string) =>
+  store.dispatch(markTxAsDoneReducer(hash));
