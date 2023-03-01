@@ -81,6 +81,20 @@ export const connectToLatest = async () => {
     return;
   }
 
+  debug("SN window objects", {
+    starknet_argentX: window.starknet_argentX,
+    starknet_braavos: window.starknet_braavos,
+  });
+
+  if (!window.starknet_argentX && !window.starknet_braavos) {
+    // wait for wallets to propagate to the window object
+    await new Promise((r) => setTimeout(r, 500));
+    debug("SN window objects 2nd attempt", {
+      starknet_argentX: window.starknet_argentX,
+      starknet_braavos: window.starknet_braavos,
+    });
+  }
+
   const sn = getStarknet();
   const latestWallet = await sn.getLastConnectedWallet();
 
