@@ -1,4 +1,4 @@
-import { addTx, markTxAsDone } from "./../redux/actions";
+import { addTx, markTxAsDone, markTxAsFailed } from "./../redux/actions";
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { AccountInterface } from "starknet";
 import { Option } from "../types/options";
@@ -94,11 +94,18 @@ export const approveAndTradeOpen = async (
   if (res?.transaction_hash) {
     const hash = res.transaction_hash;
     addTx(hash, TransactionActions.TradeOpen);
-    afterTransaction(hash, () => {
-      markTxAsDone(hash);
-      invalidatePositions();
-      cb();
-    });
+    afterTransaction(
+      hash,
+      () => {
+        markTxAsDone(hash);
+        invalidatePositions();
+        cb();
+      },
+      () => {
+        markTxAsFailed(hash);
+        cb();
+      }
+    );
   } else {
     throw Error("Trade open failed unexpectedly");
   }

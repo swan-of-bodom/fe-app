@@ -13,9 +13,10 @@ import { NetworkState } from "../types/network";
 import { OptionWithPosition } from "../types/options";
 import {
   addTxReducer,
-  markTxAsDoneReducer,
+  setTxStatusReducer,
   Transaction,
   TransactionActions,
+  TransactionStatus,
 } from "./reducers/transactions";
 
 export const updateSettings = (v: Partial<Settings>) =>
@@ -68,11 +69,19 @@ export const addTx = (hash: string, action: TransactionActions) => {
   const tx: Transaction = {
     hash,
     action,
-    done: false,
+    status: TransactionStatus.Pending,
     timestamp: new Date().getTime(),
+    chainId: store.getState().network.network.chainId,
   };
   store.dispatch(addTxReducer(tx));
 };
 
 export const markTxAsDone = (hash: string) =>
-  store.dispatch(markTxAsDoneReducer(hash));
+  store.dispatch(
+    setTxStatusReducer({ hash, status: TransactionStatus.Success })
+  );
+
+export const markTxAsFailed = (hash: string) =>
+  store.dispatch(
+    setTxStatusReducer({ hash, status: TransactionStatus.Failed })
+  );

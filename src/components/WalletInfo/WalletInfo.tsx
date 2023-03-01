@@ -15,6 +15,7 @@ import { ContentCopy, Info, PowerSettingsNew } from "@mui/icons-material";
 import { ToastType } from "../../redux/reducers/ui";
 import { TESTNET_CHAINID } from "../../constants/starknet";
 import { RecentTransaction } from "./RecentTransactions";
+import { getStarkscanUrl } from "../../utils/utils";
 
 const handleDisconnect = () => {
   closeDialog();
@@ -47,9 +48,10 @@ export const WalletInfo = () => {
   const start = address.substring(0, letters);
   const end = address.substring(address.length - letters);
 
-  const exploreUrl = `https://${
-    wallet.account.chainId === TESTNET_CHAINID ? "testnet." : ""
-  }starkscan.co/contract/${address}`;
+  const exploreUrl = getStarkscanUrl({
+    chainId: wallet.account.chainId,
+    contractHash: address,
+  });
 
   return (
     <>

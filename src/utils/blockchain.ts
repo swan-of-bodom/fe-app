@@ -10,7 +10,11 @@ export const getMainContract = (): Contract => {
   return new Contract(AmmAbi, MAIN_CONTRACT_ADDRESS, provider);
 };
 
-export const afterTransaction = (tx: string, cb: () => void) => {
+export const afterTransaction = (
+  tx: string,
+  ok: () => void,
+  nok?: () => void
+) => {
   const provider = store.getState().network.provider;
-  provider.waitForTransaction(tx).then(cb);
+  provider.waitForTransaction(tx).then(ok).catch(nok);
 };

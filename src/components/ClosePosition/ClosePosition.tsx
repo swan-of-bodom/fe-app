@@ -146,14 +146,7 @@ const WithOption = ({ option }: Props) => {
       return;
     }
 
-    tradeClose(account, option, premia, size, true).then((res) => {
-      if (res?.transaction_hash) {
-        afterTransaction(res.transaction_hash, () => {
-          invalidatePositions();
-          showToast("Position closed successfully", ToastType.Success);
-        });
-      }
-    });
+    tradeClose(account, option, premia, size, true);
   };
 
   debug("usePremiaQuery", { status, data, error, isFetching });

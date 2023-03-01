@@ -37,6 +37,7 @@ export const InMoneyItem = ({ option }: Props) => {
       })
       .catch(() => {
         setProcessing(false);
+        showToast("Successfully settled position", ToastType.Error);
       });
   };
 

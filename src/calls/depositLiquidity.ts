@@ -6,7 +6,7 @@ import AmmAbi from "../abi/amm_abi.json";
 import { OptionType } from "../types/options";
 import { afterTransaction } from "../utils/blockchain";
 import { currencyAddresByType } from "../utils/utils";
-import { addTx, markTxAsDone } from "../redux/actions";
+import { addTx, markTxAsDone, markTxAsFailed } from "../redux/actions";
 import { TransactionActions } from "../redux/reducers/transactions";
 
 export const depositLiquidity = async (
@@ -48,11 +48,19 @@ export const depositLiquidity = async (
   if (res?.transaction_hash) {
     const hash = res.transaction_hash;
     addTx(hash, TransactionActions.Stake);
-    afterTransaction(res.transaction_hash, () => {
-      // everything done - OK callback
-      ok();
-      markTxAsDone(hash);
-    });
+    afterTransaction(
+      res.transaction_hash,
+      () => {
+        // everything done - OK callback
+        ok();
+        markTxAsDone(hash);
+      },
+      () => {
+        debug("Tx failed");
+        nok();
+        markTxAsFailed(hash);
+      }
+    );
   } else {
     // transaction was not successfully created (no txhash)
     // NotOK callback

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { constants } from "starknet";
 
 export enum TransactionActions {
   TradeOpen = "TradeOpen",
@@ -8,12 +9,19 @@ export enum TransactionActions {
   Settle = "Settle",
 }
 
+export enum TransactionStatus {
+  Pending = "Pending",
+  Success = "Success",
+  Failed = "Failed",
+}
+
 export interface Transaction {
   action: TransactionActions;
   hash: string;
   timestamp: number;
   finishedTimestamp?: number;
-  done: boolean;
+  status: TransactionStatus;
+  chainId: constants.StarknetChainId;
 }
 
 export const txs = createSlice({
@@ -24,12 +32,15 @@ export const txs = createSlice({
       state.push(action.payload);
       return state;
     },
-    markTxAsDoneReducer: (state, action: { payload: string }) => {
-      const tx = state.find((tx) => tx.hash === action.payload);
+    setTxStatusReducer: (
+      state,
+      action: { payload: { hash: string; status: TransactionStatus } }
+    ) => {
+      const tx = state.find((tx) => tx.hash === action.payload.hash);
       if (tx) {
         const timestamp = new Date().getTime();
 
-        tx.done = true;
+        tx.status = action.payload.status;
         tx.finishedTimestamp = timestamp;
       }
       return state;
@@ -37,4 +48,4 @@ export const txs = createSlice({
   },
 });
 
-export const { addTxReducer, markTxAsDoneReducer } = txs.actions;
+export const { addTxReducer, setTxStatusReducer } = txs.actions;
