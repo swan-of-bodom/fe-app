@@ -13,7 +13,6 @@ import { closeDialog, showToast } from "../../redux/actions";
 import { WalletIcon } from "../assets";
 import { ContentCopy, Info, PowerSettingsNew } from "@mui/icons-material";
 import { ToastType } from "../../redux/reducers/ui";
-import { TESTNET_CHAINID } from "../../constants/starknet";
 import { RecentTransaction } from "./RecentTransactions";
 import { getStarkscanUrl } from "../../utils/utils";
 
