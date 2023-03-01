@@ -14,7 +14,7 @@ import { WalletIcon } from "../assets";
 import { ContentCopy, Info, PowerSettingsNew } from "@mui/icons-material";
 import { ToastType } from "../../redux/reducers/ui";
 import { RecentTransaction } from "./RecentTransactions";
-import { getStarkscanUrl } from "../../utils/utils";
+import { addressElision, getStarkscanUrl } from "../../utils/utils";
 
 const handleDisconnect = () => {
   closeDialog();
@@ -42,11 +42,6 @@ export const WalletInfo = () => {
 
   const { account } = wallet;
   const { address } = account;
-
-  const letters = 5;
-  const start = address.substring(0, letters);
-  const end = address.substring(address.length - letters);
-
   const exploreUrl = getStarkscanUrl({
     chainId: wallet.account.chainId,
     contractHash: address,
@@ -65,9 +60,7 @@ export const WalletInfo = () => {
           <Button variant="outlined" onClick={() => handleCopy(address)}>
             <WalletIcon sx={iconStyle} wallet={wallet} />
 
-            <Typography>
-              {start}...{end}
-            </Typography>
+            <Typography>{addressElision(address)}</Typography>
           </Button>
         </Tooltip>
 

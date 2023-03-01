@@ -14,7 +14,7 @@ import {
 } from "../../redux/reducers/transactions";
 import { HourglassBottomTwoTone, Done, Report } from "@mui/icons-material";
 import { debug } from "../../utils/debugger";
-import { getStarkscanUrl } from "../../utils/utils";
+import { addressElision, getStarkscanUrl } from "../../utils/utils";
 import { useCurrentChainId } from "../../hooks/useCurrentChainId";
 
 const Tx = ({ tx }: { tx: Transaction }) => {
@@ -70,7 +70,7 @@ const Tx = ({ tx }: { tx: Transaction }) => {
               href={exploreUrl}
               rel="noreferrer"
             >
-              <Typography>{hash.substring(0, 5) + "..."}</Typography>
+              <Typography>{addressElision(hash)}</Typography>
             </Link>
           </Tooltip>
         </div>

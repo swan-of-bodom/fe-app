@@ -3,6 +3,7 @@ import { WalletIcon } from "../assets";
 import { useWallet } from "../../hooks/useWallet";
 import { openAccountDialog } from "../../redux/actions";
 import { debug } from "../../utils/debugger";
+import { addressElision } from "../../utils/utils";
 
 const iconStyle = {
   width: 30,
@@ -30,17 +31,11 @@ export const AccountInfo = () => {
   const { account } = wallet;
   const { address } = account;
 
-  const letters = 5;
-  const start = address.substring(0, letters);
-  const end = address.substring(address.length - letters);
-
   return (
     <Button onClick={handleClick} variant="outlined" sx={containerStyle}>
       <>
         <WalletIcon sx={iconStyle} wallet={wallet} />
-        <Typography>
-          {start}...{end}
-        </Typography>
+        <Typography>{addressElision(address)}</Typography>
       </>
     </Button>
   );
