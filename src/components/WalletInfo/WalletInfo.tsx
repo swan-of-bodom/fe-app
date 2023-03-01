@@ -54,10 +54,16 @@ export const WalletInfo = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          flexWrap: "wrap",
+          gap: ".5rem",
         }}
       >
         <Tooltip title={address}>
-          <Button variant="outlined" onClick={() => handleCopy(address)}>
+          <Button
+            sx={{ mr: 2 }}
+            variant="outlined"
+            onClick={() => handleCopy(address)}
+          >
             <WalletIcon sx={iconStyle} wallet={wallet} />
 
             <Typography>{addressElision(address)}</Typography>
