@@ -1,8 +1,8 @@
-import { Button, Tooltip, Typography } from "@mui/material";
-import { SupportedWalletIds } from "../../types/wallet";
-import { ArgentIcon, BraavosIcon } from "../assets";
+import { Button, Typography } from "@mui/material";
+import { WalletIcon } from "../assets";
 import { useWallet } from "../../hooks/useWallet";
-import { disconnect } from "../../network/account";
+import { openAccountDialog } from "../../redux/actions";
+import { debug } from "../../utils/debugger";
 
 const iconStyle = {
   width: 30,
@@ -21,11 +21,13 @@ export const AccountInfo = () => {
     return null;
   }
 
-  const handleDisconnect = () => {
-    disconnect();
+  debug(wallet.icon);
+
+  const handleClick = () => {
+    openAccountDialog();
   };
 
-  const { account, id } = wallet;
+  const { account } = wallet;
   const { address } = account;
 
   const letters = 5;
@@ -33,16 +35,13 @@ export const AccountInfo = () => {
   const end = address.substring(address.length - letters);
 
   return (
-    <Tooltip title={"Disconnect"}>
-      <Button onClick={handleDisconnect} variant="outlined" sx={containerStyle}>
-        <>
-          {id === SupportedWalletIds.ArgentX && <ArgentIcon sx={iconStyle} />}
-          {id === SupportedWalletIds.Braavos && <BraavosIcon sx={iconStyle} />}
-          <Typography>
-            {start}...{end}
-          </Typography>
-        </>
-      </Button>
-    </Tooltip>
+    <Button onClick={handleClick} variant="outlined" sx={containerStyle}>
+      <>
+        <WalletIcon sx={iconStyle} wallet={wallet} />
+        <Typography>
+          {start}...{end}
+        </Typography>
+      </>
+    </Button>
   );
 };

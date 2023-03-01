@@ -10,6 +10,14 @@ import { afterTransaction } from "../utils/blockchain";
 import { getPremiaWithSlippage, longInteger } from "../utils/computations";
 import { Math64x61 } from "../types/units";
 import BN from "bn.js";
+import {
+  addTx,
+  markTxAsDone,
+  markTxAsFailed,
+  showToast,
+} from "../redux/actions";
+import { TransactionActions } from "../redux/reducers/transactions";
+import { ToastType } from "../redux/reducers/ui";
 
 export const tradeClose = async (
   account: AccountInterface,
@@ -47,7 +55,20 @@ export const tradeClose = async (
     debug("Executing following call:", call);
     const res = await account.execute(call, [AmmAbi]);
     if (res?.transaction_hash) {
-      afterTransaction(res.transaction_hash, invalidatePositions);
+      const hash = res.transaction_hash;
+      addTx(hash, TransactionActions.TradeClose);
+      afterTransaction(
+        hash,
+        () => {
+          markTxAsDone(hash);
+          invalidatePositions();
+          showToast("Position closed successfully", ToastType.Success);
+        },
+        () => {
+          markTxAsFailed(hash);
+          showToast("Position closed failed", ToastType.Error);
+        }
+      );
     }
     return res;
   } catch (e) {

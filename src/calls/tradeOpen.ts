@@ -1,3 +1,4 @@
+import { addTx, markTxAsDone, markTxAsFailed } from "./../redux/actions";
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { AccountInterface } from "starknet";
 import { Option } from "../types/options";
@@ -17,6 +18,7 @@ import { afterTransaction } from "../utils/blockchain";
 import { invalidatePositions } from "../queries/client";
 import { digitsByType, isCall } from "../utils/utils";
 import { intToMath64x61 } from "../utils/units";
+import { TransactionActions } from "../redux/reducers/transactions";
 
 export const approveAndTradeOpen = async (
   account: AccountInterface,
@@ -90,10 +92,20 @@ export const approveAndTradeOpen = async (
   debug("Done trading", res);
 
   if (res?.transaction_hash) {
-    afterTransaction(res.transaction_hash, () => {
-      invalidatePositions();
-      cb();
-    });
+    const hash = res.transaction_hash;
+    addTx(hash, TransactionActions.TradeOpen);
+    afterTransaction(
+      hash,
+      () => {
+        markTxAsDone(hash);
+        invalidatePositions();
+        cb();
+      },
+      () => {
+        markTxAsFailed(hash);
+        cb();
+      }
+    );
   } else {
     throw Error("Trade open failed unexpectedly");
   }
