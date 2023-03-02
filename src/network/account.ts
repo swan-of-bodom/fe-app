@@ -73,6 +73,9 @@ export const connect = (
   });
 };
 
+const foundWallet = (): boolean =>
+  !!window.starknet_argentX || !!window.starknet_braavos;
+
 export const connectToLatest = async () => {
   const { walletId } = store.getState().network;
 
@@ -80,6 +83,22 @@ export const connectToLatest = async () => {
     // already connected
     return;
   }
+
+  let n = 0;
+  while (n < 5) {
+    if (foundWallet()) {
+      debug(`Found wallet on attempt #${n}`);
+      break;
+    }
+    const waitTime = 2 ** n;
+    await new Promise((r) => setTimeout(r, waitTime));
+    n++;
+  }
+
+  debug("Available wallets", {
+    argentX: !!window.starknet_argentX,
+    braavos: !!window.starknet_braavos,
+  });
 
   const sn = getStarknet();
   const latestWallet = await sn.getLastConnectedWallet();

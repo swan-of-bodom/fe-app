@@ -3,6 +3,7 @@ import { OptionWithPosition } from "../../types/options";
 
 export enum DialogContentElem {
   Wallet = "Wallet",
+  Account = "Account",
   NetworkMismatch = "NetworkMismatch",
   Slippage = "Slippage",
   CloseOption = "CloseOption",

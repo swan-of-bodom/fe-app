@@ -8,6 +8,7 @@ import {
 import { Theme } from "@mui/system";
 import { ThemeVariants } from "../style/themes";
 import { OptionSide, OptionType } from "../types/options";
+import { TESTNET_CHAINID } from "../constants/starknet";
 
 export const isNonEmptyArray = (v: unknown): v is Array<any> =>
   !!(v && Array.isArray(v) && v.length > 0);
@@ -94,4 +95,42 @@ export const assert = (condition: boolean, message?: string): void => {
   if (!condition) {
     throw new Error("Assertion failed " + message);
   }
+};
+
+type StarkscanProps = {
+  chainId?: string;
+  txHash?: string;
+  contractHash?: string;
+};
+
+export const getStarkscanUrl = ({
+  chainId,
+  txHash,
+  contractHash,
+}: StarkscanProps): string => {
+  const baseUrl = `https://${
+    chainId === TESTNET_CHAINID ? "testnet." : ""
+  }starkscan.co`;
+
+  if (txHash) {
+    return `${baseUrl}/tx/${txHash}`;
+  }
+
+  if (contractHash) {
+    return `${baseUrl}/contract/${contractHash}`;
+  }
+
+  // fallback
+  return "";
+};
+
+export const addressElision = (address: string, n: number = 5): string => {
+  if (address.length < 2 * n) {
+    // too short for elision
+    return address;
+  }
+  const start = address.substring(0, n);
+  const end = address.substring(address.length - n);
+
+  return `${start}...${end}`;
 };

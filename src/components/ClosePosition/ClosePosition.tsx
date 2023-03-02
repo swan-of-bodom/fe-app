@@ -23,14 +23,10 @@ import BN from "bn.js";
 import { digitsByType, isCall } from "../../utils/utils";
 import { getPremiaWithSlippage, shortInteger } from "../../utils/computations";
 import { tradeClose } from "../../calls/tradeClose";
-import { invalidatePositions } from "../../queries/client";
-import { afterTransaction } from "../../utils/blockchain";
 import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
 import { useEth } from "../../hooks/useCurrency";
 import { Math64x61 } from "../../types/units";
-import { showToast } from "../../redux/actions";
-import { ToastType } from "../../redux/reducers/ui";
 
 const premiaToDisplayValue = (
   premia: number,
@@ -146,14 +142,7 @@ const WithOption = ({ option }: Props) => {
       return;
     }
 
-    tradeClose(account, option, premia, size, true).then((res) => {
-      if (res?.transaction_hash) {
-        afterTransaction(res.transaction_hash, () => {
-          invalidatePositions();
-          showToast("Position closed successfully", ToastType.Success);
-        });
-      }
-    });
+    tradeClose(account, option, premia, size, true);
   };
 
   debug("usePremiaQuery", { status, data, error, isFetching });

@@ -8,6 +8,8 @@ import { isCall } from "../utils/utils";
 import { Math64x61 } from "../types/units";
 import { isBN } from "bn.js";
 
+const method = AMM_METHODS.GET_TOTAL_PREMIA;
+
 export const getPremia = async (
   option: Option,
   size: number,
@@ -30,12 +32,10 @@ export const getPremia = async (
 
   const contract = getMainContract();
 
-  const res = await contract[AMM_METHODS.GET_TOTAL_PREMIA](...calldata).catch(
-    (e: Error) => {
-      debug("Failed to get total premia", e.message);
-      throw Error(e.message);
-    }
-  );
+  const res = await contract.call(method, calldata).catch((e: Error) => {
+    debug(`Failed while calling ${method}`, e.message);
+    throw Error(e.message);
+  });
 
   if (!isBN(res?.total_premia_including_fees)) {
     throw Error("Response did not included total_premia_including_fees");

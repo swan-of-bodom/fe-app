@@ -1,0 +1,1 @@
+export const TESTNET_CHAINID = "0x534e5f474f45524c49";

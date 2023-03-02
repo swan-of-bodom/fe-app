@@ -1,3 +1,4 @@
+import { debug } from "./../utils/debugger";
 import { AMM_METHODS } from "../constants/amm";
 import { ResponseUserPoolInfo, UserPoolInfo } from "../types/pool";
 import { getMainContract } from "../utils/blockchain";
@@ -11,9 +12,12 @@ export const getUserPoolInfo = async (
   address: string
 ): Promise<UserPoolInfo[]> => {
   const contract = getMainContract();
-  const res: unknown[] = await contract[method](address).catch((e: string) => {
-    throw Error("Failed while calling");
-  });
+  const res: unknown[] = await contract
+    .call(method, [address])
+    .catch((e: string) => {
+      debug(`Failed while calling ${method}\n`, e);
+      throw Error(`Failed while calling ${method}`);
+    });
 
   if (!isNonEmptyArray(res) || !isNonEmptyArray(res[0])) {
     return [];
