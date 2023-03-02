@@ -44,6 +44,17 @@ const Tx = ({ tx }: { tx: Transaction }) => {
       ? Done
       : Report;
 
+  const d = new Date(timestamp);
+  const dateOptions = {
+    day: "numeric",
+    month: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    timeZoneName: "short",
+  } as const;
+  const date = new Intl.DateTimeFormat("default", dateOptions).format(d);
+
   return (
     <Paper
       sx={{
@@ -84,9 +95,7 @@ const Tx = ({ tx }: { tx: Transaction }) => {
         </div>
       </Box>
       <Box>
-        <Typography variant="caption">
-          {new Date(timestamp).toUTCString()}
-        </Typography>
+        <Typography variant="caption">{date}</Typography>
       </Box>
     </Paper>
   );
