@@ -4,15 +4,15 @@ import { getMainContract } from "../utils/blockchain";
 import { debug } from "../utils/debugger";
 import { isNonEmptyArray } from "../utils/utils";
 
+const method = AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER;
+
 export const getOptionsWithPositionOfUser = async (
   address: string
 ): Promise<BN[]> => {
   const contract = getMainContract();
 
-  const res = await contract[AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER](
-    address
-  ).catch((e: Error) => {
-    debug("Failed while calling", AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER);
+  const res = await contract.call(method, [address]).catch((e: Error) => {
+    debug("Failed while calling", method);
     throw Error(e.message);
   });
 
