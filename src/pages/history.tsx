@@ -9,7 +9,9 @@ const HistoryPage = () => {
 
   return (
     <>
-      <Typography variant="h4">History</Typography>
+      <Typography sx={{ mb: 2 }} variant="h4">
+        History
+      </Typography>
       <TradeHistory />
     </>
   );

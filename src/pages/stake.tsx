@@ -17,7 +17,7 @@ const StakePage = () => {
           style={{ textDecoration: "none", color: "inherit" }}
           to="/staking-explained"
         >
-          <Typography variant="h4" sx={{ display: "inline" }}>
+          <Typography variant="h4" sx={{ mb: 2, display: "inline" }}>
             Stake Capital <Info />
           </Typography>
         </RouterLink>
