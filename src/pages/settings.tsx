@@ -9,7 +9,9 @@ const Settings = () => {
 
   return (
     <>
-      <Typography variant="h4">Settings</Typography>
+      <Typography sx={{ mb: 2 }} variant="h4">
+        Settings
+      </Typography>
       <Typography sx={{ maxWidth: "66ch" }}>
         The settings are stored in the localStorage - they are persistent per
         device and only if the usage of local storage is available.

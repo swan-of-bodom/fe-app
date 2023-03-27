@@ -12,6 +12,7 @@ import { Controller } from "./Controller";
 import { CssBaseline } from "@mui/material";
 import { MultiDialog } from "./components/MultiDialog/MultiDialog";
 import { Toast } from "./components/Toast/Toast";
+import HistoryPage from "./pages/history";
 
 const App = () => (
   <Provider store={store}>
@@ -28,6 +29,7 @@ const App = () => (
               path="/staking-explained"
               element={<StakingExplainedPage />}
             />
+            <Route path="/history" element={<HistoryPage />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
