@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { useAccount } from "../../hooks/useAccount";
 import { QueryKeys } from "../../queries/keys";
@@ -6,6 +7,7 @@ import {
   ITradeHistory,
   ITradeHistoryBundle,
 } from "../../types/history";
+import { LoadingAnimation } from "../loading";
 import { BundlesDisplay } from "./BundleDisplay";
 import { fetchHistoricalData } from "./fetchHistoricalData";
 
@@ -50,15 +52,17 @@ const TradeHistoryWithAddress = ({ address }: PropsAddress) => {
   );
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <LoadingAnimation />;
   }
 
   if (isError) {
-    return <p>Failed</p>;
+    return (
+      <Typography>Something went wrong, please try again later</Typography>
+    );
   }
 
-  if (!data) {
-    return <p>No trade data</p>;
+  if (!data?.length) {
+    return <Typography>We do not have any data on your past trades</Typography>;
   }
 
   const bundles = generateBundles(data);
