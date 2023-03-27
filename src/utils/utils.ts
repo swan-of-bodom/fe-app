@@ -44,7 +44,18 @@ export const weiTo64x61 = (wei: string): string => {
   return res;
 };
 
-export const timestampToReadableDate = (ts: number): string => {
+export const timestampToReadableDate = (ts: number): string =>
+  new Intl.DateTimeFormat("default", {
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    timeZoneName: "short",
+  }).format(ts);
+
+export const timestampToRichDate = (ts: number): string => {
   const d = new Date(ts);
   return d.getDate() + ". " + (d.getMonth() + 1) + ". " + d.getFullYear();
 };
@@ -90,6 +101,8 @@ export const digitsByType = (type: OptionType) =>
   isCall(type) ? ETH_DIGITS : USD_DIGITS;
 
 export const toHex = (v: BN) => "0x" + v.toString(16);
+
+export const hexToBN = (v: string): BN => new BN(v.substring(2), "hex");
 
 export const assert = (condition: boolean, message?: string): void => {
   if (!condition) {
