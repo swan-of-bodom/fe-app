@@ -66,12 +66,12 @@ export const getToApprove = (
 
   if (isCall(type)) {
     // short call - locked capital minus premia with slippage
-    return shortCall(size, premia);
+    return shortCall(size, premiaWithSlippage);
   }
 
   // short put - locked capital minus premia with slippage
   // locked capital is size * strike price
-  return shortPut(size, premia, strike);
+  return shortPut(size, premiaWithSlippage, strike);
 };
 
 export const longInteger = (n: Decimal, digits: number): BN => {
