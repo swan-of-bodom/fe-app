@@ -84,4 +84,4 @@ export const USD_BASE_VALUE = new BN(10).pow(new BN(USD_DIGITS));
 export const BASE_MATH_64_61 = new BN(2).pow(new BN(61));
 export const USD_PRECISSION = 1000;
 
-export const API_URL = "https://demo-carmine-api-b72kfmj3xa-ey.a.run.app/api/";
+export const API_URL = "https://api.carmine-dev.eu/api/";
