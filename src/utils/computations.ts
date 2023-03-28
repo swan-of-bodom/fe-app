@@ -4,6 +4,7 @@ import { Decimal } from "../types/units";
 import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
 import { store } from "../redux/store";
 import { isCall, isLong } from "./utils";
+import { debug } from "./debugger";
 
 type GetApproveAmount = (size: number, premia: BN, strike?: number) => BN;
 
@@ -57,21 +58,22 @@ export const getToApprove = (
   premia: BN,
   strike?: number
 ): BN => {
-  const premiaWithSlippage = getPremiaWithSlippage(premia, side, false);
+  const longPremia = getPremiaWithSlippage(premia, side, true);
+  const shortPremia = getPremiaWithSlippage(premia, side, false);
 
   if (isLong(side)) {
     // long call / long put - premia with slippage
-    return premiaWithSlippage;
+    return longPremia;
   }
 
   if (isCall(type)) {
     // short call - locked capital minus premia with slippage
-    return shortCall(size, premia);
+    return shortCall(size, shortPremia);
   }
 
   // short put - locked capital minus premia with slippage
   // locked capital is size * strike price
-  return shortPut(size, premia, strike);
+  return shortPut(size, shortPremia, strike);
 };
 
 export const longInteger = (n: Decimal, digits: number): BN => {
