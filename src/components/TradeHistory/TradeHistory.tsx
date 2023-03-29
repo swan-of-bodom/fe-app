@@ -2,47 +2,12 @@ import { Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { useAccount } from "../../hooks/useAccount";
 import { QueryKeys } from "../../queries/keys";
-import {
-  ITradeData,
-  ITradeHistory,
-  ITradeHistoryBundle,
-} from "../../types/history";
 import { LoadingAnimation } from "../loading";
-import { BundlesDisplay } from "./BundleDisplay";
+import { TransactionTable } from "./TransactionDisplay";
 import { fetchHistoricalData } from "./fetchHistoricalData";
 
 type PropsAddress = {
   address: string;
-};
-
-const generateBundles = (history: ITradeHistory[]): ITradeHistoryBundle[] => {
-  const bundles = history.reduce((acc, v) => {
-    const {
-      timestamp,
-      action,
-      caller,
-      capital_transfered,
-      option_tokens_minted,
-      option,
-    } = v;
-    const history: ITradeData = {
-      timestamp,
-      action,
-      caller,
-      capital_transfered,
-      option_tokens_minted,
-    };
-    if (acc.some((other) => v.option.eq(other.option))) {
-      acc.find((other) => v.option.eq(other.option))?.history.push(history);
-    } else {
-      acc.push({ option, history: [history] });
-    }
-    return acc;
-  }, [] as ITradeHistoryBundle[]);
-
-  return bundles.sort(
-    (a, b) => b.option.parsed.maturity - a.option.parsed.maturity
-  );
 };
 
 const TradeHistoryWithAddress = ({ address }: PropsAddress) => {
@@ -65,9 +30,9 @@ const TradeHistoryWithAddress = ({ address }: PropsAddress) => {
     return <Typography>We do not have any data on your past trades</Typography>;
   }
 
-  const bundles = generateBundles(data);
+  const sorted = data.sort((a, b) => b.timestamp - a.timestamp);
 
-  return <BundlesDisplay bundles={bundles} />;
+  return <TransactionTable transactions={sorted} />;
 };
 
 export const TradeHistory = () => {

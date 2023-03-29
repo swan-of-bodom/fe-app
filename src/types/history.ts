@@ -25,8 +25,3 @@ export interface ITradeData {
 export interface ITradeHistory extends ITradeData {
   option: OptionClass;
 }
-
-export interface ITradeHistoryBundle {
-  option: OptionClass;
-  history: ITradeData[];
-}

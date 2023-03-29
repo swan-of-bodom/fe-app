@@ -55,6 +55,15 @@ export const timestampToReadableDate = (ts: number): string =>
     timeZoneName: "short",
   }).format(ts);
 
+export const timestampToShortTimeDate = (ts: number): string =>
+  new Intl.DateTimeFormat("default", {
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).format(ts);
+
 export const timestampToRichDate = (ts: number): string => {
   const d = new Date(ts);
   return d.getDate() + ". " + (d.getMonth() + 1) + ". " + d.getFullYear();
