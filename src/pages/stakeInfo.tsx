@@ -51,7 +51,7 @@ const StakingExplainedPage = () => {
       <br />
       <Typography>
         You can find more information{" "}
-        <Link href="https://docs.carmine.finance/carmine-options-amm/how-to-use-app/adding-removing-liquidity-to-from-pools">
+        <Link href="https://docs.carmine.finance/carmine-options-amm/mechanics-basic-overview/liquidity-pools">
           in our documentation.
         </Link>
       </Typography>
