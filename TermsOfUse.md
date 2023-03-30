@@ -96,7 +96,7 @@ When accessing and using the Interface you must not:
 
 Simplified, you cannot breach these Terms or any Applicable Law and you cannot act unfairly, fraudulently or otherwise criminally.
 
-DISCLAIMERS
+## DISCLAIMERS
 
 You understand that the Protocol is not controled by us. We do not have access to your private key and cannot initiate an interaction with your crypto assets. We are not responsible for any activities that you engage in when using your wallet, or the Interface.
 
