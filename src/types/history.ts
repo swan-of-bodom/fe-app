@@ -1,17 +1,21 @@
 import { OptionClass } from "./../classes/Option/index";
 
-export interface RawTradeHistory {
-  timestamp: number;
-  action: string;
-  caller: string;
-  capital_transfered: string;
-  option_tokens_minted: string;
+export interface RawOptionHistory {
   option_side: number;
   maturity: number;
   strike_price: string;
   quote_token_address: string;
   base_token_address: string;
   option_type: number;
+}
+
+export interface RawTradeHistory {
+  timestamp: number;
+  action: string;
+  caller: string;
+  capital_transfered: string;
+  option_tokens_minted: string;
+  option: RawOptionHistory | null;
 }
 
 export interface ITradeData {
@@ -23,5 +27,5 @@ export interface ITradeData {
 }
 
 export interface ITradeHistory extends ITradeData {
-  option: OptionClass;
+  option: OptionClass | null;
 }

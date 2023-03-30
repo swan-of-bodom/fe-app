@@ -47,20 +47,45 @@ const SingleItem = ({ data }: SingleItemProps) => {
         </TableCell>
         <TableCell>{timestampToShortTimeDate(timestamp * 1000)}</TableCell>
         <TableCell align="left">{action}</TableCell>
-        <TableCell align="left">{`${option.sideAsText} ${option.typeAsText}`}</TableCell>
-        <TableCell align="left">{`$${option.parsed.strikePrice}`}</TableCell>
-        <TableCell align="left">{size}</TableCell>
+        {option ? (
+          <>
+            <TableCell align="left">{`${option.sideAsText} ${option.typeAsText}`}</TableCell>
+            <TableCell align="left">{`$${option.parsed.strikePrice}`}</TableCell>
+            <TableCell align="left">{size}</TableCell>
+          </>
+        ) : (
+          <>
+            <TableCell align="left"></TableCell>
+            <TableCell align="left"></TableCell>
+            <TableCell align="left">{size}</TableCell>
+          </>
+        )}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h5" gutterBottom component="div">
-                Option
-              </Typography>
-              <Typography variant="body1" gutterBottom component="div">
-                {option.display}
-              </Typography>
+              {option ? (
+                <>
+                  {" "}
+                  <Typography variant="h5" gutterBottom component="div">
+                    Option
+                  </Typography>
+                  <Typography variant="body1" gutterBottom component="div">
+                    {option.display}
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Typography variant="h5" gutterBottom component="div">
+                    Liquidity
+                  </Typography>
+                  <Typography variant="body1" gutterBottom component="div">
+                    thanks for providing liquidity
+                  </Typography>
+                </>
+              )}
             </Box>
           </Collapse>
         </TableCell>

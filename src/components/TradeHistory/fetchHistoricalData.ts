@@ -1,3 +1,4 @@
+import { RawOptionHistory } from "./../../types/history";
 import { OptionClass } from "./../../classes/Option/index";
 import { QueryFunctionContext } from "react-query";
 import { API_URL } from "../../constants/amm";
@@ -6,25 +7,33 @@ import { debug, LogTypes } from "../../utils/debugger";
 import BN from "bn.js";
 import { hexToBN } from "../../utils/utils";
 
+const getOptionFromHistory = (option: RawOptionHistory | null) => {
+  if (!option) {
+    return null;
+  }
+  const raw = {
+    option_side: new BN(option.option_side),
+    maturity: new BN(option.maturity),
+    strike_price: hexToBN(option.strike_price),
+    quote_token_address: hexToBN(option.quote_token_address),
+    base_token_address: hexToBN(option.base_token_address),
+    option_type: new BN(option.option_type),
+  };
+  return new OptionClass({ raw });
+};
+
 const parseHostoricDataResponse = (data: RawTradeHistory[]): ITradeHistory[] =>
   data.map((v) => {
-    const raw = {
-      option_side: new BN(v.option_side),
-      maturity: new BN(v.maturity),
-      strike_price: hexToBN(v.strike_price),
-      quote_token_address: hexToBN(v.quote_token_address),
-      base_token_address: hexToBN(v.base_token_address),
-      option_type: new BN(v.option_type),
-    };
+    const option = getOptionFromHistory(v.option);
     const {
-      action,
       timestamp,
+      action,
       caller,
       capital_transfered,
       option_tokens_minted,
     } = v;
     return {
-      option: new OptionClass({ raw }),
+      option: option,
       timestamp,
       action,
       caller,
