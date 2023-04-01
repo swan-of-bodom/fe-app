@@ -82,7 +82,9 @@ const SingleItem = ({ data }: SingleItemProps) => {
                     Liquidity
                   </Typography>
                   <Typography variant="body1" gutterBottom component="div">
-                    thanks for providing liquidity
+                    {action === "DepositLiquidity"
+                      ? "Liquidity has been transfered into the liquidity pool"
+                      : "Liquidity has been removed from the liquidity pool and transfered into your wallet"}
                   </Typography>
                 </>
               )}
