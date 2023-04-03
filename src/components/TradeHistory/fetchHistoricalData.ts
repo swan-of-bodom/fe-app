@@ -33,6 +33,7 @@ const parseHostoricDataResponse = (data: RawTradeHistory[]): ITradeHistory[] =>
       option_tokens_minted,
     } = v;
     return {
+      liquidity_pool: v.liquidity_pool,
       option: option,
       timestamp,
       action,

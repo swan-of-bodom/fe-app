@@ -28,7 +28,8 @@ type SingleItemProps = {
 
 const SingleItem = ({ data }: SingleItemProps) => {
   const [open, setOpen] = useState(false);
-  const { option, timestamp, action, option_tokens_minted } = data;
+  const { option, liquidity_pool, timestamp, action, option_tokens_minted } =
+    data;
   const size = shortInteger(
     hexToBN(option_tokens_minted).toString(10),
     ETH_DIGITS
@@ -55,7 +56,7 @@ const SingleItem = ({ data }: SingleItemProps) => {
           </>
         ) : (
           <>
-            <TableCell align="left"></TableCell>
+            <TableCell align="left">{liquidity_pool}</TableCell>
             <TableCell align="left"></TableCell>
             <TableCell align="left">{size}</TableCell>
           </>
@@ -105,7 +106,7 @@ export const TransactionTable = ({ transactions }: TransactionTableProps) => {
             <TableCell></TableCell>
             <TableCell>Date</TableCell>
             <TableCell align="left">Action</TableCell>
-            <TableCell align="left">Option</TableCell>
+            <TableCell align="left">Option/Pool</TableCell>
             <TableCell align="left">Strike Price</TableCell>
             <TableCell align="left">Size</TableCell>
           </TableRow>
