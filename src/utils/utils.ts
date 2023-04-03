@@ -1,14 +1,18 @@
+import { NetworkName } from "./../types/network";
 import BN from "bn.js";
 import {
   ETH_DIGITS,
   USD_BASE_VALUE,
   USD_DIGITS,
   getTokenAddresses,
+  API_URL_MAINNET,
+  API_URL_TESTNET,
 } from "../constants/amm";
 import { Theme } from "@mui/system";
 import { ThemeVariants } from "../style/themes";
 import { OptionSide, OptionType } from "../types/options";
 import { TESTNET_CHAINID } from "../constants/starknet";
+import { store } from "../redux/store";
 
 export const isNonEmptyArray = (v: unknown): v is Array<any> =>
   !!(v && Array.isArray(v) && v.length > 0);
@@ -145,6 +149,11 @@ export const getStarkscanUrl = ({
   // fallback
   return "";
 };
+
+export const getApiUrl = () =>
+  store.getState().network.network.name === NetworkName.Mainnet
+    ? API_URL_MAINNET
+    : API_URL_TESTNET;
 
 export const addressElision = (address: string, n: number = 5): string => {
   if (address.length < 2 * n) {

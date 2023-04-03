@@ -21,7 +21,14 @@ export const networkProviderOptionsMap = new Map<NetworkName, ProviderOptions>([
   [NetworkName.Devnet, devnetOptions],
   [NetworkName.Testnet, testnetOptions],
   [NetworkName.Testdev, testnetOptions],
-  [NetworkName.Mainnet, testnetOptions], // TODO: add mainnet
+  [
+    NetworkName.Mainnet,
+    {
+      sequencer: {
+        network: "mainnet-alpha",
+      },
+    },
+  ],
 ]);
 
 export const getProviderByNetwork = (network: NetworkName): Provider =>

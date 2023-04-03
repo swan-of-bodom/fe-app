@@ -41,9 +41,13 @@ export const NetworkSwitch = () => {
           {isDev ? (
             <MenuItem value={NetworkName.Testdev}>Testdev</MenuItem>
           ) : null}
-          <MenuItem disabled={true} value={NetworkName.Mainnet}>
-            Mainnet - comming soon!
-          </MenuItem>
+          {isDev ? (
+            <MenuItem value={NetworkName.Mainnet}>Mainnet</MenuItem>
+          ) : (
+            <MenuItem disabled={true} value={NetworkName.Mainnet}>
+              Mainnet - comming soon!
+            </MenuItem>
+          )}
         </Select>
       </FormControl>
     </Box>

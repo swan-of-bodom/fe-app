@@ -1,7 +1,7 @@
+import { getApiUrl } from "./../../utils/utils";
 import { RawOptionHistory } from "./../../types/history";
 import { OptionClass } from "./../../classes/Option/index";
 import { QueryFunctionContext } from "react-query";
-import { API_URL } from "../../constants/amm";
 import { ITradeHistory, RawTradeHistory } from "../../types/history";
 import { debug, LogTypes } from "../../utils/debugger";
 import BN from "bn.js";
@@ -56,7 +56,9 @@ export const fetchHistoricalData = async ({
     );
   }
 
-  const data = await fetch(`${API_URL}trade-history?address=${walletAddress}`)
+  const data = await fetch(
+    `${getApiUrl()}trade-history?address=${walletAddress}`
+  )
     .then((res) => res.json())
     .then((v) => {
       if (v?.status === "success") {
