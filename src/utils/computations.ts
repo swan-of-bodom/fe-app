@@ -4,7 +4,6 @@ import { Decimal } from "../types/units";
 import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
 import { store } from "../redux/store";
 import { isCall, isLong } from "./utils";
-import { debug } from "./debugger";
 
 type GetApproveAmount = (size: number, premia: BN, strike?: number) => BN;
 
