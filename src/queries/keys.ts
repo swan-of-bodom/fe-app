@@ -3,4 +3,5 @@ export enum QueryKeys {
   position = "POSITIONS",
   stake = "STAKED_CAPITAL",
   premia = "GET_PREMIA",
+  tradeHistory = "TRADE_HISTORY",
 }

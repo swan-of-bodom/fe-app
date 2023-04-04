@@ -22,7 +22,7 @@ const StakingExplainedPage = () => {
     <Box sx={containerStyle}>
       <RouterLink style={linkStyle} to="/staking">
         <ArrowBack />{" "}
-        <Typography sx={{ paddingLeft: 2 }} variant="h4">
+        <Typography sx={{ pl: 2 }} variant="h4">
           Staking Explained
         </Typography>
       </RouterLink>

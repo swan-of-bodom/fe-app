@@ -12,31 +12,51 @@ import { Controller } from "./Controller";
 import { CssBaseline } from "@mui/material";
 import { MultiDialog } from "./components/MultiDialog/MultiDialog";
 import { Toast } from "./components/Toast/Toast";
+import HistoryPage from "./pages/history";
+import TermsAndConditions from "./pages/termsAndConditions";
+import { useState } from "react";
 
-const App = () => (
-  <Provider store={store}>
-    <Controller>
-      <CssBaseline />
-      <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<TradePage />} />
-            <Route path="/trade" element={<TradePage />} />
-            <Route path="/position" element={<BalancePage />} />
-            <Route path="/staking" element={<StakePage />} />
-            <Route
-              path="/staking-explained"
-              element={<StakingExplainedPage />}
-            />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </Router>
-      <MultiDialog />
-      <Toast />
-    </Controller>
-  </Provider>
-);
+const App = () => {
+  const [check, rerender] = useState(false);
+
+  // TODO: remove when T&C should be in prod
+  const isProd = window.location.hostname === "window.location.hostname";
+
+  const acceptedTermsAndConditions =
+    window.localStorage.getItem("carmine-terms-&-conditions") === "accepted";
+
+  return (
+    <Provider store={store}>
+      <Controller>
+        <CssBaseline />
+        {isProd || acceptedTermsAndConditions ? (
+          <>
+            <Router>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<TradePage />} />
+                  <Route path="/trade" element={<TradePage />} />
+                  <Route path="/position" element={<BalancePage />} />
+                  <Route path="/staking" element={<StakePage />} />
+                  <Route
+                    path="/staking-explained"
+                    element={<StakingExplainedPage />}
+                  />
+                  <Route path="/history" element={<HistoryPage />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+            </Router>
+            <MultiDialog />
+            <Toast />
+          </>
+        ) : (
+          <TermsAndConditions check={check} rerender={rerender} />
+        )}
+      </Controller>
+    </Provider>
+  );
+};
 
 export default App;

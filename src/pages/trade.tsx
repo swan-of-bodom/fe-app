@@ -10,7 +10,9 @@ const TradePage = () => {
 
   return (
     <>
-      <Typography variant="h4">Buy Options</Typography>
+      <Typography sx={{ mb: 2 }} variant="h4">
+        Buy Options
+      </Typography>
       <ComplexGraph />
       <TradeTable />
     </>

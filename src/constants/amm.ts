@@ -36,6 +36,19 @@ const testdevTokens = {
     "0x077868613647e04cfa11593f628598e93071d52ca05f1e89a70add4bb3470897",
 };
 
+const mainnetTokens = {
+  ETH_ADDRESS:
+    "0x049D36570D4e46f48e99674bd3fcc84644DdD6b96F7C741B1562B82f9e004dC7",
+  USD_ADDRESS:
+    "0x053C91253BC9682c04929cA02ED00b3E423f6710D2ee7e0D5EBB06F3eCF368A8",
+  MAIN_CONTRACT_ADDRESS:
+    "0x8b6421cec0b0853b79c93330905603636024b2a08151ea289084fad35fc81a",
+  LPTOKEN_CONTRACT_ADDRESS:
+    "0x8d7253c73fde5f8418a40cb66a09dc304bef463dc1e9d14004c9651554136b",
+  LPTOKEN_CONTRACT_ADDRESS_PUT:
+    "0x1ea6feaa5823e9dc6a75b7afbd21342b77d69525106ea929a24f91649addd16",
+};
+
 const devnetTokens = {
   ETH_ADDRESS: process.env.REACT_APP_ETH_ADDRESS!,
   USD_ADDRESS: process.env.REACT_APP_USD_ADDRESS!,
@@ -49,7 +62,7 @@ const networkToTokenMap = new Map<NetworkName, TokenAddresses>([
   [NetworkName.Devnet, devnetTokens],
   [NetworkName.Testnet, testnetTokens],
   [NetworkName.Testdev, testdevTokens],
-  [NetworkName.Mainnet, testnetTokens], // TODO: update when mainnet
+  [NetworkName.Mainnet, mainnetTokens],
 ]);
 
 export const getTokenAddresses = (): TokenAddresses => {
@@ -83,3 +96,6 @@ export const ETH_BASE_VALUE = new BN(10).pow(new BN(ETH_DIGITS));
 export const USD_BASE_VALUE = new BN(10).pow(new BN(USD_DIGITS));
 export const BASE_MATH_64_61 = new BN(2).pow(new BN(61));
 export const USD_PRECISSION = 1000;
+
+export const API_URL_TESTNET = "https://api.carmine-dev.eu/api/";
+export const API_URL_MAINNET = "https://api.carmine.finance/api/";

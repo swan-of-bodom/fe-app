@@ -7,7 +7,9 @@ const NotFound = () => {
   });
   return (
     <>
-      <Typography variant="h4">404</Typography>
+      <Typography sx={{ mb: 2 }} variant="h4">
+        404
+      </Typography>
       <Typography>Sorry, this page does not exist</Typography>
     </>
   );

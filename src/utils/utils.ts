@@ -1,14 +1,18 @@
+import { NetworkName } from "./../types/network";
 import BN from "bn.js";
 import {
   ETH_DIGITS,
   USD_BASE_VALUE,
   USD_DIGITS,
   getTokenAddresses,
+  API_URL_MAINNET,
+  API_URL_TESTNET,
 } from "../constants/amm";
 import { Theme } from "@mui/system";
 import { ThemeVariants } from "../style/themes";
 import { OptionSide, OptionType } from "../types/options";
 import { TESTNET_CHAINID } from "../constants/starknet";
+import { store } from "../redux/store";
 
 export const isNonEmptyArray = (v: unknown): v is Array<any> =>
   !!(v && Array.isArray(v) && v.length > 0);
@@ -44,7 +48,27 @@ export const weiTo64x61 = (wei: string): string => {
   return res;
 };
 
-export const timestampToReadableDate = (ts: number): string => {
+export const timestampToReadableDate = (ts: number): string =>
+  new Intl.DateTimeFormat("default", {
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    timeZoneName: "short",
+  }).format(ts);
+
+export const timestampToShortTimeDate = (ts: number): string =>
+  new Intl.DateTimeFormat("default", {
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).format(ts);
+
+export const timestampToRichDate = (ts: number): string => {
   const d = new Date(ts);
   return d.getDate() + ". " + (d.getMonth() + 1) + ". " + d.getFullYear();
 };
@@ -91,6 +115,8 @@ export const digitsByType = (type: OptionType) =>
 
 export const toHex = (v: BN) => "0x" + v.toString(16);
 
+export const hexToBN = (v: string): BN => new BN(v.substring(2), "hex");
+
 export const assert = (condition: boolean, message?: string): void => {
   if (!condition) {
     throw new Error("Assertion failed " + message);
@@ -123,6 +149,11 @@ export const getStarkscanUrl = ({
   // fallback
   return "";
 };
+
+export const getApiUrl = () =>
+  store.getState().network.network.name === NetworkName.Mainnet
+    ? API_URL_MAINNET
+    : API_URL_TESTNET;
 
 export const addressElision = (address: string, n: number = 5): string => {
   if (address.length < 2 * n) {
