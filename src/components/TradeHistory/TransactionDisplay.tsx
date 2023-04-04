@@ -1,4 +1,4 @@
-import { ETH_DIGITS } from "../../constants/amm";
+import { ETH_DIGITS, USD_DIGITS } from "../../constants/amm";
 import { ITradeHistory } from "../../types/history";
 import { shortInteger } from "../../utils/computations";
 import { hexToBN, timestampToShortTimeDate } from "../../utils/utils";
@@ -13,6 +13,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { InfoOutlined, KeyboardArrowUp } from "@mui/icons-material";
@@ -26,10 +27,24 @@ type SingleItemProps = {
   data: ITradeHistory;
 };
 
+const capitalToReadable = (type: string, capital: string) => {
+  const n = hexToBN(capital).toString(10);
+  if (type === "Call") {
+    return "ETH " + shortInteger(n, ETH_DIGITS);
+  }
+  return "$" + shortInteger(n, USD_DIGITS);
+};
+
 const SingleItem = ({ data }: SingleItemProps) => {
   const [open, setOpen] = useState(false);
-  const { option, liquidity_pool, timestamp, action, option_tokens_minted } =
-    data;
+  const {
+    option,
+    liquidity_pool,
+    timestamp,
+    action,
+    option_tokens_minted,
+    capital_transfered,
+  } = data;
   const size = shortInteger(
     hexToBN(option_tokens_minted).toString(10),
     ETH_DIGITS
@@ -58,7 +73,14 @@ const SingleItem = ({ data }: SingleItemProps) => {
           <>
             <TableCell align="left">{liquidity_pool}</TableCell>
             <TableCell align="left"></TableCell>
-            <TableCell align="left">{size}</TableCell>
+            <Tooltip
+              title={capitalToReadable(
+                liquidity_pool as string,
+                capital_transfered
+              )}
+            >
+              <TableCell align="left">{size}</TableCell>
+            </Tooltip>
           </>
         )}
       </TableRow>
@@ -108,7 +130,12 @@ export const TransactionTable = ({ transactions }: TransactionTableProps) => {
             <TableCell align="left">Action</TableCell>
             <TableCell align="left">Option/Pool</TableCell>
             <TableCell align="left">Strike Price</TableCell>
-            <TableCell align="left">Size</TableCell>
+            <Tooltip
+              placement="top"
+              title="Amount of tokens transfered divided by 10^18"
+            >
+              <TableCell align="left">Size</TableCell>
+            </Tooltip>
           </TableRow>
         </TableHead>
         <TableBody>
