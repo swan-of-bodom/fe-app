@@ -3,13 +3,14 @@ import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useState } from "react";
 
 const cookieName = "carmine-alpha-warning";
+const HIDE_TIME_MS = 12 * 60 * 60 * 1000; // 12 hours in ms
 
 const shouldShow = () =>
   !document.cookie.split(";").some((c) => c.includes(`${cookieName}=`));
 
 const setShowCookie = () => {
   const expires = new Date();
-  expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000);
+  expires.setTime(expires.getTime() + HIDE_TIME_MS);
   document.cookie =
     `${cookieName}=closed;expires=` + expires.toUTCString() + ";path=/";
 };
