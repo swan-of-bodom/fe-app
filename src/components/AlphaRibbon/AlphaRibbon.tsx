@@ -2,11 +2,26 @@ import { Close } from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useState } from "react";
 
+const cookieName = "carmine-alpha-warning";
+
+const shouldShow = () =>
+  !document.cookie.split(";").some((c) => c.includes(`${cookieName}=`));
+
+const setShowCookie = () => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000);
+  document.cookie =
+    `${cookieName}=closed;expires=` + expires.toUTCString() + ";path=/";
+};
+
 export const AlphaRibbon = () => {
   const theme = useTheme();
-  const [show, setShow] = useState<"" | "hidden">("");
+  const [show, setShow] = useState(shouldShow());
 
-  const handleClose = () => setShow("hidden");
+  const handleClose = () => {
+    setShowCookie();
+    setShow(false);
+  };
 
   const style = {
     position: "fixed",
@@ -17,7 +32,7 @@ export const AlphaRibbon = () => {
     p: 2,
     pt: 1,
     background: theme.palette.primary.main,
-    visibility: show,
+    visibility: show ? "" : "hidden",
   };
   return (
     <Box sx={style}>
