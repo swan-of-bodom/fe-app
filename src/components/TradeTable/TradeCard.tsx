@@ -133,7 +133,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     debounce((size: number, controller: AbortController) => {
       fetchModalData(size, option, account, controller.signal)
         .then((v) => {
-          if (v && v[0] && v[1]) {
+          if (v && v[0]) {
             setData(v[0]);
             setBalance(v[1]);
             setLoading(false);
@@ -156,8 +156,6 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
-
-  debug("USER BALANCE", balance);
 
   const { strikePrice, maturity, optionType, optionSide } = option.parsed;
   const side = isLong(optionSide) ? "Long" : "Short";

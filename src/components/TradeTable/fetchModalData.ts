@@ -7,7 +7,6 @@ import { debug } from "../../utils/debugger";
 import { isCall } from "../../utils/utils";
 import { financialDataEth, financialDataUsd } from "../../utils/computations";
 import { math64x61toDecimal } from "../../utils/units";
-import { getWallet } from "../../network/account";
 import { getUserBalance } from "../../calls/balanceOf";
 
 const ethData = {
@@ -64,7 +63,11 @@ export const fetchModalData = async (
     throw Error("Failed fetching");
   });
 
-  debug("Fetched ETH and premia", { ethInUsd, fetchedPremia });
+  debug("Fetched ETH, premia and user balance", {
+    ethInUsd,
+    fetchedPremia,
+    userBalance,
+  });
 
   if (signal.aborted) {
     return [null, undefined];
