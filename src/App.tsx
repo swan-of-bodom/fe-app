@@ -15,6 +15,7 @@ import { Toast } from "./components/Toast/Toast";
 import HistoryPage from "./pages/history";
 import TermsAndConditions from "./pages/termsAndConditions";
 import { useState } from "react";
+import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
 
 const App = () => {
   const [check, rerender] = useState(false);
@@ -50,6 +51,7 @@ const App = () => {
             </Router>
             <MultiDialog />
             <Toast />
+            <AlphaRibbon />
           </>
         ) : (
           <TermsAndConditions check={check} rerender={rerender} />
