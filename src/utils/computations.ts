@@ -57,21 +57,19 @@ export const getToApprove = (
   premia: BN,
   strike?: number
 ): BN => {
-  const premiaWithSlippage = getPremiaWithSlippage(premia, side, false);
-
   if (isLong(side)) {
     // long call / long put - premia with slippage
-    return premiaWithSlippage;
+    return premia;
   }
 
   if (isCall(type)) {
     // short call - locked capital minus premia with slippage
-    return shortCall(size, premiaWithSlippage);
+    return shortCall(size, premia);
   }
 
   // short put - locked capital minus premia with slippage
   // locked capital is size * strike price
-  return shortPut(size, premiaWithSlippage, strike);
+  return shortPut(size, premia, strike);
 };
 
 export const longInteger = (n: Decimal, digits: number): BN => {

@@ -23,14 +23,13 @@ export const balanceOfUsdc = async (account: AccountInterface): Promise<BN> => {
   return balanceFromTokenAddress(account, USD_ADDRESS);
 };
 
-export const balance = async (
-  account?: AccountInterface
+export const getUserBalance = async (
+  account: AccountInterface
 ): Promise<UserBalance | undefined> => {
-  if (!account) {
-    return;
-  }
+  console.time("balance");
   const promises = [balanceOfEth(account), balanceOfUsdc(account)];
   const values = await Promise.all(promises);
+  console.timeEnd("balance");
   return {
     eth: values[0],
     usd: values[1],

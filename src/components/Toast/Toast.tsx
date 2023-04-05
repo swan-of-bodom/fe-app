@@ -44,7 +44,7 @@ export const Toast = () => {
       <Alert
         onClose={handleClose}
         severity={toastTypeToSeverity(type)}
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", maxWidth: "400px" }}
       >
         {message}
       </Alert>
