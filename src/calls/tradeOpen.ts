@@ -5,11 +5,7 @@ import { Option } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug } from "../utils/debugger";
 import BN from "bn.js";
-import {
-  getPremiaWithSlippage,
-  getToApprove,
-  longInteger,
-} from "../utils/computations";
+import { getToApprove } from "../utils/computations";
 import { convertSizeToInt } from "../utils/conversions";
 
 import AmmAbi from "../abi/amm_abi.json";
@@ -31,11 +27,6 @@ export const approveAndTradeOpen = async (
     getTokenAddresses();
   const { optionType, optionSide } = option.parsed;
 
-  debug("Approve and TradeOpen", {
-    size: longInteger(size, 18).toString(10),
-    premia: premia.toString(10),
-  });
-
   const toApprove = getToApprove(
     optionType,
     optionSide,
@@ -43,12 +34,6 @@ export const approveAndTradeOpen = async (
     premia,
     parseInt(option.parsed.strikePrice, 10)
   );
-
-  debug("to Approve:", {
-    size,
-    premia: new BN(premia).toString(10),
-    toApprove: new BN(toApprove!).toString(10),
-  });
 
   if (!toApprove) {
     throw Error("Failed getting to approve");
@@ -72,10 +57,7 @@ export const approveAndTradeOpen = async (
     entrypoint: AMM_METHODS.TRADE_OPEN,
     calldata: [
       ...rawOptionToCalldata(option.raw, convertedSize),
-      intToMath64x61(
-        getPremiaWithSlippage(premia, optionSide, false).toString(10),
-        digitsByType(optionType)
-      ),
+      intToMath64x61(premia.toString(10), digitsByType(optionType)),
       deadline,
     ],
   };

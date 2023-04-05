@@ -13,7 +13,7 @@ import { useState, useCallback, useEffect } from "react";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
 import { ETH_DIGITS, USD_DIGITS } from "../../constants/amm";
 import { FinancialData, OptionWithPremia } from "../../types/options";
-import { longInteger } from "../../utils/computations";
+import { getPremiaWithSlippage, longInteger } from "../../utils/computations";
 import { debug, LogTypes } from "../../utils/debugger";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { timestampToReadableDate, isCall, isLong } from "../../utils/utils";
@@ -24,6 +24,7 @@ import { ProfitTable, ProfitTableSkeleton } from "./ProfitTable";
 import { useAccount } from "../../hooks/useAccount";
 import { showToast } from "../../redux/actions";
 import { ToastType } from "../../redux/reducers/ui";
+import { UserBalance } from "../../types/wallet";
 
 type TemplateProps = {
   title: string;
@@ -119,6 +120,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
   const [inputText, setInputText] = useState<string>("1");
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<FinancialData | null>(null);
+  const [balance, setBalance] = useState<UserBalance | undefined>(undefined);
   const [tradeState, updateTradeState] = useState<TradeState>({
     failed: false,
     processing: false,
@@ -129,10 +131,11 @@ export const TradeCard = ({ option }: TradeCardProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const callWithDelay = useCallback(
     debounce((size: number, controller: AbortController) => {
-      fetchModalData(size, option, controller.signal)
+      fetchModalData(size, option, account, controller.signal)
         .then((v) => {
-          if (v) {
-            setData(v);
+          if (v && v[0] && v[1]) {
+            setData(v[0]);
+            setBalance(v[1]);
             setLoading(false);
           }
         })
@@ -153,6 +156,8 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
+
+  debug("USER BALANCE", balance);
 
   const { strikePrice, maturity, optionType, optionSide } = option.parsed;
   const side = isLong(optionSide) ? "Long" : "Short";
@@ -210,6 +215,12 @@ export const TradeCard = ({ option }: TradeCardProps) => {
       return;
     }
 
+    const premiaWithSlippage = getPremiaWithSlippage(
+      currentPremia,
+      option.parsed.optionSide,
+      false
+    );
+
     updateTradeState({ failed: false, processing: true });
 
     const cb = () => {
@@ -217,8 +228,8 @@ export const TradeCard = ({ option }: TradeCardProps) => {
       showToast("Successfully opened position", ToastType.Success);
     };
 
-    approveAndTradeOpen(account, option, amount, currentPremia, cb).catch(() =>
-      updateTradeState({ failed: true, processing: false })
+    approveAndTradeOpen(account, option, amount, premiaWithSlippage, cb).catch(
+      () => updateTradeState({ failed: true, processing: false })
     );
   };
 
