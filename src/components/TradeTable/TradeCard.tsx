@@ -210,6 +210,11 @@ export const TradeCard = ({ option }: TradeCardProps) => {
       return;
     }
 
+    if (!balance) {
+      debug(LogTypes.WARN, "No user balance");
+      return;
+    }
+
     if (!amount) {
       showToast("Cannot trade size 0", ToastType.Warn);
       return;
@@ -228,9 +233,14 @@ export const TradeCard = ({ option }: TradeCardProps) => {
       showToast("Successfully opened position", ToastType.Success);
     };
 
-    approveAndTradeOpen(account, option, amount, premiaWithSlippage, cb).catch(
-      () => updateTradeState({ failed: true, processing: false })
-    );
+    approveAndTradeOpen(
+      account,
+      option,
+      amount,
+      premiaWithSlippage,
+      balance,
+      cb
+    ).catch(() => updateTradeState({ failed: true, processing: false }));
   };
 
   const buttonText = () =>

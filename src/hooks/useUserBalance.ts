@@ -1,4 +1,3 @@
-import { AccountInterface } from "starknet";
 import { getUserBalance } from "./../calls/balanceOf";
 import { useState, useEffect } from "react";
 import { UserBalance } from "../types/wallet";

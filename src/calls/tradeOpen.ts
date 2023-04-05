@@ -1,11 +1,18 @@
-import { addTx, markTxAsDone, markTxAsFailed } from "./../redux/actions";
+import { ETH_DIGITS, USD_DIGITS } from "./../constants/amm";
+import { UserBalance } from "./../types/wallet";
+import {
+  addTx,
+  markTxAsDone,
+  markTxAsFailed,
+  showToast,
+} from "./../redux/actions";
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { AccountInterface } from "starknet";
 import { Option } from "../types/options";
 import { rawOptionToCalldata } from "../utils/parseOption";
 import { debug } from "../utils/debugger";
 import BN from "bn.js";
-import { getToApprove } from "../utils/computations";
+import { getToApprove, shortInteger } from "../utils/computations";
 import { convertSizeToInt } from "../utils/conversions";
 
 import AmmAbi from "../abi/amm_abi.json";
@@ -15,12 +22,14 @@ import { invalidatePositions } from "../queries/client";
 import { digitsByType, isCall } from "../utils/utils";
 import { intToMath64x61 } from "../utils/units";
 import { TransactionActions } from "../redux/reducers/transactions";
+import { ToastType } from "../redux/reducers/ui";
 
 export const approveAndTradeOpen = async (
   account: AccountInterface,
   option: Option,
   size: number,
   premia: BN,
+  balance: UserBalance,
   cb: () => void
 ): Promise<boolean> => {
   const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
@@ -35,8 +44,36 @@ export const approveAndTradeOpen = async (
     parseInt(option.parsed.strikePrice, 10)
   );
 
-  if (!toApprove) {
-    throw Error("Failed getting to approve");
+  if (isCall(optionType)) {
+    // Call - make sure user has enough ETH
+    if (balance.eth.lt(toApprove)) {
+      const [has, needs] = [
+        shortInteger(balance.eth.toString(10), ETH_DIGITS),
+        shortInteger(toApprove.toString(10), ETH_DIGITS),
+      ];
+      showToast(
+        `To open this position you need ETH${needs.toFixed(
+          4
+        )}, but you only have ETH${has.toFixed(4)}`,
+        ToastType.Warn
+      );
+      throw Error("Not enough funds");
+    }
+  } else {
+    // Put - make sure user has enough USD
+    if (balance.usd.lt(toApprove)) {
+      const [has, needs] = [
+        shortInteger(balance.usd.toString(10), USD_DIGITS),
+        shortInteger(toApprove.toString(10), USD_DIGITS),
+      ];
+      showToast(
+        `To open this position you need $${needs.toFixed(
+          4
+        )}, but you only have $${has.toFixed(4)}`,
+        ToastType.Warn
+      );
+      throw Error("Not enough funds");
+    }
   }
 
   const convertedSize = convertSizeToInt(size);
