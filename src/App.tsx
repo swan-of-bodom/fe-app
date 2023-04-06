@@ -16,21 +16,18 @@ import HistoryPage from "./pages/history";
 import TermsAndConditions from "./pages/termsAndConditions";
 import { useState } from "react";
 import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
+import { isCookieSet } from "./utils/cookies";
 
 const App = () => {
   const [check, rerender] = useState(false);
 
-  // TODO: remove when T&C should be in prod
-  const isProd = window.location.hostname === "window.location.hostname";
-
-  const acceptedTermsAndConditions =
-    window.localStorage.getItem("carmine-terms-&-conditions") === "accepted";
+  const acceptedTermsAndConditions = isCookieSet("carmine-t&c");
 
   return (
     <Provider store={store}>
       <Controller>
         <CssBaseline />
-        {isProd || acceptedTermsAndConditions ? (
+        {acceptedTermsAndConditions ? (
           <>
             <Router>
               <Layout>
