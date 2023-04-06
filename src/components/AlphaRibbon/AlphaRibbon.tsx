@@ -1,19 +1,15 @@
 import { Close } from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useState } from "react";
+import { isCookieSet, setCookieWithExpiry } from "../../utils/cookies";
 
 const cookieName = "carmine-alpha-warning";
 const HIDE_TIME_MS = 12 * 60 * 60 * 1000; // 12 hours in ms
 
-const shouldShow = () =>
-  !document.cookie.split(";").some((c) => c.includes(`${cookieName}=`));
+const shouldShow = () => !isCookieSet(cookieName);
 
-const setShowCookie = () => {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + HIDE_TIME_MS);
-  document.cookie =
-    `${cookieName}=closed;expires=` + expires.toUTCString() + ";path=/";
-};
+const setShowCookie = () =>
+  setCookieWithExpiry(cookieName, "closed", HIDE_TIME_MS);
 
 export const AlphaRibbon = () => {
   const theme = useTheme();

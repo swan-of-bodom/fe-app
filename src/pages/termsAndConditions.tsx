@@ -1,12 +1,15 @@
 import Typography from "@mui/material/Typography";
 import { Box, Button, Link, useTheme } from "@mui/material";
 import { useEffect } from "react";
+import { setCookieWithExpiry } from "../utils/cookies";
+
+const HIDE_TIME_MS = 12 * 60 * 60 * 1000; // 12 hours in ms
 
 const storeTermsAndConditions = (
   check: boolean,
   rerender: (b: boolean) => void
 ) => {
-  window.localStorage.setItem("carmine-terms-&-conditions", "accepted");
+  setCookieWithExpiry("carmine-t&c", "accepted", HIDE_TIME_MS);
   rerender(!check);
 };
 
