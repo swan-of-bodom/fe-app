@@ -7,9 +7,33 @@ import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
 import { NetworkName } from "../types/network";
 import { updateSettings } from "../redux/actions";
+import { useState } from "react";
+import { useInterval } from "../hooks/useInterval";
+
+const RELEAST_DATE_MS = 1680872400000;
+
+const remainingSeconds = () => {
+  const s = Math.floor((RELEAST_DATE_MS - new Date().getTime()) / 1000);
+
+  return s > 0 ? s : 0;
+};
+
+const clock = (s: number) => {
+  const hours = Math.floor(s / 3600);
+  const minutes = Math.floor((s - hours * 3600) / 60);
+  const seconds = s - hours * 3600 - minutes * 60;
+
+  return `${hours < 10 ? "0" + hours : hours}:${
+    minutes < 10 ? "0" + minutes : minutes
+  }:${seconds < 10 ? "0" + seconds : seconds}`;
+};
 
 export const NetworkSwitch = () => {
   const currentEnv = useSelector((s: RootState) => s.settings.network);
+  const s = remainingSeconds();
+  const [count, setCount] = useState(s);
+
+  useInterval(() => setCount(count - 1), count > 0 ? 1000 : null);
 
   const handleChange = (e: SelectChangeEvent) => {
     const current = e.target.value as NetworkName;
@@ -34,18 +58,17 @@ export const NetworkSwitch = () => {
           label="Network"
           onChange={handleChange}
         >
-          {process.env.NODE_ENV === "development" ? (
+          {process.env.NODE_ENV === "development" && (
             <MenuItem value={NetworkName.Devnet}>Devnet</MenuItem>
-          ) : null}
+          )}
           <MenuItem value={NetworkName.Testnet}>Testnet</MenuItem>
-          {isDev ? (
-            <MenuItem value={NetworkName.Testdev}>Testdev</MenuItem>
-          ) : null}
-          {isDev ? (
-            <MenuItem value={NetworkName.Mainnet}>Mainnet</MenuItem>
+          {isDev && <MenuItem value={NetworkName.Testdev}>Testdev</MenuItem>}
+          {isDev && <MenuItem value={NetworkName.Mainnet}>Mainnet</MenuItem>}
+          {count <= 0 ? (
+            <MenuItem value={NetworkName.Mainnet}>✨Mainnet✨</MenuItem>
           ) : (
             <MenuItem disabled={true} value={NetworkName.Mainnet}>
-              Mainnet - comming soon!
+              {`Mainnet - ${clock(count)}`}
             </MenuItem>
           )}
         </Select>
