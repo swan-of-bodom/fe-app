@@ -12,6 +12,10 @@ const HistoryPage = () => {
       <Typography sx={{ mb: 2 }} variant="h4">
         History
       </Typography>
+      <Typography>
+        Please be advised that it takes 5-20 minutes for a transaction to
+        appear.
+      </Typography>
       <TradeHistory />
     </>
   );

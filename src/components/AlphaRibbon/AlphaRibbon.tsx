@@ -49,7 +49,7 @@ export const AlphaRibbon = () => {
       <Typography>
         Carmine Protocol is built on top of StarkNet, which is currently in
         Alpha. As such, delays may occur, and catastrophic bugs may lurk. Thank
-        you for trying our app at this early stage.
+        you for using the app at this early stage.
       </Typography>
     </Box>
   );
