@@ -8,7 +8,7 @@ const SETTINGS_KEY = "app-settings";
 const DEFAULT_SETTINGS: Settings = {
   autoconnect: true,
   theme: ThemeVariants.dark,
-  network: NetworkName.Testnet,
+  network: NetworkName.Mainnet,
   slippage: 5,
 };
 
