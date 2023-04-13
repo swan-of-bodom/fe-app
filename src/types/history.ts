@@ -14,7 +14,7 @@ export interface RawTradeHistory {
   action: string;
   caller: string;
   capital_transfered: string;
-  option_tokens_minted: string;
+  tokens_minted: string;
   option: RawOptionHistory | null;
   liquidity_pool: string | null;
 }
@@ -24,7 +24,7 @@ export interface ITradeData {
   action: string;
   caller: string;
   capital_transfered: string;
-  option_tokens_minted: string;
+  tokens_minted: string;
 }
 
 export interface ITradeHistory extends ITradeData {

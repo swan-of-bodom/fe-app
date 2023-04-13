@@ -25,13 +25,7 @@ const getOptionFromHistory = (option: RawOptionHistory | null) => {
 const parseHostoricDataResponse = (data: RawTradeHistory[]): ITradeHistory[] =>
   data.map((v) => {
     const option = getOptionFromHistory(v.option);
-    const {
-      timestamp,
-      action,
-      caller,
-      capital_transfered,
-      option_tokens_minted,
-    } = v;
+    const { timestamp, action, caller, capital_transfered, tokens_minted } = v;
     return {
       liquidity_pool: v.liquidity_pool,
       option: option,
@@ -39,7 +33,7 @@ const parseHostoricDataResponse = (data: RawTradeHistory[]): ITradeHistory[] =>
       action,
       caller,
       capital_transfered,
-      option_tokens_minted,
+      tokens_minted,
     };
   });
 
@@ -57,7 +51,7 @@ export const fetchHistoricalData = async ({
   }
 
   const data = await fetch(
-    `${getApiUrl()}trade-history?address=${walletAddress}`
+    `${getApiUrl()}transactions?address=${walletAddress}`
   )
     .then((res) => res.json())
     .then((v) => {
