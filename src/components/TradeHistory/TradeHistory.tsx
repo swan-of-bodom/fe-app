@@ -5,6 +5,7 @@ import { QueryKeys } from "../../queries/keys";
 import { LoadingAnimation } from "../loading";
 import { TransactionTable } from "./TransactionDisplay";
 import { fetchHistoricalData } from "./fetchHistoricalData";
+import { debug } from "../../utils/debugger";
 
 type PropsAddress = {
   address: string;
@@ -31,6 +32,8 @@ const TradeHistoryWithAddress = ({ address }: PropsAddress) => {
   }
 
   const sorted = data.sort((a, b) => b.timestamp - a.timestamp);
+
+  debug(sorted);
 
   return <TransactionTable transactions={sorted} />;
 };

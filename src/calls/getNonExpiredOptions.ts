@@ -2,7 +2,7 @@ import { getApiUrl } from "./../utils/utils";
 import BN from "bn.js";
 
 export const getNonExpiredOptions = async (): Promise<BN[]> =>
-  fetch(`${getApiUrl()}all-non-expired`)
+  fetch(`${getApiUrl()}live-options`)
     .then((res) => res.json())
     .then((res) => {
       if (res?.status !== "success" || !res?.data?.length) {

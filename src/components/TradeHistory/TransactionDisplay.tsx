@@ -42,13 +42,10 @@ const SingleItem = ({ data }: SingleItemProps) => {
     liquidity_pool,
     timestamp,
     action,
-    option_tokens_minted,
+    tokens_minted,
     capital_transfered,
   } = data;
-  const size = shortInteger(
-    hexToBN(option_tokens_minted).toString(10),
-    ETH_DIGITS
-  );
+  const size = shortInteger(hexToBN(tokens_minted).toString(10), ETH_DIGITS);
   return (
     <>
       <TableRow>
