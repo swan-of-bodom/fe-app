@@ -7,6 +7,8 @@ import {
   getTokenAddresses,
   API_URL_MAINNET,
   API_URL_TESTNET,
+  DEV_API_URL_MAINNET,
+  DEV_API_URL_TESTNET,
 } from "../constants/amm";
 import { Theme } from "@mui/system";
 import { ThemeVariants } from "../style/themes";
@@ -150,10 +152,14 @@ export const getStarkscanUrl = ({
   return "";
 };
 
-export const getApiUrl = () =>
-  store.getState().network.network.name === NetworkName.Mainnet
-    ? API_URL_MAINNET
-    : API_URL_TESTNET;
+export const getApiUrl = () => {
+  const isProd = window.location.hostname === "app.carmine.finance";
+  const network = store.getState().network.network.name;
+  const [testnet, mainnet] = isProd
+    ? [API_URL_TESTNET, API_URL_MAINNET]
+    : [DEV_API_URL_TESTNET, DEV_API_URL_MAINNET];
+  return network === NetworkName.Mainnet ? mainnet : testnet;
+};
 
 export const addressElision = (address: string, n: number = 5): string => {
   if (address.length < 2 * n) {
