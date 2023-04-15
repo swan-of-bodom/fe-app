@@ -22,7 +22,7 @@ import {
   ParsedOptionWithPosition,
   ParsedOptionWithPremia,
 } from "../types/options";
-import { ETH_DIGITS } from "../constants/amm";
+import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
 
 type Props =
   | {
@@ -185,6 +185,10 @@ export class Option {
       toHex(this.raw.base_token_address),
       toHex(this.raw.option_type),
     ];
+  }
+
+  get digits(): number {
+    return this.isCall ? ETH_DIGITS : USD_DIGITS;
   }
 }
 
