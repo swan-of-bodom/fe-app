@@ -1,5 +1,5 @@
-import { OptionClass } from "./Option/Option";
-import { OptionWithPositionClass } from "./Option/OptionWithPosition";
-import { OptionWithPremiaClass } from "./Option/OptionWithPremia";
+import { Option } from "./Option/Option";
+import { OptionWithPosition } from "./Option/OptionWithPosition";
+import { OptionWithPremia } from "./Option/OptionWithPremia";
 
-export { OptionClass, OptionWithPositionClass, OptionWithPremiaClass };
+export { Option, OptionWithPosition, OptionWithPremia };

@@ -11,8 +11,7 @@ import {
   RawOptionWithPosition,
   RawOptionWithPremia,
 } from "../../types/options";
-import { OptionWithPositionClass } from "./OptionWithPosition";
-import { OptionWithPremiaClass } from "./OptionWithPremia";
+import { OptionWithPosition, OptionWithPremia } from "../Option";
 
 export interface RawProps {
   raw: RawOptionBase;
@@ -24,7 +23,7 @@ export interface ParsedProps {
 
 type Props = RawProps | ParsedProps;
 
-export class OptionClass {
+export class Option {
   raw: RawOptionBase;
   parsed: ParsedOptionBase;
   id: string;
@@ -71,35 +70,36 @@ export class OptionClass {
     return JSON.stringify(this.parsed, Object.keys(this.parsed).sort());
   }
 
-  eq(other: OptionClass): boolean {
+  eq(other: Option): boolean {
     return this.id === other.id;
   }
 
-  addPosition(
-    position_size: BN,
-    value_of_position: BN
-  ): OptionWithPositionClass {
+  isFresh(): boolean {
+    return this.parsed.maturity * 1000 > new Date().getTime();
+  }
+
+  addPosition(position_size: BN, value_of_position: BN): OptionWithPosition {
     const raw: RawOptionWithPosition = {
       ...this.raw,
       position_size,
       value_of_position,
     };
-    return new OptionWithPositionClass({ raw });
+    return new OptionWithPosition({ raw });
   }
 
-  addPremia(premia: BN): OptionWithPremiaClass {
+  addPremia(premia: BN): OptionWithPremia {
     const raw: RawOptionWithPremia = {
       ...this.raw,
       premia,
     };
-    return new OptionWithPremiaClass({ raw });
+    return new OptionWithPremia({ raw });
   }
 
   ////////////
   // GETTERS
   ////////////
 
-  get otherSideOption(): OptionClass {
+  get otherSideOption(): Option {
     const otherSide =
       this.parsed.optionSide === OptionSide.Long
         ? OptionSide.Short
@@ -108,7 +108,7 @@ export class OptionClass {
       ...this.parsed,
       optionSide: otherSide,
     };
-    return new OptionClass({ parsed });
+    return new Option({ parsed });
   }
 
   get isExpired(): boolean {

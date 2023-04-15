@@ -4,14 +4,14 @@ import {
   ParsedOptionWithPosition,
   RawOptionWithPosition,
 } from "../../types/options";
-import { OptionClass } from "./Option";
+import { Option } from "../Option";
 import { ETH_DIGITS } from "../../constants/amm";
 
 interface Props {
   raw: RawOptionWithPosition;
 }
 
-export class OptionWithPositionClass extends OptionClass {
+export class OptionWithPosition extends Option {
   raw: RawOptionWithPosition;
   parsed: ParsedOptionWithPosition;
   id: string;

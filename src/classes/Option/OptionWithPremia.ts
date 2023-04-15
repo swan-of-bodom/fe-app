@@ -3,7 +3,7 @@ import {
   ParsedOptionWithPremia,
   RawOptionWithPremia,
 } from "../../types/options";
-import { OptionClass } from "./Option";
+import { Option } from "../Option";
 import { digitsByType } from "../../utils/utils";
 import { bnToOptionType } from "../../utils/conversions";
 
@@ -11,7 +11,7 @@ interface Props {
   raw: RawOptionWithPremia;
 }
 
-export class OptionWithPremiaClass extends OptionClass {
+export class OptionWithPremia extends Option {
   raw: RawOptionWithPremia;
   parsed: ParsedOptionWithPremia;
   id: string;
