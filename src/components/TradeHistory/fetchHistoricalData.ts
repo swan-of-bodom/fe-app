@@ -1,6 +1,6 @@
 import { getApiUrl } from "./../../utils/utils";
 import { RawOptionHistory } from "./../../types/history";
-import { OptionClass } from "./../../classes/Option/index";
+import { OptionClass } from "../../classes/Option";
 import { QueryFunctionContext } from "react-query";
 import { ITradeHistory, RawTradeHistory } from "../../types/history";
 import { debug, LogTypes } from "../../utils/debugger";

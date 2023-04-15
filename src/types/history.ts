@@ -1,4 +1,4 @@
-import { OptionClass } from "./../classes/Option/index";
+import { OptionClass } from "../classes/Option/Option";
 
 export interface RawOptionHistory {
   option_side: number;

@@ -1,4 +1,4 @@
-import { decimalToMath64x61 } from "./../../utils/units";
+import { decimalToMath64x61 } from "../../utils/units";
 import BN from "bn.js";
 import { bnToOptionType, bnToOptionSide } from "../../utils/conversions";
 import { math64x61toDecimal } from "../../utils/units";
@@ -8,15 +8,19 @@ import {
   ParsedOptionBase,
   OptionSide,
   OptionType,
-} from "./../../types/options";
+  RawOptionWithPosition,
+  RawOptionWithPremia,
+} from "../../types/options";
+import { OptionWithPositionClass } from "./OptionWithPosition";
+import { OptionWithPremiaClass } from "./OptionWithPremia";
 
-type RawProps = {
+export interface RawProps {
   raw: RawOptionBase;
-};
+}
 
-type ParsedProps = {
+export interface ParsedProps {
   parsed: ParsedOptionBase;
-};
+}
 
 type Props = RawProps | ParsedProps;
 
@@ -71,6 +75,26 @@ export class OptionClass {
     return this.id === other.id;
   }
 
+  addPosition(
+    position_size: BN,
+    value_of_position: BN
+  ): OptionWithPositionClass {
+    const raw: RawOptionWithPosition = {
+      ...this.raw,
+      position_size,
+      value_of_position,
+    };
+    return new OptionWithPositionClass({ raw });
+  }
+
+  addPremia(premia: BN): OptionWithPremiaClass {
+    const raw: RawOptionWithPremia = {
+      ...this.raw,
+      premia,
+    };
+    return new OptionWithPremiaClass({ raw });
+  }
+
   ////////////
   // GETTERS
   ////////////
@@ -98,6 +122,22 @@ export class OptionClass {
 
   get sideAsText(): string {
     return this.parsed.optionSide === OptionSide.Long ? "Long" : "Short";
+  }
+
+  get isCall(): boolean {
+    return this.parsed.optionType === OptionType.Call;
+  }
+
+  get isPut(): boolean {
+    return this.parsed.optionType === OptionType.Put;
+  }
+
+  get isLong(): boolean {
+    return this.parsed.optionSide === OptionSide.Long;
+  }
+
+  get isShort(): boolean {
+    return this.parsed.optionSide === OptionSide.Short;
   }
 
   get display(): string {
