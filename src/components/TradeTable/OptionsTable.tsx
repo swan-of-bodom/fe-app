@@ -5,7 +5,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { OptionWithPremia } from "../../types/options";
+import { OptionWithPremia } from "../../classes/Option";
 import { OptionModal } from "./OptionModal";
 import OptionsTableItem from "./OptionTableItem";
 import { useState } from "react";

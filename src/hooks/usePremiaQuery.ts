@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { getPremia } from "../calls/getPremia";
-import { Option } from "../types/options";
+import { Option } from "../classes/Option";
 import { Math64x61 } from "../types/units";
 import { QueryKeys } from "../queries/keys";
 

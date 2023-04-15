@@ -11,11 +11,7 @@ import { useCloseOption } from "../../hooks/useCloseOption";
 import { usePremiaQuery } from "../../hooks/usePremiaQuery";
 import { debug } from "../../utils/debugger";
 import { CustomDialogTitle } from "../MultiDialog/MultiDialog";
-import {
-  OptionSide,
-  OptionType,
-  OptionWithPosition,
-} from "../../types/options";
+import { OptionSide, OptionType } from "../../types/options";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { useDebounce } from "../../hooks/useDebounce";
 import { math64x61toDecimal, math64x61ToInt } from "../../utils/units";
@@ -27,6 +23,7 @@ import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
 import { useEth } from "../../hooks/useCurrency";
 import { Math64x61 } from "../../types/units";
+import { OptionWithPosition } from "../../classes/Option";
 
 const premiaToDisplayValue = (
   premia: number,

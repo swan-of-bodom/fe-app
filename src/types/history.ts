@@ -1,4 +1,4 @@
-import { OptionClass } from "../classes/Option/Option";
+import { Option } from "../classes/Option";
 
 export interface RawOptionHistory {
   option_side: number;
@@ -28,6 +28,6 @@ export interface ITradeData {
 }
 
 export interface ITradeHistory extends ITradeData {
-  option: OptionClass | null;
+  option: Option | null;
   liquidity_pool: string | null;
 }

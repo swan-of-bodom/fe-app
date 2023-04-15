@@ -1,13 +1,14 @@
 import { AccountInterface } from "starknet";
 import { UserBalance } from "./../../types/wallet";
 import { getEthInUsd } from "../../calls/currencies";
-import { FinancialData, OptionWithPremia } from "../../types/options";
+import { FinancialData } from "../../types/options";
 import { getPremia } from "../../calls/getPremia";
 import { debug } from "../../utils/debugger";
 import { isCall } from "../../utils/utils";
 import { financialDataEth, financialDataUsd } from "../../utils/computations";
 import { math64x61toDecimal } from "../../utils/units";
 import { getUserBalance } from "../../calls/balanceOf";
+import { OptionWithPremia } from "../../classes/Option";
 
 const ethData = {
   ethInUsd: 0,

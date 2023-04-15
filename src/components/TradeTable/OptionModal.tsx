@@ -1,5 +1,5 @@
 import { Modal, Paper, useTheme } from "@mui/material";
-import { OptionWithPremia } from "../../types/options";
+import { OptionWithPremia } from "../../classes/Option";
 import { isDarkTheme } from "../../utils/utils";
 import { TradeCard } from "./TradeCard";
 

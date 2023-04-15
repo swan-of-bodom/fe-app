@@ -64,11 +64,6 @@ export interface ParsedOptionBase {
   optionType: OptionType;
 }
 
-export interface Option {
-  raw: RawOptionBase;
-  parsed: ParsedOptionBase;
-}
-
 export interface RawOptionWithPosition extends RawOptionBase {
   position_size: Uint256BN;
   value_of_position: Math64x61BN;
@@ -79,11 +74,6 @@ export interface ParsedOptionWithPosition extends ParsedOptionBase {
   positionValue: Decimal;
 }
 
-export interface OptionWithPosition {
-  raw: RawOptionWithPosition;
-  parsed: ParsedOptionWithPosition;
-}
-
 export interface RawOptionWithPremia extends RawOptionBase {
   premia: Math64x61BN;
 }
@@ -91,11 +81,6 @@ export interface RawOptionWithPremia extends RawOptionBase {
 export interface ParsedOptionWithPremia extends ParsedOptionBase {
   premiaBase: string;
   premiaDecimal: Decimal;
-}
-
-export interface OptionWithPremia {
-  raw: RawOptionWithPremia;
-  parsed: ParsedOptionWithPremia;
 }
 
 export type FinancialData = {

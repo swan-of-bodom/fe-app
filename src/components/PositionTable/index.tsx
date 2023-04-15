@@ -6,8 +6,7 @@ import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { NoContent } from "../TableNoContent";
 import { LoadingAnimation } from "../loading";
-import { OptionWithPosition } from "../../types/options";
-import { isFresh } from "../../utils/parseOption";
+import { OptionWithPosition } from "../../classes/Option";
 import { TableElement } from "./TableElement";
 import { LiveItem } from "./LiveItem";
 import { InMoneyItem } from "./InMoneyItem";
@@ -85,18 +84,18 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
     );
   }
 
-  const liveOptions = data.filter(({ raw }: OptionWithPosition) =>
-    isFresh(raw)
+  const liveOptions = data.filter(
+    (option: OptionWithPosition) => option.isFresh
   );
 
   const inOptions = data.filter(
-    ({ raw, parsed }: OptionWithPosition) =>
-      !isFresh(raw) && !!parsed.positionValue
+    (option: OptionWithPosition) =>
+      !option.isFresh && !!option.parsed.positionValue
   );
 
   const outOptions = data.filter(
-    ({ raw, parsed }: OptionWithPosition) =>
-      !isFresh(raw) && !parsed.positionValue
+    (option: OptionWithPosition) =>
+      !option.isFresh && !option.parsed.positionValue
   );
 
   return (

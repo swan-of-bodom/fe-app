@@ -1,11 +1,11 @@
 import { getApiUrl } from "./../../utils/utils";
 import { RawOptionHistory } from "./../../types/history";
-import { OptionClass } from "../../classes/Option";
 import { QueryFunctionContext } from "react-query";
 import { ITradeHistory, RawTradeHistory } from "../../types/history";
 import { debug, LogTypes } from "../../utils/debugger";
 import BN from "bn.js";
 import { hexToBN } from "../../utils/utils";
+import { Option } from "../../classes/Option";
 
 const getOptionFromHistory = (option: RawOptionHistory | null) => {
   if (!option) {
@@ -19,7 +19,7 @@ const getOptionFromHistory = (option: RawOptionHistory | null) => {
     base_token_address: hexToBN(option.base_token_address),
     option_type: new BN(option.option_type),
   };
-  return new OptionClass({ raw });
+  return new Option({ raw });
 };
 
 const parseHostoricDataResponse = (data: RawTradeHistory[]): ITradeHistory[] =>

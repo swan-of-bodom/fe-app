@@ -12,7 +12,7 @@ import BN from "bn.js";
 import { useState, useCallback, useEffect } from "react";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
 import { ETH_DIGITS, USD_DIGITS } from "../../constants/amm";
-import { FinancialData, OptionWithPremia } from "../../types/options";
+import { FinancialData } from "../../types/options";
 import { getPremiaWithSlippage, longInteger } from "../../utils/computations";
 import { debug, LogTypes } from "../../utils/debugger";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
@@ -25,6 +25,7 @@ import { useAccount } from "../../hooks/useAccount";
 import { showToast } from "../../redux/actions";
 import { ToastType } from "../../redux/reducers/ui";
 import { UserBalance } from "../../types/wallet";
+import { OptionWithPremia } from "../../classes/Option";
 
 type TemplateProps = {
   title: string;
@@ -226,18 +227,13 @@ export const TradeCard = ({ option }: TradeCardProps) => {
 
     updateTradeState({ failed: false, processing: true });
 
-    const cb = () => {
-      updateTradeState({ failed: false, processing: false });
-      showToast("Successfully opened position", ToastType.Success);
-    };
-
     approveAndTradeOpen(
       account,
       option,
       amount,
       premiaWithSlippage,
       balance,
-      cb
+      updateTradeState
     ).catch(() => updateTradeState({ failed: true, processing: false }));
   };
 
