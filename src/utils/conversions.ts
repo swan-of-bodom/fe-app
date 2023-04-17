@@ -1,8 +1,9 @@
-import { OptionSide, OptionType, OptionWithPosition } from "../types/options";
+import { OptionSide, OptionType } from "../types/options";
 import BN from "bn.js";
 import { ETH_DIGITS } from "../constants/amm";
 import { uint256 } from "starknet";
 import { longInteger } from "./computations";
+import { OptionWithPosition } from "../classes/Option";
 
 export const getBaseAmountWei = (amount: number) =>
   longInteger(amount, 18).toString(16);

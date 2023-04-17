@@ -1,8 +1,6 @@
 import BN from "bn.js";
-import { Option } from "../../types/options";
-import { bnToOptionType, bnToOptionSide } from "../conversions";
-import { math64x61toDecimal } from "../units";
-import { toHex, assert } from "../utils";
+import { assert } from "../utils";
+import { Option } from "../../classes/Option";
 
 export const parseOption = (arr: BN[]): Option => {
   const expectedLength = 6;
@@ -18,21 +16,5 @@ export const parseOption = (arr: BN[]): Option => {
     option_type: arr[5],
   };
 
-  const optionType = bnToOptionType(raw.option_type);
-  const optionSide = bnToOptionSide(raw.option_side);
-  const maturity = new BN(raw.maturity).toNumber();
-  const strikePrice = String(math64x61toDecimal(raw.strike_price.toString(10)));
-  const quoteToken = toHex(raw.quote_token_address);
-  const baseToken = toHex(raw.base_token_address);
-
-  const parsed = {
-    optionSide,
-    optionType,
-    maturity,
-    strikePrice,
-    quoteToken,
-    baseToken,
-  };
-
-  return { raw, parsed };
+  return new Option({ raw });
 };

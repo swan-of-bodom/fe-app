@@ -11,47 +11,41 @@ import { useCloseOption } from "../../hooks/useCloseOption";
 import { usePremiaQuery } from "../../hooks/usePremiaQuery";
 import { debug } from "../../utils/debugger";
 import { CustomDialogTitle } from "../MultiDialog/MultiDialog";
-import {
-  OptionSide,
-  OptionType,
-  OptionWithPosition,
-} from "../../types/options";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { useDebounce } from "../../hooks/useDebounce";
 import { math64x61toDecimal, math64x61ToInt } from "../../utils/units";
 import BN from "bn.js";
-import { digitsByType, isCall } from "../../utils/utils";
 import { getPremiaWithSlippage, shortInteger } from "../../utils/computations";
 import { tradeClose } from "../../calls/tradeClose";
 import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
 import { useEth } from "../../hooks/useCurrency";
 import { Math64x61 } from "../../types/units";
+import { OptionWithPosition } from "../../classes/Option";
 
 const premiaToDisplayValue = (
   premia: number,
   ethInUsd: number,
-  max: number,
-  side: OptionSide,
-  type: OptionType
+  option: OptionWithPosition
 ) => {
-  switch (type + side) {
-    case OptionType.Call + OptionSide.Long:
-      return `$${(premia * ethInUsd).toFixed(2)}`;
-    case OptionType.Put + OptionSide.Long:
-      return `$${premia.toFixed(2)}`;
-    case OptionType.Call + OptionSide.Short:
-      return `$${((max - premia) * ethInUsd).toFixed(2)}`;
-    case OptionType.Put + OptionSide.Short:
-      return `$${(max * ethInUsd - premia).toFixed(2)}`;
-    default:
-      // unreachable
-      throw Error(`Invalid type or side ${type}, ${side}`);
+  // Long Call
+  if (option.isCall && option.isLong) {
+    return `$${(premia * ethInUsd).toFixed(2)}`;
   }
-};
-
-type Props = {
-  option: OptionWithPosition;
+  // Long Put
+  if (option.isPut && option.isLong) {
+    return `$${premia.toFixed(2)}`;
+  }
+  // Short Call
+  if (option.isCall && option.isShort) {
+    return `$${((option.parsed.positionSize - premia) * ethInUsd).toFixed(2)}`;
+  }
+  // Short Put
+  if (option.isPut && option.isShort) {
+    return `$${(option.parsed.positionSize * ethInUsd - premia).toFixed(2)}`;
+  }
+  // unreachable
+  throw Error('Could not get "premiaToDisplayValue"');
 };
 
 type TemplateProps = {
@@ -107,14 +101,14 @@ const Template = ({
   );
 };
 
+type Props = {
+  option: OptionWithPosition;
+};
+
 const WithOption = ({ option }: Props) => {
   const account = useAccount();
   const ethInUsd = useEth();
-  const {
-    positionSize: max,
-    optionSide: side,
-    optionType: type,
-  } = option.parsed;
+  const { positionSize: max, optionSide: side } = option.parsed;
   const [size, setSize] = useState<number>(max);
   const [inputText, setInputText] = useState<string>(String(max));
   const debouncedSize = useDebounce<number>(size);
@@ -136,7 +130,7 @@ const WithOption = ({ option }: Props) => {
     if (!account || !size) {
       debug("Could not trade close", {
         account,
-        raw: option?.raw,
+        option,
         size,
       });
       return;
@@ -148,7 +142,6 @@ const WithOption = ({ option }: Props) => {
   debug("usePremiaQuery", { status, data, error, isFetching });
 
   if (debouncedSize === 0) {
-    // loading...
     return (
       <Template
         handleChange={handleChange}
@@ -209,25 +202,22 @@ const WithOption = ({ option }: Props) => {
     );
   }
 
-  const digits = digitsByType(option.parsed.optionType);
   const premia = math64x61toDecimal(data);
   const premiaWithSlippage = shortInteger(
     getPremiaWithSlippage(
-      new BN(math64x61ToInt(data, digits)),
+      new BN(math64x61ToInt(data, option.digits)),
       side,
       true
     ).toString(10),
-    digits
+    option.digits
   );
   const slippage = store.getState().settings.slippage;
 
-  const displayPremia = premiaToDisplayValue(premia, ethInUsd, max, side, type);
+  const displayPremia = premiaToDisplayValue(premia, ethInUsd, option);
   const displayPremiaWithSlippage = premiaToDisplayValue(
     premiaWithSlippage,
     ethInUsd,
-    max,
-    side,
-    type
+    option
   );
 
   return (
@@ -293,8 +283,7 @@ export const ClosePosition = () => {
     );
   }
 
-  const type = isCall(option.parsed.optionType) ? "Call" : "Put";
-  const title = `$${option.parsed.strikePrice} ${type}`;
+  const title = `$${option.parsed.strikePrice} ${option.typeAsText}`;
 
   return (
     <>

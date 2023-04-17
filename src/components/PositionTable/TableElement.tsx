@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { NoContent } from "../TableNoContent";
-import { OptionWithPosition } from "../../types/options";
+import { OptionWithPosition } from "../../classes/Option";
 import { LoadingAnimation } from "../loading";
 
 type Props = {

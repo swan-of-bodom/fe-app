@@ -1,4 +1,4 @@
-import { OptionWithPremia } from "../../types/options";
+import { OptionWithPremia } from "../../classes/Option";
 import { isCall, timestampToReadableDate } from "../../utils/utils";
 import { Box, TableCell, TableRow, useTheme } from "@mui/material";
 import { ThemeVariants } from "../../style/themes";

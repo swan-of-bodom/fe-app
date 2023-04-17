@@ -1,7 +1,6 @@
-import { OptionSide, OptionType, OptionWithPremia } from "../../types/options";
+import { OptionSide, OptionType } from "../../types/options";
 import { Box, Button, Paper, TableContainer, useTheme } from "@mui/material";
 import { useState } from "react";
-import { isFresh } from "../../utils/parseOption";
 import OptionsTable from "./OptionsTable";
 import { isCall, isDarkTheme, isLong } from "../../utils/utils";
 import { LoadingAnimation } from "../loading";
@@ -11,6 +10,7 @@ import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { debug } from "../../utils/debugger";
 import { SlippageButton } from "../Slippage/SlippageButton";
+import { OptionWithPremia } from "../../classes/Option";
 
 const getText = (type: OptionType, side: OptionSide) =>
   `We currently do not have any ${isLong(side) ? "long" : "short"} ${
@@ -57,10 +57,7 @@ const TradeTable = () => {
 
   const filtered = data
     ? data.filter(
-        ({ raw, parsed }) =>
-          isFresh(raw) &&
-          parsed.optionSide === side &&
-          parsed.optionType === type
+        (option) => option.isFresh && option.isSide(side) && option.isType(type)
       )
     : [];
 

@@ -10,7 +10,7 @@ import {
 import { store } from "./store";
 import { Settings } from "../types/settings";
 import { NetworkState } from "../types/network";
-import { OptionWithPosition } from "../types/options";
+import { OptionWithPosition } from "../classes/Option";
 import {
   addTxReducer,
   setTxStatusReducer,

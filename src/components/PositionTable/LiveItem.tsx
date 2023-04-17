@@ -1,4 +1,4 @@
-import { OptionWithPosition } from "../../types/options";
+import { OptionWithPosition } from "../../classes/Option";
 import { isCall, isLong, timestampToReadableDate } from "../../utils/utils";
 import { Button, TableCell, TableRow, Tooltip } from "@mui/material";
 import { openCloseOptionDialog, setCloseOption } from "../../redux/actions";

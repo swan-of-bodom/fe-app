@@ -1,6 +1,6 @@
 import { Table, TableBody, TableRow, TableCell, Skeleton } from "@mui/material";
-import { OptionSide, OptionType } from "../../types/options";
-import { isCall } from "../../utils/utils";
+import { OptionWithPremia } from "../../classes/Option";
+import { debug } from "../../utils/debugger";
 
 type ProfitTableTemplateProps = {
   limited: string;
@@ -45,36 +45,33 @@ export const ProfitTableSkeleton = () => (
 );
 
 type ProfitTableProps = {
-  strikePrice: number;
+  option: OptionWithPremia;
   basePremia: number;
   premia: number;
-  side: OptionSide;
-  type: OptionType;
 };
 
 export const ProfitTable = ({
-  strikePrice,
+  option,
   basePremia,
   premia,
-  side,
-  type,
 }: ProfitTableProps) => {
-  const long = side === OptionSide.Long;
+  const numStrikePrice = parseFloat(option.parsed.strikePrice);
   const limited = "$" + premia.toFixed(2);
   const unlimited = "Unlimited";
   const breakEven =
     "$" +
-    (isCall(type)
-      ? strikePrice + basePremia
-      : strikePrice - basePremia
+    (option.isCall
+      ? numStrikePrice + basePremia
+      : numStrikePrice - basePremia
     ).toFixed(2);
+  debug({ numStrikePrice, strk: option.parsed.strikePrice, breakEven });
 
   return (
     <ProfitTableTemplate
       limited={limited}
       unlimited={unlimited}
       breakEven={breakEven}
-      isLong={long}
+      isLong={option.isLong}
     />
   );
 };
