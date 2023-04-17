@@ -113,15 +113,17 @@ export const shortInteger = (str: string, digits: number): Decimal => {
 };
 
 export const financialDataEth = (
-  basePremiaEth: number,
+  size: number,
   premiaEth: number,
   ethInUsd: number
 ): FinancialData => {
-  const basePremiaUsd = basePremiaEth * ethInUsd;
+  const basePremiaEth = premiaEth / size;
+  const premiaUsd = premiaEth * ethInUsd;
+  const basePremiaUsd = premiaUsd / size;
 
   return {
     premiaEth,
-    premiaUsd: premiaEth * ethInUsd,
+    premiaUsd,
     basePremiaEth,
     basePremiaUsd,
     ethInUsd,
@@ -129,14 +131,16 @@ export const financialDataEth = (
 };
 
 export const financialDataUsd = (
-  basePremiaUsd: number,
+  size: number,
   premiaUsd: number,
   ethInUsd: number
 ): FinancialData => {
-  const basePremiaEth = basePremiaUsd / ethInUsd;
+  const basePremiaUsd = premiaUsd / size;
+  const premiaEth = premiaUsd / ethInUsd;
+  const basePremiaEth = premiaEth / size;
 
   return {
-    premiaEth: premiaUsd / ethInUsd,
+    premiaEth,
     premiaUsd,
     basePremiaEth,
     basePremiaUsd,

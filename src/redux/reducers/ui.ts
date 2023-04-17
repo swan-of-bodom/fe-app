@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { OptionWithPosition } from "../../types/options";
+import { OptionWithPosition } from "../../classes/Option";
 
 export enum DialogContentElem {
   Wallet = "Wallet",

@@ -1,4 +1,4 @@
-import { OptionWithPosition } from "../../types/options";
+import { OptionWithPosition } from "../../classes/Option";
 import { debug } from "../../utils/debugger";
 import { isNonEmptyArray } from "../../utils/utils";
 import { QueryFunctionContext } from "react-query";

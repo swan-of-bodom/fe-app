@@ -8,12 +8,10 @@ import {
 } from "./../redux/actions";
 import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
 import { AccountInterface } from "starknet";
-import { Option } from "../types/options";
-import { rawOptionToCalldata } from "../utils/parseOption";
+import { Option } from "../classes/Option";
 import { debug } from "../utils/debugger";
 import BN from "bn.js";
 import { getToApprove, shortInteger } from "../utils/computations";
-import { convertSizeToInt } from "../utils/conversions";
 
 import AmmAbi from "../abi/amm_abi.json";
 import LpAbi from "../abi/lptoken_abi.json";
@@ -30,7 +28,13 @@ export const approveAndTradeOpen = async (
   size: number,
   premia: BN,
   balance: UserBalance,
-  cb: () => void
+  updateTradeState: ({
+    failed,
+    processing,
+  }: {
+    failed: boolean;
+    processing: boolean;
+  }) => void
 ): Promise<boolean> => {
   const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
     getTokenAddresses();
@@ -76,8 +80,6 @@ export const approveAndTradeOpen = async (
     }
   }
 
-  const convertedSize = convertSizeToInt(size);
-
   const approveArgs = {
     contractAddress: isCall(optionType) ? ETH_ADDRESS : USD_ADDRESS,
     entrypoint: AMM_METHODS.APPROVE,
@@ -93,7 +95,7 @@ export const approveAndTradeOpen = async (
     contractAddress: MAIN_CONTRACT_ADDRESS,
     entrypoint: AMM_METHODS.TRADE_OPEN,
     calldata: [
-      ...rawOptionToCalldata(option.raw, convertedSize),
+      ...option.tradeCalldata(size),
       intToMath64x61(premia.toString(10), digitsByType(optionType)),
       deadline,
     ],
@@ -118,11 +120,19 @@ export const approveAndTradeOpen = async (
       () => {
         markTxAsDone(hash);
         invalidatePositions();
-        cb();
+        updateTradeState({
+          failed: false,
+          processing: false,
+        });
+        showToast("Successfully opened position", ToastType.Success);
       },
       () => {
         markTxAsFailed(hash);
-        cb();
+        updateTradeState({
+          failed: true,
+          processing: false,
+        });
+        showToast("Failed to open position", ToastType.Error);
       }
     );
   } else {
