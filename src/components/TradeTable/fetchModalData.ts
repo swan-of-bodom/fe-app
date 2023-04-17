@@ -4,7 +4,6 @@ import { getEthInUsd } from "../../calls/currencies";
 import { FinancialData } from "../../types/options";
 import { getPremia } from "../../calls/getPremia";
 import { debug } from "../../utils/debugger";
-import { isCall } from "../../utils/utils";
 import { financialDataEth, financialDataUsd } from "../../utils/computations";
 import { math64x61toDecimal } from "../../utils/units";
 import { getUserBalance } from "../../calls/balanceOf";
@@ -74,14 +73,12 @@ export const fetchModalData = async (
     return [null, undefined];
   }
 
-  const { optionType, premiaDecimal } = option.parsed;
-
   const convertedPremia = math64x61toDecimal(fetchedPremia);
 
   return [
-    isCall(optionType)
-      ? financialDataEth(premiaDecimal, convertedPremia, ethInUsd)
-      : financialDataUsd(premiaDecimal, convertedPremia, ethInUsd),
+    option.isCall
+      ? financialDataEth(size, convertedPremia, ethInUsd)
+      : financialDataUsd(size, convertedPremia, ethInUsd),
     userBalance,
   ];
 };

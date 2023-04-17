@@ -261,9 +261,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
         ProfitTable({
           premia: data.premiaUsd,
           basePremia: data.basePremiaUsd,
-          strikePrice: parseFloat(strikePrice),
-          side: optionSide,
-          type: optionType,
+          option,
         })
       }
       BuyButton={BuyButton}
