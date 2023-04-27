@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContentText,
   IconButton,
+  Link,
 } from "@mui/material";
 import { isDarkTheme } from "../../utils/utils";
 import { useDialog } from "../../hooks/useDialog";
@@ -18,6 +19,7 @@ import { SlippageContent } from "../Slippage/SlippageContent";
 import { Close } from "@mui/icons-material";
 import { ClosePosition } from "../ClosePosition/ClosePosition";
 import { WalletInfo } from "../WalletInfo/WalletInfo";
+import { CallWido, PutWido } from "../WidoWidgetWrapper/WidoWidgetWrapper";
 
 const NetworkMismatch = () => (
   <>
@@ -30,6 +32,32 @@ const NetworkMismatch = () => (
         application. Please ensure that your wallet is connected to the same
         network as the app, or change the network that the app is using, in
         order to proceed.
+      </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button variant="contained" onClick={closeDialog} autoFocus>
+        Close
+      </Button>
+    </DialogActions>
+  </>
+);
+
+const MetamaskMissing = () => (
+  <>
+    <DialogTitle id="alert-dialog-title">Metamask wallet not found</DialogTitle>
+    <DialogContent>
+      <DialogContentText id="alert-dialog-description">
+        It appears that you do not have the Metamask wallet installed in your
+        browser.
+        <br />
+        In order to stake using Wido, it is necessary to have the Metamask
+        wallet.
+        <br />
+        To install it, please follow the instructions provided at{" "}
+        <Link target="_blank" href="https://metamask.io/">
+          metamask.io
+        </Link>
+        .
       </DialogContentText>
     </DialogContent>
     <DialogActions>
@@ -72,9 +100,10 @@ export const MultiDialog = () => {
   const theme = useTheme();
 
   const style = {
-    p: 2,
+    p: 1,
     background: isDarkTheme(theme) ? "black" : "white",
     border: `solid 1px ${theme.palette.primary.main}`,
+    overflow: "hidden",
   };
 
   return (
@@ -92,6 +121,11 @@ export const MultiDialog = () => {
         {dialogContent === DialogContentElem.Wallet && <WalletBox />}
         {dialogContent === DialogContentElem.CloseOption && <ClosePosition />}
         {dialogContent === DialogContentElem.Account && <WalletInfo />}
+        {dialogContent === DialogContentElem.CallWido && <CallWido />}
+        {dialogContent === DialogContentElem.PutWido && <PutWido />}
+        {dialogContent === DialogContentElem.MetamaskMissing && (
+          <MetamaskMissing />
+        )}
       </Paper>
     </Dialog>
   );

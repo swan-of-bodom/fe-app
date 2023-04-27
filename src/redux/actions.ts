@@ -55,6 +55,15 @@ export const openCloseOptionDialog = () =>
 export const openAccountDialog = () =>
   openDialogWithContent(DialogContentElem.Account);
 
+export const openCallWidoDialog = () =>
+  openDialogWithContent(DialogContentElem.CallWido);
+
+export const openPutWidoDialog = () =>
+  openDialogWithContent(DialogContentElem.PutWido);
+
+export const openMetamaskMissingDialog = () =>
+  openDialogWithContent(DialogContentElem.MetamaskMissing);
+
 export const setSlippage = (n: number) => store.dispatch(setSlippageState(n));
 
 export const setCloseOption = (option: OptionWithPosition) =>
