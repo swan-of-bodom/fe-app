@@ -20,6 +20,7 @@ import { Close } from "@mui/icons-material";
 import { ClosePosition } from "../ClosePosition/ClosePosition";
 import { WalletInfo } from "../WalletInfo/WalletInfo";
 import { CallWido, PutWido } from "../WidoWidgetWrapper/WidoWidgetWrapper";
+import { CSSProperties, ReactNode } from "react";
 
 const NetworkMismatch = () => (
   <>
@@ -95,8 +96,11 @@ export const CustomDialogTitle = ({ title }: CustomDialogTitleProps) => (
   </DialogTitle>
 );
 
-export const MultiDialog = () => {
-  const { dialogOpen, dialogContent } = useDialog();
+type Props = {
+  children: ReactNode;
+};
+
+const Border = ({ children }: Props) => {
   const theme = useTheme();
 
   const style = {
@@ -106,27 +110,63 @@ export const MultiDialog = () => {
     overflow: "hidden",
   };
 
+  return <Paper sx={style}>{children}</Paper>;
+};
+
+export const MultiDialog = () => {
+  const { dialogOpen, dialogContent } = useDialog();
+
+  const paperStyle: CSSProperties = {};
+
+  if (
+    dialogContent === DialogContentElem.CallWido ||
+    dialogContent === DialogContentElem.PutWido
+  ) {
+    paperStyle.borderRadius = "1em";
+  }
+
   return (
     <Dialog
       open={dialogOpen}
       onClose={closeDialog}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      PaperProps={{
+        style: paperStyle,
+      }}
     >
-      <Paper sx={style}>
-        {dialogContent === DialogContentElem.NetworkMismatch && (
+      {dialogContent === DialogContentElem.NetworkMismatch && (
+        <Border>
           <NetworkMismatch />
-        )}
-        {dialogContent === DialogContentElem.Slippage && <SlippageContent />}
-        {dialogContent === DialogContentElem.Wallet && <WalletBox />}
-        {dialogContent === DialogContentElem.CloseOption && <ClosePosition />}
-        {dialogContent === DialogContentElem.Account && <WalletInfo />}
-        {dialogContent === DialogContentElem.CallWido && <CallWido />}
-        {dialogContent === DialogContentElem.PutWido && <PutWido />}
-        {dialogContent === DialogContentElem.MetamaskMissing && (
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.Slippage && (
+        <Border>
+          <SlippageContent />
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.Wallet && (
+        <Border>
+          <WalletBox />
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.CloseOption && (
+        <Border>
+          <ClosePosition />
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.Account && (
+        <Border>
+          <WalletInfo />
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.CallWido && <CallWido />}
+      {dialogContent === DialogContentElem.PutWido && <PutWido />}
+      {dialogContent === DialogContentElem.MetamaskMissing && (
+        <Border>
           <MetamaskMissing />
-        )}
-      </Paper>
+        </Border>
+      )}
     </Dialog>
   );
 };

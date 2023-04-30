@@ -80,6 +80,15 @@ const WidoWidgetWrapper = (pool: "call" | "put") => {
   const account = useAccount();
   const theme = useTheme();
 
+  const widoTheme = {
+    // use base wido theme per user mode
+    ...(theme.palette.mode === "dark" ? darkTheme : lightTheme),
+    // overrides
+    primary: theme.palette.primary.main,
+    accent: theme.palette.primary.main,
+    outline: theme.palette.primary.main,
+  };
+
   const ethProvider = window.ethereum
     ? new ethers.providers.Web3Provider(window.ethereum as any)
     : undefined;
@@ -96,7 +105,7 @@ const WidoWidgetWrapper = (pool: "call" | "put") => {
       fromTokens={fromTokens}
       toTokens={toTokens}
       presetToToken={presetToToken}
-      theme={theme.palette.mode === "dark" ? darkTheme : lightTheme}
+      theme={widoTheme}
     />
   );
 };
