@@ -116,7 +116,7 @@ const Border = ({ children }: Props) => {
 export const MultiDialog = () => {
   const { dialogOpen, dialogContent } = useDialog();
 
-  const paperStyle: CSSProperties = {};
+  const paperStyle: CSSProperties = { overflow: "hidden" };
 
   if (
     dialogContent === DialogContentElem.CallWido ||

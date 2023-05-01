@@ -6,6 +6,8 @@ import { useTheme } from "@mui/material";
 import { store } from "../../redux/store";
 import { NetworkName } from "../../types/network";
 import { openMetamaskMissingDialog } from "../../redux/actions";
+import { getTokenAddresses } from "../../constants/amm";
+import { stripZerosFromAddress } from "../../utils/utils";
 
 const handleConnectWalletClick = () => {
   if (!window.ethereum) {
@@ -20,6 +22,7 @@ const handleConnectWalletClick = () => {
 
 const getTokens = () => {
   const n = store.getState().network.network.name;
+  const tokens = getTokenAddresses();
 
   switch (n) {
     case NetworkName.Devnet:
@@ -37,13 +40,11 @@ const getTokens = () => {
         toTokens: [
           {
             chainId: 15367,
-            address:
-              "0x3b176f8e5b4c9227b660e49e97f2d9d1756f96e5878420ad4accd301dd0cc17",
+            address: stripZerosFromAddress(tokens.LPTOKEN_CONTRACT_ADDRESS),
           },
           {
             chainId: 15367,
-            address:
-              "0x30fe5d12635ed696483a824eca301392b3f529e06133b42784750503a24972",
+            address: stripZerosFromAddress(tokens.LPTOKEN_CONTRACT_ADDRESS_PUT),
           },
         ],
         fromTokens: [

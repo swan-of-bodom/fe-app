@@ -171,3 +171,8 @@ export const addressElision = (address: string, n: number = 5): string => {
 
   return `${start}...${end}`;
 };
+
+export const stripZerosFromAddress = (address: string): string => {
+  const withoutPrefix = address.replace(/^0x0*/g, "");
+  return "0x" + withoutPrefix;
+};
