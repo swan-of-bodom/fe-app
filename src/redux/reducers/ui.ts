@@ -7,6 +7,9 @@ export enum DialogContentElem {
   NetworkMismatch = "NetworkMismatch",
   Slippage = "Slippage",
   CloseOption = "CloseOption",
+  CallWido = "CallWido",
+  PutWido = "PutWido",
+  MetamaskMissing = "MetamaskMissing",
 }
 
 export enum ToastType {
