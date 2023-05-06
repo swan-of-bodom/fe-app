@@ -17,6 +17,7 @@ import TermsAndConditions from "./pages/termsAndConditions";
 import { useState } from "react";
 import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
 import { isCookieSet } from "./utils/cookies";
+import Airdrop from "./pages/airdrop";
 
 const App = () => {
   const [check, rerender] = useState(false);
@@ -42,6 +43,7 @@ const App = () => {
                   />
                   <Route path="/history" element={<HistoryPage />} />
                   <Route path="/settings" element={<Settings />} />
+                  <Route path="/airdrop" element={<Airdrop />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>
