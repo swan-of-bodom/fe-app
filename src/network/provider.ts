@@ -4,10 +4,10 @@ import { constants } from "starknet";
 
 const devnetOptions = {
   sequencer: {
-    baseUrl: process.env.REACT_APP_GATEWAY!,
+    baseUrl: "http://127.0.0.1:5050/",
     feederGatewayUrl: "feeder_gateway",
-    gatewayUrl: process.env.REACT_APP_GATEWAY,
-    chainId: process.env.REACT_APP_CHAIN_ID as constants.StarknetChainId,
+    gatewayUrl: "http://127.0.0.1:5050/",
+    chainId: constants.StarknetChainId.MAINNET,
   },
 };
 
