@@ -5,7 +5,6 @@ import {
 import { store } from "../redux/store";
 import { NetworkName } from "../types/network";
 import { openNetworkMismatchDialog } from "../redux/actions";
-import { debug } from "../utils/debugger";
 
 export const walletNetworkChangeHandlerFactory =
   (wallet: StarknetWindowObject): NetworkChangeEventHandler =>
@@ -27,7 +26,10 @@ export const walletNetworkChangeHandlerFactory =
       return;
     }
 
-    debug("Network change event fired from", id);
+    if (settings.network === NetworkName.Devnet) {
+      // devnet can do whatever it wants, do nothing
+      return;
+    }
 
     // network mismatch - open the dialog
     openNetworkMismatchDialog();
