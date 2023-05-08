@@ -7,6 +7,7 @@ import { useNetwork } from "../../hooks/useNetwork";
 import { getProof } from "./getProof";
 import { AccountInterface } from "starknet";
 import { hexToBN } from "../../utils/utils";
+import { shortInteger } from "../../utils/computations";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -77,7 +78,7 @@ export const Airdrop = () => {
   }
 
   if (account && data) {
-    const amount = hexToBN(data[1]).toString(10);
+    const amount = shortInteger(hexToBN(data[1]).toString(10), 18);
     const message = `You are eligible to receive ${amount} Carmine tokens!`;
 
     return <AirdropTemplate account={account} data={data} message={message} />;
