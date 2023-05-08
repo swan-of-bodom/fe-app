@@ -8,6 +8,7 @@ import { debug } from "../utils/debugger";
 import { store } from "../redux/store";
 import { SupportedWalletIds } from "../types/wallet";
 import { addWalletEventHandlers } from "./walletEvents";
+import { NetworkName } from "../types/network";
 
 const isConnectedWallet = (
   wallet: StarknetWindowObject | undefined
@@ -60,6 +61,10 @@ export const connect = (
     const { chainId } = store.getState().network.network;
 
     if (chainId !== wallet.account.chainId) {
+      if (store.getState().network.network.name === NetworkName.Devnet) {
+        // devnet - ignore network mismatch
+        return;
+      }
       debug("Wallet - App network mismatch, opening dialog");
       disconnect();
       if (fromLatest) {
