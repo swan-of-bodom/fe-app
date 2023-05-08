@@ -8,6 +8,7 @@ type TokenAddresses = {
   MAIN_CONTRACT_ADDRESS: string;
   LPTOKEN_CONTRACT_ADDRESS: string;
   LPTOKEN_CONTRACT_ADDRESS_PUT: string;
+  GOVERNANCE_CONTRACT_ADDRESS: string;
 };
 
 const testnetTokens = {
@@ -21,6 +22,8 @@ const testnetTokens = {
     "0x03b176f8e5b4c9227b660e49e97f2d9d1756f96e5878420ad4accd301dd0cc17",
   LPTOKEN_CONTRACT_ADDRESS_PUT:
     "0x0030fe5d12635ed696483a824eca301392b3f529e06133b42784750503a24972",
+  GOVERNANCE_CONTRACT_ADDRESS:
+    "0x23965fa4bfffa5a1c00a959b985d38974d90d1c2eddd84a4bde83b55f3aa992",
 };
 
 const testdevTokens = {
@@ -34,6 +37,7 @@ const testdevTokens = {
     "0x0149a0249403aa85859297ac2e3c96b7ca38f2b36d7a34212dcfbc92e8d66eb1",
   LPTOKEN_CONTRACT_ADDRESS_PUT:
     "0x077868613647e04cfa11593f628598e93071d52ca05f1e89a70add4bb3470897",
+  GOVERNANCE_CONTRACT_ADDRESS: "0x0",
 };
 
 const mainnetTokens = {
@@ -47,6 +51,8 @@ const mainnetTokens = {
     "0x7aba50fdb4e024c1ba63e2c60565d0fd32566ff4b18aa5818fc80c30e749024",
   LPTOKEN_CONTRACT_ADDRESS_PUT:
     "0x18a6abca394bd5f822cfa5f88783c01b13e593d1603e7b41b00d31d2ea4827a",
+  GOVERNANCE_CONTRACT_ADDRESS:
+    "0x001405ab78ab6ec90fba09e6116f373cda53b0ba557789a4578d8c1ec374ba0f",
 };
 
 const devnetTokens = {
@@ -60,6 +66,8 @@ const devnetTokens = {
     "0x7aba50fdb4e024c1ba63e2c60565d0fd32566ff4b18aa5818fc80c30e749024",
   LPTOKEN_CONTRACT_ADDRESS_PUT:
     "0x18a6abca394bd5f822cfa5f88783c01b13e593d1603e7b41b00d31d2ea4827a",
+  GOVERNANCE_CONTRACT_ADDRESS:
+    "0x001405ab78ab6ec90fba09e6116f373cda53b0ba557789a4578d8c1ec374ba0f",
 };
 
 const networkToTokenMap = new Map<NetworkName, TokenAddresses>([

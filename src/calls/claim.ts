@@ -1,14 +1,14 @@
 import { AccountInterface } from "starknet";
 import { afterTransaction } from "../utils/blockchain";
 import GovernanceAbi from "../abi/governance_abi.json";
+import { getTokenAddresses } from "../constants/amm";
 
 export const claim = async (
   account: AccountInterface,
   calldata: string[],
   setText: (txt: string) => void
 ) => {
-  const contractAddress =
-    "0x001405ab78ab6ec90fba09e6116f373cda53b0ba557789a4578d8c1ec374ba0f";
+  const contractAddress = getTokenAddresses().GOVERNANCE_CONTRACT_ADDRESS;
   const call = {
     contractAddress,
     entrypoint: "claim",

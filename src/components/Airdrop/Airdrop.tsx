@@ -3,7 +3,7 @@ import { ClaimButton } from "./ClaimButton";
 import { useAccount } from "../../hooks/useAccount";
 import { useEffect, useState } from "react";
 import { useNetwork } from "../../hooks/useNetwork";
-import { NetworkName } from "../../types/network";
+// import { NetworkName } from "../../types/network";
 import { getProof } from "./getProof";
 import { AccountInterface } from "starknet";
 import { hexToBN } from "../../utils/utils";
@@ -30,7 +30,9 @@ export const Airdrop = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<string[] | undefined>();
 
-  const isMainnet = network === NetworkName.Mainnet;
+  // for testing purposes treat every network as Mainnet
+  // const isMainnet = network === NetworkName.Mainnet;
+  const isMainnet = true;
 
   useEffect(() => {
     if (account && isMainnet) {
