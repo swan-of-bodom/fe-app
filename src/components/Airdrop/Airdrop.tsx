@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { ClaimButton } from "./ClaimButton";
 import { useAccount } from "../../hooks/useAccount";
 import { useEffect, useState } from "react";
@@ -7,7 +7,6 @@ import { NetworkName } from "../../types/network";
 import { getProof } from "./getProof";
 import { AccountInterface } from "starknet";
 import { hexToBN } from "../../utils/utils";
-import { intToDecimal } from "../../utils/units";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -16,13 +15,13 @@ type Props = {
 };
 
 const AirdropTemplate = ({ account, message, data }: Props) => (
-  <>
-    <Typography sx={{ mb: 2, mt: 5 }} variant="h4">
+  <Box sx={{ my: 4 }}>
+    <Typography sx={{ mb: 2 }} variant="h4">
       Airdrop
     </Typography>
     <Typography>{message}</Typography>
     {account && <ClaimButton account={account} data={data} />}
-  </>
+  </Box>
 );
 
 export const Airdrop = () => {
@@ -48,6 +47,15 @@ export const Airdrop = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, network]);
 
+  if (!isMainnet) {
+    return (
+      <AirdropTemplate
+        account={undefined}
+        message="Please switch to Mainnet to access airdrop"
+      />
+    );
+  }
+
   if (loading) {
     return (
       <AirdropTemplate
@@ -67,7 +75,7 @@ export const Airdrop = () => {
   }
 
   if (account && data) {
-    const amount = intToDecimal(hexToBN(data[1]).toString(10), 18);
+    const amount = hexToBN(data[1]).toString(10);
     const message = `You are eligible to receive ${amount} Carmine tokens!`;
 
     return <AirdropTemplate account={account} data={data} message={message} />;

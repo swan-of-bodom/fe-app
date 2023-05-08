@@ -18,10 +18,10 @@ export const ClaimButton = ({ account, data }: Props) => {
       sx={{
         maxWidth: "100%",
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
-        gap: 1,
-        flexFlow: "column",
+        gap: 4,
+        flexFlow: "row",
         m: 2,
       }}
     >
