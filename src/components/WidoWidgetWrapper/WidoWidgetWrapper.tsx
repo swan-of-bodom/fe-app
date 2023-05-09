@@ -25,10 +25,25 @@ const getTokens = () => {
   const tokens = getTokenAddresses();
 
   switch (n) {
+    // devnet uses same tokens as mainnet
     case NetworkName.Devnet:
       return {
-        toTokens: [],
-        fromTokens: [],
+        toTokens: [
+          {
+            chainId: 15366,
+            address:
+              "0x7aba50fdb4e024c1ba63e2c60565d0fd32566ff4b18aa5818fc80c30e749024",
+          },
+          {
+            chainId: 15366,
+            address:
+              "0x18a6abca394bd5f822cfa5f88783c01b13e593d1603e7b41b00d31d2ea4827a",
+          },
+        ],
+        fromTokens: [
+          { chainId: 1, address: "0x0000000000000000000000000000000000000000" },
+          { chainId: 1, address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" },
+        ],
       };
     case NetworkName.Testdev:
       return {
@@ -53,23 +68,22 @@ const getTokens = () => {
         ],
       };
     case NetworkName.Mainnet:
-      // TODO: find mainnet tokens
       return {
         toTokens: [
           {
-            chainId: 15367,
+            chainId: 15366,
             address:
-              "0x3b176f8e5b4c9227b660e49e97f2d9d1756f96e5878420ad4accd301dd0cc17",
+              "0x7aba50fdb4e024c1ba63e2c60565d0fd32566ff4b18aa5818fc80c30e749024",
           },
           {
-            chainId: 15367,
+            chainId: 15366,
             address:
-              "0x30fe5d12635ed696483a824eca301392b3f529e06133b42784750503a24972",
+              "0x18a6abca394bd5f822cfa5f88783c01b13e593d1603e7b41b00d31d2ea4827a",
           },
         ],
         fromTokens: [
-          { chainId: 5, address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" },
-          { chainId: 5, address: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F" },
+          { chainId: 1, address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" },
+          { chainId: 1, address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" },
         ],
       };
     default:
