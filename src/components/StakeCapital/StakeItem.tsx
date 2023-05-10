@@ -7,8 +7,6 @@ import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { isCall } from "../../utils/utils";
 import { POOL_NAMES } from "../../constants/texts";
 import { openCallWidoDialog, openPutWidoDialog } from "../../redux/actions";
-import { NetworkName } from "../../types/network";
-import { useNetwork } from "../../hooks/useNetwork";
 
 type Props = {
   account: AccountInterface;
@@ -19,7 +17,6 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
   const [amount, setAmount] = useState<number>(0);
   const [text, setText] = useState<string>("0");
   const [loading, setLoading] = useState<boolean>(false);
-  const network = useNetwork();
 
   const handleChange = handleNumericChangeFactory(setText, setAmount);
 
@@ -54,19 +51,11 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
         >
           {loading ? "Processing..." : "Stake"}
         </Button>
-        {network === NetworkName.Testnet && (
-          <>
-            <Tooltip title="Stake from L1 directly to our liquidity pool - requires MetaMask">
-              <Button
-                sx={{ ml: 1 }}
-                variant="contained"
-                onClick={handleWidoClick}
-              >
-                Stake from L1
-              </Button>
-            </Tooltip>
-          </>
-        )}
+        <Tooltip title="Stake from L1 directly to our liquidity pool - requires MetaMask">
+          <Button sx={{ ml: 1 }} variant="contained" onClick={handleWidoClick}>
+            Stake from L1
+          </Button>
+        </Tooltip>
       </TableCell>
     </TableRow>
   );
