@@ -15,9 +15,7 @@ const handleConnectWalletClick = () => {
     openMetamaskMissingDialog();
     return;
   }
-  window.ethereum.request({ method: "eth_requestAccounts" }).then((res) => {
-    debug("MetaMask result:", res);
-  });
+  window.ethereum.request({ method: "eth_requestAccounts" });
 };
 
 const getTokens = () => {
