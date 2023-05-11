@@ -92,6 +92,7 @@ const getTokens = () => {
 const WidoWidgetWrapper = (pool: "call" | "put") => {
   const account = useAccount();
   const theme = useTheme();
+  const carmineAddress = getTokenAddresses().MAIN_CONTRACT_ADDRESS;
 
   const widoTheme = {
     // use base wido theme per user mode
@@ -119,6 +120,7 @@ const WidoWidgetWrapper = (pool: "call" | "put") => {
       toTokens={toTokens}
       presetToToken={presetToToken}
       theme={widoTheme}
+      partner={carmineAddress}
     />
   );
 };
