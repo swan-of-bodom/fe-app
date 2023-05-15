@@ -1,3 +1,4 @@
+import { MetaMaskInpageProvider } from "@metamask/providers";
 import BN from "bn.js";
 
 export enum SupportedWalletIds {
@@ -9,3 +10,9 @@ export type UserBalance = {
   eth: BN;
   usd: BN;
 };
+
+declare global {
+  interface Window {
+    ethereum?: MetaMaskInpageProvider;
+  }
+}

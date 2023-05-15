@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContentText,
   IconButton,
+  Link,
 } from "@mui/material";
 import { isDarkTheme } from "../../utils/utils";
 import { useDialog } from "../../hooks/useDialog";
@@ -18,6 +19,8 @@ import { SlippageContent } from "../Slippage/SlippageContent";
 import { Close } from "@mui/icons-material";
 import { ClosePosition } from "../ClosePosition/ClosePosition";
 import { WalletInfo } from "../WalletInfo/WalletInfo";
+import { CallWido, PutWido } from "../WidoWidgetWrapper/WidoWidgetWrapper";
+import { CSSProperties, ReactNode } from "react";
 
 const NetworkMismatch = () => (
   <>
@@ -30,6 +33,32 @@ const NetworkMismatch = () => (
         application. Please ensure that your wallet is connected to the same
         network as the app, or change the network that the app is using, in
         order to proceed.
+      </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button variant="contained" onClick={closeDialog} autoFocus>
+        Close
+      </Button>
+    </DialogActions>
+  </>
+);
+
+const MetamaskMissing = () => (
+  <>
+    <DialogTitle id="alert-dialog-title">Metamask wallet not found</DialogTitle>
+    <DialogContent>
+      <DialogContentText id="alert-dialog-description">
+        It appears that you do not have the Metamask wallet installed in your
+        browser.
+        <br />
+        In order to stake using Wido, it is necessary to have the Metamask
+        wallet.
+        <br />
+        To install it, please follow the instructions provided at{" "}
+        <Link target="_blank" href="https://metamask.io/">
+          metamask.io
+        </Link>
+        .
       </DialogContentText>
     </DialogContent>
     <DialogActions>
@@ -67,15 +96,34 @@ export const CustomDialogTitle = ({ title }: CustomDialogTitleProps) => (
   </DialogTitle>
 );
 
-export const MultiDialog = () => {
-  const { dialogOpen, dialogContent } = useDialog();
+type Props = {
+  children: ReactNode;
+};
+
+const Border = ({ children }: Props) => {
   const theme = useTheme();
 
   const style = {
-    p: 2,
+    p: 1,
     background: isDarkTheme(theme) ? "black" : "white",
     border: `solid 1px ${theme.palette.primary.main}`,
+    overflow: "hidden",
   };
+
+  return <Paper sx={style}>{children}</Paper>;
+};
+
+export const MultiDialog = () => {
+  const { dialogOpen, dialogContent } = useDialog();
+
+  const paperStyle: CSSProperties = { overflow: "hidden" };
+
+  if (
+    dialogContent === DialogContentElem.CallWido ||
+    dialogContent === DialogContentElem.PutWido
+  ) {
+    paperStyle.borderRadius = "1em";
+  }
 
   return (
     <Dialog
@@ -83,16 +131,42 @@ export const MultiDialog = () => {
       onClose={closeDialog}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      PaperProps={{
+        style: paperStyle,
+      }}
     >
-      <Paper sx={style}>
-        {dialogContent === DialogContentElem.NetworkMismatch && (
+      {dialogContent === DialogContentElem.NetworkMismatch && (
+        <Border>
           <NetworkMismatch />
-        )}
-        {dialogContent === DialogContentElem.Slippage && <SlippageContent />}
-        {dialogContent === DialogContentElem.Wallet && <WalletBox />}
-        {dialogContent === DialogContentElem.CloseOption && <ClosePosition />}
-        {dialogContent === DialogContentElem.Account && <WalletInfo />}
-      </Paper>
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.Slippage && (
+        <Border>
+          <SlippageContent />
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.Wallet && (
+        <Border>
+          <WalletBox />
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.CloseOption && (
+        <Border>
+          <ClosePosition />
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.Account && (
+        <Border>
+          <WalletInfo />
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.CallWido && <CallWido />}
+      {dialogContent === DialogContentElem.PutWido && <PutWido />}
+      {dialogContent === DialogContentElem.MetamaskMissing && (
+        <Border>
+          <MetamaskMissing />
+        </Border>
+      )}
     </Dialog>
   );
 };

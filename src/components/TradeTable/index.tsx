@@ -52,7 +52,7 @@ const TradeTable = () => {
   debug("React query data", { isLoading, isError, data });
 
   const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
-  const [type, setCallPut] = useState<OptionType>(OptionType.Call);
+  const [type, setCallPut] = useState<OptionType>(OptionType.Put);
   const theme = useTheme();
 
   const filtered = data

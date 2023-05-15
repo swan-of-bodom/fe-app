@@ -158,7 +158,14 @@ export const getApiUrl = () => {
   const [testnet, mainnet] = isProd
     ? [API_URL_TESTNET, API_URL_MAINNET]
     : [DEV_API_URL_TESTNET, DEV_API_URL_MAINNET];
-  return network === NetworkName.Mainnet ? mainnet : testnet;
+
+  if (network === NetworkName.Mainnet) {
+    return mainnet;
+  }
+  if (network === NetworkName.Devnet) {
+    return API_URL_MAINNET;
+  }
+  return testnet;
 };
 
 export const addressElision = (address: string, n: number = 5): string => {
@@ -174,3 +181,8 @@ export const addressElision = (address: string, n: number = 5): string => {
 
 export const isDev =
   new URL(window.location.href).hostname !== "app.carmine.finance";
+
+export const stripZerosFromAddress = (address: string): string => {
+  const withoutPrefix = address.replace(/^0x0*/g, "");
+  return "0x" + withoutPrefix;
+};
