@@ -6,6 +6,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { NetworkName } from "../types/network";
 import { updateSettings } from "../redux/actions";
 import { useNetwork } from "../hooks/useNetwork";
+import { isDev } from "../utils/utils";
 
 export const NetworkSwitch = () => {
   const currentEnv = useNetwork();
@@ -17,9 +18,6 @@ export const NetworkSwitch = () => {
     // use correct network is to reload the app
     window.location.reload();
   };
-
-  const isDev =
-    new URL(window.location.href).hostname !== "app.carmine.finance";
 
   return (
     <Box sx={{ minWidth: 120 }}>

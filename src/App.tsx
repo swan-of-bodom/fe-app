@@ -17,6 +17,8 @@ import TermsAndConditions from "./pages/termsAndConditions";
 import { useState } from "react";
 import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
 import { isCookieSet } from "./utils/cookies";
+import BenchPage from "./pages/bench";
+import { isDev } from "./utils/utils";
 
 const App = () => {
   const [check, rerender] = useState(false);
@@ -42,6 +44,7 @@ const App = () => {
                   />
                   <Route path="/history" element={<HistoryPage />} />
                   <Route path="/settings" element={<Settings />} />
+                  {isDev && <Route path="/bench" element={<BenchPage />} />}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>
