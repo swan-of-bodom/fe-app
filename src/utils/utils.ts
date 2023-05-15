@@ -171,3 +171,6 @@ export const addressElision = (address: string, n: number = 5): string => {
 
   return `${start}...${end}`;
 };
+
+export const isDev =
+  new URL(window.location.href).hostname !== "app.carmine.finance";

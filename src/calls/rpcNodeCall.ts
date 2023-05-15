@@ -10,16 +10,38 @@ import { store } from "../redux/store";
 import { NetworkName } from "../types/network";
 import { debug } from "../utils/debugger";
 
-const getUrl = () => {
+export enum RPCNode {
+  Infura = "Infura",
+  BlastAPI = "BlastAPI",
+}
+
+const getUrl = (rpcNode: RPCNode) => {
   const network = store.getState().network.network.name;
-  switch (network) {
-    case NetworkName.Testnet:
-      return "https://starknet-goerli.infura.io/v3/df11605e57a14558b13a24a111661f52";
-    case NetworkName.Mainnet:
-      return "https://starknet-mainnet.infura.io/v3/df11605e57a14558b13a24a111661f52";
-    default:
-      return "https://starknet-mainnet.infura.io/v3/df11605e57a14558b13a24a111661f52";
+
+  if (rpcNode === RPCNode.BlastAPI) {
+    switch (network) {
+      case NetworkName.Testnet:
+        return "https://starknet-testnet.blastapi.io/887824dd-2f0b-448d-8549-09598869e9bb";
+      case NetworkName.Mainnet:
+        return "https://starknet-mainnet.blastapi.io/887824dd-2f0b-448d-8549-09598869e9bb";
+      default:
+        return "https://starknet-mainnet.blastapi.io/887824dd-2f0b-448d-8549-09598869e9bb";
+    }
   }
+
+  if (rpcNode === RPCNode.Infura) {
+    switch (network) {
+      case NetworkName.Testnet:
+        return "https://starknet-goerli.infura.io/v3/df11605e57a14558b13a24a111661f52";
+      case NetworkName.Mainnet:
+        return "https://starknet-mainnet.infura.io/v3/df11605e57a14558b13a24a111661f52";
+      default:
+        return "https://starknet-mainnet.infura.io/v3/df11605e57a14558b13a24a111661f52";
+    }
+  }
+
+  // unreachable
+  throw Error("RPCNode not in the list");
 };
 
 const getRequestBody = (
@@ -39,13 +61,13 @@ const getRequestBody = (
   ],
 });
 
-export const infuraCall = async (
+export const rpcNodeCall = async (
+  rpcNode: RPCNode,
   contractAddress: string,
   selector: string,
   calldata: string[]
 ) => {
-  const url = getUrl();
-  const res = await fetch(url, {
+  const res = await fetch(getUrl(rpcNode), {
     body: JSON.stringify(getRequestBody(contractAddress, selector, calldata)),
     headers: {
       "Content-Type": "application/json",
@@ -54,15 +76,15 @@ export const infuraCall = async (
   })
     .then((r) => r.json())
     .catch((e) => {
-      debug("Infura call failed", e);
-      return { ok: false };
+      debug(`${rpcNode} call failed`, e);
+      return { ok: false, err: e };
     });
 
-  debug("Infura result:", res);
-
-  if (res.ok && res.result) {
+  if (res.result) {
     return res.result;
   }
 
-  throw Error("infura call failed");
+  debug(`${rpcNode} failed`, res);
+
+  return [];
 };
