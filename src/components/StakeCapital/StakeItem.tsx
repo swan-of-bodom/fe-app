@@ -48,7 +48,7 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
 
   const poolName = isCall(type) ? POOL_NAMES.CALL : POOL_NAMES.PUT;
   const apyTooltipText =
-    "APY (Annual Percentage Yield) is calculated based on the last week and represents the annualized yield of the pool.";
+    "APY (Annual Percentage Yield) is calculated based on the last week and represents the annualized yield of the pool. Keep in mind that it does NOT account for risk and that past returns do not imply future returns.";
   const displayApy =
     apy === undefined ? "--" : `${apy < 0 ? "-" : "+"}${apy.toFixed(2)}%`;
   const apySx: CSSProperties = { fontWeight: "bold", textAlign: "center" };

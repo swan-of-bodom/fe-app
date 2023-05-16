@@ -5,10 +5,14 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import { OptionType } from "../../types/options";
 import { StakeCapitalItem } from "./StakeItem";
 import { useAccount } from "../../hooks/useAccount";
+import { Link as RouterLink } from "react-router-dom";
+import { Info } from "@mui/icons-material";
 
 const NoContent = () => (
   <Box sx={{ textAlign: "center" }}>
@@ -18,6 +22,7 @@ const NoContent = () => (
 
 export const StakeCapitalParent = () => {
   const account = useAccount();
+  const sx = { fontWeight: "bold" };
 
   if (!account) return <NoContent />;
 
@@ -25,9 +30,26 @@ export const StakeCapitalParent = () => {
     <Table aria-label="simple table">
       <TableHead>
         <TableRow>
-          <TableCell>Pool</TableCell>
-          <TableCell align="center">APY</TableCell>
-          <TableCell align="center">Amount</TableCell>
+          <TableCell>
+            <Typography sx={sx}>Pool</Typography>
+          </TableCell>
+
+          <TableCell align="center">
+            <RouterLink
+              style={{ textDecoration: "none", color: "inherit" }}
+              to="/apy-info"
+            >
+              <Tooltip title="Click for more information">
+                <Typography sx={sx}>
+                  APY <Info sx={{ height: "17px", marginBottom: "-2px" }} />
+                </Typography>
+              </Tooltip>
+            </RouterLink>
+          </TableCell>
+
+          <TableCell align="center">
+            <Typography sx={sx}>Amount</Typography>
+          </TableCell>
           <TableCell align="center"></TableCell>
         </TableRow>
       </TableHead>

@@ -17,6 +17,7 @@ import TermsAndConditions from "./pages/termsAndConditions";
 import { useState } from "react";
 import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
 import { isCookieSet } from "./utils/cookies";
+import APYInfoPage from "./pages/apyInfo";
 
 const App = () => {
   const [check, rerender] = useState(false);
@@ -40,6 +41,7 @@ const App = () => {
                     path="/staking-explained"
                     element={<StakingExplainedPage />}
                   />
+                  <Route path="/apy-info" element={<APYInfoPage />} />
                   <Route path="/history" element={<HistoryPage />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="*" element={<NotFound />} />
