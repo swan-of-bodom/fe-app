@@ -10,7 +10,6 @@ export const getOptionsWithPositionOfUser = async (
   address: string
 ): Promise<BN[]> => {
   const contract = getMainContract();
-
   const res = await contract.call(method, [address]).catch((e: Error) => {
     debug("Failed while calling", method);
     throw Error(e.message);

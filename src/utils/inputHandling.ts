@@ -1,4 +1,4 @@
-const MAX = 9999;
+const MAX = 99999999;
 
 export const handleNumericChangeFactory =
   (
