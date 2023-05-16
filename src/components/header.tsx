@@ -29,6 +29,10 @@ const navLinks = [
     title: "History",
     link: "/history",
   },
+  {
+    title: "Dashboard",
+    link: "/dashboard",
+  },
 ] as NavLinkProps[];
 
 const navLink = ({ title, link }: NavLinkProps, i: number): ReactNode => (

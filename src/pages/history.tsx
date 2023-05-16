@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Typography } from "@mui/material";
 import { TradeHistory } from "../components/TradeHistory/TradeHistory";
+import { Layout } from "../components/layout";
 
 const HistoryPage = () => {
   useEffect(() => {
@@ -8,7 +9,7 @@ const HistoryPage = () => {
   });
 
   return (
-    <>
+    <Layout>
       <Typography sx={{ mb: 2 }} variant="h4">
         History
       </Typography>
@@ -17,7 +18,7 @@ const HistoryPage = () => {
         appear.
       </Typography>
       <TradeHistory />
-    </>
+    </Layout>
   );
 };
 
