@@ -7,7 +7,7 @@ const TradeDashboardPage = () => {
   });
 
   const header = document.querySelector("header");
-  const headerHeight = header ? header.offsetHeight + 8 : 0;
+  const headerHeight = header ? header.offsetHeight + 8 : 80;
   const height = `calc(100vh - ${headerHeight}px)`;
 
   return (
