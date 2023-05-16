@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { getMainContract } from "../utils/blockchain";
 import { getOptionsWithPositionOfUser } from "../calls/getOptionsWithPosition";
 import { RPCNode, rpcNodeCall } from "../calls/rpcNodeCall";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 const selector =
   "0x2b20b26ede4304b68503c401a342731579b75844e5696ee13e6286cd51a9621";
-const NUM_RUNS = 10;
+const NUM_RUNS = 1;
 
 const sleep = (sec: number) =>
   new Promise((resolve) => setTimeout(resolve, sec * 1000));
@@ -35,9 +35,9 @@ const runBenchmark = async (fn: () => Promise<any>): Promise<string> => {
 };
 
 const report = (arr: number[]): string =>
-  `average: ${average(arr)}\nmax: ${Math.max(...arr)}\nmin: ${Math.min(
-    ...arr
-  )}`;
+  `average: ${average(arr).toFixed(2)}s\nmax: ${Math.max(...arr).toFixed(
+    2
+  )}s\nmin: ${Math.min(...arr).toFixed(2)}s`;
 
 type BenchSummary = { name: string; report: string };
 
@@ -73,18 +73,20 @@ const BenchPage = () => {
 
   return (
     <>
-      <Typography sx={{ mb: 2 }} variant="h2">
+      <Typography sx={{ mb: 2 }} variant="h4">
         Benchmark
       </Typography>
       {data.length === 0 && (
         <Typography>Wait for the test to finish</Typography>
       )}
       {data.length > 0 &&
-        data.map((summary: BenchSummary) => (
-          <>
-            <Typography variant="h4">{summary.name}</Typography>
+        data.map((summary: BenchSummary, key: number) => (
+          <Box key={key}>
+            <Typography sx={{ mt: 2 }} variant="h6">
+              {summary.name}
+            </Typography>
             <Typography>{summary.report}</Typography>
-          </>
+          </Box>
         ))}
     </>
   );

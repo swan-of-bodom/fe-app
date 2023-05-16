@@ -6,6 +6,7 @@
 //   "contract_address": "0x76dbabc4293db346b0a56b29b6ea9fe18e93742c73f12348c8747ecfc1050aa",
 //   "entry_point_selector": "0x2b20b26ede4304b68503c401a342731579b75844e5696ee13e6286cd51a9621",
 //   "calldata": ["0x03d1525605db970fa1724693404f5f64cba8af82ec4aab514e6ebd3dec4838ad"]
+import BN from "bn.js";
 import { store } from "../redux/store";
 import { NetworkName } from "../types/network";
 import { debug } from "../utils/debugger";
@@ -14,6 +15,18 @@ export enum RPCNode {
   Infura = "Infura",
   BlastAPI = "BlastAPI",
 }
+
+type RPCNodeOkResponse<T> = {
+  ok: true;
+  data: T;
+};
+
+type RPCNodeNokResponse = {
+  ok: false;
+  err: any;
+};
+
+export type RPCNodeResponse<T> = RPCNodeOkResponse<T> | RPCNodeNokResponse;
 
 const getUrl = (rpcNode: RPCNode) => {
   const network = store.getState().network.network.name;
@@ -51,6 +64,7 @@ const getRequestBody = (
 ) => ({
   jsonrpc: "2.0",
   method: "starknet_call",
+  id: 0,
   params: [
     {
       contract_address: contractAddress,
@@ -66,7 +80,7 @@ export const rpcNodeCall = async (
   contractAddress: string,
   selector: string,
   calldata: string[]
-) => {
+): Promise<RPCNodeResponse<BN[]>> => {
   const res = await fetch(getUrl(rpcNode), {
     body: JSON.stringify(getRequestBody(contractAddress, selector, calldata)),
     headers: {
@@ -75,16 +89,13 @@ export const rpcNodeCall = async (
     method: "POST",
   })
     .then((r) => r.json())
-    .catch((e) => {
-      debug(`${rpcNode} call failed`, e);
-      return { ok: false, err: e };
-    });
+    .catch((e) => e);
 
   if (res.result) {
-    return res.result;
+    return { ok: true, data: res.result };
   }
 
   debug(`${rpcNode} failed`, res);
 
-  return [];
+  return res;
 };
