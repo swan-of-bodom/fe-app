@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Header } from "../components/header";
+import { isDev } from "../utils/utils";
 
 const TradeDashboardPage = () => {
   useEffect(() => {
@@ -10,6 +11,10 @@ const TradeDashboardPage = () => {
   const headerHeight = header ? header.offsetHeight + 8 : 80;
   const height = `calc(100vh - ${headerHeight}px)`;
 
+  const url = isDev
+    ? "https://dashboard.carmine-dev.eu/"
+    : "https://dashboard.carmine.finance/";
+
   return (
     <>
       <Header />
@@ -18,7 +23,7 @@ const TradeDashboardPage = () => {
         frameBorder="0"
         width="100%"
         style={{ height }}
-        src="https://simple-trading-dashboard-cazsppxr7a-ew.a.run.app/"
+        src={url}
       ></iframe>
     </>
   );
