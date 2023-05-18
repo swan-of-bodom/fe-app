@@ -4,6 +4,9 @@ import { AccountInterface, Contract } from "starknet";
 import ABI from "../abi/lptoken_abi.json";
 import { getTokenAddresses } from "../constants/amm";
 
+const CARM_TOKEN_ADDRESS =
+  "0x3c0286e9e428a130ae7fbbe911b794e8a829c367dd788e7cfe3efb0367548fa";
+
 const balanceFromTokenAddress = async (
   account: AccountInterface,
   tokenAddress: string
@@ -23,13 +26,15 @@ export const balanceOfUsdc = async (account: AccountInterface): Promise<BN> => {
   return balanceFromTokenAddress(account, USD_ADDRESS);
 };
 
+export const balanceOfCarmineToken = async (
+  account: AccountInterface
+): Promise<BN> => balanceFromTokenAddress(account, CARM_TOKEN_ADDRESS);
+
 export const getUserBalance = async (
   account: AccountInterface
 ): Promise<UserBalance | undefined> => {
-  console.time("balance");
   const promises = [balanceOfEth(account), balanceOfUsdc(account)];
   const values = await Promise.all(promises);
-  console.timeEnd("balance");
   return {
     eth: values[0],
     usd: values[1],
