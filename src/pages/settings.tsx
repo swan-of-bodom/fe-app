@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import { useEffect } from "react";
 import { CheckBox } from "../components/Settings/CheckBox";
+import { Layout } from "../components/layout";
 
 const Settings = () => {
   useEffect(() => {
@@ -8,7 +9,7 @@ const Settings = () => {
   });
 
   return (
-    <>
+    <Layout>
       <Typography sx={{ mb: 2 }} variant="h4">
         Settings
       </Typography>
@@ -18,7 +19,7 @@ const Settings = () => {
       </Typography>
       <br />
       <CheckBox />
-    </>
+    </Layout>
   );
 };
 

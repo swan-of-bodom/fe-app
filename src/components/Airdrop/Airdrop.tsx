@@ -4,9 +4,8 @@ import { useAccount } from "../../hooks/useAccount";
 import { useEffect, useState } from "react";
 import { useNetwork } from "../../hooks/useNetwork";
 import { NetworkName } from "../../types/network";
-import { getProof } from "./getProof";
+import { ProofResult, getProof } from "./getProof";
 import { AccountInterface } from "starknet";
-import { hexToBN } from "../../utils/utils";
 import { shortInteger } from "../../utils/computations";
 
 type Props = {
@@ -29,7 +28,7 @@ export const Airdrop = () => {
   const account = useAccount();
   const network = useNetwork();
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<string[] | undefined>();
+  const [data, setData] = useState<ProofResult | undefined>();
 
   const isMainnet = network === NetworkName.Mainnet;
 
@@ -37,11 +36,7 @@ export const Airdrop = () => {
     if (account && isMainnet) {
       setLoading(true);
       getProof(account).then((res) => {
-        if (res.eligible) {
-          setData(res.data);
-        } else {
-          setData(undefined);
-        }
+        setData(res);
         setLoading(false);
       });
     }
@@ -57,7 +52,7 @@ export const Airdrop = () => {
     );
   }
 
-  if (loading) {
+  if (loading || !data) {
     return (
       <AirdropTemplate
         account={account}
@@ -75,11 +70,23 @@ export const Airdrop = () => {
     );
   }
 
-  if (account && data) {
-    const amount = shortInteger(hexToBN(data[1]).toString(10), 18);
+  if (data.eligible) {
+    if (data.claimable === "0") {
+      const amount = shortInteger(data.claimed, 18);
+      return (
+        <AirdropTemplate
+          account={undefined}
+          message={`You cannot claim any tokens, you have already claimed ${amount}`}
+        />
+      );
+    }
+
+    const amount = shortInteger(data.claimable, 18);
     const message = `You are eligible to receive ${amount} Carmine tokens!`;
 
-    return <AirdropTemplate account={account} data={data} message={message} />;
+    return (
+      <AirdropTemplate account={account} data={data.proof} message={message} />
+    );
   }
 
   return (

@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Layout } from "./components/layout";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import BalancePage from "./pages/balance";
@@ -17,6 +16,8 @@ import TermsAndConditions from "./pages/termsAndConditions";
 import { useState } from "react";
 import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
 import { isCookieSet } from "./utils/cookies";
+import APYInfoPage from "./pages/apyInfo";
+import TradeDashboardPage from "./pages/dashboard";
 
 const App = () => {
   const [check, rerender] = useState(false);
@@ -30,21 +31,21 @@ const App = () => {
         {acceptedTermsAndConditions ? (
           <>
             <Router>
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<TradePage />} />
-                  <Route path="/trade" element={<TradePage />} />
-                  <Route path="/position" element={<BalancePage />} />
-                  <Route path="/staking" element={<StakePage />} />
-                  <Route
-                    path="/staking-explained"
-                    element={<StakingExplainedPage />}
-                  />
-                  <Route path="/history" element={<HistoryPage />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Layout>
+              <Routes>
+                <Route path="/" element={<TradePage />} />
+                <Route path="/trade" element={<TradePage />} />
+                <Route path="/position" element={<BalancePage />} />
+                <Route path="/staking" element={<StakePage />} />
+                <Route
+                  path="/staking-explained"
+                  element={<StakingExplainedPage />}
+                />
+                <Route path="/apy-info" element={<APYInfoPage />} />
+                <Route path="/history" element={<HistoryPage />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/dashboard" element={<TradeDashboardPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
             </Router>
             <MultiDialog />
             <Toast />

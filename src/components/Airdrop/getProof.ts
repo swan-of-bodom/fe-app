@@ -1,27 +1,56 @@
 import { AccountInterface } from "starknet";
 import { API_URL_MAINNET } from "../../constants/amm";
+import { balanceOfCarmineToken } from "../../calls/balanceOf";
+import { BN } from "bn.js";
+import { hexToBN } from "../../utils/utils";
+import { debug } from "../../utils/debugger";
 
 type Eligible = {
   eligible: true;
-  data: string[];
+  claimable: string;
+  claimed: string;
+  proof: string[];
 };
 
 type NotEligible = {
   eligible: false;
 };
 
-type ProofResult = Eligible | NotEligible;
+export type ProofResult = Eligible | NotEligible;
 
 export const getProof = async (
   account: AccountInterface
 ): Promise<ProofResult> => {
-  const res = await fetch(
+  const merkleTreeRequest = fetch(
     `${API_URL_MAINNET}airdrop?address=${account.address}`
   ).then((r) => r.json());
+  const carmBalanceRequest = balanceOfCarmineToken(account);
 
-  if (res.status === "success") {
-    return { eligible: true, data: res.data };
+  const [merkleTreeResponse, carmBalanceResponse] = await Promise.all([
+    merkleTreeRequest,
+    carmBalanceRequest,
+  ]);
+
+  if (merkleTreeResponse.status !== "success") {
+    return { eligible: false };
   }
 
-  return { eligible: false };
+  const total = hexToBN(merkleTreeResponse.data[1]);
+  const claimed = new BN(carmBalanceResponse);
+  const diff = total.sub(claimed);
+  // account for tiny differences
+  const claimable = diff.lt(new BN(100)) ? "0" : diff.toString(10);
+
+  debug("CARM token claim data:", {
+    total: total.toString(10),
+    claimed: claimed.toString(10),
+    claimable,
+  });
+
+  return {
+    eligible: true,
+    proof: merkleTreeResponse.data,
+    claimable,
+    claimed: claimed.toString(10),
+  };
 };
