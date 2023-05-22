@@ -22,7 +22,8 @@ import {
   ParsedOptionWithPosition,
   ParsedOptionWithPremia,
 } from "../types/options";
-import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
+import { BASE_DIGITS } from "../constants/amm";
+import { Token, TokenPair, getTokenPair } from "../pools/pools";
 
 type Props =
   | {
@@ -36,16 +37,33 @@ export class Option {
   raw: RawOptionBase;
   parsed: ParsedOptionBase;
   id: string;
+  tokenPair: TokenPair;
+  base: Token;
+  quote: Token;
 
   constructor(props: Props) {
     if ("raw" in props) {
       this.raw = props.raw;
       this.parsed = this.parsedFromRaw(props.raw);
       this.id = this.generateId();
+      this.tokenPair = getTokenPair(
+        this.parsed.optionType,
+        this.parsed.baseToken,
+        this.parsed.quoteToken
+      );
+      this.base = this.tokenPair.base;
+      this.quote = this.tokenPair.quote;
     } else if ("parsed" in props) {
       this.parsed = props.parsed;
       this.raw = this.rawFromParsed(props.parsed);
       this.id = this.generateId();
+      this.tokenPair = getTokenPair(
+        this.parsed.optionType,
+        this.parsed.baseToken,
+        this.parsed.quoteToken
+      );
+      this.base = this.tokenPair.base;
+      this.quote = this.tokenPair.quote;
     } else {
       throw Error("No option specified in constructor");
     }
@@ -188,7 +206,15 @@ export class Option {
   }
 
   get digits(): number {
-    return this.isCall ? ETH_DIGITS : USD_DIGITS;
+    return this.isCall ? this.base.decimals : this.quote.decimals;
+  }
+
+  get tokenAddress(): string {
+    return this.isCall ? this.base.tokenAddress : this.quote.tokenAddress;
+  }
+
+  get symbol(): string {
+    return this.isCall ? this.base.symbol : this.quote.symbol;
   }
 }
 
@@ -207,7 +233,7 @@ export class OptionWithPosition extends Option {
   parsedFromRaw(raw: RawOptionWithPosition): ParsedOptionWithPosition {
     // Uint256 - just one part
     // ETH_DIGITS for token count
-    const positionSize = uint256toDecimal(raw.position_size, ETH_DIGITS);
+    const positionSize = uint256toDecimal(raw.position_size, BASE_DIGITS);
     // math64_61
     const positionValue = math64x61toDecimal(
       raw.value_of_position.toString(10)

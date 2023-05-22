@@ -1,4 +1,3 @@
-import { ETH_DIGITS, USD_DIGITS } from "./../constants/amm";
 import { UserBalance } from "./../types/wallet";
 import {
   addTx,
@@ -17,7 +16,6 @@ import AmmAbi from "../abi/amm_abi.json";
 import LpAbi from "../abi/lptoken_abi.json";
 import { afterTransaction } from "../utils/blockchain";
 import { invalidatePositions } from "../queries/client";
-import { digitsByType, isCall } from "../utils/utils";
 import { intToMath64x61 } from "../utils/units";
 import { TransactionActions } from "../redux/reducers/transactions";
 import { ToastType } from "../redux/reducers/ui";
@@ -36,8 +34,7 @@ export const approveAndTradeOpen = async (
     processing: boolean;
   }) => void
 ): Promise<boolean> => {
-  const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
-    getTokenAddresses();
+  const { MAIN_CONTRACT_ADDRESS } = getTokenAddresses();
   const { optionType, optionSide } = option.parsed;
 
   const toApprove = getToApprove(
@@ -48,12 +45,12 @@ export const approveAndTradeOpen = async (
     parseInt(option.parsed.strikePrice, 10)
   );
 
-  if (isCall(optionType)) {
+  if (option.isCall) {
     // Call - make sure user has enough ETH
     if (balance.eth.lt(toApprove)) {
       const [has, needs] = [
-        shortInteger(balance.eth.toString(10), ETH_DIGITS),
-        shortInteger(toApprove.toString(10), ETH_DIGITS),
+        shortInteger(balance.eth.toString(10), option.digits),
+        shortInteger(toApprove.toString(10), option.digits),
       ];
       showToast(
         `To open this position you need ETH${needs.toFixed(
@@ -67,8 +64,8 @@ export const approveAndTradeOpen = async (
     // Put - make sure user has enough USD
     if (balance.usd.lt(toApprove)) {
       const [has, needs] = [
-        shortInteger(balance.usd.toString(10), USD_DIGITS),
-        shortInteger(toApprove.toString(10), USD_DIGITS),
+        shortInteger(balance.usd.toString(10), option.digits),
+        shortInteger(toApprove.toString(10), option.digits),
       ];
       showToast(
         `To open this position you need $${needs.toFixed(
@@ -81,7 +78,7 @@ export const approveAndTradeOpen = async (
   }
 
   const approveArgs = {
-    contractAddress: isCall(optionType) ? ETH_ADDRESS : USD_ADDRESS,
+    contractAddress: option.tokenAddress,
     entrypoint: AMM_METHODS.APPROVE,
     calldata: [MAIN_CONTRACT_ADDRESS, new BN(toApprove).toString(10), "0"],
   };
@@ -96,7 +93,7 @@ export const approveAndTradeOpen = async (
     entrypoint: AMM_METHODS.TRADE_OPEN,
     calldata: [
       ...option.tradeCalldata(size),
-      intToMath64x61(premia.toString(10), digitsByType(optionType)),
+      intToMath64x61(premia.toString(10), option.digits),
       deadline,
     ],
   };
