@@ -17,7 +17,7 @@ import { POOL_NAMES } from "../../constants/texts";
 import { openCallWidoDialog, openPutWidoDialog } from "../../redux/actions";
 
 type Props = {
-  account: AccountInterface;
+  account: AccountInterface | undefined;
   type: OptionType;
 };
 
@@ -89,11 +89,11 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
       </TableCell>
       <TableCell align="right">
         <Button
-          disabled={loading}
+          disabled={loading || !account}
           variant="contained"
-          onClick={() => handleStake(account, amount, type, setLoading)}
+          onClick={() => handleStake(account!, amount, type, setLoading)}
         >
-          {loading ? "Processing..." : "Stake"}
+          {loading ? "Processing..." : account ? "Stake" : "Connect wallet"}
         </Button>
         <Tooltip title="Stake from L1 directly to our liquidity pool - requires MetaMask">
           <Button sx={{ ml: 1 }} variant="contained" onClick={handleWidoClick}>

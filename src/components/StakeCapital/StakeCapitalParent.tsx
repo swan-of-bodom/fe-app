@@ -14,17 +14,9 @@ import { useAccount } from "../../hooks/useAccount";
 import { Link as RouterLink } from "react-router-dom";
 import { Info } from "@mui/icons-material";
 
-const NoContent = () => (
-  <Box sx={{ textAlign: "center" }}>
-    <p>Connect wallet to stake capital</p>
-  </Box>
-);
-
 export const StakeCapitalParent = () => {
   const account = useAccount();
   const sx = { fontWeight: "bold" };
-
-  if (!account) return <NoContent />;
 
   return (
     <Table aria-label="simple table">
