@@ -1,7 +1,12 @@
-import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import Container from "@mui/material/Container";
 import { Socials } from "./Socials";
+import {
+  Box,
+  Grid,
+  useTheme,
+  Typography,
+  Link,
+  Container,
+} from "@mui/material";
 
 const Copyright = () => (
   <Typography variant="body2" color="text.secondary" align="center">
@@ -14,22 +19,46 @@ const Copyright = () => (
   </Typography>
 );
 
-export const Footer = () => (
-  <>
-    <Container
-      maxWidth="md"
-      component="footer"
-      sx={{
-        borderTop: (theme) => `1px solid ${theme.palette.divider}`,
-        mt: 13,
-        py: [3, 6],
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center",
-      }}
-    >
-      <Copyright />
-      <Socials />
-    </Container>
-  </>
-);
+export const Footer = () => {
+  const theme = useTheme();
+  return (
+    <>
+      <Container
+        maxWidth="md"
+        component="footer"
+        sx={{
+          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+          mt: 13,
+          py: [3, 6],
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <Link
+                sx={{ color: theme.palette.text.primary }}
+                href="https://carmine.finance/audit/hack-a-chain"
+                target="_blank"
+              >
+                Audit by Hack a chain
+              </Link>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Socials />
+          </Grid>
+          <Grid item xs={12}>
+            <Copyright />
+          </Grid>
+        </Grid>
+      </Container>
+    </>
+  );
+};
