@@ -49,13 +49,23 @@ export const chooseType = async (): Promise<OptionType> => {
     return flipCoin();
   }
 
-  const chosenType =
-    hexToBN(call.data.unlocked_cap).mul(new BN(ETH_PRICE_APPROXIMATION)) >
-    hexToBN(put.data.unlocked_cap)
-      ? // more unlocked in the call pool than put pool
-        OptionType.Call
-      : // more unlocked in the put pool than call pool
-        OptionType.Put;
+  const callUnlocked = hexToBN(call.data.unlocked_cap).mul(
+    new BN(ETH_PRICE_APPROXIMATION)
+  );
+  const putUnlocked = hexToBN(put.data.unlocked_cap).mul(
+    new BN(10).pow(new BN(18 - 6))
+  );
+
+  debug({
+    callUnlocked: callUnlocked.toString(10),
+    putUnlocked: putUnlocked.toString(10),
+  });
+
+  const chosenType = callUnlocked.gt(putUnlocked)
+    ? // more unlocked in the call pool than put pool
+      OptionType.Call
+    : // more unlocked in the put pool than call pool
+      OptionType.Put;
 
   debug("type decided based on unlocked capital:", {
     call: call.data,
