@@ -155,11 +155,6 @@ export class Option {
     return new Option({ parsed });
   }
 
-  get isExpired(): boolean {
-    const nowInSecs = Math.floor(Date.now() / 1000);
-    return this.parsed.maturity < nowInSecs;
-  }
-
   get typeAsText(): string {
     return this.parsed.optionType === OptionType.Call ? "Call" : "Put";
   }
@@ -194,6 +189,10 @@ export class Option {
     return this.parsed.maturity * 1000 > new Date().getTime();
   }
 
+  get isExpired(): boolean {
+    return !this.isFresh;
+  }
+
   get struct(): string[] {
     return [
       toHex(this.raw.option_side),
@@ -206,15 +205,15 @@ export class Option {
   }
 
   get digits(): number {
-    return this.isCall ? this.base.decimals : this.quote.decimals;
+    return this.tokenPair.decimals;
   }
 
   get tokenAddress(): string {
-    return this.isCall ? this.base.tokenAddress : this.quote.tokenAddress;
+    return this.tokenPair.tokenAddress;
   }
 
   get symbol(): string {
-    return this.isCall ? this.base.symbol : this.quote.symbol;
+    return this.tokenPair.symbol;
   }
 }
 

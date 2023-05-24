@@ -20,6 +20,9 @@ export interface TokenPair {
   type: OptionType;
   base: Token;
   quote: Token;
+  symbol: string;
+  decimals: number;
+  tokenAddress: string;
 }
 
 export const tokensList: TokensList = {
@@ -42,11 +45,13 @@ const ethUsdcPair = {
 
 const ethUsdcCall: TokenPair = {
   ...ethUsdcPair,
+  ...tokensList.ETH,
   type: OptionType.Call,
 };
 
 const ethUsdcPut: TokenPair = {
   ...ethUsdcPair,
+  ...tokensList.USDC,
   type: OptionType.Put,
 };
 
