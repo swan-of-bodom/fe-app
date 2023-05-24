@@ -8,7 +8,6 @@ import { NoContent } from "../TableNoContent";
 import { fetchOptions } from "./fetchOptions";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
-import { debug } from "../../utils/debugger";
 import { SlippageButton } from "../Slippage/SlippageButton";
 import { OptionWithPremia } from "../../classes/Option";
 
@@ -48,15 +47,14 @@ const Content = ({ options, type, side, loading, error }: ContentProps) => {
 
 const TradeTable = () => {
   const { isLoading, isError, data } = useQuery(QueryKeys.trade, fetchOptions);
-
-  debug("React query data", { isLoading, isError, data });
-
   const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
-  const [type, setCallPut] = useState<OptionType>(OptionType.Put);
+  const [type, setCallPut] = useState<OptionType>(
+    data ? data[1] : OptionType.Call
+  );
   const theme = useTheme();
 
   const filtered = data
-    ? data.filter(
+    ? data[0].filter(
         (option) => option.isFresh && option.isSide(side) && option.isType(type)
       )
     : [];
@@ -74,6 +72,7 @@ const TradeTable = () => {
     >
       <Box
         sx={{
+          visibility: data ? "" : "hidden",
           display: "flex",
           [theme.breakpoints.down("md")]: {
             flexFlow: "column",
