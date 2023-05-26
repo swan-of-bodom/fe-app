@@ -49,14 +49,15 @@ export const StakeCapitalItem = ({ account, type }: Props) => {
   const poolName = isCall(type) ? POOL_NAMES.CALL : POOL_NAMES.PUT;
   const apyTooltipText =
     "APY (Annual Percentage Yield) is calculated based on the last week and represents the annualized yield of the pool. Keep in mind that it does NOT account for risk and that past returns do not imply future returns.";
-  const displayApy =
-    apy === undefined ? "--" : `${apy < 0 ? "" : "+"}${apy.toFixed(2)}%`;
+  // const displayApy =
+  //   apy === undefined ? "--" : `${apy < 0 ? "" : "+"}${apy.toFixed(2)}%`;
+  const displayApy = "--";
   const apySx: CSSProperties = { fontWeight: "bold", textAlign: "center" };
-  if (apy && apy < 0) {
-    apySx.color = theme.palette.error.main;
-  } else if (apy && apy > 0) {
-    apySx.color = theme.palette.success.main;
-  }
+  // if (apy && apy < 0) {
+  //   apySx.color = theme.palette.error.main;
+  // } else if (apy && apy > 0) {
+  //   apySx.color = theme.palette.success.main;
+  // }
 
   const handleWidoClick = () => {
     isCall(type) ? openCallWidoDialog() : openPutWidoDialog();
