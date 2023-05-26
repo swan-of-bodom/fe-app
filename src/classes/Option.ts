@@ -23,7 +23,7 @@ import {
   ParsedOptionWithPremia,
 } from "../types/options";
 import { BASE_DIGITS } from "../constants/amm";
-import { Token, TokenPair, getTokenPair } from "../pools/pools";
+import { TokenPair, getTokenPairByAddresses } from "../tokenPairs/tokenPairs";
 
 type Props =
   | {
@@ -38,32 +38,24 @@ export class Option {
   parsed: ParsedOptionBase;
   id: string;
   tokenPair: TokenPair;
-  base: Token;
-  quote: Token;
 
   constructor(props: Props) {
     if ("raw" in props) {
       this.raw = props.raw;
       this.parsed = this.parsedFromRaw(props.raw);
       this.id = this.generateId();
-      this.tokenPair = getTokenPair(
-        this.parsed.optionType,
+      this.tokenPair = getTokenPairByAddresses(
         this.parsed.baseToken,
         this.parsed.quoteToken
       );
-      this.base = this.tokenPair.base;
-      this.quote = this.tokenPair.quote;
     } else if ("parsed" in props) {
       this.parsed = props.parsed;
       this.raw = this.rawFromParsed(props.parsed);
       this.id = this.generateId();
-      this.tokenPair = getTokenPair(
-        this.parsed.optionType,
+      this.tokenPair = getTokenPairByAddresses(
         this.parsed.baseToken,
         this.parsed.quoteToken
       );
-      this.base = this.tokenPair.base;
-      this.quote = this.tokenPair.quote;
     } else {
       throw Error("No option specified in constructor");
     }
@@ -205,15 +197,22 @@ export class Option {
   }
 
   get digits(): number {
-    return this.tokenPair.decimals;
+    // call has base decimals, put has quote decimals
+    return this.isCall
+      ? this.tokenPair.base.decimals
+      : this.tokenPair.quote.decimals;
   }
 
   get tokenAddress(): string {
-    return this.tokenPair.tokenAddress;
+    return this.isCall
+      ? this.tokenPair.base.tokenAddress
+      : this.tokenPair.quote.tokenAddress;
   }
 
   get symbol(): string {
-    return this.tokenPair.symbol;
+    return this.isCall
+      ? this.tokenPair.base.symbol
+      : this.tokenPair.quote.symbol;
   }
 }
 

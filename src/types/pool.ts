@@ -9,6 +9,7 @@ import {
   Math64x61BN,
 } from "./units";
 import { uint256 } from "starknet";
+import { TokenPair } from "../tokenPairs/tokenPairs";
 
 export interface RawPool {
   quote_token_address: AddressBN;
@@ -17,8 +18,7 @@ export interface RawPool {
 }
 
 export interface ParsedPool {
-  quoteTokenAddress: Address;
-  baseTokenAddress: Address;
+  tokenPair: TokenPair;
   optionType: OptionType;
 }
 

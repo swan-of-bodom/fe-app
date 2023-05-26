@@ -1,5 +1,5 @@
 import { OptionWithPosition } from "../../classes/Option";
-import { isCall, isLong, timestampToReadableDate } from "../../utils/utils";
+import { timestampToReadableDate } from "../../utils/utils";
 import { Button, TableCell, TableRow, Tooltip } from "@mui/material";
 import { debug } from "../../utils/debugger";
 import { tradeSettle } from "../../calls/tradeSettle";
@@ -41,23 +41,12 @@ export const InMoneyItem = ({ option }: Props) => {
       });
   };
 
-  const {
-    strikePrice,
-    optionSide,
-    optionType,
-    maturity,
-    positionSize,
-    positionValue,
-  } = option.parsed;
+  const { strikePrice, maturity, positionSize, positionValue } = option.parsed;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
-  const [typeText, currency] = isCall(optionType)
-    ? ["Call", "ETH"]
-    : ["Put", "USD"];
-  const sideText = isLong(optionSide) ? "Long" : "Short";
 
-  const desc = `${sideText} ${typeText} with strike $${strikePrice}`;
+  const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strikePrice}`;
   const decimals = 4;
 
   return (
@@ -68,7 +57,7 @@ export const InMoneyItem = ({ option }: Props) => {
       <TableCell>
         <Tooltip title={positionValue}>
           <span>
-            {currency} {positionValue.toFixed(decimals)}
+            {option.symbol} {positionValue.toFixed(decimals)}
           </span>
         </Tooltip>
       </TableCell>

@@ -1,4 +1,5 @@
 import { ETH_DIGITS } from "../../constants/amm";
+import { getTokenPairByAddresses } from "../../tokenPairs/tokenPairs";
 import {
   Pool,
   PoolInfo,
@@ -13,9 +14,11 @@ import { digitsByType, toHex } from "../utils";
 import { uint256 } from "starknet";
 
 export const parsePool = (raw: ResponsePool): Pool => {
+  const quoteTokenAddress = toHex(raw.quote_token_address);
+  const baseTokenAddress = toHex(raw.base_token_address);
+
   const parsed = {
-    quoteTokenAddress: toHex(raw.quote_token_address),
-    baseTokenAddress: toHex(raw.base_token_address),
+    tokenPair: getTokenPairByAddresses(baseTokenAddress, quoteTokenAddress),
     optionType: bnToOptionType(raw.option_type),
   };
   return { raw, parsed };
