@@ -45,36 +45,20 @@ export const approveAndTradeOpen = async (
     parseInt(option.parsed.strikePrice, 10)
   );
 
-  if (option.isCall) {
-    // Call - make sure user has enough ETH
-    if (balance.eth.lt(toApprove)) {
-      const [has, needs] = [
-        shortInteger(balance.eth.toString(10), option.digits),
-        shortInteger(toApprove.toString(10), option.digits),
-      ];
-      showToast(
-        `To open this position you need ETH${needs.toFixed(
-          4
-        )}, but you only have ETH${has.toFixed(4)}`,
-        ToastType.Warn
-      );
-      throw Error("Not enough funds");
-    }
-  } else {
-    // Put - make sure user has enough USD
-    if (balance.usd.lt(toApprove)) {
-      const [has, needs] = [
-        shortInteger(balance.usd.toString(10), option.digits),
-        shortInteger(toApprove.toString(10), option.digits),
-      ];
-      showToast(
-        `To open this position you need $${needs.toFixed(
-          4
-        )}, but you only have $${has.toFixed(4)}`,
-        ToastType.Warn
-      );
-      throw Error("Not enough funds");
-    }
+  const tokenId = option.underlying.id;
+
+  if (balance[tokenId].lt(toApprove)) {
+    const [has, needs] = [
+      shortInteger(balance[tokenId].toString(10), option.digits),
+      shortInteger(toApprove.toString(10), option.digits),
+    ];
+    showToast(
+      `To open this position you need ${option.symbol}${needs.toFixed(
+        4
+      )}, but you only have ${option.symbol}${has.toFixed(4)}`,
+      ToastType.Warn
+    );
+    throw Error("Not enough funds");
   }
 
   const approveArgs = {

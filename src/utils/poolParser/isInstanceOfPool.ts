@@ -1,18 +1,18 @@
 import { inputBaseClasses } from "@mui/material";
 import {
-  ResponsePool,
+  RawPool,
   ResponsePoolInfo,
   ResponseUserPoolInfo,
 } from "../../types/pool";
 import { debug } from "../debugger";
 
-export const isInstanceOfPool = (input: unknown): input is ResponsePool => {
+export const isInstanceOfPool = (input: unknown): input is RawPool => {
   if (!input) {
     return false;
   }
 
   const { quote_token_address, base_token_address, option_type } =
-    input as ResponsePool;
+    input as RawPool;
 
   if (!quote_token_address || !base_token_address || !option_type) {
     return false;

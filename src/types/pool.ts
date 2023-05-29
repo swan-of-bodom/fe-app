@@ -9,22 +9,17 @@ import {
   Math64x61BN,
 } from "./units";
 import { uint256 } from "starknet";
-import { TokenPair } from "../tokenPairs/tokenPairs";
+
+export type ParsedPool = {
+  quoteToken: string;
+  baseToken: string;
+  optionType: OptionType;
+};
 
 export interface RawPool {
   quote_token_address: AddressBN;
   base_token_address: AddressBN;
   option_type: BN;
-}
-
-export interface ParsedPool {
-  tokenPair: TokenPair;
-  optionType: OptionType;
-}
-
-export interface Pool {
-  raw: RawPool;
-  parsed: ParsedPool;
 }
 
 export interface RawPoolInfo extends RawPool {
@@ -63,14 +58,8 @@ export interface UserPoolInfo {
   parsed: ParsedUserPoolInfo;
 }
 
-export interface ResponsePool {
-  quote_token_address: AddressBN;
-  base_token_address: AddressBN;
-  option_type: BN;
-}
-
 export interface ResponsePoolInfo {
-  pool: ResponsePool;
+  pool: RawPool;
   lptoken_address: AddressBN;
   staked_capital: uint256.Uint256; // lpool_balance
   unlocked_capital: uint256.Uint256;

@@ -23,7 +23,7 @@ import {
   ParsedOptionWithPremia,
 } from "../types/options";
 import { BASE_DIGITS } from "../constants/amm";
-import { TokenPair, getTokenPairByAddresses } from "../tokenPairs/tokenPairs";
+import { Token, TokenPair, getTokenPairByAddresses } from "../tokens/tokens";
 
 type Props =
   | {
@@ -196,23 +196,21 @@ export class Option {
     ];
   }
 
+  get underlying(): Token {
+    return this.isCall ? this.tokenPair.base : this.tokenPair.quote;
+  }
+
   get digits(): number {
     // call has base decimals, put has quote decimals
-    return this.isCall
-      ? this.tokenPair.base.decimals
-      : this.tokenPair.quote.decimals;
+    return this.underlying.decimals;
   }
 
   get tokenAddress(): string {
-    return this.isCall
-      ? this.tokenPair.base.tokenAddress
-      : this.tokenPair.quote.tokenAddress;
+    return this.underlying.tokenAddress;
   }
 
   get symbol(): string {
-    return this.isCall
-      ? this.tokenPair.base.symbol
-      : this.tokenPair.quote.symbol;
+    return this.underlying.symbol;
   }
 }
 

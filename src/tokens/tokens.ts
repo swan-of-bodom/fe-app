@@ -1,8 +1,11 @@
+import { Pool } from "../classes/Pool";
 import { getTokenAddresses } from "../constants/amm";
+import { OptionType } from "../types/options";
 import { debug } from "../utils/debugger";
 import { standardiseAddress } from "../utils/utils";
 
 export interface Token {
+  id: TokenKey;
   symbol: string;
   decimals: number;
   tokenAddress: string;
@@ -13,9 +16,9 @@ export interface TokenPair {
   quote: Token;
 }
 
-export enum TokenKeys {
-  ETH = "ETH",
-  USDC = "USDC",
+export enum TokenKey {
+  ETH = "ethereum",
+  USDC = "usd-coin",
 }
 
 export enum TokenPairKey {
@@ -23,7 +26,7 @@ export enum TokenPairKey {
 }
 
 export type TokensList = {
-  [key in TokenKeys]: Token;
+  [key in TokenKey]: Token;
 };
 
 export type TokenPairList = {
@@ -31,12 +34,14 @@ export type TokenPairList = {
 };
 
 export const tokensList: TokensList = {
-  ETH: {
+  [TokenKey.ETH]: {
+    id: TokenKey.ETH,
     symbol: "ETH",
     decimals: 18,
     tokenAddress: standardiseAddress(getTokenAddresses().ETH_ADDRESS),
   },
-  USDC: {
+  [TokenKey.USDC]: {
+    id: TokenKey.USDC,
     symbol: "USDC",
     decimals: 6,
     tokenAddress: standardiseAddress(getTokenAddresses().USD_ADDRESS),
@@ -45,8 +50,8 @@ export const tokensList: TokensList = {
 
 export const tokenPairList: TokenPairList = {
   EthUsdc: {
-    base: tokensList.ETH,
-    quote: tokensList.USDC,
+    base: tokensList[TokenKey.ETH],
+    quote: tokensList[TokenKey.USDC],
   },
 };
 
@@ -67,4 +72,19 @@ export const getTokenPairByAddresses = (
 
   // unreachable
   throw Error(`Could not find pair: base: ${base}, quote: ${quote}`);
+};
+
+export const getPoolByPairType = (
+  pairKey: TokenPairKey,
+  type: OptionType
+): Pool => {
+  const pair = tokenPairList[pairKey];
+
+  return new Pool({
+    parsed: {
+      optionType: type,
+      baseToken: pair.base.tokenAddress,
+      quoteToken: pair.quote.tokenAddress,
+    },
+  });
 };
