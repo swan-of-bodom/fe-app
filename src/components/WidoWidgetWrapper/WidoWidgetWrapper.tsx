@@ -8,14 +8,21 @@ import { NetworkName } from "../../types/network";
 import { openMetamaskMissingDialog } from "../../redux/actions";
 import { getTokenAddresses } from "../../constants/amm";
 import { stripZerosFromAddress } from "../../utils/utils";
+import { openWalletConnectDialog } from "../../redux/actions";
 
-const handleConnectWalletClick = () => {
-  if (!window.ethereum) {
-    debug("MetaMask not present");
-    openMetamaskMissingDialog();
-    return;
+const handleConnectWalletClick = (chainId: number) => {
+  if (chainId === 1) {
+    // connect ETH L1 wallet
+    if (!window.ethereum) {
+      debug("MetaMask not present");
+      openMetamaskMissingDialog();
+      return;
+    }
+    window.ethereum.request({ method: "eth_requestAccounts" });
   }
-  window.ethereum.request({ method: "eth_requestAccounts" });
+  if (chainId === 15366) {
+    openWalletConnectDialog();
+  }
 };
 
 const getTokens = () => {

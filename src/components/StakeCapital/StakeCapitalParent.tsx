@@ -1,5 +1,4 @@
 import {
-  Box,
   Table,
   TableBody,
   TableCell,
@@ -15,12 +14,6 @@ import { Link as RouterLink } from "react-router-dom";
 import { Info } from "@mui/icons-material";
 import { TokenPairKey, getPoolByPairType } from "../../tokens/tokens";
 
-const NoContent = () => (
-  <Box sx={{ textAlign: "center" }}>
-    <p>Connect wallet to stake capital</p>
-  </Box>
-);
-
 export const StakeCapitalParent = () => {
   const account = useAccount();
   const sx = { fontWeight: "bold" };
@@ -29,8 +22,6 @@ export const StakeCapitalParent = () => {
     getPoolByPairType(TokenPairKey.EthUsdc, OptionType.Call),
     getPoolByPairType(TokenPairKey.EthUsdc, OptionType.Put),
   ];
-
-  if (!account) return <NoContent />;
 
   return (
     <Table aria-label="simple table">

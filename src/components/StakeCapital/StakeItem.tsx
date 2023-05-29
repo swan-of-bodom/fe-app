@@ -15,8 +15,8 @@ import { openCallWidoDialog, openPutWidoDialog } from "../../redux/actions";
 import { Pool } from "../../classes/Pool";
 
 type Props = {
-  account: AccountInterface;
-  pool: Pool;
+  account: AccountInterface | undefined;
+  type: OptionType;
 };
 
 const getApy = async (setApy: (n: number) => void, pool: Pool) => {
@@ -47,7 +47,7 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
   const apyTooltipText =
     "APY (Annual Percentage Yield) is calculated based on the last week and represents the annualized yield of the pool. Keep in mind that it does NOT account for risk and that past returns do not imply future returns.";
   const displayApy =
-    apy === undefined ? "--" : `${apy < 0 ? "-" : "+"}${apy.toFixed(2)}%`;
+    apy === undefined ? "--" : `${apy < 0 ? "" : "+"}${apy.toFixed(2)}%`;
   const apySx: CSSProperties = { fontWeight: "bold", textAlign: "center" };
   if (apy && apy < 0) {
     apySx.color = theme.palette.error.main;
@@ -86,11 +86,11 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
       </TableCell>
       <TableCell align="right">
         <Button
-          disabled={loading}
+          disabled={loading || !account}
           variant="contained"
-          onClick={() => handleStake(account, amount, pool, setLoading)}
+          onClick={() => handleStake(account!, amount, type, setLoading)}
         >
-          {loading ? "Processing..." : "Stake"}
+          {loading ? "Processing..." : account ? "Stake" : "Connect wallet"}
         </Button>
         <Tooltip title="Stake from L1 directly to our liquidity pool - requires MetaMask">
           <Button sx={{ ml: 1 }} variant="contained" onClick={handleWidoClick}>
