@@ -16,7 +16,7 @@ import { Pool } from "../../classes/Pool";
 
 type Props = {
   account: AccountInterface | undefined;
-  type: OptionType;
+  pool: Pool;
 };
 
 const getApy = async (setApy: (n: number) => void, pool: Pool) => {
@@ -88,7 +88,7 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
         <Button
           disabled={loading || !account}
           variant="contained"
-          onClick={() => handleStake(account!, amount, type, setLoading)}
+          onClick={() => handleStake(account!, amount, pool, setLoading)}
         >
           {loading ? "Processing..." : account ? "Stake" : "Connect wallet"}
         </Button>
