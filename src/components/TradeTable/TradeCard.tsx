@@ -185,12 +185,10 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     );
   }
 
-  const premia = option.isCall ? data.premiaEth : data.premiaUsd;
+  const premia = option.isCall ? data.premiaBase : data.premiaQuote;
   const currentPremia: BN = longInteger(premia, option.digits);
 
-  const displayPremia = option.isCall
-    ? `ETH ${data.premiaEth.toFixed(5)}`
-    : `$${data.premiaUsd.toFixed(5)}`;
+  const displayPremia = `${option.symbol} ${premia.toFixed(5)}`;
 
   const graphData = getProfitGraphData(
     optionType,
@@ -257,7 +255,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
       ProfitTable={() =>
         ProfitTable({
           premia: data.premiaUsd,
-          basePremia: data.basePremiaUsd,
+          basePremia: data.sizeOnePremiaUsd,
           option,
         })
       }

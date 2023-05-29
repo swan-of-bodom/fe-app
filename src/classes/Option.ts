@@ -20,6 +20,7 @@ import {
   RawOptionWithPremia,
   ParsedOptionWithPosition,
   ParsedOptionWithPremia,
+  FinancialData,
 } from "../types/options";
 import { BASE_DIGITS } from "../constants/amm";
 import { TokenPair, getTokenPairByAddresses } from "../tokens/tokens";
@@ -118,6 +119,65 @@ export class Option extends Pool {
 
   isSide(side: OptionSide): boolean {
     return this.parsed.optionSide === side;
+  }
+
+  financialDataCall(
+    size: number,
+    // premia is in base token
+    premia: number,
+    basePrice: number,
+    quotePrice: number
+  ): FinancialData {
+    const premiaUsd = premia * basePrice;
+    const premiaBase = premia;
+    const premiaQuote = premiaUsd / quotePrice;
+    const sizeOnePremiaUsd = premiaUsd / size;
+    const sizeOnePremiaBase = premiaBase / size;
+    const sizeOnePremiaQuote = premiaQuote / size;
+
+    return {
+      premiaUsd,
+      premiaBase,
+      premiaQuote,
+      sizeOnePremiaUsd,
+      sizeOnePremiaBase,
+      sizeOnePremiaQuote,
+    };
+  }
+
+  financialDataPut(
+    size: number,
+    // premia is in quote token
+    premia: number,
+    basePrice: number,
+    quotePrice: number
+  ): FinancialData {
+    const premiaUsd = premia * quotePrice;
+    const premiaBase = premiaUsd / basePrice;
+    const premiaQuote = premia;
+    const sizeOnePremiaUsd = premiaUsd / size;
+    const sizeOnePremiaBase = premiaBase / size;
+    const sizeOnePremiaQuote = premiaQuote / size;
+
+    return {
+      premiaUsd,
+      premiaBase,
+      premiaQuote,
+      sizeOnePremiaUsd,
+      sizeOnePremiaBase,
+      sizeOnePremiaQuote,
+    };
+  }
+
+  financialData(
+    size: number,
+    premia: number,
+    basePrice: number,
+    quotePrice: number
+  ): FinancialData {
+    return this.isCall
+      ? this.financialDataCall(size, premia, basePrice, quotePrice)
+      : this.financialDataPut(size, premia, basePrice, quotePrice);
   }
 
   ////////////

@@ -72,8 +72,9 @@ export interface ParsedOptionWithPremia extends ParsedOptionBase {
 
 export type FinancialData = {
   premiaUsd: number;
-  premiaEth: number;
-  basePremiaUsd: number;
-  basePremiaEth: number;
-  ethInUsd: number;
+  premiaBase: number;
+  premiaQuote: number;
+  sizeOnePremiaUsd: number;
+  sizeOnePremiaBase: number;
+  sizeOnePremiaQuote: number;
 };

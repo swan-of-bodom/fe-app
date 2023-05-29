@@ -5,6 +5,7 @@ import { OptionType } from "../types/options";
 import { Token, TokenPair, getTokenPairByAddresses } from "../tokens/tokens";
 import { RawPool } from "../types/pool";
 import { ParsedPool } from "../types/pool";
+import { getMultipleTokensValueInUsd } from "../tokens/tokenPrices";
 
 type Props =
   | {
@@ -69,6 +70,14 @@ export class Pool {
 
   isType(type: OptionType): boolean {
     return this.parsed.optionType === type;
+  }
+
+  async tokenPricesInUsd() {
+    const [base, quote] = await getMultipleTokensValueInUsd([
+      this.tokenPair.base.id,
+      this.tokenPair.quote.id,
+    ]);
+    return { base, quote };
   }
 
   ////////////
