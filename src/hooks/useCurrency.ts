@@ -1,10 +1,11 @@
-import { getEthInUsd } from "./../calls/currencies";
+import { getTokenValueInUsd } from "../tokens/tokenPrices";
+import { TokenKey } from "../tokens/tokens";
 import { useState, useEffect } from "react";
 
-export const useEth = (): number | undefined => {
-  const delay = 10 * 1000; // 10s
-  const [currentEth, setCurrentEth] = useState<number | undefined>(undefined);
-  const cb = () => getEthInUsd().then((res) => setCurrentEth(res));
+export const useCurrency = (id: TokenKey): number | undefined => {
+  const delay = 1000;
+  const [current, setCurrent] = useState<number | undefined>(undefined);
+  const cb = () => getTokenValueInUsd(id).then((res) => setCurrent(res));
 
   useEffect(() => {
     cb();
@@ -13,5 +14,5 @@ export const useEth = (): number | undefined => {
     return () => clearInterval(id);
   });
 
-  return currentEth;
+  return current;
 };

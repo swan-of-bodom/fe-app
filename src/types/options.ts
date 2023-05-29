@@ -5,13 +5,12 @@ import {
   Int,
   Hex,
   Decimal,
-  AddressBN,
   IntBN,
   Math64x61BN,
   OptionSideBN,
-  OptionTypeBN,
   Uint256BN,
 } from "./units";
+import { ParsedPool, RawPool } from "./pool";
 
 export enum OptionType {
   Call = "0",
@@ -32,13 +31,7 @@ export interface OptionStruct {
   base_token_address: Address;
 }
 
-export interface RawOption {
-  option_side: BN;
-  maturity: BN;
-  strike_price: BN;
-  quote_token_address: BN;
-  base_token_address: BN;
-  option_type: BN;
+export interface RawOption extends RawOptionBase {
   token_address?: BN;
   balance?: BN;
   premia?: BN;
@@ -46,22 +39,16 @@ export interface RawOption {
   value_of_position?: BN;
 }
 
-export interface RawOptionBase {
+export interface RawOptionBase extends RawPool {
   option_side: OptionSideBN;
   maturity: IntBN;
   strike_price: Math64x61BN;
-  quote_token_address: AddressBN;
-  base_token_address: AddressBN;
-  option_type: OptionTypeBN;
 }
 
-export interface ParsedOptionBase {
+export interface ParsedOptionBase extends ParsedPool {
   optionSide: OptionSide;
   maturity: Decimal;
-  strikePrice: string;
-  quoteToken: string;
-  baseToken: string;
-  optionType: OptionType;
+  strikePrice: number;
 }
 
 export interface RawOptionWithPosition extends RawOptionBase {
@@ -85,8 +72,9 @@ export interface ParsedOptionWithPremia extends ParsedOptionBase {
 
 export type FinancialData = {
   premiaUsd: number;
-  premiaEth: number;
-  basePremiaUsd: number;
-  basePremiaEth: number;
-  ethInUsd: number;
+  premiaBase: number;
+  premiaQuote: number;
+  sizeOnePremiaUsd: number;
+  sizeOnePremiaBase: number;
+  sizeOnePremiaQuote: number;
 };

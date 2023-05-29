@@ -55,7 +55,7 @@ export const ProfitTable = ({
   basePremia,
   premia,
 }: ProfitTableProps) => {
-  const numStrikePrice = parseFloat(option.parsed.strikePrice);
+  const numStrikePrice = option.parsed.strikePrice;
   const limited = "$" + premia.toFixed(2);
   const unlimited = "Unlimited";
   const breakEven =
