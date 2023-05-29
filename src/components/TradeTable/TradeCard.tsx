@@ -193,7 +193,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
   const graphData = getProfitGraphData(
     optionType,
     optionSide,
-    parseFloat(strikePrice),
+    strikePrice,
     data.premiaUsd,
     amount
   );

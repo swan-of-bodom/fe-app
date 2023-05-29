@@ -48,7 +48,7 @@ export interface RawOptionBase extends RawPool {
 export interface ParsedOptionBase extends ParsedPool {
   optionSide: OptionSide;
   maturity: Decimal;
-  strikePrice: string;
+  strikePrice: number;
 }
 
 export interface RawOptionWithPosition extends RawOptionBase {

@@ -68,7 +68,7 @@ export class Option extends Pool {
       optionSide: bnToOptionSide(raw.option_side),
       optionType: bnToOptionType(raw.option_type),
       maturity: new BN(raw.maturity).toNumber(),
-      strikePrice: String(math64x61toDecimal(raw.strike_price.toString(10))),
+      strikePrice: math64x61toDecimal(raw.strike_price.toString(10)),
       quoteToken: toHex(raw.quote_token_address),
       baseToken: toHex(raw.base_token_address),
     };
@@ -78,9 +78,7 @@ export class Option extends Pool {
     return {
       option_side: new BN(parsed.optionSide),
       maturity: new BN(parsed.maturity),
-      strike_price: new BN(
-        decimalToMath64x61(parseInt(parsed.strikePrice, 10))
-      ),
+      strike_price: new BN(decimalToMath64x61(parsed.strikePrice)),
       quote_token_address: new BN(parsed.quoteToken),
       base_token_address: new BN(parsed.baseToken),
       option_type: new BN(parsed.optionType),

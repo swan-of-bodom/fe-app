@@ -42,7 +42,7 @@ export const approveAndTradeOpen = async (
     optionSide,
     size,
     premia,
-    parseInt(option.parsed.strikePrice, 10)
+    option.parsed.strikePrice
   );
 
   const tokenId = option.underlying.id;
