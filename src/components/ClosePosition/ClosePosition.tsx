@@ -19,30 +19,35 @@ import { getPremiaWithSlippage, shortInteger } from "../../utils/computations";
 import { tradeClose } from "../../calls/tradeClose";
 import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
-import { useEth } from "../../hooks/useCurrency";
+import { useCurrency } from "../../hooks/useCurrency";
 import { Math64x61 } from "../../types/units";
 import { OptionWithPosition } from "../../classes/Option";
 
 const premiaToDisplayValue = (
   premia: number,
-  ethInUsd: number,
+  base: number,
+  quote: number,
   option: OptionWithPosition
 ) => {
   // Long Call
   if (option.isCall && option.isLong) {
-    return `$${(premia * ethInUsd).toFixed(2)}`;
+    return `$${(premia * base).toFixed(2)}`;
   }
   // Long Put
   if (option.isPut && option.isLong) {
-    return `$${premia.toFixed(2)}`;
+    return `$${(premia * quote).toFixed(2)}`;
   }
   // Short Call
   if (option.isCall && option.isShort) {
-    return `$${((option.parsed.positionSize - premia) * ethInUsd).toFixed(2)}`;
+    return `$${((option.parsed.positionSize * quote - premia) * base).toFixed(
+      2
+    )}`;
   }
   // Short Put
   if (option.isPut && option.isShort) {
-    return `$${(option.parsed.positionSize * ethInUsd - premia).toFixed(2)}`;
+    return `$${((option.parsed.positionSize * base - premia) * quote).toFixed(
+      2
+    )}`;
   }
   // unreachable
   throw Error('Could not get "premiaToDisplayValue"');
@@ -107,17 +112,15 @@ type Props = {
 
 const WithOption = ({ option }: Props) => {
   const account = useAccount();
-  const ethInUsd = useEth();
+  const base = useCurrency(option.tokenPair.base.id);
+  const quote = useCurrency(option.tokenPair.quote.id);
+
   const { positionSize: max, optionSide: side } = option.parsed;
   const [size, setSize] = useState<number>(max);
   const [inputText, setInputText] = useState<string>(String(max));
   const debouncedSize = useDebounce<number>(size);
 
-  const { status, data, error, isFetching } = usePremiaQuery(
-    option,
-    size,
-    true
-  );
+  const { data, error, isFetching } = usePremiaQuery(option, size, true);
 
   const cb = (n: number) => (n > max ? max : n);
   const handleChange = handleNumericChangeFactory(setInputText, setSize, cb);
@@ -138,8 +141,6 @@ const WithOption = ({ option }: Props) => {
 
     tradeClose(account, option, premia, size, true);
   };
-
-  debug("usePremiaQuery", { status, data, error, isFetching });
 
   if (debouncedSize === 0) {
     return (
@@ -172,7 +173,7 @@ const WithOption = ({ option }: Props) => {
     );
   }
 
-  if (isFetching || !ethInUsd) {
+  if (isFetching || !base || !quote) {
     // loading...
     return (
       <Template
@@ -188,7 +189,7 @@ const WithOption = ({ option }: Props) => {
     );
   }
 
-  if (typeof data === "undefined") {
+  if (typeof data === "undefined" || error) {
     // no data
     return (
       <Template
@@ -203,6 +204,7 @@ const WithOption = ({ option }: Props) => {
   }
 
   const premia = math64x61toDecimal(data);
+  debug("Closing premia:", premia);
   const premiaWithSlippage = shortInteger(
     getPremiaWithSlippage(
       new BN(math64x61ToInt(data, option.digits)),
@@ -213,10 +215,11 @@ const WithOption = ({ option }: Props) => {
   );
   const slippage = store.getState().settings.slippage;
 
-  const displayPremia = premiaToDisplayValue(premia, ethInUsd, option);
+  const displayPremia = premiaToDisplayValue(premia, base, quote, option);
   const displayPremiaWithSlippage = premiaToDisplayValue(
     premiaWithSlippage,
-    ethInUsd,
+    base,
+    quote,
     option
   );
 

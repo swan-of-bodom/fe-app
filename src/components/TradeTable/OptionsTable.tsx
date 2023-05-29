@@ -35,11 +35,7 @@ const OptionsTable = ({ options }: Props) => {
         </TableHead>
         <TableBody>
           {options
-            .sort(
-              (a, b) =>
-                parseInt(b.parsed.strikePrice, 10) -
-                parseInt(a.parsed.strikePrice, 10)
-            )
+            .sort((a, b) => b.parsed.strikePrice - a.parsed.strikePrice)
             .map((o, i: number) => (
               <OptionsTableItem
                 option={o}

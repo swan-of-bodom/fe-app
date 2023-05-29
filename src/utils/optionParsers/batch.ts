@@ -20,7 +20,7 @@ export const parseBatchOfOptions = <T, R>(
     try {
       options.push(parsingFunction(cur));
     } catch (error) {
-      throw Error("Failed to parse batch, parsing fnc threw" + error);
+      throw Error(`Failed to parse batch, parsing fnc threw: ${error}`);
     }
   }
 

@@ -1,4 +1,3 @@
-import { ETH_DIGITS, USD_DIGITS } from "./../constants/amm";
 import { UserBalance } from "./../types/wallet";
 import {
   addTx,
@@ -17,7 +16,6 @@ import AmmAbi from "../abi/amm_abi.json";
 import LpAbi from "../abi/lptoken_abi.json";
 import { afterTransaction } from "../utils/blockchain";
 import { invalidatePositions } from "../queries/client";
-import { digitsByType, isCall } from "../utils/utils";
 import { intToMath64x61 } from "../utils/units";
 import { TransactionActions } from "../redux/reducers/transactions";
 import { ToastType } from "../redux/reducers/ui";
@@ -36,8 +34,7 @@ export const approveAndTradeOpen = async (
     processing: boolean;
   }) => void
 ): Promise<boolean> => {
-  const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
-    getTokenAddresses();
+  const { MAIN_CONTRACT_ADDRESS } = getTokenAddresses();
   const { optionType, optionSide } = option.parsed;
 
   const toApprove = getToApprove(
@@ -45,43 +42,27 @@ export const approveAndTradeOpen = async (
     optionSide,
     size,
     premia,
-    parseInt(option.parsed.strikePrice, 10)
+    option.parsed.strikePrice
   );
 
-  if (isCall(optionType)) {
-    // Call - make sure user has enough ETH
-    if (balance.eth.lt(toApprove)) {
-      const [has, needs] = [
-        shortInteger(balance.eth.toString(10), ETH_DIGITS),
-        shortInteger(toApprove.toString(10), ETH_DIGITS),
-      ];
-      showToast(
-        `To open this position you need ETH${needs.toFixed(
-          4
-        )}, but you only have ETH${has.toFixed(4)}`,
-        ToastType.Warn
-      );
-      throw Error("Not enough funds");
-    }
-  } else {
-    // Put - make sure user has enough USD
-    if (balance.usd.lt(toApprove)) {
-      const [has, needs] = [
-        shortInteger(balance.usd.toString(10), USD_DIGITS),
-        shortInteger(toApprove.toString(10), USD_DIGITS),
-      ];
-      showToast(
-        `To open this position you need $${needs.toFixed(
-          4
-        )}, but you only have $${has.toFixed(4)}`,
-        ToastType.Warn
-      );
-      throw Error("Not enough funds");
-    }
+  const tokenId = option.underlying.id;
+
+  if (balance[tokenId].lt(toApprove)) {
+    const [has, needs] = [
+      shortInteger(balance[tokenId].toString(10), option.digits),
+      shortInteger(toApprove.toString(10), option.digits),
+    ];
+    showToast(
+      `To open this position you need ${option.symbol}${needs.toFixed(
+        4
+      )}, but you only have ${option.symbol}${has.toFixed(4)}`,
+      ToastType.Warn
+    );
+    throw Error("Not enough funds");
   }
 
   const approveArgs = {
-    contractAddress: isCall(optionType) ? ETH_ADDRESS : USD_ADDRESS,
+    contractAddress: option.tokenAddress,
     entrypoint: AMM_METHODS.APPROVE,
     calldata: [MAIN_CONTRACT_ADDRESS, new BN(toApprove).toString(10), "0"],
   };
@@ -96,7 +77,7 @@ export const approveAndTradeOpen = async (
     entrypoint: AMM_METHODS.TRADE_OPEN,
     calldata: [
       ...option.tradeCalldata(size),
-      intToMath64x61(premia.toString(10), digitsByType(optionType)),
+      intToMath64x61(premia.toString(10), option.digits),
       deadline,
     ],
   };

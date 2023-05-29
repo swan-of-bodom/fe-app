@@ -1,32 +1,13 @@
 import { AccountInterface } from "starknet";
 import { UserBalance } from "./../../types/wallet";
-import { getEthInUsd } from "../../calls/currencies";
 import { FinancialData } from "../../types/options";
 import { getPremia } from "../../calls/getPremia";
 import { debug } from "../../utils/debugger";
-import { financialDataEth, financialDataUsd } from "../../utils/computations";
 import { math64x61toDecimal } from "../../utils/units";
 import { getUserBalance } from "../../calls/balanceOf";
 import { OptionWithPremia } from "../../classes/Option";
 
-const ethData = {
-  ethInUsd: 0,
-  lastFetched: 0,
-};
-
 const validDuration = 30 * 1000; // 30s
-
-const recentEthInUsd = async () => {
-  const timeNow = new Date().getTime();
-  if (timeNow < ethData.lastFetched + validDuration) {
-    return ethData.ethInUsd;
-  }
-  const ethNow = await getEthInUsd();
-  const timeAfterFetch = new Date().getTime();
-  ethData.ethInUsd = ethNow;
-  ethData.lastFetched = timeAfterFetch;
-  return ethNow;
-};
 
 const balanceData: { balance: UserBalance | undefined; lastFetched: number } = {
   balance: undefined,
@@ -54,8 +35,8 @@ export const fetchModalData = async (
   account: AccountInterface | undefined,
   signal: AbortSignal
 ): Promise<[FinancialData | null, UserBalance | undefined]> => {
-  const [ethInUsd, fetchedPremia, userBalance] = await Promise.all([
-    recentEthInUsd(),
+  const [{ base, quote }, fetchedPremia, userBalance] = await Promise.all([
+    option.tokenPricesInUsd(),
     getPremia(option, size, false),
     recentUserBalance(account),
   ]).catch((e: Error) => {
@@ -64,7 +45,8 @@ export const fetchModalData = async (
   });
 
   debug("Fetched ETH, premia and user balance", {
-    ethInUsd,
+    base,
+    quote,
     fetchedPremia,
     userBalance,
   });
@@ -76,9 +58,7 @@ export const fetchModalData = async (
   const convertedPremia = math64x61toDecimal(fetchedPremia);
 
   return [
-    option.isCall
-      ? financialDataEth(size, convertedPremia, ethInUsd)
-      : financialDataUsd(size, convertedPremia, ethInUsd),
+    option.financialData(size, convertedPremia, base, quote),
     userBalance,
   ];
 };

@@ -1,5 +1,6 @@
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import BN from "bn.js";
+import { TokenKey } from "../tokens/tokens";
 
 export enum SupportedWalletIds {
   ArgentX = "argentX",
@@ -7,8 +8,7 @@ export enum SupportedWalletIds {
 }
 
 export type UserBalance = {
-  eth: BN;
-  usd: BN;
+  [key in TokenKey]: BN;
 };
 
 declare global {

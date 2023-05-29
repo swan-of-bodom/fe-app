@@ -12,10 +12,16 @@ import { StakeCapitalItem } from "./StakeItem";
 import { useAccount } from "../../hooks/useAccount";
 import { Link as RouterLink } from "react-router-dom";
 import { Info } from "@mui/icons-material";
+import { TokenPairKey, getPoolByPairType } from "../../tokens/tokens";
 
 export const StakeCapitalParent = () => {
   const account = useAccount();
   const sx = { fontWeight: "bold" };
+
+  const pools = [
+    getPoolByPairType(TokenPairKey.EthUsdc, OptionType.Call),
+    getPoolByPairType(TokenPairKey.EthUsdc, OptionType.Put),
+  ];
 
   return (
     <Table aria-label="simple table">
@@ -45,8 +51,9 @@ export const StakeCapitalParent = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        <StakeCapitalItem account={account} type={OptionType.Call} />
-        <StakeCapitalItem account={account} type={OptionType.Put} />
+        {pools.map((pool, i) => (
+          <StakeCapitalItem key={i} account={account} pool={pool} />
+        ))}
       </TableBody>
     </Table>
   );

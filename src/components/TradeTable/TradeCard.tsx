@@ -11,7 +11,6 @@ import { LoadingAnimation } from "../loading";
 import BN from "bn.js";
 import { useState, useCallback, useEffect } from "react";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
-import { ETH_DIGITS, USD_DIGITS } from "../../constants/amm";
 import { FinancialData } from "../../types/options";
 import { getPremiaWithSlippage, longInteger } from "../../utils/computations";
 import { debug, LogTypes } from "../../utils/debugger";
@@ -186,19 +185,15 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     );
   }
 
-  const [digits, premia] = isCall(optionType)
-    ? [ETH_DIGITS, data.premiaEth]
-    : [USD_DIGITS, data.premiaUsd];
-  const currentPremia: BN = longInteger(premia, digits);
+  const premia = option.isCall ? data.premiaBase : data.premiaQuote;
+  const currentPremia: BN = longInteger(premia, option.digits);
 
-  const displayPremia = isCall(optionType)
-    ? `ETH ${data.premiaEth.toFixed(5)}`
-    : `$${data.premiaUsd.toFixed(5)}`;
+  const displayPremia = `${option.symbol} ${premia.toFixed(5)}`;
 
   const graphData = getProfitGraphData(
     optionType,
     optionSide,
-    parseFloat(strikePrice),
+    strikePrice,
     data.premiaUsd,
     amount
   );
@@ -260,7 +255,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
       ProfitTable={() =>
         ProfitTable({
           premia: data.premiaUsd,
-          basePremia: data.basePremiaUsd,
+          basePremia: data.sizeOnePremiaUsd,
           option,
         })
       }

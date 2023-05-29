@@ -3,6 +3,7 @@ import BN from "bn.js";
 import { AccountInterface, Contract } from "starknet";
 import ABI from "../abi/lptoken_abi.json";
 import { getTokenAddresses } from "../constants/amm";
+import { TokenKey } from "../tokens/tokens";
 
 const CARM_TOKEN_ADDRESS =
   "0x3c0286e9e428a130ae7fbbe911b794e8a829c367dd788e7cfe3efb0367548fa";
@@ -36,7 +37,7 @@ export const getUserBalance = async (
   const promises = [balanceOfEth(account), balanceOfUsdc(account)];
   const values = await Promise.all(promises);
   return {
-    eth: values[0],
-    usd: values[1],
+    [TokenKey.ETH]: values[0],
+    [TokenKey.USDC]: values[1],
   };
 };

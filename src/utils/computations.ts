@@ -1,4 +1,4 @@
-import { FinancialData, OptionSide, OptionType } from "../types/options";
+import { OptionSide, OptionType } from "../types/options";
 import BN from "bn.js";
 import { Decimal } from "../types/units";
 import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
@@ -110,40 +110,4 @@ export const shortInteger = (str: string, digits: number): Decimal => {
   ];
 
   return parseFloat(head + "." + tail);
-};
-
-export const financialDataEth = (
-  size: number,
-  premiaEth: number,
-  ethInUsd: number
-): FinancialData => {
-  const basePremiaEth = premiaEth / size;
-  const premiaUsd = premiaEth * ethInUsd;
-  const basePremiaUsd = premiaUsd / size;
-
-  return {
-    premiaEth,
-    premiaUsd,
-    basePremiaEth,
-    basePremiaUsd,
-    ethInUsd,
-  };
-};
-
-export const financialDataUsd = (
-  size: number,
-  premiaUsd: number,
-  ethInUsd: number
-): FinancialData => {
-  const basePremiaUsd = premiaUsd / size;
-  const premiaEth = premiaUsd / ethInUsd;
-  const basePremiaEth = premiaEth / size;
-
-  return {
-    premiaEth,
-    premiaUsd,
-    basePremiaEth,
-    basePremiaUsd,
-    ethInUsd,
-  };
 };

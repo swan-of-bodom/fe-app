@@ -3,26 +3,23 @@ import { debug } from "../utils/debugger";
 import { AccountInterface } from "starknet";
 import LpAbi from "../abi/lptoken_abi.json";
 import AmmAbi from "../abi/amm_abi.json";
-import { OptionType } from "../types/options";
 import { afterTransaction } from "../utils/blockchain";
-import { currencyAddresByType } from "../utils/utils";
 import { addTx, markTxAsDone, markTxAsFailed } from "../redux/actions";
 import { TransactionActions } from "../redux/reducers/transactions";
+import { Pool } from "../classes/Pool";
 
 export const depositLiquidity = async (
   account: AccountInterface,
   size: string,
-  type: OptionType,
+  pool: Pool,
   ok: () => void,
   nok: () => void
 ): Promise<void> => {
   const { USD_ADDRESS, ETH_ADDRESS, MAIN_CONTRACT_ADDRESS } =
     getTokenAddresses();
 
-  const currencyAddress = currencyAddresByType(type);
-
   const approveCalldata = {
-    contractAddress: currencyAddress,
+    contractAddress: pool.tokenAddress,
     entrypoint: AMM_METHODS.APPROVE,
     calldata: [MAIN_CONTRACT_ADDRESS, size, "0"],
   };
@@ -30,7 +27,14 @@ export const depositLiquidity = async (
   const depositLiquidityCalldata = {
     contractAddress: MAIN_CONTRACT_ADDRESS,
     entrypoint: AMM_METHODS.DEPOSIT_LIQUIDITY,
-    calldata: [currencyAddress, USD_ADDRESS, ETH_ADDRESS, type, size, "0"],
+    calldata: [
+      pool.tokenAddress,
+      USD_ADDRESS,
+      ETH_ADDRESS,
+      pool.parsed.optionType,
+      size,
+      "0",
+    ],
   };
 
   debug("Depositing liquidity with calldata:", [

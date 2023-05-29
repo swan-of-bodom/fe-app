@@ -102,6 +102,7 @@ export const enum AMM_METHODS {
 
 export const SLIPPAGE = 0.1;
 
+export const BASE_DIGITS = 18;
 export const ETH_DIGITS = 18;
 export const USD_DIGITS = 6;
 export const ETH_BASE_VALUE = new BN(10).pow(new BN(ETH_DIGITS));

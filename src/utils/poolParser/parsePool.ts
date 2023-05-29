@@ -1,25 +1,17 @@
+import { Pool } from "../../classes/Pool";
 import { ETH_DIGITS } from "../../constants/amm";
 import {
-  Pool,
   PoolInfo,
-  ResponsePool,
+  RawPool,
   ResponsePoolInfo,
   ResponseUserPoolInfo,
   UserPoolInfo,
 } from "../../types/pool";
-import { bnToOptionType } from "../conversions";
 import { intToDecimal, uint256toDecimal } from "../units";
 import { digitsByType, toHex } from "../utils";
 import { uint256 } from "starknet";
 
-export const parsePool = (raw: ResponsePool): Pool => {
-  const parsed = {
-    quoteTokenAddress: toHex(raw.quote_token_address),
-    baseTokenAddress: toHex(raw.base_token_address),
-    optionType: bnToOptionType(raw.option_type),
-  };
-  return { raw, parsed };
-};
+export const parsePool = (raw: RawPool): Pool => new Pool({ raw });
 
 export const parsePoolInfo = (response: ResponsePoolInfo): PoolInfo => {
   const pool = parsePool(response.pool);

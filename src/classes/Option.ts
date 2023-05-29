@@ -16,13 +16,15 @@ import {
   RawOptionBase,
   ParsedOptionBase,
   OptionSide,
-  OptionType,
   RawOptionWithPosition,
   RawOptionWithPremia,
   ParsedOptionWithPosition,
   ParsedOptionWithPremia,
+  FinancialData,
 } from "../types/options";
-import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
+import { BASE_DIGITS } from "../constants/amm";
+import { TokenPair, getTokenPairByAddresses } from "../tokens/tokens";
+import { Pool } from "./Pool";
 
 type Props =
   | {
@@ -32,20 +34,30 @@ type Props =
       parsed: ParsedOptionBase;
     };
 
-export class Option {
+export class Option extends Pool {
   raw: RawOptionBase;
   parsed: ParsedOptionBase;
   id: string;
+  tokenPair: TokenPair;
 
   constructor(props: Props) {
+    super(props);
     if ("raw" in props) {
       this.raw = props.raw;
       this.parsed = this.parsedFromRaw(props.raw);
       this.id = this.generateId();
+      this.tokenPair = getTokenPairByAddresses(
+        this.parsed.baseToken,
+        this.parsed.quoteToken
+      );
     } else if ("parsed" in props) {
       this.parsed = props.parsed;
       this.raw = this.rawFromParsed(props.parsed);
       this.id = this.generateId();
+      this.tokenPair = getTokenPairByAddresses(
+        this.parsed.baseToken,
+        this.parsed.quoteToken
+      );
     } else {
       throw Error("No option specified in constructor");
     }
@@ -56,7 +68,7 @@ export class Option {
       optionSide: bnToOptionSide(raw.option_side),
       optionType: bnToOptionType(raw.option_type),
       maturity: new BN(raw.maturity).toNumber(),
-      strikePrice: String(math64x61toDecimal(raw.strike_price.toString(10))),
+      strikePrice: math64x61toDecimal(raw.strike_price.toString(10)),
       quoteToken: toHex(raw.quote_token_address),
       baseToken: toHex(raw.base_token_address),
     };
@@ -66,21 +78,11 @@ export class Option {
     return {
       option_side: new BN(parsed.optionSide),
       maturity: new BN(parsed.maturity),
-      strike_price: new BN(
-        decimalToMath64x61(parseInt(parsed.strikePrice, 10))
-      ),
+      strike_price: new BN(decimalToMath64x61(parsed.strikePrice)),
       quote_token_address: new BN(parsed.quoteToken),
       base_token_address: new BN(parsed.baseToken),
       option_type: new BN(parsed.optionType),
     };
-  }
-
-  generateId(): string {
-    return JSON.stringify(this.parsed, Object.keys(this.parsed).sort());
-  }
-
-  eq(other: Option): boolean {
-    return this.id === other.id;
   }
 
   tradeCalldata(size: string | number): string[] {
@@ -117,8 +119,63 @@ export class Option {
     return this.parsed.optionSide === side;
   }
 
-  isType(type: OptionType): boolean {
-    return this.parsed.optionType === type;
+  financialDataCall(
+    size: number,
+    // premia is in base token
+    premia: number,
+    basePrice: number,
+    quotePrice: number
+  ): FinancialData {
+    const premiaUsd = premia * basePrice;
+    const premiaBase = premia;
+    const premiaQuote = premiaUsd / quotePrice;
+    const sizeOnePremiaUsd = premiaUsd / size;
+    const sizeOnePremiaBase = premiaBase / size;
+    const sizeOnePremiaQuote = premiaQuote / size;
+
+    return {
+      premiaUsd,
+      premiaBase,
+      premiaQuote,
+      sizeOnePremiaUsd,
+      sizeOnePremiaBase,
+      sizeOnePremiaQuote,
+    };
+  }
+
+  financialDataPut(
+    size: number,
+    // premia is in quote token
+    premia: number,
+    basePrice: number,
+    quotePrice: number
+  ): FinancialData {
+    const premiaUsd = premia * quotePrice;
+    const premiaBase = premiaUsd / basePrice;
+    const premiaQuote = premia;
+    const sizeOnePremiaUsd = premiaUsd / size;
+    const sizeOnePremiaBase = premiaBase / size;
+    const sizeOnePremiaQuote = premiaQuote / size;
+
+    return {
+      premiaUsd,
+      premiaBase,
+      premiaQuote,
+      sizeOnePremiaUsd,
+      sizeOnePremiaBase,
+      sizeOnePremiaQuote,
+    };
+  }
+
+  financialData(
+    size: number,
+    premia: number,
+    basePrice: number,
+    quotePrice: number
+  ): FinancialData {
+    return this.isCall
+      ? this.financialDataCall(size, premia, basePrice, quotePrice)
+      : this.financialDataPut(size, premia, basePrice, quotePrice);
   }
 
   ////////////
@@ -137,25 +194,8 @@ export class Option {
     return new Option({ parsed });
   }
 
-  get isExpired(): boolean {
-    const nowInSecs = Math.floor(Date.now() / 1000);
-    return this.parsed.maturity < nowInSecs;
-  }
-
-  get typeAsText(): string {
-    return this.parsed.optionType === OptionType.Call ? "Call" : "Put";
-  }
-
   get sideAsText(): string {
     return this.parsed.optionSide === OptionSide.Long ? "Long" : "Short";
-  }
-
-  get isCall(): boolean {
-    return this.parsed.optionType === OptionType.Call;
-  }
-
-  get isPut(): boolean {
-    return this.parsed.optionType === OptionType.Put;
   }
 
   get isLong(): boolean {
@@ -176,6 +216,10 @@ export class Option {
     return this.parsed.maturity * 1000 > new Date().getTime();
   }
 
+  get isExpired(): boolean {
+    return !this.isFresh;
+  }
+
   get struct(): string[] {
     return [
       toHex(this.raw.option_side),
@@ -185,10 +229,6 @@ export class Option {
       toHex(this.raw.base_token_address),
       toHex(this.raw.option_type),
     ];
-  }
-
-  get digits(): number {
-    return this.isCall ? ETH_DIGITS : USD_DIGITS;
   }
 }
 
@@ -207,7 +247,7 @@ export class OptionWithPosition extends Option {
   parsedFromRaw(raw: RawOptionWithPosition): ParsedOptionWithPosition {
     // Uint256 - just one part
     // ETH_DIGITS for token count
-    const positionSize = uint256toDecimal(raw.position_size, ETH_DIGITS);
+    const positionSize = uint256toDecimal(raw.position_size, BASE_DIGITS);
     // math64_61
     const positionValue = math64x61toDecimal(
       raw.value_of_position.toString(10)

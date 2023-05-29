@@ -186,3 +186,8 @@ export const stripZerosFromAddress = (address: string): string => {
   const withoutPrefix = address.replace(/^0x0*/g, "");
   return "0x" + withoutPrefix;
 };
+
+export const standardiseAddress = (address: string): string => {
+  const withoutPrefix = address.replace(/^0x0*/g, "").toLowerCase();
+  return "0x" + withoutPrefix;
+};
