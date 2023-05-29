@@ -1,7 +1,6 @@
 import { Pool } from "../classes/Pool";
 import { getTokenAddresses } from "../constants/amm";
 import { OptionType } from "../types/options";
-import { debug } from "../utils/debugger";
 import { standardiseAddress } from "../utils/utils";
 
 export interface Token {
@@ -59,7 +58,6 @@ export const getTokenPairByAddresses = (
   base: string,
   quote: string
 ): TokenPair => {
-  debug("getting pair", { base, quote, values: Object.values(tokenPairList) });
   const found = Object.values(tokenPairList).find(
     (pair) =>
       pair.base.tokenAddress === standardiseAddress(base) &&

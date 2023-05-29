@@ -16,14 +16,14 @@ import {
   RawOptionBase,
   ParsedOptionBase,
   OptionSide,
-  OptionType,
   RawOptionWithPosition,
   RawOptionWithPremia,
   ParsedOptionWithPosition,
   ParsedOptionWithPremia,
 } from "../types/options";
 import { BASE_DIGITS } from "../constants/amm";
-import { Token, TokenPair, getTokenPairByAddresses } from "../tokens/tokens";
+import { TokenPair, getTokenPairByAddresses } from "../tokens/tokens";
+import { Pool } from "./Pool";
 
 type Props =
   | {
@@ -33,13 +33,14 @@ type Props =
       parsed: ParsedOptionBase;
     };
 
-export class Option {
+export class Option extends Pool {
   raw: RawOptionBase;
   parsed: ParsedOptionBase;
   id: string;
   tokenPair: TokenPair;
 
   constructor(props: Props) {
+    super(props);
     if ("raw" in props) {
       this.raw = props.raw;
       this.parsed = this.parsedFromRaw(props.raw);
@@ -85,14 +86,6 @@ export class Option {
     };
   }
 
-  generateId(): string {
-    return JSON.stringify(this.parsed, Object.keys(this.parsed).sort());
-  }
-
-  eq(other: Option): boolean {
-    return this.id === other.id;
-  }
-
   tradeCalldata(size: string | number): string[] {
     const targetSize = typeof size === "number" ? convertSizeToInt(size) : size;
     return [
@@ -127,10 +120,6 @@ export class Option {
     return this.parsed.optionSide === side;
   }
 
-  isType(type: OptionType): boolean {
-    return this.parsed.optionType === type;
-  }
-
   ////////////
   // GETTERS
   ////////////
@@ -147,20 +136,8 @@ export class Option {
     return new Option({ parsed });
   }
 
-  get typeAsText(): string {
-    return this.parsed.optionType === OptionType.Call ? "Call" : "Put";
-  }
-
   get sideAsText(): string {
     return this.parsed.optionSide === OptionSide.Long ? "Long" : "Short";
-  }
-
-  get isCall(): boolean {
-    return this.parsed.optionType === OptionType.Call;
-  }
-
-  get isPut(): boolean {
-    return this.parsed.optionType === OptionType.Put;
   }
 
   get isLong(): boolean {
@@ -194,23 +171,6 @@ export class Option {
       toHex(this.raw.base_token_address),
       toHex(this.raw.option_type),
     ];
-  }
-
-  get underlying(): Token {
-    return this.isCall ? this.tokenPair.base : this.tokenPair.quote;
-  }
-
-  get digits(): number {
-    // call has base decimals, put has quote decimals
-    return this.underlying.decimals;
-  }
-
-  get tokenAddress(): string {
-    return this.underlying.tokenAddress;
-  }
-
-  get symbol(): string {
-    return this.underlying.symbol;
   }
 }
 
