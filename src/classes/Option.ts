@@ -11,7 +11,12 @@ import {
   convertSizeToInt,
 } from "../utils/conversions";
 import { math64x61toDecimal } from "../utils/units";
-import { digitsByType, timestampToReadableDate, toHex } from "../utils/utils";
+import {
+  digitsByType,
+  timestampToReadableDate,
+  timestampToShortTimeDate,
+  toHex,
+} from "../utils/utils";
 import {
   RawOptionBase,
   ParsedOptionBase,
@@ -229,6 +234,14 @@ export class Option extends Pool {
       toHex(this.raw.base_token_address),
       toHex(this.raw.option_type),
     ];
+  }
+
+  get dateShort(): string {
+    return timestampToShortTimeDate(this.parsed.maturity * 1000);
+  }
+
+  get dateRich(): string {
+    return timestampToReadableDate(this.parsed.maturity * 1000);
   }
 }
 

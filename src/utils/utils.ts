@@ -191,3 +191,9 @@ export const standardiseAddress = (address: string): string => {
   const withoutPrefix = address.replace(/^0x0*/g, "").toLowerCase();
   return "0x" + withoutPrefix;
 };
+
+export const uniquePrimitiveValues = (
+  value: any,
+  index: number,
+  array: any[]
+) => array.indexOf(value) === index;

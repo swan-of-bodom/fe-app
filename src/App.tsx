@@ -18,6 +18,7 @@ import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
 import { isCookieSet } from "./utils/cookies";
 import APYInfoPage from "./pages/apyInfo";
 import TradeDashboardPage from "./pages/dashboard";
+import Insurance from "./pages/insurance";
 
 const App = () => {
   const [check, rerender] = useState(false);
@@ -34,6 +35,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<TradePage />} />
                 <Route path="/trade" element={<TradePage />} />
+                <Route path="/insurance" element={<Insurance />} />
                 <Route path="/position" element={<BalancePage />} />
                 <Route path="/staking" element={<StakePage />} />
                 <Route

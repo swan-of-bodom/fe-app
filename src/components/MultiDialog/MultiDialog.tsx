@@ -21,6 +21,7 @@ import { ClosePosition } from "../ClosePosition/ClosePosition";
 import { WalletInfo } from "../WalletInfo/WalletInfo";
 import { CallWido, PutWido } from "../WidoWidgetWrapper/WidoWidgetWrapper";
 import { CSSProperties, ReactNode } from "react";
+import { BuyInsuranceModal } from "../Insurance/BuyInsuranceModal";
 
 const NetworkMismatch = () => (
   <>
@@ -153,6 +154,11 @@ export const MultiDialog = () => {
       {dialogContent === DialogContentElem.CloseOption && (
         <Border>
           <ClosePosition />
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.BuyInsurance && (
+        <Border>
+          <BuyInsuranceModal />
         </Border>
       )}
       {dialogContent === DialogContentElem.Account && (

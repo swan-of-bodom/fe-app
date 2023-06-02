@@ -5,7 +5,7 @@ import OptionsTable from "./OptionsTable";
 import { isCall, isDarkTheme, isLong } from "../../utils/utils";
 import { LoadingAnimation } from "../loading";
 import { NoContent } from "../TableNoContent";
-import { fetchOptions } from "./fetchOptions";
+import { fetchOptionsWithType } from "./fetchOptions";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { SlippageButton } from "../Slippage/SlippageButton";
@@ -46,7 +46,10 @@ const Content = ({ options, type, side, loading, error }: ContentProps) => {
 };
 
 const TradeTable = () => {
-  const { isLoading, isError, data } = useQuery(QueryKeys.trade, fetchOptions);
+  const { isLoading, isError, data } = useQuery(
+    QueryKeys.optionsWithType,
+    fetchOptionsWithType
+  );
   const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
   const [type, setCallPut] = useState<OptionType>(
     data ? data[1] : OptionType.Call

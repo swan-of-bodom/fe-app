@@ -45,6 +45,8 @@ export const approveAndTradeOpen = async (
     option.parsed.strikePrice
   );
 
+  debug("TO APPROVE", toApprove.toString(10));
+
   const tokenId = option.underlying.id;
 
   if (balance[tokenId].lt(toApprove)) {
@@ -52,6 +54,7 @@ export const approveAndTradeOpen = async (
       shortInteger(balance[tokenId].toString(10), option.digits),
       shortInteger(toApprove.toString(10), option.digits),
     ];
+    debug({ size, premia, has, needs });
     showToast(
       `To open this position you need ${option.symbol}${needs.toFixed(
         4
