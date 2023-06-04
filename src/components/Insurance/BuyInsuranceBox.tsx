@@ -54,8 +54,13 @@ export const BuyInsuranceBox = () => {
   const [textSize, setTextSize] = useState<string>(
     displayBalance ? displayBalance : "0"
   );
-
   const [expiry, setExpiry] = useState<number>();
+
+  if (displayBalance && size === 0) {
+    // if no size has been set, set it to user balance
+    setSize(parseFloat(displayBalance));
+    setTextSize(displayBalance);
+  }
 
   if (valueInUsd === undefined || isLoading) {
     return <LoadingAnimation />;

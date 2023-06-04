@@ -153,11 +153,8 @@ export const getStarkscanUrl = ({
 };
 
 export const getApiUrl = () => {
-  const isProd = window.location.hostname === "app.carmine.finance";
   const network = store.getState().network.network.name;
-  const [testnet, mainnet] = isProd
-    ? [API_URL_TESTNET, API_URL_MAINNET]
-    : [DEV_API_URL_TESTNET, DEV_API_URL_MAINNET];
+  const [testnet, mainnet] = [API_URL_TESTNET, API_URL_MAINNET];
 
   if (network === NetworkName.Mainnet) {
     return mainnet;

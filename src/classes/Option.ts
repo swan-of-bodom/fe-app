@@ -30,6 +30,7 @@ import {
 import { BASE_DIGITS } from "../constants/amm";
 import { TokenPair, getTokenPairByAddresses } from "../tokens/tokens";
 import { Pool } from "./Pool";
+import { shortInteger } from "../utils/computations";
 
 type Props =
   | {
@@ -276,7 +277,11 @@ export class OptionWithPosition extends Option {
   }
 
   get fullSize(): string {
-    return new BN(this.raw.position_size).toString(10);
+    return this.raw.position_size.toString(10);
+  }
+
+  get size(): number {
+    return shortInteger(this.fullSize, this.tokenPair.base.decimals);
   }
 }
 
