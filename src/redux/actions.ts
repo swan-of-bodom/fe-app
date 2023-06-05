@@ -2,6 +2,7 @@ import { setSlippageState, updateSettingsState } from "./reducers/settings";
 import { updateNetworkState } from "./reducers/network";
 import {
   DialogContentElem,
+  setBuyInsuranceModalState,
   setCloseOptionState,
   setToastState,
   ToastType,
@@ -18,6 +19,7 @@ import {
   TransactionActions,
   TransactionStatus,
 } from "./reducers/transactions";
+import { BuyInsuranceModalData } from "../components/Insurance/BuyInsuranceModal";
 
 export const updateSettings = (v: Partial<Settings>) =>
   store.dispatch(updateSettingsState(v));
@@ -52,6 +54,9 @@ export const openSlippageDialog = () =>
 export const openCloseOptionDialog = () =>
   openDialogWithContent(DialogContentElem.CloseOption);
 
+export const openBuyInsuranceDialog = () =>
+  openDialogWithContent(DialogContentElem.BuyInsurance);
+
 export const openAccountDialog = () =>
   openDialogWithContent(DialogContentElem.Account);
 
@@ -68,6 +73,9 @@ export const setSlippage = (n: number) => store.dispatch(setSlippageState(n));
 
 export const setCloseOption = (option: OptionWithPosition) =>
   store.dispatch(setCloseOptionState(option));
+
+export const setBuyInsuranceModal = (data: BuyInsuranceModalData) =>
+  store.dispatch(setBuyInsuranceModalState(data));
 
 export const showToast = (message: string, type: ToastType = ToastType.Info) =>
   store.dispatch(setToastState({ message, open: true, type }));

@@ -1,27 +1,25 @@
+import { UserBalance } from "./../types/wallet";
 import { getUserBalance } from "./../calls/balanceOf";
-import { useState, useEffect } from "react";
-import { UserBalance } from "../types/wallet";
-import { getWallet } from "../network/account";
+import { useAccount } from "./useAccount";
+import { QueryFunctionContext, useQuery } from "react-query";
+import { QueryKeys } from "../queries/keys";
+import { AccountInterface } from "starknet";
+
+export const queryUserBalance = async ({
+  queryKey,
+}: QueryFunctionContext<[string, AccountInterface | undefined]>): Promise<
+  UserBalance | undefined
+> => {
+  const account = queryKey[1];
+  if (!account) {
+    return;
+  }
+  return getUserBalance(account);
+};
 
 export const useUserBalance = (): UserBalance | undefined => {
-  const [balance, setBalance] = useState<UserBalance | undefined>();
-  const delay = 30 * 1000; // 10s
+  const account = useAccount();
+  const { data } = useQuery([QueryKeys.userBalance, account], queryUserBalance);
 
-  const cb = () => {
-    const wallet = getWallet();
-
-    if (!wallet) {
-      return;
-    }
-
-    getUserBalance(wallet.account).then((res) => setBalance(res));
-  };
-
-  useEffect(() => {
-    const id = setInterval(cb, delay);
-
-    return () => clearInterval(id);
-  });
-
-  return balance;
+  return data;
 };

@@ -1,4 +1,3 @@
-import { debug } from "../utils/debugger";
 import { TokenKey } from "./tokens";
 
 type RecentValue = {
@@ -55,14 +54,12 @@ export const getTokenValueInUsd = async (id: TokenKey): Promise<number> => {
   const fromCache = checkCache(id);
 
   if (fromCache !== undefined) {
-    debug(id, "from cache", fromCache);
     return fromCache;
   }
 
   const value = await getCoinInUsd(id);
   const timestamp = Date.now();
   tokenValueCache.set(id, { value, timestamp, id });
-  debug(id, "freshly fetched", value);
   return value;
 };
 
@@ -72,7 +69,6 @@ export const getMultipleTokensValueInUsd = async (
   const fromCache = ids.map((id) => checkCache(id));
 
   if (fromCache.every(Boolean)) {
-    debug(ids, "from cache", fromCache);
     return fromCache as number[];
   }
 
@@ -81,6 +77,5 @@ export const getMultipleTokensValueInUsd = async (
   ids.forEach((id, index) => {
     tokenValueCache.set(id, { value: values[index], timestamp, id });
   });
-  debug(ids, "freshly fetched", values);
   return values;
 };

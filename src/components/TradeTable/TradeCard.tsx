@@ -105,7 +105,7 @@ export const TradeCardTemplate = ({
   );
 };
 
-type TradeState = {
+export type TradeState = {
   failed: boolean;
   processing: boolean;
 };
