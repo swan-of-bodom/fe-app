@@ -13,6 +13,9 @@ import { handleStake } from "./handleStake";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { openCallWidoDialog, openPutWidoDialog } from "../../redux/actions";
 import { Pool } from "../../classes/Pool";
+import { hexToBN, timestampToReadableDate } from "../../utils/utils";
+import { intToDecimal } from "../../utils/units";
+import { BASE_DIGITS } from "../../constants/amm";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -30,15 +33,38 @@ const getApy = async (setApy: (n: number) => void, pool: Pool) => {
     });
 };
 
+const getYieldSinceLaunch = async (
+  setYieldSinceLaunch: (n: number) => void,
+  pool: Pool
+) => {
+  const poolId = pool.isCall ? "eth-usdc-call" : "eth-usdc-put";
+  fetch(`https://api.carmine.finance/api/v1/mainnet/${poolId}/state`)
+    .then((response) => response.json())
+    .then((result) => {
+      if (result && result.status === "success") {
+        const lpValue = intToDecimal(
+          hexToBN(result.data.lp_token_value).toString(10),
+          BASE_DIGITS
+        );
+        setYieldSinceLaunch((lpValue - 1) * 100);
+      }
+    });
+};
+
 export const StakeCapitalItem = ({ account, pool }: Props) => {
   const [amount, setAmount] = useState<number>(0);
   const [text, setText] = useState<string>("0");
   const [loading, setLoading] = useState<boolean>(false);
   const [apy, setApy] = useState<number | undefined>();
+  const [yieldSinceLaunch, setYieldSinceLaunch] = useState<
+    number | undefined
+  >();
+
   const theme = useTheme();
 
   useEffect(() => {
     getApy(setApy, pool);
+    getYieldSinceLaunch(setYieldSinceLaunch, pool);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -55,6 +81,21 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
     apySx.color = theme.palette.success.main;
   }
 
+  const MAINNET_LAUNCH_TIMESTAMP = 1680864820000;
+  const yslTooltipText = `Percentage yield since the launch to Mainnet on ${timestampToReadableDate(
+    MAINNET_LAUNCH_TIMESTAMP
+  )}`;
+  const displayYieldSinceLaunch =
+    yieldSinceLaunch === undefined
+      ? "--"
+      : `${yieldSinceLaunch < 0 ? "" : "+"}${yieldSinceLaunch.toFixed(2)}%`;
+  const yslSx: CSSProperties = { fontWeight: "bold", textAlign: "center" };
+  if (yieldSinceLaunch && yieldSinceLaunch < 0) {
+    yslSx.color = theme.palette.error.main;
+  } else if (yieldSinceLaunch && yieldSinceLaunch > 0) {
+    yslSx.color = theme.palette.success.main;
+  }
+
   const handleWidoClick = () => {
     pool.isCall ? openCallWidoDialog() : openPutWidoDialog();
   };
@@ -63,6 +104,11 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
     <TableRow>
       <TableCell>
         <Typography>{pool.name}</Typography>
+      </TableCell>
+      <TableCell>
+        <Tooltip title={yslTooltipText}>
+          <Typography sx={yslSx}>{displayYieldSinceLaunch}</Typography>
+        </Tooltip>
       </TableCell>
       <TableCell>
         <Tooltip title={apyTooltipText}>

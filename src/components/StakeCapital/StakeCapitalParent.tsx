@@ -30,7 +30,9 @@ export const StakeCapitalParent = () => {
           <TableCell>
             <Typography sx={sx}>Pool</Typography>
           </TableCell>
-
+          <TableCell align="center">
+            <Typography sx={sx}>Yield since launch</Typography>
+          </TableCell>
           <TableCell align="center">
             <RouterLink
               style={{ textDecoration: "none", color: "inherit" }}
