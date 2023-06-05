@@ -13,7 +13,7 @@ import { handleStake } from "./handleStake";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { openCallWidoDialog, openPutWidoDialog } from "../../redux/actions";
 import { Pool } from "../../classes/Pool";
-import { hexToBN, timestampToReadableDate } from "../../utils/utils";
+import { hexToBN } from "../../utils/utils";
 import { intToDecimal } from "../../utils/units";
 import { BASE_DIGITS } from "../../constants/amm";
 
@@ -70,8 +70,6 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
 
   const handleChange = handleNumericChangeFactory(setText, setAmount);
 
-  const apyTooltipText =
-    "APY (Annual Percentage Yield) is calculated based on the last week and represents the annualized yield of the pool. Keep in mind that it does NOT account for risk and that past returns do not imply future returns.";
   const displayApy =
     apy === undefined ? "--" : `${apy < 0 ? "" : "+"}${apy.toFixed(2)}%`;
   const apySx: CSSProperties = { fontWeight: "bold", textAlign: "center" };
@@ -81,10 +79,6 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
     apySx.color = theme.palette.success.main;
   }
 
-  const MAINNET_LAUNCH_TIMESTAMP = 1680864820000;
-  const yslTooltipText = `Percentage yield since the launch to Mainnet on ${timestampToReadableDate(
-    MAINNET_LAUNCH_TIMESTAMP
-  )}`;
   const displayYieldSinceLaunch =
     yieldSinceLaunch === undefined
       ? "--"
@@ -106,14 +100,10 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
         <Typography>{pool.name}</Typography>
       </TableCell>
       <TableCell>
-        <Tooltip title={yslTooltipText}>
-          <Typography sx={yslSx}>{displayYieldSinceLaunch}</Typography>
-        </Tooltip>
+        <Typography sx={yslSx}>{displayYieldSinceLaunch}</Typography>
       </TableCell>
       <TableCell>
-        <Tooltip title={apyTooltipText}>
-          <Typography sx={apySx}>{displayApy}</Typography>
-        </Tooltip>
+        <Typography sx={apySx}>{displayApy}</Typography>
       </TableCell>
       <TableCell sx={{ minWidth: "100px" }} align="center">
         <TextField

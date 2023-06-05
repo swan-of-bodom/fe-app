@@ -13,6 +13,7 @@ import { useAccount } from "../../hooks/useAccount";
 import { Link as RouterLink } from "react-router-dom";
 import { Info } from "@mui/icons-material";
 import { TokenPairKey, getPoolByPairType } from "../../tokens/tokens";
+import { timestampToReadableDate } from "../../utils/utils";
 
 export const StakeCapitalParent = () => {
   const account = useAccount();
@@ -23,6 +24,13 @@ export const StakeCapitalParent = () => {
     getPoolByPairType(TokenPairKey.EthUsdc, OptionType.Put),
   ];
 
+  const MAINNET_LAUNCH_TIMESTAMP = 1680864820000;
+  const yslTooltipText = `Percentage yield since the launch to Mainnet on ${timestampToReadableDate(
+    MAINNET_LAUNCH_TIMESTAMP
+  )}`;
+  const apyTooltipText =
+    "APY (Annual Percentage Yield) is calculated based on the last week and represents the annualized yield of the pool. Keep in mind that it does NOT account for risk and that past returns do not imply future returns.";
+
   return (
     <Table aria-label="simple table">
       <TableHead>
@@ -31,14 +39,16 @@ export const StakeCapitalParent = () => {
             <Typography sx={sx}>Pool</Typography>
           </TableCell>
           <TableCell align="center">
-            <Typography sx={sx}>Yield since launch</Typography>
+            <Tooltip title={yslTooltipText}>
+              <Typography sx={sx}>Yield since launch</Typography>
+            </Tooltip>
           </TableCell>
           <TableCell align="center">
             <RouterLink
               style={{ textDecoration: "none", color: "inherit" }}
               to="/apy-info"
             >
-              <Tooltip title="Click for more information">
+              <Tooltip title={apyTooltipText}>
                 <Typography sx={sx}>
                   APY <Info sx={{ height: "17px", marginBottom: "-2px" }} />
                 </Typography>
