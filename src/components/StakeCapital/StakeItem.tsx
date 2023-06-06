@@ -16,6 +16,7 @@ import { Pool } from "../../classes/Pool";
 import { hexToBN } from "../../utils/utils";
 import { intToDecimal } from "../../utils/units";
 import { BASE_DIGITS } from "../../constants/amm";
+import { debug } from "../../utils/debugger";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -42,11 +43,18 @@ const getYieldSinceLaunch = async (
     .then((response) => response.json())
     .then((result) => {
       if (result && result.status === "success") {
+        const { lp_token_value, timestamp } = result.data;
         const lpValue = intToDecimal(
-          hexToBN(result.data.lp_token_value).toString(10),
+          hexToBN(lp_token_value).toString(10),
           BASE_DIGITS
         );
-        setYieldSinceLaunch((lpValue - 1) * 100);
+        const MAINNET_LAUNCH_TIMESTAMP = 1680864820;
+        const YEAR_SECONDS = 31536000;
+        const secondsSinceLaunch = timestamp - MAINNET_LAUNCH_TIMESTAMP;
+        const yearFraction = YEAR_SECONDS / secondsSinceLaunch;
+        const apySinceLaunch = Math.pow(lpValue, yearFraction);
+
+        setYieldSinceLaunch((apySinceLaunch - 1) * 100);
       }
     });
 };

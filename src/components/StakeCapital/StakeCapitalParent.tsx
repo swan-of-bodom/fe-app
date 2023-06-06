@@ -25,7 +25,7 @@ export const StakeCapitalParent = () => {
   ];
 
   const MAINNET_LAUNCH_TIMESTAMP = 1680864820000;
-  const yslTooltipText = `Percentage yield since the launch to Mainnet on ${timestampToReadableDate(
+  const yslTooltipText = `Annual Percentage Yield calculated from the launch to Mainnet on ${timestampToReadableDate(
     MAINNET_LAUNCH_TIMESTAMP
   )}`;
   const apyTooltipText =
@@ -40,7 +40,7 @@ export const StakeCapitalParent = () => {
           </TableCell>
           <TableCell align="center">
             <Tooltip title={yslTooltipText}>
-              <Typography sx={sx}>Yield since launch</Typography>
+              <Typography sx={sx}>APY since launch</Typography>
             </Tooltip>
           </TableCell>
           <TableCell align="center">
@@ -50,7 +50,8 @@ export const StakeCapitalParent = () => {
             >
               <Tooltip title={apyTooltipText}>
                 <Typography sx={sx}>
-                  APY <Info sx={{ height: "17px", marginBottom: "-2px" }} />
+                  APY last week
+                  <Info sx={{ height: "17px", marginBottom: "-2px" }} />
                 </Typography>
               </Tooltip>
             </RouterLink>
