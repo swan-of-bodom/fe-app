@@ -11,7 +11,12 @@ import {
   convertSizeToInt,
 } from "../utils/conversions";
 import { math64x61toDecimal } from "../utils/units";
-import { digitsByType, timestampToReadableDate, toHex } from "../utils/utils";
+import {
+  digitsByType,
+  timestampToReadableDate,
+  timestampToShortTimeDate,
+  toHex,
+} from "../utils/utils";
 import {
   RawOptionBase,
   ParsedOptionBase,
@@ -25,6 +30,7 @@ import {
 import { BASE_DIGITS } from "../constants/amm";
 import { TokenPair, getTokenPairByAddresses } from "../tokens/tokens";
 import { Pool } from "./Pool";
+import { shortInteger } from "../utils/computations";
 
 type Props =
   | {
@@ -230,6 +236,14 @@ export class Option extends Pool {
       toHex(this.raw.option_type),
     ];
   }
+
+  get dateShort(): string {
+    return timestampToShortTimeDate(this.parsed.maturity * 1000);
+  }
+
+  get dateRich(): string {
+    return timestampToReadableDate(this.parsed.maturity * 1000);
+  }
 }
 
 export class OptionWithPosition extends Option {
@@ -263,7 +277,11 @@ export class OptionWithPosition extends Option {
   }
 
   get fullSize(): string {
-    return new BN(this.raw.position_size).toString(10);
+    return this.raw.position_size.toString(10);
+  }
+
+  get size(): number {
+    return shortInteger(this.fullSize, this.tokenPair.base.decimals);
   }
 }
 

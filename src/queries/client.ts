@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientConfig } from "react-query";
 import { QueryKeys } from "./keys";
 
-// 15 minutes
-const staleTime = 15 * 60 * 1000;
+// 5 minutes
+const staleTime = 5 * 60 * 1000;
 
 const queryConfig: QueryClientConfig = {
   defaultOptions: {

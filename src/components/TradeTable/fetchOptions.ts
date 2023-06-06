@@ -6,7 +6,7 @@ import { parseNonExpiredOption } from "../../utils/optionParsers/parseNonExpired
 import { chooseType } from "./chooseType";
 import { OptionType } from "../../types/options";
 
-export const fetchOptions = async (): Promise<
+export const fetchOptionsWithType = async (): Promise<
   [OptionWithPremia[], OptionType]
 > => {
   const [rawDataResult, chosenTypeResult] = await Promise.allSettled([
@@ -37,4 +37,25 @@ export const fetchOptions = async (): Promise<
   debug("Parsed fetched options", optionsWithPremia);
 
   return [optionsWithPremia, chosenType];
+};
+
+export const fetchOptions = async (): Promise<OptionWithPremia[]> => {
+  const rawData = await getNonExpiredOptions().catch((e) => {
+    debug("fetch options failed:", e);
+    return null;
+  });
+
+  if (rawData === null) {
+    return [];
+  }
+
+  const optionsWithPremia = parseBatchOfOptions(
+    rawData,
+    7,
+    parseNonExpiredOption
+  );
+
+  debug("Parsed fetched options", optionsWithPremia);
+
+  return optionsWithPremia;
 };
