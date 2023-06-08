@@ -10,7 +10,7 @@ export const ClaimButton = ({ account, data }: Props) => {
 
   const handleClick = () => {
     setText("Confirm tokens transfer in your wallet");
-    claim(account!, data!.slice(0, 1), setText);
+    claim(account!, data!, setText);
   };
 
   return (
