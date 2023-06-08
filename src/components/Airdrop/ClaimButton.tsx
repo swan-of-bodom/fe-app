@@ -25,10 +25,12 @@ export const ClaimButton = ({ account, data }: Props) => {
         m: 2,
       }}
     >
-      <Button variant="contained" onClick={handleClick} disabled={!data}>
+      <Button variant="contained" onClick={handleClick} disabled={true}>
         Claim airdrop
       </Button>
-      <Typography>{text}</Typography>
+      <Typography>
+        Claiming of round 2 will be available in the upcoming days
+      </Typography>
     </Box>
   );
 };
