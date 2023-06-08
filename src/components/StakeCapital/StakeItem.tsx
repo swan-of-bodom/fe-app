@@ -16,7 +16,6 @@ import { Pool } from "../../classes/Pool";
 import { hexToBN } from "../../utils/utils";
 import { intToDecimal } from "../../utils/units";
 import { BASE_DIGITS } from "../../constants/amm";
-import { debug } from "../../utils/debugger";
 
 type Props = {
   account: AccountInterface | undefined;
