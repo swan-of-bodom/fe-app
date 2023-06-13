@@ -41,7 +41,8 @@ export const Vote = () => {
         alignItems: "center",
         justifyContent: "center",
         flexFlow: "column",
-        m: 8,
+        my: 8,
+        mx: 2,
       }}
     >
       <Typography>
@@ -61,7 +62,7 @@ export const Vote = () => {
           alignItems: "center",
           justifyContent: "center",
           flexFlow: "row",
-          gap: 4,
+          gap: 2,
         }}
       >
         <Button
