@@ -12,10 +12,12 @@ const TradePage = () => {
 
   return (
     <Layout>
+      {/*
+      Voting - currently not shown
       <Typography sx={{ mb: 2 }} variant="h4">
         Vote on proposal 13
       </Typography>
-      <Vote />
+      <Vote /> */}
       <Typography sx={{ mb: 2 }} variant="h4">
         Buy Options
       </Typography>
