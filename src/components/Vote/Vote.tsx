@@ -12,7 +12,7 @@ enum Opinion {
 }
 
 const vote = async (account: AccountInterface, opinion: Opinion) => {
-  const propId = "13";
+  const propId = "14";
 
   const call = {
     contractAddress: getTokenAddresses().GOVERNANCE_CONTRACT_ADDRESS,
@@ -46,8 +46,8 @@ export const Vote = () => {
       }}
     >
       <Typography>
-        Proposal fixes standard proposal passing, you can read more about this
-        in the{" "}
+        This is the second proposal, that fixes standard proposal passing, you
+        can read more about this in the{" "}
         <Link
           target="_blank"
           href="https://discord.com/channels/969228248552706078/1035256265082949722/1116669484124622889"
