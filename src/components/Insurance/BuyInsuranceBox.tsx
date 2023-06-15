@@ -54,12 +54,14 @@ export const BuyInsuranceBox = () => {
   const [textSize, setTextSize] = useState<string>(
     displayBalance ? displayBalance : "0"
   );
+  const [interacted, setInteracted] = useState(false);
   const [expiry, setExpiry] = useState<number>();
 
-  if (displayBalance && size === 0) {
-    // if no size has been set, set it to user balance
+  if (displayBalance && !interacted) {
+    // if no interaction with input, set size to user balance
     setSize(parseFloat(displayBalance));
     setTextSize(displayBalance);
+    setInteracted(true);
   }
 
   if (valueInUsd === undefined || isLoading) {
@@ -94,7 +96,10 @@ export const BuyInsuranceBox = () => {
   const handleExpiryChange = (event: SelectChangeEvent) => {
     setExpiry(parseInt(event.target.value) as number);
   };
-  const handleSizeChange = handleNumericChangeFactory(setTextSize, setSize);
+  const handleSizeChange = handleNumericChangeFactory(setTextSize, setSize, (n) => {
+    setInteracted(true);
+    return n;
+  });
 
   if (options.length === 0) {
     // no options for the given currency
