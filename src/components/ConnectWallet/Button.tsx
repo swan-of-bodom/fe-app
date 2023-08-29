@@ -1,12 +1,7 @@
-import { Button } from "@mui/material";
-import { Wallet } from "@mui/icons-material";
 import { AccountInfo } from "./AccountInfo";
 import { useAccount } from "../../hooks/useAccount";
 import { openWalletConnectDialog } from "../../redux/actions";
-
-const buttonStyle = {
-  minWidth: "170px",
-};
+import styles from "./connect.module.css";
 
 export const WalletButton = () => {
   const account = useAccount();
@@ -17,13 +12,8 @@ export const WalletButton = () => {
   }
 
   return (
-    <Button
-      variant="outlined"
-      sx={buttonStyle}
-      onClick={openWalletConnectDialog}
-    >
-      <Wallet />
-      Connect Wallet
-    </Button>
+    <button className={styles.button} onClick={openWalletConnectDialog}>
+      Connect
+    </button>
   );
 };

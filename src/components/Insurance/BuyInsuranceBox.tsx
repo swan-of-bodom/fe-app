@@ -3,7 +3,7 @@ import { useAccount } from "../../hooks/useAccount";
 import { TokenKey, tokensList } from "../../tokens/tokens";
 import { useUserBalance } from "../../hooks/useUserBalance";
 import { useCurrency } from "../../hooks/useCurrency";
-import { LoadingAnimation } from "../loading";
+import { LoadingAnimation } from "../Loading/Loading";
 import {
   Box,
   Button,

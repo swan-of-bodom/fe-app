@@ -1,5 +1,3 @@
-import { ThemeVariants } from "../style/themes";
-
 export const enum ProviderVariants {
   Devnet,
   Testnet,
@@ -8,5 +6,4 @@ export const enum ProviderVariants {
 
 export interface Settings {
   autoconnect: boolean;
-  theme: ThemeVariants;
 }

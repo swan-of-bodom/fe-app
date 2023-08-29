@@ -1,19 +1,8 @@
-import { Button, Typography } from "@mui/material";
 import { WalletIcon } from "../assets";
 import { useWallet } from "../../hooks/useWallet";
 import { openAccountDialog } from "../../redux/actions";
-import { debug } from "../../utils/debugger";
 import { addressElision } from "../../utils/utils";
-
-const iconStyle = {
-  width: 30,
-  marginRight: 1,
-};
-
-const containerStyle = {
-  display: "flex",
-  alignItems: "center",
-};
+import styles from "./connect.module.css";
 
 export const AccountInfo = () => {
   const wallet = useWallet();
@@ -22,7 +11,10 @@ export const AccountInfo = () => {
     return null;
   }
 
-  debug(wallet.icon);
+  const iconStyle = {
+    width: 30,
+    marginRight: 1,
+  };
 
   const handleClick = () => {
     openAccountDialog();
@@ -32,11 +24,11 @@ export const AccountInfo = () => {
   const { address } = account;
 
   return (
-    <Button onClick={handleClick} variant="outlined" sx={containerStyle}>
+    <button onClick={handleClick} className={styles.button}>
       <>
         <WalletIcon sx={iconStyle} wallet={wallet} />
-        <Typography>{addressElision(address)}</Typography>
+        {addressElision(address)}
       </>
-    </Button>
+    </button>
   );
 };

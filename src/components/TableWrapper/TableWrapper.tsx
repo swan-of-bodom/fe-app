@@ -1,7 +1,6 @@
-import { Box, Paper, TableContainer, useTheme } from "@mui/material";
+import { Box, Paper, TableContainer } from "@mui/material";
 import { ReactNode } from "react";
-import { isDarkTheme } from "../utils/utils";
-import { SlippageButton } from "./Slippage/SlippageButton";
+import { SlippageButton } from "../Slippage/SlippageButton";
 
 type TableWrapperProps = {
   slippage?: boolean;
@@ -9,7 +8,6 @@ type TableWrapperProps = {
 };
 
 export const TableWrapper = (props: TableWrapperProps) => {
-  const theme = useTheme();
   const { slippage, children } = props;
   return (
     <Paper
@@ -18,9 +16,7 @@ export const TableWrapper = (props: TableWrapperProps) => {
         marginBottom: 2,
         padding: 2,
         width: "100%",
-        ...(isDarkTheme(theme) && {
-          background: "#393946",
-        }),
+        background: "#393946",
       }}
     >
       {slippage && (

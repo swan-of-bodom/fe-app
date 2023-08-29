@@ -9,6 +9,7 @@ import { OptionWithPremia } from "../../classes/Option";
 import { OptionModal } from "./OptionModal";
 import OptionsTableItem from "./OptionTableItem";
 import { useState } from "react";
+import { SlippageButton } from "../Slippage/SlippageButton";
 
 type Props = {
   options: OptionWithPremia[];
@@ -25,12 +26,30 @@ const OptionsTable = ({ options }: Props) => {
 
   return (
     <>
-      <Table aria-label="simple table">
+      <Table
+        aria-label="simple table"
+        sx={{ border: "1px solid white", marginTop: "10px" }}
+      >
         <TableHead>
-          <TableRow>
-            <TableCell>Strike Price</TableCell>
-            <TableCell>Maturity</TableCell>
-            <TableCell>Premia</TableCell>
+          <TableRow sx={{ border: "1px solid white " }}>
+            <TableCell sx={{ borderBottom: "1px solid white" }}>
+              Strike Price
+            </TableCell>
+            <TableCell sx={{ borderBottom: "1px solid white" }}>
+              Maturity
+            </TableCell>
+            <TableCell sx={{ borderBottom: "1px solid white" }}>
+              Premia
+            </TableCell>
+            <TableCell
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                border: "1px solid white",
+              }}
+            >
+              <SlippageButton />
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

@@ -10,7 +10,7 @@ import {
   IconButton,
   Link,
 } from "@mui/material";
-import { isDarkTheme, timestampToReadableDate } from "../../utils/utils";
+import { timestampToReadableDate } from "../../utils/utils";
 import { useDialog } from "../../hooks/useDialog";
 import { closeDialog } from "../../redux/actions";
 import { DialogContentElem } from "../../redux/reducers/ui";
@@ -136,7 +136,7 @@ const Border = ({ children }: Props) => {
 
   const style = {
     p: 1,
-    background: isDarkTheme(theme) ? "black" : "white",
+    background: "black",
     border: `solid 1px ${theme.palette.primary.main}`,
     overflow: "hidden",
   };

@@ -16,7 +16,7 @@ import {
   validateResponse,
 } from "./utils";
 import { isNonEmptyArray } from "../../utils/utils";
-import { LoadingAnimation } from "../loading";
+import { LoadingAnimation } from "../Loading/Loading";
 
 export type IHistoricData = Array<number[]>;
 

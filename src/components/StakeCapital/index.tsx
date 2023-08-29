@@ -1,4 +1,4 @@
-import { TableWrapper } from "../TableWrapper";
+import { TableWrapper } from "../TableWrapper/TableWrapper";
 import { StakeCapitalParent } from "./StakeCapitalParent";
 
 const StakeCapital = () => (

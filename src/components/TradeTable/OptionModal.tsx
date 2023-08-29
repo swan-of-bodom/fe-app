@@ -1,6 +1,5 @@
 import { Modal, Paper, useTheme } from "@mui/material";
 import { OptionWithPremia } from "../../classes/Option";
-import { isDarkTheme } from "../../utils/utils";
 import { TradeCard } from "./TradeCard";
 
 type ModalProps = {
@@ -20,7 +19,7 @@ export const OptionModal = ({ open, setOpen, option }: ModalProps) => {
     transform: "translate(-50%, -50%)",
     padding: 2,
     minWidth: "min(500px, 95vw)",
-    background: isDarkTheme(theme) ? "black" : "white",
+    background: "black",
     border: `solid 1px ${theme.palette.primary.main}`,
   };
 

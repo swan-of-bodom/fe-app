@@ -7,7 +7,7 @@ import {
   Button,
   debounce,
 } from "@mui/material";
-import { LoadingAnimation } from "../loading";
+import { LoadingAnimation } from "../Loading/Loading";
 import BN from "bn.js";
 import { useState, useCallback, useEffect } from "react";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";

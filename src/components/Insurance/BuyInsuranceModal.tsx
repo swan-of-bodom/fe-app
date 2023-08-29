@@ -9,7 +9,7 @@ import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
 import { Option } from "../../classes/Option";
 import { useBuyInsuranceData } from "../../hooks/useBuyInsuranceData";
-import { LoadingAnimation } from "../loading";
+import { LoadingAnimation } from "../Loading/Loading";
 import { useState } from "react";
 import { TradeState } from "../TradeTable/TradeCard";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";

@@ -1,15 +1,15 @@
 import { OptionSide, OptionType } from "../../types/options";
-import { Box, Button, Paper, TableContainer, useTheme } from "@mui/material";
+import { Box, TableContainer, useTheme } from "@mui/material";
 import { useState } from "react";
 import OptionsTable from "./OptionsTable";
-import { isCall, isDarkTheme, isLong } from "../../utils/utils";
-import { LoadingAnimation } from "../loading";
+import { isCall, isLong } from "../../utils/utils";
+import { LoadingAnimation } from "../Loading/Loading";
 import { NoContent } from "../TableNoContent";
 import { fetchOptionsWithType } from "./fetchOptions";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
-import { SlippageButton } from "../Slippage/SlippageButton";
 import { OptionWithPremia } from "../../classes/Option";
+import styles from "./tradetable.module.css";
 
 const getText = (type: OptionType, side: OptionSide) =>
   `We currently do not have any ${isLong(side) ? "long" : "short"} ${
@@ -69,16 +69,7 @@ const TradeTable = () => {
     : [];
 
   return (
-    <Paper
-      sx={{
-        marginTop: 4,
-        padding: 2,
-        width: "100%",
-        ...(isDarkTheme(theme) && {
-          background: "#393946",
-        }),
-      }}
-    >
+    <>
       <Box
         sx={{
           visibility: data ? "" : "hidden",
@@ -92,37 +83,37 @@ const TradeTable = () => {
             flexFlow: "row",
             justifyContent: "space-between",
           },
+          marginTop: "100px",
         }}
       >
-        <div>
-          <Button
-            variant={isLong(side) ? "contained" : "outlined"}
+        <div className={styles.container}>
+          <button
+            className={isLong(side) ? styles.active : "non-active"}
             onClick={() => setLongShort(OptionSide.Long)}
           >
             Long
-          </Button>
-          <Button
-            variant={isLong(side) ? "outlined" : "contained"}
+          </button>
+          <button
+            className={isLong(side) ? "non-active" : styles.active}
             onClick={() => setLongShort(OptionSide.Short)}
           >
             Short
-          </Button>
-          <Button
-            variant={isCall(type) ? "contained" : "outlined"}
+          </button>
+          <button
+            className={isCall(type) ? styles.active : "non-active"}
             onClick={() => setCallPut(OptionType.Call)}
           >
             Call
-          </Button>
-          <Button
-            variant={isCall(type) ? "outlined" : "contained"}
+          </button>
+          <button
+            className={isCall(type) ? "non-active" : styles.active}
             onClick={() => setCallPut(OptionType.Put)}
           >
             Put
-          </Button>
+          </button>
         </div>
-        <SlippageButton />
       </Box>
-      <TableContainer elevation={2} component={Paper}>
+      <TableContainer component={Box}>
         <Content
           options={filtered}
           side={side}
@@ -131,7 +122,7 @@ const TradeTable = () => {
           error={isError}
         />
       </TableContainer>
-    </Paper>
+    </>
   );
 };
 

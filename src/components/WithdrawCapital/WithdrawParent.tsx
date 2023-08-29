@@ -6,7 +6,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { LoadingAnimation } from "../loading";
+import { LoadingAnimation } from "../Loading/Loading";
 import { isNonEmptyArray } from "../../utils/utils";
 
 import { WithdrawItem } from "./WithdrawItem";

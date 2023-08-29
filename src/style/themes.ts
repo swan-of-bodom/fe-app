@@ -1,47 +1,38 @@
 import { ThemeOptions, createTheme } from "@mui/material";
 
-export enum ThemeVariants {
-  dark = "dark",
-  light = "light",
+declare module "@mui/material/styles" {
+  interface Palette {
+    border: Palette["primary"];
+  }
+
+  interface PaletteOptions {
+    border?: PaletteOptions["primary"];
+  }
 }
 
-const darkTheme: ThemeOptions = {
+const themeConfig: ThemeOptions = {
   palette: {
-    mode: ThemeVariants.dark,
+    mode: "dark",
     primary: {
       main: "#ffb000",
     },
-    background: {
-      default: "#070718",
-      paper: "#020210",
+    secondary: {
+      main: "#ffb300",
     },
+    background: {
+      default: "#000000",
+      paper: "#000000",
+    },
+    success: {
+      main: "#1AFF00",
+    },
+    divider: "#a9aaac",
+  },
+  typography: {
+    fontFamily: '"Neue Haas Grotesk", sans-serif',
+    fontSize: 18,
+    fontWeightRegular: 500,
   },
 };
 
-// TODO: colors
-const lightTheme: ThemeOptions = {
-  palette: {
-    mode: ThemeVariants.light,
-  },
-};
-
-export const getTheme = (c: ThemeVariants) =>
-  c === ThemeVariants.dark ? createTheme(darkTheme) : createTheme(lightTheme);
-
-const THEME_KEY = "theme-variant";
-
-export const storeTheme = (newTheme: ThemeVariants): void => {
-  localStorage.setItem(THEME_KEY, newTheme);
-};
-
-const retrieveTheme = (): string | null => localStorage.getItem(THEME_KEY);
-
-export const getInitialTheme = (): ThemeVariants => {
-  const fromLocalStorage = retrieveTheme();
-  if (
-    Object.values(ThemeVariants).includes(fromLocalStorage as ThemeVariants)
-  ) {
-    return fromLocalStorage as ThemeVariants;
-  }
-  return ThemeVariants.dark;
-};
+export const theme = createTheme(themeConfig);

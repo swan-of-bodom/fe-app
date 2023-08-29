@@ -1,4 +1,3 @@
-import { ThemeVariants } from "../style/themes";
 import { NetworkName } from "../types/network";
 import { Settings } from "../types/settings";
 import { debug } from "./debugger";
@@ -7,7 +6,6 @@ const SETTINGS_KEY = "app-settings";
 
 const DEFAULT_SETTINGS: Settings = {
   autoconnect: true,
-  theme: ThemeVariants.dark,
   network: NetworkName.Mainnet,
   slippage: 5,
 };
@@ -24,7 +22,6 @@ export const validateSettings = (v: unknown): v is Settings => {
   }
 
   if (
-    !Object.values(ThemeVariants).includes((v as Settings).theme) ||
     !Object.values(NetworkName).includes((v as Settings).network) ||
     typeof (v as Settings).slippage !== "number"
   ) {

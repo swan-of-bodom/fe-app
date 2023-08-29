@@ -1,8 +1,6 @@
 import { OptionWithPremia } from "../../classes/Option";
 import { isCall, timestampToReadableDate } from "../../utils/utils";
-import { Box, TableCell, TableRow, useTheme } from "@mui/material";
-import { ThemeVariants } from "../../style/themes";
-import TouchAppIcon from "@mui/icons-material/TouchApp";
+import { TableCell, TableRow, useTheme } from "@mui/material";
 
 type OptionPreviewProps = {
   option: OptionWithPremia;
@@ -12,7 +10,7 @@ type OptionPreviewProps = {
 const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
   const theme = useTheme();
 
-  const greyGrade = theme.palette.mode === ThemeVariants.dark ? 800 : 300;
+  const greyGrade = 800;
 
   const style = {
     cursor: "pointer",
@@ -30,26 +28,15 @@ const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
 
   return (
     <TableRow sx={style} onClick={handleClick}>
-      <TableCell sx={{ width: "calc(100%/3)" }}>${strikePrice}</TableCell>
-      <TableCell sx={{ width: "calc(100%/3)" }}>{date}</TableCell>
-      <TableCell
-        sx={{
-          width: "calc(100%/3)",
-        }}
-      >
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
-        >
-          {currency} {displayPremia}
-          <TouchAppIcon
-            sx={{ ml: "auto", color: theme.palette.primary.main }}
-          />
-        </Box>
+      <TableCell sx={{ borderBottom: "1px solid white" }}>
+        ${strikePrice}
+      </TableCell>
+      <TableCell sx={{ borderBottom: "1px solid white" }}>{date}</TableCell>
+      <TableCell sx={{ borderBottom: "1px solid white" }}>
+        {currency} {displayPremia}
+      </TableCell>
+      <TableCell sx={{ textAlign: "center", borderBottom: "1px solid white" }}>
+        <span style={{ color: "#00FF38", fontSize: "20px" }}>+</span>
       </TableCell>
     </TableRow>
   );

@@ -1,11 +1,11 @@
 import { FunctionComponent } from "react";
 import { fetchPositions } from "./fetchPositions";
-import { TableWrapper } from "../TableWrapper";
+import { TableWrapper } from "../TableWrapper/TableWrapper";
 import { Box, Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { NoContent } from "../TableNoContent";
-import { LoadingAnimation } from "../loading";
+import { LoadingAnimation } from "../Loading/Loading";
 import { OptionWithPosition } from "../../classes/Option";
 import { TableElement } from "./TableElement";
 import { LiveItem } from "./LiveItem";

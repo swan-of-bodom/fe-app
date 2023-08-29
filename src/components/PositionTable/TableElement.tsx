@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { NoContent } from "../TableNoContent";
 import { OptionWithPosition } from "../../classes/Option";
-import { LoadingAnimation } from "../loading";
+import { LoadingAnimation } from "../Loading/Loading";
 
 type Props = {
   ItemElem: ({ option }: { option: OptionWithPosition }) => JSX.Element;

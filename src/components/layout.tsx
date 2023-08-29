@@ -1,5 +1,5 @@
-import { Header } from "./header";
-import { Footer } from "./footer";
+import { Header } from "./Header/Header";
+import { Footer } from "./Footer/Footer";
 import { ReactNode } from "react";
 import Container from "@mui/material/Container";
 

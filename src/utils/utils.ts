@@ -9,7 +9,6 @@ import {
   API_URL_TESTNET,
 } from "../constants/amm";
 import { Theme } from "@mui/system";
-import { ThemeVariants } from "../style/themes";
 import { OptionSide, OptionType } from "../types/options";
 import { TESTNET_CHAINID } from "../constants/starknet";
 import { store } from "../redux/store";
@@ -99,9 +98,6 @@ export const debounce = (cb: (...args: any[]) => void, delay: number = 750) => {
     }, delay);
   };
 };
-
-export const isDarkTheme = (theme: Theme) =>
-  theme.palette.mode === ThemeVariants.dark;
 
 export const isCall = (type: OptionType): boolean => type === OptionType.Call;
 

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Header } from "../components/header";
+import { Header } from "../components/Header/Header";
 import { isDev } from "../utils/utils";
 
 const TradeDashboardPage = () => {

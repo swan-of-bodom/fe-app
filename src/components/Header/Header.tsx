@@ -1,13 +1,20 @@
 import AppBar from "@mui/material/AppBar";
-import { Link as RouterLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import GlobalStyles from "@mui/material/GlobalStyles";
-import { WalletButton } from "./ConnectWallet/Button";
-import { ReactNode } from "react";
-import { Box, Button, useTheme } from "@mui/material";
-import { NetworkSwitch } from "./networkSwitch";
+import { WalletButton } from "../ConnectWallet/Button";
+import { CSSProperties, ReactNode } from "react";
+import { Box, useTheme } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { useAccount } from "../hooks/useAccount";
-import { AccountInterface } from "starknet";
+import { NetworkSwitch } from "../NetworkSwitch/NetworkSwitch";
+
+const navLinkStyle = ({ isActive }: { isActive: boolean }) => {
+  const style: CSSProperties = {
+    color: isActive ? "rgba(255, 255, 255, 0.6)" : "white",
+    margin: "1em 1.5em",
+    textDecoration: "none",
+  };
+  return style;
+};
 
 type NavLinkProps = {
   title: string;
@@ -20,42 +27,28 @@ const navLinks = [
     link: "/trade",
   },
   {
-    title: "Insurance",
-    link: "/insurance",
+    title: "Portfolio",
+    link: "/portfolio",
   },
   {
-    title: "My Position",
-    link: "/position",
+    title: "Insurance",
+    link: "/insurance",
   },
   {
     title: "Staking",
     link: "/staking",
   },
-  {
-    title: "History",
-    link: "/history",
-  },
-  {
-    title: "Dashboard",
-    link: "/dashboard",
-  },
 ] as NavLinkProps[];
 
-const navLink = (
-  { title, link }: NavLinkProps,
-  i: number,
-  account: AccountInterface | undefined
-): ReactNode => (
-  <RouterLink style={{ textDecoration: "none" }} to={link} key={i}>
-    <Button sx={{ color: "text.primary", my: 1, mx: 1.5 }} key={i}>
-      {title}
-    </Button>
-  </RouterLink>
+const navLink = ({ title, link }: NavLinkProps, i: number): ReactNode => (
+  <NavLink to={link} style={navLinkStyle} key={i}>
+    {title}
+  </NavLink>
 );
 
 export const Header = () => {
-  const account = useAccount();
   const theme = useTheme();
+
   return (
     <>
       <GlobalStyles
@@ -66,10 +59,16 @@ export const Header = () => {
         color="default"
         elevation={0}
         sx={{
-          borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
           padding: 1,
           justifyContent: "center",
           alignItems: "center",
+          maxWidth: "1200px",
+          paddingLeft: "24px",
+          paddingRight: "24px",
+          marginLeft: "auto",
+          marginRight: "auto",
+          marginTop: "100px",
+          marginBottom: "40px",
         }}
       >
         <Box
@@ -83,17 +82,17 @@ export const Header = () => {
             width: "100%",
           }}
         >
-          <RouterLink to="/" style={{ marginRight: "auto" }}>
+          <NavLink to="/" style={{ marginRight: "auto" }}>
             <img
-              width="47.5px"
-              height="47.5px"
-              src="/logo.svg"
+              width="61px"
+              height="111px"
+              src="/logo.png"
               alt="Carmine logo"
             />
-          </RouterLink>
+          </NavLink>
           <NetworkSwitch />
-          {navLinks.map((navData, i) => navLink(navData, i, account))}
-          <RouterLink to="/settings">
+          {navLinks.map((navData, i) => navLink(navData, i))}
+          <NavLink to="/settings">
             <Box
               sx={{
                 display: "flex",
@@ -106,7 +105,7 @@ export const Header = () => {
             >
               <SettingsIcon sx={{ color: theme.palette.text.primary }} />
             </Box>
-          </RouterLink>
+          </NavLink>
           <WalletButton />
         </Box>
       </AppBar>
