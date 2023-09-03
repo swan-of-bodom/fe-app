@@ -19,6 +19,7 @@ import { isCookieSet } from "./utils/cookies";
 import APYInfoPage from "./pages/apyInfo";
 import TradeDashboardPage from "./pages/dashboard";
 import Insurance from "./pages/insurance";
+import "./style/base.css";
 
 const App = () => {
   const [check, rerender] = useState(false);
@@ -34,7 +35,6 @@ const App = () => {
             <Router>
               <Routes>
                 <Route path="/" element={<TradePage />} />
-                <Route path="/trade" element={<TradePage />} />
                 <Route path="/insurance" element={<Insurance />} />
                 <Route path="/portfolio" element={<BalancePage />} />
                 <Route path="/staking" element={<StakePage />} />

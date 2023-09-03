@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { fetchPositions } from "./fetchPositions";
 import { TableWrapper } from "../TableWrapper/TableWrapper";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { NoContent } from "../TableNoContent";
@@ -24,33 +24,28 @@ const PositionsTemplate = ({
   InMoney,
   OutOfMoney,
 }: PositionsTemplateProps) => (
-  <>
-    <Typography variant="h4">Options Balance</Typography>
-
-    <Typography sx={{ maxWidth: "66ch" }}>
-      These options have not matured yet. You can either close your position or
-      wait for the maturity.
-    </Typography>
+  <div>
+    <h3>Options Balance</h3>
     <TableWrapper slippage>
       <Live />
     </TableWrapper>
-    <Typography variant="h4">Expired - Profit</Typography>
-    <Typography sx={{ maxWidth: "66ch" }}>
+    <h3>Expired - Profit</h3>
+    <p style={{ maxWidth: "66ch" }}>
       These options matured in the money and you will get your funds upon
       settling.
-    </Typography>
+    </p>
     <TableWrapper>
       <InMoney />
     </TableWrapper>
-    <Typography variant="h4">Expired - No Profit</Typography>
-    <Typography sx={{ maxWidth: "66ch" }}>
+    <h3>Expired - No Profit</h3>
+    <p style={{ maxWidth: "66ch" }}>
       These options matured out of the money, you will not receive any funds
       from settling them. Settling these options will simply remove them.
-    </Typography>
+    </p>
     <TableWrapper>
       <OutOfMoney />
     </TableWrapper>
-  </>
+  </div>
 );
 
 type PropsAddress = {
@@ -75,9 +70,9 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
 
   if (isLoading || !data) {
     const child = () => (
-      <Box sx={{ padding: "20px" }}>
+      <div style={{ padding: "20px" }}>
         <LoadingAnimation size={40} />
-      </Box>
+      </div>
     );
     return (
       <PositionsTemplate Live={child} InMoney={child} OutOfMoney={child} />

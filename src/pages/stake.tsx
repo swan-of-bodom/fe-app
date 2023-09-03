@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Tooltip, Typography } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import StakeCapital from "../components/StakeCapital";
 import WithdrawCapital from "../components/WithdrawCapital";
 import { Link as RouterLink } from "react-router-dom";
@@ -18,13 +18,13 @@ const StakePage = () => {
           style={{ textDecoration: "none", color: "inherit" }}
           to="/staking-explained"
         >
-          <Typography variant="h4" sx={{ mb: 2, display: "inline" }}>
+          <h3 style={{ display: "inline" }}>
             Stake Capital <Info />
-          </Typography>
+          </h3>
         </RouterLink>
       </Tooltip>
       <StakeCapital />
-      <Typography variant="h4">Withdraw Capital</Typography>
+      <h3>Withdraw Capital</h3>
       <WithdrawCapital />
     </Layout>
   );

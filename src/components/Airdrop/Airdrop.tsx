@@ -1,4 +1,3 @@
-import { Box, Typography } from "@mui/material";
 import { ClaimButton } from "./ClaimButton";
 import { useAccount } from "../../hooks/useAccount";
 import { useEffect, useState } from "react";
@@ -7,6 +6,7 @@ import { NetworkName } from "../../types/network";
 import { ProofResult, getProof } from "./getProof";
 import { AccountInterface } from "starknet";
 import { shortInteger } from "../../utils/computations";
+import styles from "./airdrop.module.css";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -15,13 +15,12 @@ type Props = {
 };
 
 const AirdropTemplate = ({ account, message, data }: Props) => (
-  <Box sx={{ my: 4 }}>
-    <Typography sx={{ mb: 2 }} variant="h4">
-      Airdrop
-    </Typography>
-    <Typography>{message}</Typography>
-    {account && <ClaimButton account={account} data={data} />}
-  </Box>
+  <div>
+    <h3>Airdrop</h3>
+    <div className={styles.container}>
+      {message} {account && <ClaimButton account={account} data={data} />}
+    </div>
+  </div>
 );
 
 export const Airdrop = () => {
@@ -82,7 +81,7 @@ export const Airdrop = () => {
     }
 
     const amount = shortInteger(data.claimable, 18);
-    const message = `You are eligible to receive ${amount} Carmine tokens!`;
+    const message = `${amount} Tokens available.`;
 
     return (
       <AirdropTemplate account={account} data={data.proof} message={message} />

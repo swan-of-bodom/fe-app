@@ -24,7 +24,7 @@ type NavLinkProps = {
 const navLinks = [
   {
     title: "Trade",
-    link: "/trade",
+    link: "/",
   },
   {
     title: "Portfolio",
