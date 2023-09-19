@@ -1,0 +1,22 @@
+.table {
+  border: 1px solid white;
+  margin-top: 10px;
+}
+
+.table tr {
+  border-bottom: 1px solid white !important;
+}
+
+.table td {
+  border: none;
+}
+
+.table th {
+  border: none;
+}
+
+.table .slippageCell {
+  display: flex;
+  justify-content: center;
+  border-left: 1px solid white !important;
+}

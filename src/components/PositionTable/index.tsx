@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import { fetchPositions } from "./fetchPositions";
 import { TableWrapper } from "../TableWrapper/TableWrapper";
-import { Box } from "@mui/material";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { NoContent } from "../TableNoContent";

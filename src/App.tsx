@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import BalancePage from "./pages/balance";
@@ -35,6 +40,8 @@ const App = () => {
             <Router>
               <Routes>
                 <Route path="/" element={<TradePage />} />
+                {/* "/trade" was replaced by "/""  */}
+                <Route path="/trade" element={<Navigate to="/" replace />} />
                 <Route path="/insurance" element={<Insurance />} />
                 <Route path="/portfolio" element={<BalancePage />} />
                 <Route path="/staking" element={<StakePage />} />

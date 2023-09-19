@@ -9,6 +9,7 @@ import {
 import { NoContent } from "../TableNoContent";
 import { OptionWithPosition } from "../../classes/Option";
 import { LoadingAnimation } from "../Loading/Loading";
+import styles from "../../style/table.module.css";
 
 type Props = {
   ItemElem: ({ option }: { option: OptionWithPosition }) => JSX.Element;
@@ -31,7 +32,7 @@ export const TableElement = ({
     );
 
   return (
-    <Table aria-label="simple table">
+    <Table aria-label="portfolio table" className={styles.table}>
       <TableHead>
         <TableRow>
           {titles.map((t, i) => (

@@ -9,7 +9,7 @@ import { fetchOptionsWithType } from "./fetchOptions";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { OptionWithPremia } from "../../classes/Option";
-import styles from "./tradetable.module.css";
+import styles from "../../style/button.module.css";
 
 const getText = (type: OptionType, side: OptionSide) =>
   `We currently do not have any ${isLong(side) ? "long" : "short"} ${

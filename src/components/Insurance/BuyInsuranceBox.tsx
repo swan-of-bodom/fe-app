@@ -133,18 +133,21 @@ export const BuyInsuranceBox = () => {
     .filter(uniquePrimitiveValues)
     .sort();
 
-  if (!expiry) {
+  if (options.length > 0 && !expiry) {
     setExpiry(expiries[0]);
   }
 
-  // show strikes for current expiry
+  // // show strikes for current expiry
   const strikes = options
     .filter((o) => o.parsed.maturity === expiry)
     .map((o) => o.parsed.strikePrice)
     .filter(uniquePrimitiveValues)
     .sort();
 
-  if (!currentStrike || !strikes.includes(currentStrike)) {
+  if (
+    options.length > 0 &&
+    (!currentStrike || !strikes.includes(currentStrike))
+  ) {
     setCurrentStrike(strikes[0]);
   }
 
