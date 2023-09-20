@@ -14,6 +14,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { Info } from "@mui/icons-material";
 import { TokenPairKey, getPoolByPairType } from "../../tokens/tokens";
 import { timestampToReadableDate } from "../../utils/utils";
+import tableStyles from "../../style/table.module.css";
 
 export const StakeCapitalParent = () => {
   const account = useAccount();
@@ -32,18 +33,18 @@ export const StakeCapitalParent = () => {
     "APY (Annual Percentage Yield) is calculated based on the last week and represents the annualized yield of the pool. Keep in mind that it does NOT account for risk and that past returns do not imply future returns.";
 
   return (
-    <Table aria-label="simple table">
+    <Table aria-label="simple table" className={tableStyles.table}>
       <TableHead>
         <TableRow>
           <TableCell>
             <Typography sx={sx}>Pool</Typography>
           </TableCell>
-          <TableCell align="center">
+          <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
             <Tooltip title={yslTooltipText}>
-              <Typography sx={sx}>APY since launch</Typography>
+              <Typography sx={sx}>APY all time</Typography>
             </Tooltip>
           </TableCell>
-          <TableCell align="center">
+          <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
             <RouterLink
               style={{ textDecoration: "none", color: "inherit" }}
               to="/apy-info"

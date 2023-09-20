@@ -1,5 +1,4 @@
 import {
-  Button,
   TableCell,
   TableRow,
   TextField,
@@ -18,6 +17,7 @@ import { BASE_DIGITS } from "../../constants/amm";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
 import { getPoolState } from "../../calls/getPoolState";
+import buttonStyles from "../../style/button.module.css";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -99,7 +99,7 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
 
   return (
     <TableRow>
-      <TableCell>
+      <TableCell sx={{ whiteSpace: "nowrap" }}>
         <Typography>{pool.name}</Typography>
       </TableCell>
       <TableCell>
@@ -123,10 +123,20 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
           onChange={handleChange}
         />
       </TableCell>
-      <TableCell align="right">
-        <Button
+      <TableCell sx={{ display: "flex", alignItems: "center" }} align="right">
+        <Tooltip title="Stake from L1 directly to our liquidity pool - requires MetaMask">
+          <button
+            className={`${buttonStyles.button} ${buttonStyles.secondary}`}
+            style={{ whiteSpace: "nowrap" }}
+            onClick={handleWidoClick}
+          >
+            Stake from L1
+          </button>
+        </Tooltip>
+        <button
+          style={{ borderRight: 0 }}
+          className={`${buttonStyles.button} ${buttonStyles.secondary}`}
           disabled={loading || !account || txPending}
-          variant="contained"
           onClick={() => handleStake(account!, amount, pool, setLoading)}
         >
           {loading || txPending
@@ -134,12 +144,7 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
             : account
             ? "Stake"
             : "Connect wallet"}
-        </Button>
-        <Tooltip title="Stake from L1 directly to our liquidity pool - requires MetaMask">
-          <Button sx={{ ml: 1 }} variant="contained" onClick={handleWidoClick}>
-            Stake from L1
-          </Button>
-        </Tooltip>
+        </button>
       </TableCell>
     </TableRow>
   );

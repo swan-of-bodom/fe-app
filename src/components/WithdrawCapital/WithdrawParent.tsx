@@ -17,6 +17,7 @@ import { QueryKeys } from "../../queries/keys";
 import { AccountInterface } from "starknet";
 import { UserPoolDisplayData } from "../../types/pool";
 import { useAccount } from "../../hooks/useAccount";
+import tableStyles from "../../style/table.module.css";
 
 type Props = { address: string; account: AccountInterface };
 
@@ -59,7 +60,7 @@ const WithdrawParentWithAccount = ({ address, account }: Props) => {
   });
 
   return (
-    <Table aria-label="simple table">
+    <Table aria-label="simple table" className={tableStyles.table}>
       <TableHead>
         <TableRow>
           <TableCell>Pool</TableCell>

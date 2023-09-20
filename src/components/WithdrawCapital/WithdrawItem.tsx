@@ -1,5 +1,4 @@
 import {
-  Button,
   ButtonGroup,
   TableCell,
   TableRow,
@@ -20,8 +19,7 @@ import { showToast } from "../../redux/actions";
 import { ToastType } from "../../redux/reducers/ui";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
-import { getUnlockedCapital } from "../../calls/getUnlockedCapital";
-import { getTokenAddresses } from "../../constants/amm";
+import buttonStyles from "../../style/button.module.css";
 
 interface Props extends UserPoolDisplayData {
   account: AccountInterface;
@@ -94,11 +92,26 @@ export const WithdrawItem = ({ account, value, fullSize, type }: Props) => {
           disabled={processing || txPending}
         >
           {processing || txPending ? (
-            <Button>Processing...</Button>
+            <button
+              className={`${buttonStyles.button} ${buttonStyles.secondary}`}
+            >
+              Processing...
+            </button>
           ) : (
             <>
-              <Button onClick={handleWithdraw}>Withdraw</Button>
-              <Button onClick={handleWithdrawAll}>Max</Button>
+              <button
+                style={{ borderRight: 0 }}
+                className={`${buttonStyles.button} ${buttonStyles.secondary}`}
+                onClick={handleWithdraw}
+              >
+                Unstake
+              </button>
+              <button
+                className={`${buttonStyles.button} ${buttonStyles.secondary}`}
+                onClick={handleWithdrawAll}
+              >
+                Max
+              </button>
             </>
           )}
         </ButtonGroup>
