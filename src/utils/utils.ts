@@ -8,7 +8,6 @@ import {
   API_URL_MAINNET,
   API_URL_TESTNET,
 } from "../constants/amm";
-import { Theme } from "@mui/system";
 import { OptionSide, OptionType } from "../types/options";
 import { TESTNET_CHAINID } from "../constants/starknet";
 import { store } from "../redux/store";
@@ -65,6 +64,17 @@ export const timestampToShortTimeDate = (ts: number): string =>
     second: "numeric",
     month: "numeric",
     day: "numeric",
+  }).format(ts);
+
+export const timestampToInsuranceDate = (ts: number): string =>
+  new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
   }).format(ts);
 
 export const timestampToRichDate = (ts: number): string => {
