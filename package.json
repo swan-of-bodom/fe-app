@@ -26,8 +26,7 @@
   },
   "scripts": {
     "start": "GENERATE_SOURCEMAP=false react-scripts start",
-    "build:testnet": "dotenv -e ./.env.testnet react-scripts build",
-    "build:mainnet": "dotenv -e ./.env.mainnet react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
