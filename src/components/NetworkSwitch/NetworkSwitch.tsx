@@ -2,9 +2,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { NetworkName } from "../../types/network";
-import { updateSettings } from "../../redux/actions";
 import { useNetwork } from "../../hooks/useNetwork";
-import { isDev } from "../../utils/utils";
 import styles from "./networkswitch.module.css";
 
 const Ellipse = () => (
@@ -24,17 +22,12 @@ export const NetworkSwitch = () => {
 
     if (target === NetworkName.Mainnet) {
       // TODO: change to mainnet.app.carmine.finance when ready
-      window.location.href = "app.carmine.finance";
+      window.location.href = "https://app.carmine.finance";
     }
     if (target === NetworkName.Testnet) {
       // TODO: uncomment when ready
-      // window.location.href = "testnet.app.carmine.finance";
+      window.location.href = "https://testnet.app.carmine.finance";
     }
-
-    updateSettings({ network: target });
-    // the most reliable way to make sure that all contracts and StarknetProvider
-    // use correct network is to reload the app
-    window.location.reload();
   };
 
   return (
@@ -50,8 +43,6 @@ export const NetworkSwitch = () => {
         onChange={handleChange}
         className={styles.button}
       >
-        {isDev && <MenuItem value={NetworkName.Devnet}>Devnet</MenuItem>}
-        {isDev && <MenuItem value={NetworkName.Testdev}>Testdev</MenuItem>}
         <MenuItem value={NetworkName.Testnet}>
           Testnet <Ellipse />
         </MenuItem>

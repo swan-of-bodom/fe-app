@@ -1,5 +1,5 @@
 import { Pool } from "../classes/Pool";
-import { getTokenAddresses } from "../constants/amm";
+import { ETH_ADDRESS, USDC_ADDRESS } from "../constants/amm";
 import { OptionType } from "../types/options";
 import { standardiseAddress } from "../utils/utils";
 
@@ -40,13 +40,13 @@ export const tokensList: TokensList = {
     id: TokenKey.ETH,
     symbol: "ETH",
     decimals: 18,
-    tokenAddress: standardiseAddress(getTokenAddresses().ETH_ADDRESS),
+    tokenAddress: standardiseAddress(ETH_ADDRESS),
   },
   [TokenKey.USDC]: {
     id: TokenKey.USDC,
     symbol: "USDC",
     decimals: 6,
-    tokenAddress: standardiseAddress(getTokenAddresses().USD_ADDRESS),
+    tokenAddress: standardiseAddress(USDC_ADDRESS),
   },
 };
 
@@ -61,10 +61,13 @@ export const getTokenPairByAddresses = (
   base: string,
   quote: string
 ): TokenPair => {
+  const standardisedBase = standardiseAddress(base);
+  const standardisedQuote = standardiseAddress(quote);
+
   const found = Object.values(tokenPairList).find(
     (pair) =>
-      pair.base.tokenAddress === standardiseAddress(base) &&
-      pair.quote.tokenAddress === standardiseAddress(quote)
+      pair.base.tokenAddress === standardisedBase &&
+      pair.quote.tokenAddress === standardisedQuote
   );
 
   if (found) {

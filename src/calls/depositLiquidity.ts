@@ -1,4 +1,9 @@
-import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
+import {
+  AMM_ADDRESS,
+  AMM_METHODS,
+  ETH_ADDRESS,
+  USDC_ADDRESS,
+} from "../constants/amm";
 import { debug } from "../utils/debugger";
 import { AccountInterface } from "starknet";
 import LpAbi from "../abi/lptoken_abi.json";
@@ -15,21 +20,18 @@ export const depositLiquidity = async (
   ok: () => void,
   nok: () => void
 ): Promise<void> => {
-  const { USD_ADDRESS, ETH_ADDRESS, MAIN_CONTRACT_ADDRESS } =
-    getTokenAddresses();
-
   const approveCalldata = {
     contractAddress: pool.tokenAddress,
     entrypoint: AMM_METHODS.APPROVE,
-    calldata: [MAIN_CONTRACT_ADDRESS, size, "0"],
+    calldata: [AMM_ADDRESS, size, "0"],
   };
 
   const depositLiquidityCalldata = {
-    contractAddress: MAIN_CONTRACT_ADDRESS,
+    contractAddress: AMM_ADDRESS,
     entrypoint: AMM_METHODS.DEPOSIT_LIQUIDITY,
     calldata: [
       pool.tokenAddress,
-      USD_ADDRESS,
+      USDC_ADDRESS,
       ETH_ADDRESS,
       pool.parsed.optionType,
       size,

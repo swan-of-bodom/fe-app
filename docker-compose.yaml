@@ -1,16 +1,16 @@
 version: '3.9'
 
 services:
-  full-build:
-    build: .
+  mainnet:
+    build:
+      context: .
+      dockerfile: Dockerfile.mainnet
     ports:
       - 8080:80
 
-  local-build:
+  testnet:
     build:
       context: .
-      dockerfile: Dockerfile.local
-    volumes:
-      - ./build:/usr/share/nginx/html
+      dockerfile: Dockerfile.testnet
     ports:
-      - 9000:80
+      - 8081:80

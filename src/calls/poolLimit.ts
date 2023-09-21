@@ -1,8 +1,11 @@
 import {
   AMM_METHODS,
+  ETH_ADDRESS,
   ETH_DIGITS,
-  USD_DIGITS,
-  getTokenAddresses,
+  ETH_USDC_CALL_ADDRESS,
+  ETH_USDC_PUT_ADDRESS,
+  USDC_ADDRESS,
+  USDC_DIGITS,
 } from "../constants/amm";
 import { getMainContract } from "../utils/blockchain";
 import { shortInteger } from "../utils/computations";
@@ -48,18 +51,17 @@ type PoolLimit = {
 };
 
 export const poolLimit = async (lpoolAddress: string): Promise<PoolLimit> => {
-  const addresses = getTokenAddresses();
   if (
-    lpoolAddress !== addresses.LPTOKEN_CONTRACT_ADDRESS &&
-    lpoolAddress !== addresses.LPTOKEN_CONTRACT_ADDRESS_PUT
+    lpoolAddress !== ETH_USDC_CALL_ADDRESS &&
+    lpoolAddress !== ETH_USDC_PUT_ADDRESS
   ) {
     // weird to address
     debug("wrong to address", lpoolAddress);
   }
   const [tokenAddress, decimals, symbol] =
-    lpoolAddress === addresses.LPTOKEN_CONTRACT_ADDRESS
-      ? [addresses.ETH_ADDRESS, ETH_DIGITS, "ETH"]
-      : [addresses.USD_ADDRESS, USD_DIGITS, "USDC"];
+    lpoolAddress === ETH_USDC_CALL_ADDRESS
+      ? [ETH_ADDRESS, ETH_DIGITS, "ETH"]
+      : [USDC_ADDRESS, USDC_DIGITS, "USDC"];
 
   const [balance, limit] = await Promise.all([
     lpoolBalance(lpoolAddress),

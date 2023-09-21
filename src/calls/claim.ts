@@ -1,14 +1,14 @@
 import { AccountInterface } from "starknet";
 import { afterTransaction } from "../utils/blockchain";
 import GovernanceAbi from "../abi/governance_abi.json";
-import { getTokenAddresses } from "../constants/amm";
+import { GOVERNANCE_ADDRESS } from "../constants/amm";
 
 export const claim = async (
   account: AccountInterface,
   data: string[],
   setText: (txt: string) => void
 ) => {
-  const contractAddress = getTokenAddresses().GOVERNANCE_CONTRACT_ADDRESS;
+  const contractAddress = GOVERNANCE_ADDRESS;
   const [address, amount, ...proof] = data;
   const calldata = [address, amount, String(proof.length), ...proof];
   const call = {

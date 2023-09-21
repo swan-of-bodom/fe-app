@@ -1,4 +1,8 @@
-import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
+import {
+  AMM_METHODS,
+  ETH_USDC_CALL_ADDRESS,
+  ETH_USDC_PUT_ADDRESS,
+} from "../constants/amm";
 import { getMainContract } from "../utils/blockchain";
 import { debug } from "../utils/debugger";
 import { convertSizeToUint256 } from "../utils/conversions";
@@ -14,10 +18,9 @@ export const getPremia = async (
   size: number,
   isClosing: boolean
 ): Promise<Math64x61> => {
-  const addresses = getTokenAddresses();
   const lpAddress = isCall(option.parsed.optionType)
-    ? addresses.LPTOKEN_CONTRACT_ADDRESS
-    : addresses.LPTOKEN_CONTRACT_ADDRESS_PUT;
+    ? ETH_USDC_CALL_ADDRESS
+    : ETH_USDC_PUT_ADDRESS;
   const convertedSize = convertSizeToUint256(size);
   const isClosingString = isClosing ? "0x1" : "0x0";
 

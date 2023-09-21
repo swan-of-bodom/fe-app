@@ -3,7 +3,7 @@ import { AccountInterface } from "starknet";
 import { debug } from "../../utils/debugger";
 import { useAccount } from "../../hooks/useAccount";
 import GovernanceAbi from "../../abi/amm_abi.json";
-import { getTokenAddresses } from "../../constants/amm";
+import { GOVERNANCE_ADDRESS } from "../../constants/amm";
 
 enum Opinion {
   YAY = "1",
@@ -15,7 +15,7 @@ const vote = async (account: AccountInterface, opinion: Opinion) => {
   const propId = "14";
 
   const call = {
-    contractAddress: getTokenAddresses().GOVERNANCE_CONTRACT_ADDRESS,
+    contractAddress: GOVERNANCE_ADDRESS,
     entrypoint: "vote",
     calldata: [propId, opinion],
   };

@@ -1,8 +1,8 @@
 import BN from "bn.js";
-import { API_URL_MAINNET } from "../../constants/amm";
 import { OptionType } from "../../types/options";
 import { hexToBN } from "../../utils/utils";
 import { debug } from "../../utils/debugger";
+import { API_URL } from "../../constants/amm";
 
 const TIMEOUT = 1000; // abort after 1,5s
 const ETH_PRICE_APPROXIMATION = 1900; // approximation of ETH price
@@ -21,10 +21,10 @@ type StatusResponse = {
 };
 
 export const chooseType = async (): Promise<OptionType> => {
-  const callPromise = fetch(API_URL_MAINNET + "eth-usdc-call/state", {
+  const callPromise = fetch(API_URL + "eth-usdc-call/state", {
     signal: AbortSignal.timeout(TIMEOUT),
   }).then((res) => res.json());
-  const putPromise = fetch(API_URL_MAINNET + "eth-usdc-put/state", {
+  const putPromise = fetch(API_URL + "eth-usdc-put/state", {
     signal: AbortSignal.timeout(TIMEOUT),
   }).then((res) => res.json());
 

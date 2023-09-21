@@ -1,8 +1,9 @@
 import { Provider, ProviderOptions } from "starknet";
 import { Network, NetworkName } from "../types/network";
 import { constants } from "starknet";
+import { NETWORK } from "../constants/amm";
 
-const devnetOptions = {
+export const devnetOptions = {
   sequencer: {
     baseUrl: "http://localhost:5050/",
     feederGatewayUrl: "feeder_gateway",
@@ -11,38 +12,51 @@ const devnetOptions = {
   },
 };
 
-const testnetOptions: ProviderOptions = {
+export const testnetOptions: ProviderOptions = {
   sequencer: {
     network: "goerli-alpha",
   },
 };
 
-export const networkProviderOptionsMap = new Map<NetworkName, ProviderOptions>([
-  [NetworkName.Devnet, devnetOptions],
-  [NetworkName.Testnet, testnetOptions],
-  [NetworkName.Testdev, testnetOptions],
-  [
-    NetworkName.Mainnet,
-    {
-      sequencer: {
-        network: "mainnet-alpha",
-      },
-    },
-  ],
-]);
-
-export const getProviderByNetwork = (network: NetworkName): Provider =>
-  new Provider(networkProviderOptionsMap.get(network) as ProviderOptions); // Map must be exhaustive!
-
-export const getNetworkObjectByNetworkName = (name: NetworkName): Network => {
-  // Testnet, Testdev and Devnet use Testnet chainId
-  const chainId =
-    name === NetworkName.Mainnet
-      ? constants.StarknetChainId.MAINNET
-      : constants.StarknetChainId.TESTNET;
-
-  return {
-    name,
-    chainId,
-  };
+export const mainnetOptions: ProviderOptions = {
+  sequencer: {
+    network: "mainnet-alpha",
+  },
 };
+
+export const providerOptions = (): ProviderOptions => {
+  if (NETWORK === "mainnet") {
+    return mainnetOptions;
+  } else if (NETWORK === "testnet") {
+    return mainnetOptions;
+  } else if (NETWORK === "devnet") {
+    return devnetOptions;
+  } else {
+    throw new Error(`Invalid network provided! ${NETWORK}`);
+  }
+};
+
+export const provider = new Provider(providerOptions());
+
+export const getNetworkObject = (): Network => {
+  if (NETWORK === "mainnet") {
+    return {
+      name: NetworkName.Mainnet,
+      chainId: constants.StarknetChainId.MAINNET,
+    };
+  } else if (NETWORK === "testnet") {
+    return {
+      name: NetworkName.Testnet,
+      chainId: constants.StarknetChainId.TESTNET,
+    };
+  } else if (NETWORK === "devnet") {
+    return {
+      name: NetworkName.Testnet,
+      chainId: constants.StarknetChainId.TESTNET,
+    };
+  } else {
+    throw new Error(`Invalid network provided! ${NETWORK}`);
+  }
+};
+
+export const networkObject = getNetworkObject();

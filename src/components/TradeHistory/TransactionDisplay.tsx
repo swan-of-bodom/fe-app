@@ -1,4 +1,4 @@
-import { ETH_DIGITS, USD_DIGITS } from "../../constants/amm";
+import { ETH_DIGITS, USDC_DIGITS } from "../../constants/amm";
 import { ITradeHistory } from "../../types/history";
 import { shortInteger } from "../../utils/computations";
 import {
@@ -33,7 +33,7 @@ const capitalToReadable = (type: string, capital: string) => {
   if (type === "Call") {
     return "ETH " + shortInteger(n, ETH_DIGITS);
   }
-  return "$" + shortInteger(n, USD_DIGITS);
+  return "$" + shortInteger(n, USDC_DIGITS);
 };
 
 const SingleItem = ({ data }: SingleItemProps) => {

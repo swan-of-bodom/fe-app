@@ -1,4 +1,4 @@
-import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
+import { AMM_ADDRESS, AMM_METHODS } from "../constants/amm";
 import AmmAbi from "../abi/amm_abi.json";
 import { AccountInterface } from "starknet";
 import { OptionWithPosition } from "../classes/Option";
@@ -39,7 +39,7 @@ export const tradeClose = async (
     debug({ premiaWithSlippage, premia });
 
     const call = {
-      contractAddress: getTokenAddresses().MAIN_CONTRACT_ADDRESS,
+      contractAddress: AMM_ADDRESS,
       entrypoint: AMM_METHODS.TRADE_CLOSE,
       calldata: [...option.tradeCalldata(size), premiaWithSlippage, deadline],
     };

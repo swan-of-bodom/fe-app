@@ -1,4 +1,4 @@
-import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
+import { AMM_ADDRESS, AMM_METHODS } from "../constants/amm";
 import AmmAbi from "../abi/amm_abi.json";
 import { AccountInterface } from "starknet";
 import { OptionWithPosition } from "../classes/Option";
@@ -14,7 +14,7 @@ export const tradeSettle = async (
 ) => {
   try {
     const call = {
-      contractAddress: getTokenAddresses().MAIN_CONTRACT_ADDRESS,
+      contractAddress: AMM_ADDRESS,
       entrypoint: AMM_METHODS.TRADE_SETTLE,
       calldata: option.tradeCalldata(option.fullSize),
     };

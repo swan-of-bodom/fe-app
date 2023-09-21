@@ -1,4 +1,9 @@
-import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
+import {
+  AMM_ADDRESS,
+  AMM_METHODS,
+  ETH_ADDRESS,
+  USDC_ADDRESS,
+} from "../constants/amm";
 import { AccountInterface } from "starknet";
 import { number } from "starknet";
 import LpAbi from "../abi/lptoken_abi.json";
@@ -12,14 +17,12 @@ export const approve = async (
   account: AccountInterface,
   amount: string
 ) => {
-  const { ETH_ADDRESS, USD_ADDRESS, MAIN_CONTRACT_ADDRESS } =
-    getTokenAddresses();
-  const contractAddress = isCall(type) ? ETH_ADDRESS : USD_ADDRESS;
+  const contractAddress = isCall(type) ? ETH_ADDRESS : USDC_ADDRESS;
   try {
     const call = {
       contractAddress,
       entrypoint: AMM_METHODS.APPROVE,
-      calldata: [MAIN_CONTRACT_ADDRESS, number.toHex(new BN(amount)), 0],
+      calldata: [AMM_ADDRESS, number.toHex(new BN(amount)), 0],
     };
     const res = await account.execute(call, [LpAbi]);
     return res;

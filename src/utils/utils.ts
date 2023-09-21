@@ -1,16 +1,13 @@
-import { NetworkName } from "./../types/network";
 import BN from "bn.js";
 import {
+  ETH_ADDRESS,
   ETH_DIGITS,
-  USD_BASE_VALUE,
-  USD_DIGITS,
-  getTokenAddresses,
-  API_URL_MAINNET,
-  API_URL_TESTNET,
+  USDC_ADDRESS,
+  USDC_BASE_VALUE,
+  USDC_DIGITS,
 } from "../constants/amm";
 import { OptionSide, OptionType } from "../types/options";
 import { TESTNET_CHAINID } from "../constants/starknet";
-import { store } from "../redux/store";
 
 export const isNonEmptyArray = (v: unknown): v is Array<any> =>
   !!(v && Array.isArray(v) && v.length > 0);
@@ -102,7 +99,7 @@ export const hashToReadable = (v: string): string =>
 
 export const premiaToUsd = (usdInMath64x61: BN): string => {
   return new BN(usdInMath64x61)
-    .mul(new BN(USD_BASE_VALUE))
+    .mul(new BN(USDC_BASE_VALUE))
     .div(new BN(2).pow(new BN(61)))
     .toString(10);
 };
@@ -129,10 +126,10 @@ export const isCall = (type: OptionType): boolean => type === OptionType.Call;
 export const isLong = (side: OptionSide): boolean => side === OptionSide.Long;
 
 export const currencyAddresByType = (type: OptionType) =>
-  getTokenAddresses()[isCall(type) ? "ETH_ADDRESS" : "USD_ADDRESS"];
+  isCall(type) ? ETH_ADDRESS : USDC_ADDRESS;
 
 export const digitsByType = (type: OptionType) =>
-  isCall(type) ? ETH_DIGITS : USD_DIGITS;
+  isCall(type) ? ETH_DIGITS : USDC_DIGITS;
 
 export const toHex = (v: BN) => "0x" + v.toString(16);
 
@@ -169,19 +166,6 @@ export const getStarkscanUrl = ({
 
   // fallback
   return "";
-};
-
-export const getApiUrl = () => {
-  const network = store.getState().network.network.name;
-  const [testnet, mainnet] = [API_URL_TESTNET, API_URL_MAINNET];
-
-  if (network === NetworkName.Mainnet) {
-    return mainnet;
-  }
-  if (network === NetworkName.Devnet) {
-    return API_URL_MAINNET;
-  }
-  return testnet;
 };
 
 export const addressElision = (address: string, n: number = 5): string => {

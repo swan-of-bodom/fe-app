@@ -1,19 +1,17 @@
 import { Contract } from "starknet";
-import { getTokenAddresses } from "../constants/amm";
 import { store } from "../redux/store";
 import AmmAbi from "../abi/amm_abi.json";
 import GovernanceAbi from "../abi/amm_abi.json";
+import { AMM_ADDRESS, GOVERNANCE_ADDRESS } from "../constants/amm";
 
 export const getMainContract = (): Contract => {
   const provider = store.getState().network.provider;
-  const { MAIN_CONTRACT_ADDRESS } = getTokenAddresses();
-  return new Contract(AmmAbi, MAIN_CONTRACT_ADDRESS, provider);
+  return new Contract(AmmAbi, AMM_ADDRESS, provider);
 };
 
 export const getGovernanceContract = (): Contract => {
   const provider = store.getState().network.provider;
-  const { GOVERNANCE_CONTRACT_ADDRESS } = getTokenAddresses();
-  return new Contract(GovernanceAbi, GOVERNANCE_CONTRACT_ADDRESS, provider);
+  return new Contract(GovernanceAbi, GOVERNANCE_ADDRESS, provider);
 };
 
 export const afterTransaction = (

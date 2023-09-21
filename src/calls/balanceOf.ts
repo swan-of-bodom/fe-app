@@ -2,8 +2,8 @@ import { UserBalance } from "./../types/wallet";
 import BN from "bn.js";
 import { AccountInterface, Contract } from "starknet";
 import ABI from "../abi/lptoken_abi.json";
-import { getTokenAddresses } from "../constants/amm";
 import { TokenKey } from "../tokens/tokens";
+import { ETH_ADDRESS, USDC_ADDRESS } from "../constants/amm";
 
 const CARM_TOKEN_ADDRESS =
   "0x3c0286e9e428a130ae7fbbe911b794e8a829c367dd788e7cfe3efb0367548fa";
@@ -18,13 +18,11 @@ const balanceFromTokenAddress = async (
 };
 
 export const balanceOfEth = async (account: AccountInterface): Promise<BN> => {
-  const { ETH_ADDRESS } = getTokenAddresses();
   return balanceFromTokenAddress(account, ETH_ADDRESS);
 };
 
 export const balanceOfUsdc = async (account: AccountInterface): Promise<BN> => {
-  const { USD_ADDRESS } = getTokenAddresses();
-  return balanceFromTokenAddress(account, USD_ADDRESS);
+  return balanceFromTokenAddress(account, USDC_ADDRESS);
 };
 
 export const balanceOfCarmineToken = async (

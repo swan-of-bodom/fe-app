@@ -6,7 +6,13 @@ import { useTheme } from "@mui/material";
 import { store } from "../../redux/store";
 import { NetworkName } from "../../types/network";
 import { openMetamaskMissingDialog } from "../../redux/actions";
-import { ETH_DIGITS, USD_DIGITS, getTokenAddresses } from "../../constants/amm";
+import {
+  AMM_ADDRESS,
+  ETH_DIGITS,
+  ETH_USDC_CALL_ADDRESS,
+  ETH_USDC_PUT_ADDRESS,
+  USDC_DIGITS,
+} from "../../constants/amm";
 import { stripZerosFromAddress } from "../../utils/utils";
 import { openWalletConnectDialog } from "../../redux/actions";
 import { QuoteResult, QuoteRequest, quote } from "wido";
@@ -52,7 +58,7 @@ const quoteApiWithLimitCheck = async (
     );
   }
 
-  const decimals = request.toToken === TO_TOKEN_CALL ? ETH_DIGITS : USD_DIGITS;
+  const decimals = request.toToken === TO_TOKEN_CALL ? ETH_DIGITS : USDC_DIGITS;
   const stakingLptoken = new BN(quoteResponse.toTokenAmount || "0");
   const staking = shortInteger(
     stakingLptoken.mul(lptokenValue.base).toString(10),
@@ -78,7 +84,6 @@ const quoteApiWithLimitCheck = async (
 
 const getTokens = () => {
   const n = store.getState().network.network.name;
-  const tokens = getTokenAddresses();
 
   switch (n) {
     // devnet uses same tokens as mainnet
@@ -111,11 +116,11 @@ const getTokens = () => {
         toTokens: [
           {
             chainId: 15367,
-            address: stripZerosFromAddress(tokens.LPTOKEN_CONTRACT_ADDRESS),
+            address: stripZerosFromAddress(ETH_USDC_CALL_ADDRESS),
           },
           {
             chainId: 15367,
-            address: stripZerosFromAddress(tokens.LPTOKEN_CONTRACT_ADDRESS_PUT),
+            address: stripZerosFromAddress(ETH_USDC_PUT_ADDRESS),
           },
         ],
         fromTokens: [
@@ -150,7 +155,6 @@ const getTokens = () => {
 const WidoWidgetWrapper = (pool: "call" | "put") => {
   const account = useAccount();
   const theme = useTheme();
-  const carmineAddress = getTokenAddresses().MAIN_CONTRACT_ADDRESS;
 
   const widoTheme = {
     // use base wido theme per user mode
@@ -178,7 +182,7 @@ const WidoWidgetWrapper = (pool: "call" | "put") => {
       toTokens={toTokens}
       presetToToken={presetToToken}
       theme={widoTheme}
-      partner={carmineAddress}
+      partner={AMM_ADDRESS}
       quoteApi={quoteApiWithLimitCheck}
     />
   );

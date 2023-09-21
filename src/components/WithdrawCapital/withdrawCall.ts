@@ -1,5 +1,12 @@
 import { AccountInterface } from "starknet";
-import { AMM_METHODS, getTokenAddresses } from "../../constants/amm";
+import {
+  AMM_ADDRESS,
+  AMM_METHODS,
+  ETH_ADDRESS,
+  ETH_USDC_CALL_ADDRESS,
+  ETH_USDC_PUT_ADDRESS,
+  USDC_ADDRESS,
+} from "../../constants/amm";
 import { OptionType } from "../../types/options";
 import { debug } from "../../utils/debugger";
 import AmmAbi from "../../abi/amm_abi.json";
@@ -24,13 +31,6 @@ export const withdrawCall = async (
   size: string
 ) => {
   setProcessing(true);
-  const {
-    ETH_ADDRESS,
-    USD_ADDRESS,
-    MAIN_CONTRACT_ADDRESS,
-    LPTOKEN_CONTRACT_ADDRESS,
-    LPTOKEN_CONTRACT_ADDRESS_PUT,
-  } = getTokenAddresses();
 
   if (!size) {
     return;
@@ -39,7 +39,7 @@ export const withdrawCall = async (
   const call = isCall(type);
 
   const unlocked = await getUnlockedCapital(
-    call ? LPTOKEN_CONTRACT_ADDRESS : LPTOKEN_CONTRACT_ADDRESS_PUT
+    call ? ETH_USDC_CALL_ADDRESS : ETH_USDC_PUT_ADDRESS
   ).catch(() => {
     return undefined;
   });
@@ -61,15 +61,15 @@ export const withdrawCall = async (
   }
 
   const calldata = [
-    call ? ETH_ADDRESS : USD_ADDRESS,
-    USD_ADDRESS,
+    call ? ETH_ADDRESS : USDC_ADDRESS,
+    USDC_ADDRESS,
     ETH_ADDRESS,
     "0x" + type,
     size,
     "0", // uint256 trailing 0
   ];
   const withdraw = {
-    contractAddress: MAIN_CONTRACT_ADDRESS,
+    contractAddress: AMM_ADDRESS,
     entrypoint: AMM_METHODS.WITHDRAW_LIQUIDITY,
     calldata,
   };

@@ -5,7 +5,7 @@ import {
   markTxAsFailed,
   showToast,
 } from "./../redux/actions";
-import { AMM_METHODS, getTokenAddresses } from "../constants/amm";
+import { AMM_ADDRESS, AMM_METHODS } from "../constants/amm";
 import { AccountInterface } from "starknet";
 import { Option } from "../classes/Option";
 import { debug } from "../utils/debugger";
@@ -34,7 +34,6 @@ export const approveAndTradeOpen = async (
     processing: boolean;
   }) => void
 ): Promise<boolean> => {
-  const { MAIN_CONTRACT_ADDRESS } = getTokenAddresses();
   const { optionType, optionSide } = option.parsed;
 
   const toApprove = getToApprove(
@@ -67,7 +66,7 @@ export const approveAndTradeOpen = async (
   const approveArgs = {
     contractAddress: option.tokenAddress,
     entrypoint: AMM_METHODS.APPROVE,
-    calldata: [MAIN_CONTRACT_ADDRESS, new BN(toApprove).toString(10), "0"],
+    calldata: [AMM_ADDRESS, new BN(toApprove).toString(10), "0"],
   };
 
   debug("Trade open approve calldata", approveArgs);
@@ -76,7 +75,7 @@ export const approveAndTradeOpen = async (
   const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
 
   const tradeOpenArgs = {
-    contractAddress: MAIN_CONTRACT_ADDRESS,
+    contractAddress: AMM_ADDRESS,
     entrypoint: AMM_METHODS.TRADE_OPEN,
     calldata: [
       ...option.tradeCalldata(size),

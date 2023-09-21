@@ -1,7 +1,7 @@
 import { OptionSide, OptionType } from "../types/options";
 import BN from "bn.js";
 import { Decimal } from "../types/units";
-import { ETH_DIGITS, USD_DIGITS } from "../constants/amm";
+import { ETH_DIGITS, USDC_DIGITS } from "../constants/amm";
 import { store } from "../redux/store";
 import { isCall, isLong } from "./utils";
 
@@ -27,7 +27,7 @@ const shortPut: GetApproveAmount = (size, premia, strike): BN => {
   if (!strike) {
     throw new Error("Short Put get to approve did not receive strike price");
   }
-  const base = longInteger(size * strike, USD_DIGITS);
+  const base = longInteger(size * strike, USDC_DIGITS);
 
   return base.sub(premia);
 };

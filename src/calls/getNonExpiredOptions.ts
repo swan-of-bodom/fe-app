@@ -1,11 +1,11 @@
 import { OptionWithPremia } from "../classes/Option";
+import { API_URL } from "../constants/amm";
 import { parseBatchOfOptions } from "../utils/optionParsers/batch";
 import { parseNonExpiredOption } from "../utils/optionParsers/parseNonExpiredOption";
-import { getApiUrl } from "./../utils/utils";
 import BN from "bn.js";
 
 export const getNonExpiredOptions = async (): Promise<OptionWithPremia[]> =>
-  fetch(`${getApiUrl()}live-options`)
+  fetch(`${API_URL}live-options`)
     .then((res) => res.json())
     .then((res) => {
       if (res?.status !== "success" || !res?.data?.length) {
