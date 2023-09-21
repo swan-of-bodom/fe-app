@@ -8,3 +8,5 @@ export const selectNoBorder = {
     border: 0,
   },
 };
+
+export const borderValue = "1px solid white !important";

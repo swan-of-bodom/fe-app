@@ -1,11 +1,12 @@
 import { ETH_DIGITS, USD_DIGITS } from "../../constants/amm";
 import { ITradeHistory } from "../../types/history";
 import { shortInteger } from "../../utils/computations";
-import { hexToBN, timestampToShortTimeDate } from "../../utils/utils";
 import {
-  Box,
-  Collapse,
-  IconButton,
+  hexToBN,
+  timestampToDateAndTime,
+  timestampToInsuranceDate,
+} from "../../utils/utils";
+import {
   Paper,
   Table,
   TableBody,
@@ -14,10 +15,10 @@ import {
   TableHead,
   TableRow,
   Tooltip,
-  Typography,
 } from "@mui/material";
-import { InfoOutlined, KeyboardArrowUp } from "@mui/icons-material";
 import { useState } from "react";
+import tableStyles from "../../style/table.module.css";
+import { borderValue } from "../../style/sx";
 
 type TransactionTableProps = {
   transactions: ITradeHistory[];
@@ -36,7 +37,6 @@ const capitalToReadable = (type: string, capital: string) => {
 };
 
 const SingleItem = ({ data }: SingleItemProps) => {
-  const [open, setOpen] = useState(false);
   const {
     option,
     liquidity_pool,
@@ -45,87 +45,58 @@ const SingleItem = ({ data }: SingleItemProps) => {
     tokens_minted,
     capital_transfered,
   } = data;
+
   const size = shortInteger(hexToBN(tokens_minted).toString(10), ETH_DIGITS);
+
+  const [date, time] = timestampToDateAndTime(timestamp * 1000);
+
   return (
-    <>
-      <TableRow>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
+    <TableRow>
+      <TableCell>{date}</TableCell>
+      <TableCell sx={{ borderRight: borderValue }}>{time}</TableCell>
+      <TableCell>
+        {option && timestampToInsuranceDate(option.parsed.maturity * 1000)}
+      </TableCell>
+      <TableCell align="left">{action}</TableCell>
+      {option ? (
+        <>
+          <TableCell align="left">{`${option.sideAsText} ${option.typeAsText}`}</TableCell>
+          <TableCell align="left">{`$${option.parsed.strikePrice}`}</TableCell>
+          <TableCell align="left">{size}</TableCell>
+        </>
+      ) : (
+        <>
+          <TableCell align="left">{liquidity_pool}</TableCell>
+          <TableCell align="left"></TableCell>
+          <Tooltip
+            title={capitalToReadable(
+              liquidity_pool as string,
+              capital_transfered
+            )}
           >
-            {open ? <KeyboardArrowUp /> : <InfoOutlined />}
-          </IconButton>
-        </TableCell>
-        <TableCell>{timestampToShortTimeDate(timestamp * 1000)}</TableCell>
-        <TableCell align="left">{action}</TableCell>
-        {option ? (
-          <>
-            <TableCell align="left">{`${option.sideAsText} ${option.typeAsText}`}</TableCell>
-            <TableCell align="left">{`$${option.parsed.strikePrice}`}</TableCell>
             <TableCell align="left">{size}</TableCell>
-          </>
-        ) : (
-          <>
-            <TableCell align="left">{liquidity_pool}</TableCell>
-            <TableCell align="left"></TableCell>
-            <Tooltip
-              title={capitalToReadable(
-                liquidity_pool as string,
-                capital_transfered
-              )}
-            >
-              <TableCell align="left">{size}</TableCell>
-            </Tooltip>
-          </>
-        )}
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              {option ? (
-                <>
-                  {" "}
-                  <Typography variant="h5" gutterBottom component="div">
-                    Option
-                  </Typography>
-                  <Typography variant="body1" gutterBottom component="div">
-                    {option.display}
-                  </Typography>
-                </>
-              ) : (
-                <>
-                  {" "}
-                  <Typography variant="h5" gutterBottom component="div">
-                    Liquidity
-                  </Typography>
-                  <Typography variant="body1" gutterBottom component="div">
-                    {action === "DepositLiquidity"
-                      ? "Liquidity has been transfered into the liquidity pool"
-                      : "Liquidity has been removed from the liquidity pool and transfered into your wallet"}
-                  </Typography>
-                </>
-              )}
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
+          </Tooltip>
+        </>
+      )}
+    </TableRow>
   );
 };
 
 export const TransactionTable = ({ transactions }: TransactionTableProps) => {
+  const [expanded, setExpanded] = useState(false);
+
+  const size = expanded ? transactions.length : 5;
+
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
+      <Table className={tableStyles.table} aria-label="collapsible table">
         <TableHead>
           <TableRow>
-            <TableCell></TableCell>
             <TableCell>Date</TableCell>
+            <TableCell sx={{ borderRight: borderValue }}>Time</TableCell>
+            <TableCell align="left">Option Expiry</TableCell>
             <TableCell align="left">Action</TableCell>
-            <TableCell align="left">Option/Pool</TableCell>
+            <TableCell align="left">Option / Pool</TableCell>
             <TableCell align="left">Strike Price</TableCell>
             <Tooltip
               placement="top"
@@ -136,9 +107,18 @@ export const TransactionTable = ({ transactions }: TransactionTableProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {transactions.map((transaction, i) => (
+          {transactions.slice(0, size).map((transaction, i) => (
             <SingleItem data={transaction} key={i} />
           ))}
+          <TableRow>
+            <td
+              onClick={() => setExpanded(!expanded)}
+              colSpan={7}
+              style={{ textAlign: "center", cursor: "pointer" }}
+            >
+              {expanded ? "Show less" : "Show more"}
+            </td>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>

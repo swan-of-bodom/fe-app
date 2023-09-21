@@ -64,9 +64,8 @@ const WithdrawParentWithAccount = ({ address, account }: Props) => {
       <TableHead>
         <TableRow>
           <TableCell>Pool</TableCell>
-          <TableCell>Value of staked capital</TableCell>
-          <TableCell># LP Tokens</TableCell>
-          <TableCell>Amount to withdraw</TableCell>
+          <TableCell>Amount staked</TableCell>
+          <TableCell>Amount to unstake</TableCell>
           <TableCell align="right">
             {isFetching && <LoadingAnimation size={30} />}
           </TableCell>

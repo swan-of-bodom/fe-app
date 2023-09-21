@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
-import BalancePage from "./pages/balance";
+import Portfolio from "./pages/portfolio";
 import NotFound from "./pages/notFound";
 import TradePage from "./pages/trade";
 import StakePage from "./pages/stake";
@@ -16,7 +16,6 @@ import { Controller } from "./Controller";
 import { CssBaseline } from "@mui/material";
 import { MultiDialog } from "./components/MultiDialog/MultiDialog";
 import { Toast } from "./components/Toast/Toast";
-import HistoryPage from "./pages/history";
 import TermsAndConditions from "./pages/termsAndConditions";
 import { useState } from "react";
 import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
@@ -31,6 +30,12 @@ const App = () => {
 
   const acceptedTermsAndConditions = isCookieSet("carmine-t&c");
 
+  const oldPathRedirects = [
+    ["/trade", "/"],
+    ["/position", "/portfolio"],
+    ["/history", "/portfolio#history"],
+  ];
+
   return (
     <Provider store={store}>
       <Controller>
@@ -39,18 +44,23 @@ const App = () => {
           <>
             <Router>
               <Routes>
+                {/* paths that no longer exist are redirected to new paths */}
+                {oldPathRedirects.map(([oldPath, newPath]) => (
+                  <Route
+                    path={oldPath}
+                    element={<Navigate to={newPath} replace />}
+                  />
+                ))}
+
                 <Route path="/" element={<TradePage />} />
-                {/* "/trade" was replaced by "/""  */}
-                <Route path="/trade" element={<Navigate to="/" replace />} />
                 <Route path="/insurance" element={<Insurance />} />
-                <Route path="/portfolio" element={<BalancePage />} />
+                <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/staking" element={<StakePage />} />
                 <Route
                   path="/staking-explained"
                   element={<StakingExplainedPage />}
                 />
                 <Route path="/apy-info" element={<APYInfoPage />} />
-                <Route path="/history" element={<HistoryPage />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/dashboard" element={<TradeDashboardPage />} />
                 <Route path="*" element={<NotFound />} />

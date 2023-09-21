@@ -18,7 +18,6 @@ import tableStyles from "../../style/table.module.css";
 
 export const StakeCapitalParent = () => {
   const account = useAccount();
-  const sx = { fontWeight: "bold" };
 
   const pools = [
     getPoolByPairType(TokenPairKey.EthUsdc, OptionType.Call),
@@ -37,11 +36,11 @@ export const StakeCapitalParent = () => {
       <TableHead>
         <TableRow>
           <TableCell>
-            <Typography sx={sx}>Pool</Typography>
+            <Typography>Pool</Typography>
           </TableCell>
           <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
             <Tooltip title={yslTooltipText}>
-              <Typography sx={sx}>APY all time</Typography>
+              <Typography>APY all time</Typography>
             </Tooltip>
           </TableCell>
           <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
@@ -50,7 +49,7 @@ export const StakeCapitalParent = () => {
               to="/apy-info"
             >
               <Tooltip title={apyTooltipText}>
-                <Typography sx={sx}>
+                <Typography>
                   APY last week
                   <Info sx={{ height: "17px", marginBottom: "-2px" }} />
                 </Typography>
@@ -59,7 +58,7 @@ export const StakeCapitalParent = () => {
           </TableCell>
 
           <TableCell align="center">
-            <Typography sx={sx}>Amount</Typography>
+            <Typography>Amount</Typography>
           </TableCell>
           <TableCell align="center"></TableCell>
         </TableRow>

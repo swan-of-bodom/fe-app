@@ -77,6 +77,21 @@ export const timestampToInsuranceDate = (ts: number): string =>
     hour12: true,
   }).format(ts);
 
+export const timestampToDateAndTime = (ts: number): [string, string] => {
+  const date = new Intl.DateTimeFormat("default", {
+    month: "numeric",
+    day: "numeric",
+    year: "numeric",
+  }).format(ts);
+  const time = new Intl.DateTimeFormat("default", {
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  }).format(ts);
+
+  return [date, time];
+};
+
 export const timestampToRichDate = (ts: number): string => {
   const d = new Date(ts);
   return d.getDate() + ". " + (d.getMonth() + 1) + ". " + d.getFullYear();

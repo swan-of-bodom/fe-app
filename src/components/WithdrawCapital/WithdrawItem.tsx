@@ -66,9 +66,6 @@ export const WithdrawItem = ({ account, value, fullSize, type }: Props) => {
           <Typography>{displayValue}</Typography>
         </Tooltip>
       </TableCell>
-      <TableCell>
-        <Typography>{fullSize}</Typography>
-      </TableCell>
       <TableCell sx={{ minWidth: "100px" }}>
         <TextField
           id="outlined-number"
