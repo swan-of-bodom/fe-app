@@ -2,8 +2,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { NetworkName } from "../../types/network";
-import { useNetwork } from "../../hooks/useNetwork";
 import styles from "./networkswitch.module.css";
+import { NETWORK } from "../../constants/amm";
 
 const Ellipse = () => (
   <img
@@ -15,8 +15,6 @@ const Ellipse = () => (
 );
 
 export const NetworkSwitch = () => {
-  const currentEnv = useNetwork();
-
   const handleChange = (e: SelectChangeEvent) => {
     const target = e.target.value as NetworkName;
 
@@ -34,7 +32,7 @@ export const NetworkSwitch = () => {
     <FormControl>
       <Select
         id="network-select"
-        value={currentEnv}
+        value={NETWORK}
         displayEmpty
         inputProps={{
           "aria-label": "Without label",
@@ -43,10 +41,10 @@ export const NetworkSwitch = () => {
         onChange={handleChange}
         className={styles.button}
       >
-        <MenuItem value={NetworkName.Testnet}>
+        <MenuItem value="testnet">
           Testnet <Ellipse />
         </MenuItem>
-        <MenuItem value={NetworkName.Mainnet}>
+        <MenuItem value="mainnet">
           Mainnet <Ellipse />
         </MenuItem>
       </Select>
