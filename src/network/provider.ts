@@ -28,7 +28,7 @@ export const providerOptions = (): ProviderOptions => {
   if (NETWORK === "mainnet") {
     return mainnetOptions;
   } else if (NETWORK === "testnet") {
-    return mainnetOptions;
+    return testnetOptions;
   } else if (NETWORK === "devnet") {
     return devnetOptions;
   } else {

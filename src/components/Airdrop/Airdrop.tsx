@@ -2,11 +2,11 @@ import { ClaimButton } from "./ClaimButton";
 import { useAccount } from "../../hooks/useAccount";
 import { useEffect, useState } from "react";
 import { useNetwork } from "../../hooks/useNetwork";
-import { NetworkName } from "../../types/network";
 import { ProofResult, getProof } from "./getProof";
 import { AccountInterface } from "starknet";
 import { shortInteger } from "../../utils/computations";
 import styles from "./airdrop.module.css";
+import { NETWORK } from "../../constants/amm";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -29,7 +29,7 @@ export const Airdrop = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ProofResult | undefined>();
 
-  const isMainnet = network === NetworkName.Mainnet;
+  const isMainnet = NETWORK === "mainnet";
 
   useEffect(() => {
     if (account && isMainnet) {
