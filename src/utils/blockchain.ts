@@ -4,13 +4,13 @@ import GovernanceAbi from "../abi/amm_abi.json";
 import { AMM_ADDRESS, GOVERNANCE_ADDRESS } from "../constants/amm";
 import { provider } from "../network/provider";
 
-export const getMainContract = (): Contract => {
-  return new Contract(AmmAbi, AMM_ADDRESS, provider);
-};
+export const AMMContract = new Contract(AmmAbi, AMM_ADDRESS, provider);
 
-export const getGovernanceContract = (): Contract => {
-  return new Contract(GovernanceAbi, GOVERNANCE_ADDRESS, provider);
-};
+export const GovernanceContract = new Contract(
+  GovernanceAbi,
+  GOVERNANCE_ADDRESS,
+  provider
+);
 
 export const afterTransaction = (
   tx: string,

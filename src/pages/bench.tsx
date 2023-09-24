@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMainContract } from "../utils/blockchain";
+import { AMMContract } from "../utils/blockchain";
 import { getOptionsWithPositionOfUser } from "../calls/getOptionsWithPosition";
 import { RPCNode, rpcNodeCall } from "../calls/rpcNodeCall";
 import { Box, Typography } from "@mui/material";
@@ -45,12 +45,13 @@ type BenchSummary = { name: string; report: string };
 export const bench = async (setData: (v: BenchSummary[]) => void) => {
   const address =
     "0x03d1525605db970fa1724693404f5f64cba8af82ec4aab514e6ebd3dec4838ad";
-  const contract = getMainContract();
 
   const infuraFn = async () =>
-    await rpcNodeCall(RPCNode.Infura, contract.address, selector, [address]);
+    await rpcNodeCall(RPCNode.Infura, AMMContract.address, selector, [address]);
   const blastApiFn = async () =>
-    await rpcNodeCall(RPCNode.BlastAPI, contract.address, selector, [address]);
+    await rpcNodeCall(RPCNode.BlastAPI, AMMContract.address, selector, [
+      address,
+    ]);
   const starknetFn = async () => await getOptionsWithPositionOfUser(address);
 
   const infura = await runBenchmark(infuraFn);

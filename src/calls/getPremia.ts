@@ -3,7 +3,7 @@ import {
   ETH_USDC_CALL_ADDRESS,
   ETH_USDC_PUT_ADDRESS,
 } from "../constants/amm";
-import { getMainContract } from "../utils/blockchain";
+import { AMMContract } from "../utils/blockchain";
 import { debug } from "../utils/debugger";
 import { convertSizeToUint256 } from "../utils/conversions";
 import { isCall } from "../utils/utils";
@@ -26,9 +26,7 @@ export const getPremia = async (
 
   const calldata = [option.struct, lpAddress, convertedSize, isClosingString];
 
-  const contract = getMainContract();
-
-  const res = await contract.call(method, calldata).catch((e: Error) => {
+  const res = await AMMContract.call(method, calldata).catch((e: Error) => {
     debug(`Failed while calling ${method}`, e.message);
     throw Error(e.message);
   });

@@ -1,1466 +1,1207 @@
 [
   {
-    "members": [
-      {
-        "name": "low",
-        "offset": 0,
-        "type": "felt"
-      },
-      {
-        "name": "high",
-        "offset": 1,
-        "type": "felt"
-      }
-    ],
-    "name": "Uint256",
-    "size": 2,
-    "type": "struct"
+    "type": "impl",
+    "name": "Amm",
+    "interface_name": "carmine_protocol::amm_core::amm::IAMM"
   },
   {
+    "type": "enum",
+    "name": "core::bool",
+    "variants": [
+      { "name": "False", "type": "()" },
+      { "name": "True", "type": "()" }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "cubit::f128::types::fixed::Fixed",
     "members": [
-      {
-        "name": "option_side",
-        "offset": 0,
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "offset": 1,
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "offset": 2,
-        "type": "felt"
-      },
+      { "name": "mag", "type": "core::integer::u128" },
+      { "name": "sign", "type": "core::bool" }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "core::integer::u256",
+    "members": [
+      { "name": "low", "type": "core::integer::u128" },
+      { "name": "high", "type": "core::integer::u128" }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "carmine_protocol::types::option_::Option_",
+    "members": [
+      { "name": "option_side", "type": "core::integer::u8" },
+      { "name": "maturity", "type": "core::integer::u64" },
+      { "name": "strike_price", "type": "cubit::f128::types::fixed::Fixed" },
       {
         "name": "quote_token_address",
-        "offset": 3,
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
       },
       {
         "name": "base_token_address",
-        "offset": 4,
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
       },
-      {
-        "name": "option_type",
-        "offset": 5,
-        "type": "felt"
-      }
-    ],
-    "name": "Option",
-    "size": 6,
-    "type": "struct"
+      { "name": "option_type", "type": "core::integer::u8" }
+    ]
   },
   {
+    "type": "struct",
+    "name": "carmine_protocol::types::option_::OptionWithPremia",
+    "members": [
+      {
+        "name": "option",
+        "type": "carmine_protocol::types::option_::Option_"
+      },
+      { "name": "premia", "type": "cubit::f128::types::fixed::Fixed" }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "carmine_protocol::types::option_::OptionWithUsersPosition",
+    "members": [
+      {
+        "name": "option",
+        "type": "carmine_protocol::types::option_::Option_"
+      },
+      { "name": "position_size", "type": "core::integer::u256" },
+      {
+        "name": "value_of_position",
+        "type": "cubit::f128::types::fixed::Fixed"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "carmine_protocol::types::pool::Pool",
     "members": [
       {
         "name": "quote_token_address",
-        "offset": 0,
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
       },
       {
         "name": "base_token_address",
-        "offset": 1,
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
       },
-      {
-        "name": "option_type",
-        "offset": 2,
-        "type": "felt"
-      }
-    ],
-    "name": "Pool",
-    "size": 3,
-    "type": "struct"
+      { "name": "option_type", "type": "core::integer::u8" }
+    ]
   },
   {
+    "type": "struct",
+    "name": "carmine_protocol::types::pool::PoolInfo",
     "members": [
-      {
-        "name": "value_of_user_stake",
-        "offset": 0,
-        "type": "Uint256"
-      },
-      {
-        "name": "size_of_users_tokens",
-        "offset": 2,
-        "type": "Uint256"
-      },
-      {
-        "name": "pool_info",
-        "offset": 4,
-        "type": "PoolInfo"
-      }
-    ],
-    "name": "UserPoolInfo",
-    "size": 13,
-    "type": "struct"
-  },
-  {
-    "members": [
-      {
-        "name": "pool",
-        "offset": 0,
-        "type": "Pool"
-      },
+      { "name": "pool", "type": "carmine_protocol::types::pool::Pool" },
       {
         "name": "lptoken_address",
-        "offset": 3,
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
       },
-      {
-        "name": "staked_capital",
-        "offset": 4,
-        "type": "Uint256"
-      },
-      {
-        "name": "unlocked_capital",
-        "offset": 6,
-        "type": "Uint256"
-      },
+      { "name": "staked_capital", "type": "core::integer::u256" },
+      { "name": "unlocked_capital", "type": "core::integer::u256" },
       {
         "name": "value_of_pool_position",
-        "offset": 8,
-        "type": "felt"
+        "type": "cubit::f128::types::fixed::Fixed"
       }
-    ],
-    "name": "PoolInfo",
-    "size": 9,
-    "type": "struct"
+    ]
   },
   {
-    "data": [
+    "type": "struct",
+    "name": "carmine_protocol::types::pool::UserPoolInfo",
+    "members": [
+      { "name": "value_of_user_stake", "type": "core::integer::u256" },
+      { "name": "size_of_users_tokens", "type": "core::integer::u256" },
+      {
+        "name": "pool_info",
+        "type": "carmine_protocol::types::pool::PoolInfo"
+      }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "carmine_protocol::amm_core::oracles::pragma::PragmaUtils::AggregationMode",
+    "variants": [
+      { "name": "Median", "type": "()" },
+      { "name": "Mean", "type": "()" },
+      { "name": "Error", "type": "()" }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "carmine_protocol::amm_core::oracles::pragma::PragmaUtils::Checkpoint",
+    "members": [
+      { "name": "timestamp", "type": "core::integer::u64" },
+      { "name": "value", "type": "core::integer::u128" },
+      {
+        "name": "aggregation_mode",
+        "type": "carmine_protocol::amm_core::oracles::pragma::PragmaUtils::AggregationMode"
+      },
+      { "name": "num_sources_aggregated", "type": "core::integer::u32" }
+    ]
+  },
+  {
+    "type": "enum",
+    "name": "core::option::Option::<core::integer::u64>",
+    "variants": [
+      { "name": "Some", "type": "core::integer::u64" },
+      { "name": "None", "type": "()" }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "carmine_protocol::amm_core::oracles::pragma::PragmaUtils::PragmaPricesResponse",
+    "members": [
+      { "name": "price", "type": "core::integer::u128" },
+      { "name": "decimals", "type": "core::integer::u32" },
+      { "name": "last_updated_timestamp", "type": "core::integer::u64" },
+      { "name": "num_sources_aggregated", "type": "core::integer::u32" },
+      {
+        "name": "expiration_timestamp",
+        "type": "core::option::Option::<core::integer::u64>"
+      }
+    ]
+  },
+  {
+    "type": "interface",
+    "name": "carmine_protocol::amm_core::amm::IAMM",
+    "items": [
+      {
+        "type": "function",
+        "name": "trade_open",
+        "inputs": [
+          { "name": "option_type", "type": "core::integer::u8" },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          { "name": "maturity", "type": "core::integer::u64" },
+          { "name": "option_side", "type": "core::integer::u8" },
+          { "name": "option_size", "type": "core::integer::u128" },
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "limit_total_premia",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          { "name": "tx_deadline", "type": "core::integer::u64" }
+        ],
+        "outputs": [{ "type": "cubit::f128::types::fixed::Fixed" }],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "trade_close",
+        "inputs": [
+          { "name": "option_type", "type": "core::integer::u8" },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          { "name": "maturity", "type": "core::integer::u64" },
+          { "name": "option_side", "type": "core::integer::u8" },
+          { "name": "option_size", "type": "core::integer::u128" },
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "limit_total_premia",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          { "name": "tx_deadline", "type": "core::integer::u64" }
+        ],
+        "outputs": [{ "type": "cubit::f128::types::fixed::Fixed" }],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "trade_settle",
+        "inputs": [
+          { "name": "option_type", "type": "core::integer::u8" },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          { "name": "maturity", "type": "core::integer::u64" },
+          { "name": "option_side", "type": "core::integer::u8" },
+          { "name": "option_size", "type": "core::integer::u128" },
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "is_option_available",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "option_side", "type": "core::integer::u8" },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          { "name": "maturity", "type": "core::integer::u64" }
+        ],
+        "outputs": [{ "type": "core::bool" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "set_trading_halt",
+        "inputs": [{ "name": "new_status", "type": "core::bool" }],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_trading_halt",
+        "inputs": [],
+        "outputs": [{ "type": "core::bool" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "add_lptoken",
+        "inputs": [
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "option_type", "type": "core::integer::u8" },
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "pooled_token_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "volatility_adjustment_speed",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          { "name": "max_lpool_bal", "type": "core::integer::u256" }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "add_option",
+        "inputs": [
+          { "name": "option_side", "type": "core::integer::u8" },
+          { "name": "maturity", "type": "core::integer::u64" },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "option_type", "type": "core::integer::u8" },
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "option_token_address_",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "initial_volatility",
+            "type": "cubit::f128::types::fixed::Fixed"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "add_option_both_sides",
+        "inputs": [
+          { "name": "maturity", "type": "core::integer::u64" },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "option_type", "type": "core::integer::u8" },
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "option_token_address_long",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "option_token_address_short",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "initial_volatility",
+            "type": "cubit::f128::types::fixed::Fixed"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_option_token_address",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "option_side", "type": "core::integer::u8" },
+          { "name": "maturity", "type": "core::integer::u64" },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          }
+        ],
+        "outputs": [
+          { "type": "core::starknet::contract_address::ContractAddress" }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_lptokens_for_underlying",
+        "inputs": [
+          {
+            "name": "pooled_token_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "underlying_amt", "type": "core::integer::u256" }
+        ],
+        "outputs": [{ "type": "core::integer::u256" }],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_underlying_for_lptokens",
+        "inputs": [
+          {
+            "name": "pooled_token_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "lpt_amt", "type": "core::integer::u256" }
+        ],
+        "outputs": [{ "type": "core::integer::u256" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_available_lptoken_addresses",
+        "inputs": [{ "name": "order_i", "type": "core::felt252" }],
+        "outputs": [
+          { "type": "core::starknet::contract_address::ContractAddress" }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_all_options",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<carmine_protocol::types::option_::Option_>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_all_non_expired_options_with_premia",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<carmine_protocol::types::option_::OptionWithPremia>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_option_with_position_of_user",
+        "inputs": [
+          {
+            "name": "user_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<carmine_protocol::types::option_::OptionWithUsersPosition>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_all_lptoken_addresses",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::array::Array::<core::starknet::contract_address::ContractAddress>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_value_of_pool_position",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "cubit::f128::types::fixed::Fixed" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_value_of_pool_expired_position",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "cubit::f128::types::fixed::Fixed" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_value_of_pool_non_expired_position",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "cubit::f128::types::fixed::Fixed" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_value_of_position",
+        "inputs": [
+          {
+            "name": "option",
+            "type": "carmine_protocol::types::option_::Option_"
+          },
+          { "name": "position_size", "type": "core::integer::u128" },
+          { "name": "option_type", "type": "core::integer::u8" },
+          {
+            "name": "current_volatility",
+            "type": "cubit::f128::types::fixed::Fixed"
+          }
+        ],
+        "outputs": [{ "type": "cubit::f128::types::fixed::Fixed" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_all_poolinfo",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::array::Array::<carmine_protocol::types::pool::PoolInfo>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_user_pool_infos",
+        "inputs": [
+          {
+            "name": "user",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::array::Array::<carmine_protocol::types::pool::UserPoolInfo>"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "deposit_liquidity",
+        "inputs": [
+          {
+            "name": "pooled_token_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "option_type", "type": "core::integer::u8" },
+          { "name": "amount", "type": "core::integer::u256" }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "withdraw_liquidity",
+        "inputs": [
+          {
+            "name": "pooled_token_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "option_type", "type": "core::integer::u8" },
+          { "name": "lp_token_amount", "type": "core::integer::u256" }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_unlocked_capital",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "core::integer::u256" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "expire_option_token_for_pool",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "option_side", "type": "core::integer::u8" },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          { "name": "maturity", "type": "core::integer::u64" }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "set_max_option_size_percent_of_voladjspd",
+        "inputs": [
+          {
+            "name": "max_opt_size_as_perc_of_vol_adjspd",
+            "type": "core::integer::u128"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_max_option_size_percent_of_voladjspd",
+        "inputs": [],
+        "outputs": [{ "type": "core::integer::u128" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_lpool_balance",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "core::integer::u256" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_max_lpool_balance",
+        "inputs": [
+          {
+            "name": "lpt_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "core::integer::u256" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "set_max_lpool_balance",
+        "inputs": [
+          {
+            "name": "lpt_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "max_lpool_bal", "type": "core::integer::u256" }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_pool_locked_capital",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "core::integer::u256" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_available_options",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "order_i", "type": "core::integer::u32" }
+        ],
+        "outputs": [{ "type": "carmine_protocol::types::option_::Option_" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_lptoken_address_for_given_option",
+        "inputs": [
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "option_type", "type": "core::integer::u8" }
+        ],
+        "outputs": [
+          { "type": "core::starknet::contract_address::ContractAddress" }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_pool_definition_from_lptoken_address",
+        "inputs": [
+          {
+            "name": "lptoken_addres",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "carmine_protocol::types::pool::Pool" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_option_volatility",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "maturity", "type": "core::integer::u64" },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          }
+        ],
+        "outputs": [{ "type": "cubit::f128::types::fixed::Fixed" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_underlying_token_address",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          { "type": "core::starknet::contract_address::ContractAddress" }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_available_lptoken_addresses_usable_index",
+        "inputs": [{ "name": "starting_index", "type": "core::felt252" }],
+        "outputs": [{ "type": "core::felt252" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_pool_volatility_adjustment_speed",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "cubit::f128::types::fixed::Fixed" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "set_pool_volatility_adjustment_speed",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "new_speed", "type": "cubit::f128::types::fixed::Fixed" }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_option_position",
+        "inputs": [
+          {
+            "name": "lptoken_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "option_side", "type": "core::integer::u8" },
+          { "name": "maturity", "type": "core::integer::u64" },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          }
+        ],
+        "outputs": [{ "type": "core::integer::u128" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_total_premia",
+        "inputs": [
+          {
+            "name": "option",
+            "type": "carmine_protocol::types::option_::Option_"
+          },
+          { "name": "position_size", "type": "core::integer::u256" },
+          { "name": "is_closing", "type": "core::bool" }
+        ],
+        "outputs": [
+          {
+            "type": "(cubit::f128::types::fixed::Fixed, cubit::f128::types::fixed::Fixed)"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "black_scholes",
+        "inputs": [
+          { "name": "sigma", "type": "cubit::f128::types::fixed::Fixed" },
+          {
+            "name": "time_till_maturity_annualized",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          {
+            "name": "strike_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          {
+            "name": "underlying_price",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          {
+            "name": "risk_free_rate_annualized",
+            "type": "cubit::f128::types::fixed::Fixed"
+          },
+          { "name": "is_for_trade", "type": "core::bool" }
+        ],
+        "outputs": [
+          {
+            "type": "(cubit::f128::types::fixed::Fixed, cubit::f128::types::fixed::Fixed, core::bool)"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_current_price",
+        "inputs": [
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "cubit::f128::types::fixed::Fixed" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_terminal_price",
+        "inputs": [
+          {
+            "name": "quote_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_address",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          { "name": "maturity", "type": "core::integer::u64" }
+        ],
+        "outputs": [{ "type": "cubit::f128::types::fixed::Fixed" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "set_pragma_checkpoint",
+        "inputs": [{ "name": "key", "type": "core::felt252" }],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_pragma_checkpoint",
+        "inputs": [
+          { "name": "key", "type": "core::felt252" },
+          { "name": "before", "type": "core::integer::u64" }
+        ],
+        "outputs": [
+          {
+            "type": "(carmine_protocol::amm_core::oracles::pragma::PragmaUtils::Checkpoint, core::integer::u64)"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "set_pragma_required_checkpoints",
+        "inputs": [],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "upgrade",
+        "inputs": [
+          {
+            "name": "new_implementation",
+            "type": "core::starknet::class_hash::ClassHash"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "_get_ticker_key",
+        "inputs": [
+          {
+            "name": "quote_token_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [{ "type": "core::felt252" }],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "_get_pragma",
+        "inputs": [{ "name": "key", "type": "core::felt252" }],
+        "outputs": [
+          {
+            "type": "carmine_protocol::amm_core::oracles::pragma::PragmaUtils::PragmaPricesResponse"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "get_pragma",
+        "inputs": [
+          {
+            "name": "quote_token_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "base_token_addr",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "carmine_protocol::amm_core::oracles::pragma::PragmaUtils::PragmaPricesResponse"
+          }
+        ],
+        "state_mutability": "view"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "carmine_protocol::amm_core::amm::AMM::TradeOpen",
+    "kind": "struct",
+    "members": [
       {
         "name": "caller",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
         "name": "option_token",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
         "name": "capital_transfered",
-        "type": "Uint256"
+        "type": "core::integer::u256",
+        "kind": "data"
       },
       {
         "name": "option_tokens_minted",
-        "type": "Uint256"
+        "type": "core::integer::u256",
+        "kind": "data"
       }
-    ],
-    "keys": [],
-    "name": "TradeOpen",
-    "type": "event"
+    ]
   },
   {
-    "data": [
+    "type": "event",
+    "name": "carmine_protocol::amm_core::amm::AMM::TradeClose",
+    "kind": "struct",
+    "members": [
       {
         "name": "caller",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
         "name": "option_token",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
         "name": "capital_transfered",
-        "type": "Uint256"
+        "type": "core::integer::u256",
+        "kind": "data"
       },
       {
         "name": "option_tokens_burned",
-        "type": "Uint256"
+        "type": "core::integer::u256",
+        "kind": "data"
       }
-    ],
-    "keys": [],
-    "name": "TradeClose",
-    "type": "event"
+    ]
   },
   {
-    "data": [
+    "type": "event",
+    "name": "carmine_protocol::amm_core::amm::AMM::TradeSettle",
+    "kind": "struct",
+    "members": [
       {
         "name": "caller",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
         "name": "option_token",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
         "name": "capital_transfered",
-        "type": "Uint256"
+        "type": "core::integer::u256",
+        "kind": "data"
       },
       {
         "name": "option_tokens_burned",
-        "type": "Uint256"
+        "type": "core::integer::u256",
+        "kind": "data"
       }
-    ],
-    "keys": [],
-    "name": "TradeSettle",
-    "type": "event"
+    ]
   },
   {
-    "data": [
+    "type": "event",
+    "name": "carmine_protocol::amm_core::amm::AMM::DepositLiquidity",
+    "kind": "struct",
+    "members": [
       {
         "name": "caller",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
         "name": "lp_token",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
         "name": "capital_transfered",
-        "type": "Uint256"
+        "type": "core::integer::u256",
+        "kind": "data"
       },
       {
         "name": "lp_tokens_minted",
-        "type": "Uint256"
+        "type": "core::integer::u256",
+        "kind": "data"
       }
-    ],
-    "keys": [],
-    "name": "DepositLiquidity",
-    "type": "event"
+    ]
   },
   {
-    "data": [
+    "type": "event",
+    "name": "carmine_protocol::amm_core::amm::AMM::WithdrawLiquidity",
+    "kind": "struct",
+    "members": [
       {
         "name": "caller",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
         "name": "lp_token",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
       {
         "name": "capital_transfered",
-        "type": "Uint256"
+        "type": "core::integer::u256",
+        "kind": "data"
       },
       {
         "name": "lp_tokens_burned",
-        "type": "Uint256"
+        "type": "core::integer::u256",
+        "kind": "data"
       }
-    ],
-    "keys": [],
-    "name": "WithdrawLiquidity",
-    "type": "event"
+    ]
   },
   {
-    "data": [
+    "type": "event",
+    "name": "carmine_protocol::amm_core::amm::AMM::ExpireOptionTokenForPool",
+    "kind": "struct",
+    "members": [
       {
         "name": "lptoken_address",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress",
+        "kind": "data"
       },
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
+      { "name": "option_side", "type": "core::integer::u8", "kind": "data" },
       {
         "name": "strike_price",
-        "type": "felt"
+        "type": "cubit::f128::types::fixed::Fixed",
+        "kind": "data"
       },
-      {
-        "name": "maturity",
-        "type": "felt"
-      }
-    ],
-    "keys": [],
-    "name": "ExpireOptionTokenForPool",
-    "type": "event"
+      { "name": "maturity", "type": "core::integer::u64", "kind": "data" }
+    ]
   },
   {
-    "inputs": [
+    "type": "event",
+    "name": "carmine_protocol::amm_core::amm::AMM::Event",
+    "kind": "enum",
+    "variants": [
       {
-        "name": "sigma",
-        "type": "felt"
+        "name": "TradeOpen",
+        "type": "carmine_protocol::amm_core::amm::AMM::TradeOpen",
+        "kind": "nested"
       },
       {
-        "name": "time_till_maturity_annualized",
-        "type": "felt"
+        "name": "TradeClose",
+        "type": "carmine_protocol::amm_core::amm::AMM::TradeClose",
+        "kind": "nested"
       },
       {
-        "name": "strike_price",
-        "type": "felt"
+        "name": "TradeSettle",
+        "type": "carmine_protocol::amm_core::amm::AMM::TradeSettle",
+        "kind": "nested"
       },
       {
-        "name": "underlying_price",
-        "type": "felt"
+        "name": "DepositLiquidity",
+        "type": "carmine_protocol::amm_core::amm::AMM::DepositLiquidity",
+        "kind": "nested"
       },
       {
-        "name": "risk_free_rate_annualized",
-        "type": "felt"
+        "name": "WithdrawLiquidity",
+        "type": "carmine_protocol::amm_core::amm::AMM::WithdrawLiquidity",
+        "kind": "nested"
       },
       {
-        "name": "is_for_trade",
-        "type": "felt"
+        "name": "ExpireOptionTokenForPool",
+        "type": "carmine_protocol::amm_core::amm::AMM::ExpireOptionTokenForPool",
+        "kind": "nested"
       }
-    ],
-    "name": "black_scholes",
-    "outputs": [
-      {
-        "name": "call_premia",
-        "type": "felt"
-      },
-      {
-        "name": "put_premia",
-        "type": "felt"
-      },
-      {
-        "name": "is_usable",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "key",
-        "type": "felt"
-      }
-    ],
-    "name": "empiric_median_price",
-    "outputs": [
-      {
-        "name": "price",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "key",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      }
-    ],
-    "name": "get_terminal_price",
-    "outputs": [
-      {
-        "name": "price",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      },
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "option_size",
-        "type": "felt"
-      },
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "limit_total_premia",
-        "type": "felt"
-      },
-      {
-        "name": "tx_deadline",
-        "type": "felt"
-      }
-    ],
-    "name": "trade_open",
-    "outputs": [
-      {
-        "name": "premia",
-        "type": "felt"
-      }
-    ],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      },
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "option_size",
-        "type": "felt"
-      },
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "limit_total_premia",
-        "type": "felt"
-      },
-      {
-        "name": "tx_deadline",
-        "type": "felt"
-      }
-    ],
-    "name": "trade_close",
-    "outputs": [
-      {
-        "name": "premia",
-        "type": "felt"
-      }
-    ],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      },
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "option_size",
-        "type": "felt"
-      },
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      }
-    ],
-    "name": "trade_settle",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "data": [
-      {
-        "name": "previousOwner",
-        "type": "felt"
-      },
-      {
-        "name": "newOwner",
-        "type": "felt"
-      }
-    ],
-    "keys": [],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_value_of_pool_position",
-    "outputs": [
-      {
-        "name": "res",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "option",
-        "type": "Option"
-      },
-      {
-        "name": "position_size",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "current_volatility",
-        "type": "felt"
-      }
-    ],
-    "name": "get_value_of_position",
-    "outputs": [
-      {
-        "name": "position_value",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "underlying_amt",
-        "type": "Uint256"
-      }
-    ],
-    "name": "get_lptokens_for_underlying",
-    "outputs": [
-      {
-        "name": "lpt_amt",
-        "type": "Uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "lpt_amt",
-        "type": "Uint256"
-      }
-    ],
-    "name": "get_underlying_for_lptokens",
-    "outputs": [
-      {
-        "name": "underlying_amt",
-        "type": "Uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "pooled_token_addr",
-        "type": "felt"
-      },
-      {
-        "name": "volatility_adjustment_speed",
-        "type": "felt"
-      },
-      {
-        "name": "max_lpool_bal",
-        "type": "Uint256"
-      }
-    ],
-    "name": "add_lptoken",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "pooled_token_addr",
-        "type": "felt"
-      },
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "amount",
-        "type": "Uint256"
-      }
-    ],
-    "name": "deposit_liquidity",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "pooled_token_addr",
-        "type": "felt"
-      },
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "lp_token_amount",
-        "type": "Uint256"
-      }
-    ],
-    "name": "withdraw_liquidity",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      }
-    ],
-    "name": "expire_option_token_for_pool",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      },
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      },
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_token_address_",
-        "type": "felt"
-      },
-      {
-        "name": "initial_volatility",
-        "type": "felt"
-      }
-    ],
-    "name": "add_option",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "order_i",
-        "type": "felt"
-      }
-    ],
-    "name": "get_available_lptoken_addresses",
-    "outputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_lpool_balance",
-    "outputs": [
-      {
-        "name": "res",
-        "type": "Uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_pool_locked_capital",
-    "outputs": [
-      {
-        "name": "res",
-        "type": "Uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "order_i",
-        "type": "felt"
-      }
-    ],
-    "name": "get_available_options",
-    "outputs": [
-      {
-        "name": "option",
-        "type": "Option"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "quote_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "base_token_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_type",
-        "type": "felt"
-      }
-    ],
-    "name": "get_lptoken_address_for_given_option",
-    "outputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_addres",
-        "type": "felt"
-      }
-    ],
-    "name": "get_pool_definition_from_lptoken_address",
-    "outputs": [
-      {
-        "name": "pool",
-        "type": "Pool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_option_type",
-    "outputs": [
-      {
-        "name": "option_type",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      }
-    ],
-    "name": "get_pool_volatility",
-    "outputs": [
-      {
-        "name": "pool_volatility",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      }
-    ],
-    "name": "get_pool_volatility_separate",
-    "outputs": [
-      {
-        "name": "pool_volatility",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      }
-    ],
-    "name": "get_pool_volatility_auto",
-    "outputs": [
-      {
-        "name": "pool_volatility",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "pooled_token_addr",
-        "type": "felt"
-      }
-    ],
-    "name": "get_max_lpool_balance",
-    "outputs": [
-      {
-        "name": "max_balance",
-        "type": "Uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "pooled_token_addr",
-        "type": "felt"
-      },
-      {
-        "name": "max_lpool_bal",
-        "type": "Uint256"
-      }
-    ],
-    "name": "set_max_lpool_balance",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "max_opt_size_as_perc_of_vol_adjspd",
-        "type": "felt"
-      }
-    ],
-    "name": "set_max_option_size_percent_of_voladjspd",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "get_max_option_size_percent_of_voladjspd",
-    "outputs": [
-      {
-        "name": "res",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_underlying_token_address",
-    "outputs": [
-      {
-        "name": "underlying_token_address_",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_unlocked_capital",
-    "outputs": [
-      {
-        "name": "unlocked_capital",
-        "type": "Uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      }
-    ],
-    "name": "get_option_token_address",
-    "outputs": [
-      {
-        "name": "option_token_address",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      }
-    ],
-    "name": "get_option_position",
-    "outputs": [
-      {
-        "name": "option_position",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "starting_index",
-        "type": "felt"
-      }
-    ],
-    "name": "get_available_options_usable_index",
-    "outputs": [
-      {
-        "name": "usable_index",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "starting_index",
-        "type": "felt"
-      }
-    ],
-    "name": "get_available_lptoken_addresses_usable_index",
-    "outputs": [
-      {
-        "name": "usable_index",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "get_trading_halt",
-    "outputs": [
-      {
-        "name": "res",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "new_status",
-        "type": "felt"
-      }
-    ],
-    "name": "set_trading_halt",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_pool_volatility_adjustment_speed",
-    "outputs": [
-      {
-        "name": "res",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "new_speed",
-        "type": "felt"
-      }
-    ],
-    "name": "set_pool_volatility_adjustment_speed_external",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_side",
-        "type": "felt"
-      },
-      {
-        "name": "strike_price",
-        "type": "felt"
-      },
-      {
-        "name": "maturity",
-        "type": "felt"
-      }
-    ],
-    "name": "is_option_available",
-    "outputs": [
-      {
-        "name": "option_availability",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_all_options",
-    "outputs": [
-      {
-        "name": "array_len",
-        "type": "felt"
-      },
-      {
-        "name": "array",
-        "type": "felt*"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_all_non_expired_options_with_premia",
-    "outputs": [
-      {
-        "name": "array_len",
-        "type": "felt"
-      },
-      {
-        "name": "array",
-        "type": "felt*"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "user_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_option_with_position_of_user",
-    "outputs": [
-      {
-        "name": "array_len",
-        "type": "felt"
-      },
-      {
-        "name": "array",
-        "type": "felt*"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "get_all_lptoken_addresses",
-    "outputs": [
-      {
-        "name": "array_len",
-        "type": "felt"
-      },
-      {
-        "name": "array",
-        "type": "felt*"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "user",
-        "type": "felt"
-      }
-    ],
-    "name": "get_user_pool_infos",
-    "outputs": [
-      {
-        "name": "user_pool_infos_len",
-        "type": "felt"
-      },
-      {
-        "name": "user_pool_infos",
-        "type": "UserPoolInfo*"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "get_all_poolinfo",
-    "outputs": [
-      {
-        "name": "pool_info_len",
-        "type": "felt"
-      },
-      {
-        "name": "pool_info",
-        "type": "PoolInfo*"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "option_token_address",
-        "type": "felt"
-      }
-    ],
-    "name": "get_option_info_from_addresses",
-    "outputs": [
-      {
-        "name": "option",
-        "type": "Option"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "_option",
-        "type": "Option"
-      },
-      {
-        "name": "lptoken_address",
-        "type": "felt"
-      },
-      {
-        "name": "position_size",
-        "type": "Uint256"
-      },
-      {
-        "name": "is_closing",
-        "type": "felt"
-      }
-    ],
-    "name": "get_total_premia",
-    "outputs": [
-      {
-        "name": "total_premia_before_fees",
-        "type": "felt"
-      },
-      {
-        "name": "total_premia_including_fees",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "data": [
-      {
-        "name": "implementation",
-        "type": "felt"
-      }
-    ],
-    "keys": [],
-    "name": "Upgraded",
-    "type": "event"
-  },
-  {
-    "data": [
-      {
-        "name": "previousAdmin",
-        "type": "felt"
-      },
-      {
-        "name": "newAdmin",
-        "type": "felt"
-      }
-    ],
-    "keys": [],
-    "name": "AdminChanged",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "name": "proxy_admin",
-        "type": "felt"
-      }
-    ],
-    "name": "initializer",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "new_implementation",
-        "type": "felt"
-      }
-    ],
-    "name": "upgrade",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getAdmin",
-    "outputs": [
-      {
-        "name": "address",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "address",
-        "type": "felt"
-      }
-    ],
-    "name": "setAdmin",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getImplementationHash",
-    "outputs": [
-      {
-        "name": "implementation_hash",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
+    ]
   }
 ]

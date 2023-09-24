@@ -7,38 +7,34 @@ import {
   USDC_ADDRESS,
   USDC_DIGITS,
 } from "../constants/amm";
-import { getMainContract } from "../utils/blockchain";
+import { AMMContract } from "../utils/blockchain";
 import { shortInteger } from "../utils/computations";
 import { debug } from "../utils/debugger";
 import BN from "bn.js";
 import { uint256 } from "starknet";
 
 export const lpoolBalance = async (lpoolAddress: string): Promise<BN> => {
-  const contract = getMainContract();
-
-  const balanceRes = await contract
-    .call(AMM_METHODS.GET_LOOP_BALANCE, [lpoolAddress])
-    .catch((e: Error) => {
-      debug(`Failed while calling ${AMM_METHODS.GET_LOOP_BALANCE}`, e.message);
-      throw Error(e.message);
-    });
+  const balanceRes = await AMMContract.call(AMM_METHODS.GET_LOOP_BALANCE, [
+    lpoolAddress,
+  ]).catch((e: Error) => {
+    debug(`Failed while calling ${AMM_METHODS.GET_LOOP_BALANCE}`, e.message);
+    throw Error(e.message);
+  });
 
   const converted = uint256.uint256ToBN(balanceRes[0]);
   return converted;
 };
 
 export const lpoolLimit = async (tokenAddress: string): Promise<BN> => {
-  const contract = getMainContract();
-
-  const limitRes = await contract
-    .call(AMM_METHODS.GET_MAX_LPOOL_BALANCE, [tokenAddress])
-    .catch((e: Error) => {
-      debug(
-        `Failed while calling ${AMM_METHODS.GET_MAX_LPOOL_BALANCE}`,
-        e.message
-      );
-      throw Error(e.message);
-    });
+  const limitRes = await AMMContract.call(AMM_METHODS.GET_MAX_LPOOL_BALANCE, [
+    tokenAddress,
+  ]).catch((e: Error) => {
+    debug(
+      `Failed while calling ${AMM_METHODS.GET_MAX_LPOOL_BALANCE}`,
+      e.message
+    );
+    throw Error(e.message);
+  });
 
   const converted = uint256.uint256ToBN(limitRes[0]);
   return converted;
