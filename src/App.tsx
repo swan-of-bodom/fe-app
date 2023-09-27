@@ -45,8 +45,9 @@ const App = () => {
             <Router>
               <Routes>
                 {/* paths that no longer exist are redirected to new paths */}
-                {oldPathRedirects.map(([oldPath, newPath]) => (
+                {oldPathRedirects.map(([oldPath, newPath], i) => (
                   <Route
+                    key={i}
                     path={oldPath}
                     element={<Navigate to={newPath} replace />}
                   />

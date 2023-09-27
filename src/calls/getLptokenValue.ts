@@ -2,13 +2,12 @@ import { AMM_METHODS, BASE_DIGITS, ETH_BASE_VALUE } from "../constants/amm";
 import { AMMContract } from "../utils/blockchain";
 import { shortInteger } from "../utils/computations";
 import { debug } from "../utils/debugger";
-import BN from "bn.js";
 import { uint256 } from "starknet";
 
 const method = AMM_METHODS.GET_UNDERLYING_FOR_LPTOKENS;
 
 type LptokenValue = {
-  base: BN;
+  base: bigint;
   converted: number;
 };
 
@@ -23,7 +22,7 @@ export const getLptokenValue = async (
     throw Error(e.message);
   });
 
-  const base = uint256.uint256ToBN(res[0]);
+  const base = res as bigint;
   const converted = shortInteger(base.toString(10), BASE_DIGITS);
 
   return { base, converted };

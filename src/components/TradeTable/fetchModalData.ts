@@ -2,7 +2,7 @@ import { AccountInterface } from "starknet";
 import { UserBalance } from "./../../types/wallet";
 import { FinancialData } from "../../types/options";
 import { getPremia } from "../../calls/getPremia";
-import { debug } from "../../utils/debugger";
+import { LogTypes, debug } from "../../utils/debugger";
 import { math64x61toDecimal } from "../../utils/units";
 import { getUserBalance } from "../../calls/balanceOf";
 import { OptionWithPremia } from "../../classes/Option";
@@ -41,7 +41,8 @@ export const fetchModalData = async (
     recentUserBalance(account),
   ]).catch((e: Error) => {
     debug("Failed fetching ETH or premia", e.message);
-    throw Error("Failed fetching");
+    debug(LogTypes.ERROR, e);
+    throw e;
   });
 
   debug("Fetched ETH, premia and user balance", {

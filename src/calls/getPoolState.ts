@@ -1,6 +1,4 @@
-import BN from "bn.js";
 import { debug } from "../utils/debugger";
-import { hexToBN } from "../utils/utils";
 
 type RawPoolState = {
   unlocked_cap: string;
@@ -14,11 +12,11 @@ type RawPoolState = {
 };
 
 type PoolState = {
-  unlocked_cap: BN;
-  locked_cap: BN;
-  lp_balance: BN;
-  pool_position: BN;
-  lp_token_value: BN;
+  unlocked_cap: bigint;
+  locked_cap: bigint;
+  lp_balance: bigint;
+  pool_position: bigint;
+  lp_token_value: bigint;
   block_number: number;
   lp_address: string;
   timestamp: number;
@@ -26,11 +24,11 @@ type PoolState = {
 
 const parsePoolState = (obj: RawPoolState): PoolState => {
   const parsed: PoolState = {
-    unlocked_cap: hexToBN(obj.unlocked_cap),
-    locked_cap: hexToBN(obj.locked_cap),
-    lp_balance: hexToBN(obj.lp_balance),
-    pool_position: hexToBN(obj.pool_position),
-    lp_token_value: hexToBN(obj.lp_token_value),
+    unlocked_cap: BigInt(obj.unlocked_cap),
+    locked_cap: BigInt(obj.locked_cap),
+    lp_balance: BigInt(obj.lp_balance),
+    pool_position: BigInt(obj.pool_position),
+    lp_token_value: BigInt(obj.lp_token_value),
     block_number: obj.block_number,
     lp_address: obj.lp_address,
     timestamp: obj.timestamp,

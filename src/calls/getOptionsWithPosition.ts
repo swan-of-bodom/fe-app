@@ -1,21 +1,48 @@
-import BN from "bn.js";
 import { AMM_METHODS } from "../constants/amm";
 import { debug } from "../utils/debugger";
-import { isNonEmptyArray } from "../utils/utils";
 import { AMMContract } from "../utils/blockchain";
+import { Option, OptionWithPosition } from "../classes/Option";
+import { OptionStruct } from "../types/options";
+import { cubit } from "../types/units";
 
 const method = AMM_METHODS.GET_OPTION_WITH_POSITION_OF_USER;
 
+type Response = {
+  option: OptionStruct;
+  position_size: bigint;
+  value_of_position: cubit;
+};
+
 export const getOptionsWithPositionOfUser = async (
   address: string
-): Promise<BN[]> => {
+): Promise<OptionWithPosition[]> => {
   const res = await AMMContract.call(method, [address]).catch((e: Error) => {
     debug("Failed while calling", method);
     throw Error(e.message);
   });
 
-  if (isNonEmptyArray(res) && isNonEmptyArray(res[0])) {
-    return res[0];
-  }
-  return [];
+  debug("OPTIONS WITH POSITION", res);
+
+  const parsed = (res as Response[]).map(
+    ({ option, position_size, value_of_position }) => {
+      const opt = new Option(
+        option.base_token_address,
+        option.quote_token_address,
+        option.option_type,
+        option.option_side,
+        // option.maturity,
+        1695822000,
+        option.strike_price.mag
+      );
+      const optionWithPosition = opt.addPosition(
+        position_size,
+        value_of_position.mag
+      );
+      return optionWithPosition;
+    }
+  );
+
+  debug("PARSED OPTIONS WITH POSITION", parsed);
+
+  return parsed;
 };

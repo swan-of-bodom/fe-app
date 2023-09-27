@@ -1,67 +1,62 @@
-import BN from "bn.js";
 import { bnToOptionType } from "../utils/conversions";
-import { hexToBN, toHex } from "../utils/utils";
 import { OptionType } from "../types/options";
-import { Token, TokenPair, getTokenPairByAddresses } from "../tokens/tokens";
-import { RawPool } from "../types/pool";
-import { ParsedPool } from "../types/pool";
+import { Token, TokenKey, getTokenByAddress } from "../tokens/tokens";
 import { getMultipleTokensValueInUsd } from "../tokens/tokenPrices";
-
-type Props =
-  | {
-      raw: RawPool;
-    }
-  | {
-      parsed: ParsedPool;
-    };
+import { BigNumberish } from "starknet";
+import { toHex } from "../utils/utils";
+import { shortInteger } from "../utils/computations";
+import {
+  BASE_DIGITS,
+  BTC_USDC_CALL_ADDRESS,
+  BTC_USDC_PUT_ADDRESS,
+  ETH_USDC_CALL_ADDRESS,
+  ETH_USDC_PUT_ADDRESS,
+} from "../constants/amm";
 
 export class Pool {
-  public raw: RawPool;
-  public parsed: ParsedPool;
-  public tokenPair: TokenPair;
+  public baseToken: Token;
+  public quoteToken: Token;
+  public type: OptionType;
+  public pair: string;
+  public lpAddress: string;
   public id: string;
 
-  constructor(props: Props) {
-    if ("raw" in props) {
-      this.raw = props.raw;
-      this.parsed = this.parsedFromRaw(props.raw);
-      this.id = this.generateId();
-      this.tokenPair = getTokenPairByAddresses(
-        this.parsed.baseToken,
-        this.parsed.quoteToken
-      );
-    } else if ("parsed" in props) {
-      this.parsed = props.parsed;
-      this.raw = this.rawFromParsed(props.parsed);
-      this.id = this.generateId();
-      this.tokenPair = getTokenPairByAddresses(
-        this.parsed.baseToken,
-        this.parsed.quoteToken
-      );
-    } else {
-      // unreachable
-      throw Error(`Unexpected Pool props: ${JSON.stringify(props)}`);
+  constructor(base: BigNumberish, quote: BigNumberish, type: BigNumberish) {
+    this.baseToken = getTokenByAddress(base);
+    this.quoteToken = getTokenByAddress(quote);
+    this.type = bnToOptionType(type);
+    this.id = this.generateId();
+    this.pair = this.baseToken.id + this.quoteToken.id;
+
+    switch ((this.baseToken.id, this.quoteToken.id, this.type)) {
+      case (TokenKey.ETH, TokenKey.USDC, OptionType.Call):
+        this.lpAddress = ETH_USDC_CALL_ADDRESS;
+        break;
+      case (TokenKey.ETH, TokenKey.USDC, OptionType.Put):
+        this.lpAddress = ETH_USDC_PUT_ADDRESS;
+        break;
+      case (TokenKey.BTC, TokenKey.USDC, OptionType.Call):
+        this.lpAddress = BTC_USDC_CALL_ADDRESS;
+        break;
+      case (TokenKey.BTC, TokenKey.USDC, OptionType.Put):
+        this.lpAddress = BTC_USDC_PUT_ADDRESS;
+        break;
+      default:
+        throw Error(
+          `Invalid Pool ${this.baseToken.id + this.quoteToken.id + this.type}`
+        );
     }
   }
 
-  parsedFromRaw(raw: RawPool): ParsedPool {
-    return {
-      optionType: bnToOptionType(raw.option_type),
-      quoteToken: toHex(raw.quote_token_address),
-      baseToken: toHex(raw.base_token_address),
-    };
-  }
-
-  rawFromParsed(parsed: ParsedPool): RawPool {
-    return {
-      quote_token_address: hexToBN(parsed.quoteToken),
-      base_token_address: hexToBN(parsed.baseToken),
-      option_type: new BN(parsed.optionType),
-    };
-  }
-
+  /**
+   * Generates id that uniquily describes pool
+   */
   generateId(): string {
-    return JSON.stringify(this.parsed, Object.keys(this.parsed).sort());
+    return JSON.stringify({
+      base: this.baseToken.id,
+      quote: this.quoteToken.id,
+      type: this.type,
+    });
   }
 
   eq(other: Pool): boolean {
@@ -69,13 +64,13 @@ export class Pool {
   }
 
   isType(type: OptionType): boolean {
-    return this.parsed.optionType === type;
+    return this.type === type;
   }
 
   async tokenPricesInUsd() {
     const [base, quote] = await getMultipleTokensValueInUsd([
-      this.tokenPair.base.id,
-      this.tokenPair.quote.id,
+      this.baseToken.id,
+      this.quoteToken.id,
     ]);
     return { base, quote };
   }
@@ -85,19 +80,19 @@ export class Pool {
   ////////////
 
   get typeAsText(): string {
-    return this.parsed.optionType === OptionType.Call ? "Call" : "Put";
+    return this.type === OptionType.Call ? "Call" : "Put";
   }
 
   get isCall(): boolean {
-    return this.parsed.optionType === OptionType.Call;
+    return this.type === OptionType.Call;
   }
 
   get isPut(): boolean {
-    return this.parsed.optionType === OptionType.Put;
+    return this.type === OptionType.Put;
   }
 
   get underlying(): Token {
-    return this.isCall ? this.tokenPair.base : this.tokenPair.quote;
+    return this.isCall ? this.baseToken : this.quoteToken;
   }
 
   get digits(): number {
@@ -114,6 +109,63 @@ export class Pool {
   }
 
   get name(): string {
-    return `${this.tokenPair.base.symbol}/${this.tokenPair.quote.symbol} ${this.typeAsText} Pool (${this.symbol})`;
+    return `${this.baseToken.symbol}/${this.quoteToken.symbol} ${this.typeAsText} Pool (${this.symbol})`;
+  }
+}
+
+export class PoolInfo extends Pool {
+  public stakedHex: string;
+  public stakedBase: bigint;
+  public unlockedHex: string;
+  public unlockedBase: bigint;
+  public poolPositionHex: string;
+  public poolPositionBase: bigint;
+
+  constructor(
+    base: BigNumberish,
+    quote: BigNumberish,
+    type: BigNumberish,
+    staked: BigNumberish,
+    unlocked: BigNumberish,
+    poolPosition: BigNumberish
+  ) {
+    super(base, quote, type);
+
+    this.stakedHex = toHex(staked);
+    this.unlockedHex = toHex(unlocked);
+    this.poolPositionHex = toHex(poolPosition);
+
+    this.stakedBase = BigInt(staked);
+    this.unlockedBase = BigInt(unlocked);
+    this.poolPositionBase = BigInt(poolPosition);
+  }
+}
+
+export class UserPoolInfo extends Pool {
+  public valueHex: string;
+  public valueBase: bigint;
+  public value: number;
+  public sizeHex: string;
+  public sizeBase: bigint;
+  public size: number;
+
+  constructor(
+    base: BigNumberish,
+    quote: BigNumberish,
+    type: BigNumberish,
+    size: BigNumberish,
+    value: BigNumberish
+  ) {
+    super(base, quote, type);
+
+    this.sizeHex = toHex(size);
+    this.sizeBase = BigInt(size);
+    // size is in LP digits - always 18
+    this.size = shortInteger(this.sizeHex, BASE_DIGITS);
+
+    this.valueHex = toHex(value);
+    this.valueBase = BigInt(value);
+    // value is in digits by type
+    this.value = shortInteger(this.sizeHex, this.digits);
   }
 }

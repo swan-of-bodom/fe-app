@@ -1,15 +1,9 @@
-import {
-  AMM_METHODS,
-  ETH_USDC_CALL_ADDRESS,
-  ETH_USDC_PUT_ADDRESS,
-} from "../constants/amm";
+import { AMM_METHODS } from "../constants/amm";
 import { AMMContract } from "../utils/blockchain";
 import { debug } from "../utils/debugger";
 import { convertSizeToUint256 } from "../utils/conversions";
-import { isCall } from "../utils/utils";
-import { Math64x61 } from "../types/units";
-import { isBN } from "bn.js";
 import { Option } from "../classes/Option";
+import { BigNumberish } from "starknet";
 
 const method = AMM_METHODS.GET_TOTAL_PREMIA;
 
@@ -17,23 +11,23 @@ export const getPremia = async (
   option: Option,
   size: number,
   isClosing: boolean
-): Promise<Math64x61> => {
-  const lpAddress = isCall(option.parsed.optionType)
-    ? ETH_USDC_CALL_ADDRESS
-    : ETH_USDC_PUT_ADDRESS;
+): Promise<bigint> => {
   const convertedSize = convertSizeToUint256(size);
-  const isClosingString = isClosing ? "0x1" : "0x0";
 
-  const calldata = [option.struct, lpAddress, convertedSize, isClosingString];
+  const calldata = [option.struct, convertedSize, isClosing];
 
-  const res = await AMMContract.call(method, calldata).catch((e: Error) => {
+  const res = await AMMContract.call(
+    method,
+    calldata,
+    { parseResponse: false } // currently starknet-js cannot parse tuple, gotta format manually
+  ).catch((e: Error) => {
     debug(`Failed while calling ${method}`, e.message);
     throw Error(e.message);
   });
 
-  if (!isBN(res?.total_premia_including_fees)) {
-    throw Error("Response did not included total_premia_including_fees");
+  if (res && (res as string[]).length && (res as string[]).length === 4) {
+    return BigInt((res as string[])[2]);
   }
 
-  return res.total_premia_including_fees.toString(10);
+  return BigInt(res as BigNumberish);
 };

@@ -22,7 +22,6 @@ import {
 import { ToastType } from "../../redux/reducers/ui";
 import { TransactionAction } from "../../redux/reducers/transactions";
 import { getUnlockedCapital } from "../../calls/getUnlockedCapital";
-import BN from "bn.js";
 
 export const withdrawCall = async (
   account: AccountInterface,
@@ -53,7 +52,7 @@ export const withdrawCall = async (
 
   // if withdrawing more than unlocked
   // show dialog and stop transaction
-  if (new BN(size).gt(unlocked)) {
+  if (BigInt(size) > unlocked) {
     debug("Withdrawing more than unlocked");
     openNotEnoughUnlockedCapitalDialog();
     setProcessing(false);

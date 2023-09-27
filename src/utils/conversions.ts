@@ -1,9 +1,7 @@
 import { OptionSide, OptionType } from "../types/options";
-import BN from "bn.js";
 import { ETH_DIGITS } from "../constants/amm";
-import { uint256 } from "starknet";
+import { BigNumberish, uint256 } from "starknet";
 import { longInteger } from "./computations";
-import { OptionWithPosition } from "../classes/Option";
 
 export const getBaseAmountWei = (amount: number) =>
   longInteger(amount, 18).toString(16);
@@ -18,11 +16,8 @@ export const convertSizeToUint256 = (size: number): uint256.Uint256 => {
   return uint256.bnToUint256(longInteger(size, ETH_DIGITS));
 };
 
-export const fullSizeInt = (option: OptionWithPosition): string =>
-  new BN(option.raw.position_size).toString(10);
+export const bnToOptionSide = (n: BigNumberish): OptionSide =>
+  BigInt(n) === 1n ? OptionSide.Short : OptionSide.Long;
 
-export const bnToOptionSide = (n: BN): OptionSide =>
-  new BN(n).toNumber() === 1 ? OptionSide.Short : OptionSide.Long;
-
-export const bnToOptionType = (n: BN): OptionType =>
-  new BN(n).toNumber() === 1 ? OptionType.Put : OptionType.Call;
+export const bnToOptionType = (n: BigNumberish): OptionType =>
+  BigInt(n) === 1n ? OptionType.Put : OptionType.Call;

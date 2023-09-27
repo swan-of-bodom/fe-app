@@ -122,7 +122,7 @@ export const BuyInsuranceBox = () => {
 
   const options = data.filter(
     // only Long Puts for the chosen currency
-    (o) => o.tokenPair.base.id === currency && o.isPut && o.isLong && o.isFresh
+    (o) => o.baseToken.id === currency && o.isPut && o.isLong && o.isFresh
   );
 
   const handleCurrencyChange = (event: SelectChangeEvent) => {
@@ -145,7 +145,7 @@ export const BuyInsuranceBox = () => {
 
   // show all expiries
   const expiries = options
-    .map((o) => o.parsed.maturity)
+    .map((o) => o.maturity)
     .filter(uniquePrimitiveValues)
     .sort();
 
@@ -155,8 +155,8 @@ export const BuyInsuranceBox = () => {
 
   // // show strikes for current expiry
   const strikes = options
-    .filter((o) => o.parsed.maturity === expiry)
-    .map((o) => o.parsed.strikePrice)
+    .filter((o) => o.maturity === expiry)
+    .map((o) => o.strike)
     .filter(uniquePrimitiveValues)
     .sort();
 
@@ -168,8 +168,7 @@ export const BuyInsuranceBox = () => {
   }
 
   const pickedOption = options.find(
-    (o) =>
-      o.parsed.maturity === expiry && o.parsed.strikePrice === currentStrike
+    (o) => o.maturity === expiry && o.strike === currentStrike
   )!;
 
   return (

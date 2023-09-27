@@ -1,7 +1,6 @@
 import { AccountInterface } from "starknet";
 import { API_URL, coreTeamAddresses } from "../../constants/amm";
 import { balanceOfCarmineToken } from "../../calls/balanceOf";
-import { BN } from "bn.js";
 import { hexToBN, standardiseAddress } from "../../utils/utils";
 import { debug } from "../../utils/debugger";
 
@@ -26,7 +25,7 @@ export const getProof = async (
   ).then((r) => r.json());
   const carmBalanceRequest = balanceOfCarmineToken(account);
 
-  const [merkleTreeResponse, carmBalanceResponse] = await Promise.all([
+  const [merkleTreeResponse, claimed] = await Promise.all([
     merkleTreeRequest,
     carmBalanceRequest,
   ]);
@@ -39,12 +38,11 @@ export const getProof = async (
     standardiseAddress(account.address)
   );
   const total = hexToBN(merkleTreeResponse.data[1]);
-  const claimed = new BN(carmBalanceResponse);
-  const diff = total.sub(claimed);
+  const diff = total - claimed;
   // account for tiny differences
   const claimable = isCoreTeam
     ? total.toString(10)
-    : diff.lt(new BN(100))
+    : diff < 100n
     ? "0"
     : diff.toString(10);
 

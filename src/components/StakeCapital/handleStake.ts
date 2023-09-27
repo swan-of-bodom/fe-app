@@ -32,7 +32,7 @@ export const handleStake = async (
 
   const bnAmount = longInteger(amount, pool.digits);
 
-  if (balance[pool.underlying.id].lt(bnAmount)) {
+  if (balance[pool.underlying.id] < bnAmount) {
     const [has, needs] = [
       shortInteger(balance[pool.underlying.id].toString(10), pool.digits),
       amount,

@@ -1,4 +1,3 @@
-import BN from "bn.js";
 import {
   Math64x61,
   Address,
@@ -9,34 +8,36 @@ import {
   Math64x61BN,
   OptionSideBN,
   Uint256BN,
+  cubit,
 } from "./units";
 import { ParsedPool, RawPool } from "./pool";
+import { BigNumberish } from "starknet";
 
 export enum OptionType {
-  Call = "0",
-  Put = "1",
+  Call = "0x0",
+  Put = "0x1",
 }
 
 export enum OptionSide {
-  Long = "0",
-  Short = "1",
+  Long = "0x0",
+  Short = "0x1",
 }
 
 export interface OptionStruct {
-  option_type: Hex;
-  strike_price: Math64x61;
-  maturity: Int;
-  option_side: Hex;
-  quote_token_address: Address;
-  base_token_address: Address;
+  base_token_address: BigNumberish;
+  maturity: BigNumberish;
+  option_side: BigNumberish;
+  option_type: BigNumberish;
+  quote_token_address: BigNumberish;
+  strike_price: cubit;
 }
 
 export interface RawOption extends RawOptionBase {
-  token_address?: BN;
-  balance?: BN;
-  premia?: BN;
-  position_size?: BN;
-  value_of_position?: BN;
+  token_address?: bigint;
+  balance?: bigint;
+  premia?: bigint;
+  position_size?: bigint;
+  value_of_position?: bigint;
 }
 
 export interface RawOptionBase extends RawPool {

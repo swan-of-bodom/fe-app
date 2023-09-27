@@ -6,8 +6,6 @@ import { debug, LogTypes } from "../utils/debugger";
 import { invalidatePositions } from "../queries/client";
 import { afterTransaction } from "../utils/blockchain";
 import { getPremiaWithSlippage } from "../utils/computations";
-import { Math64x61 } from "../types/units";
-import BN from "bn.js";
 import {
   addTx,
   markTxAsDone,
@@ -20,19 +18,17 @@ import { ToastType } from "../redux/reducers/ui";
 export const tradeClose = async (
   account: AccountInterface,
   option: OptionWithPosition,
-  premia: Math64x61,
+  premia: bigint,
   size: number,
   isClosing: boolean
 ) => {
-  const { optionSide } = option.parsed;
-
   try {
     // one hour from now
     const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
 
     const premiaWithSlippage = getPremiaWithSlippage(
-      new BN(premia),
-      optionSide,
+      BigInt(premia),
+      option.side,
       isClosing
     ).toString(10);
 

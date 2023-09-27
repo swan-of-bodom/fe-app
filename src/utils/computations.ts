@@ -1,20 +1,24 @@
 import { OptionSide, OptionType } from "../types/options";
-import BN from "bn.js";
 import { Decimal } from "../types/units";
 import { ETH_DIGITS, USDC_DIGITS } from "../constants/amm";
 import { store } from "../redux/store";
 import { isCall, isLong } from "./utils";
+import { BigNumberish } from "starknet";
 
-type GetApproveAmount = (size: number, premia: BN, strike?: number) => BN;
+type GetApproveAmount = (
+  size: number,
+  premia: bigint,
+  strike?: number
+) => bigint;
 
 export const PRECISION = 10000;
 
 const shortCall: GetApproveAmount = (size, premia) => {
   const base = longInteger(size, ETH_DIGITS);
 
-  const res = base.sub(premia);
+  const res = base - premia;
 
-  if (res.ltn(0)) {
+  if (res < 0n) {
     // if this is true, users can get more money
     // than they are locking in - BIG NONO
     throw Error("Premia greater than size!");
@@ -23,20 +27,20 @@ const shortCall: GetApproveAmount = (size, premia) => {
   return res;
 };
 
-const shortPut: GetApproveAmount = (size, premia, strike): BN => {
+const shortPut: GetApproveAmount = (size, premia, strike) => {
   if (!strike) {
     throw new Error("Short Put get to approve did not receive strike price");
   }
   const base = longInteger(size * strike, USDC_DIGITS);
 
-  return base.sub(premia);
+  return base - premia;
 };
 
 export const getPremiaWithSlippage = (
-  premia: BN,
+  premia: bigint,
   side: OptionSide,
   isClosing: boolean
-): BN => {
+): bigint => {
   const { slippage } = store.getState().settings;
   const fullInBasisPoints = 10000;
   // slippage is in percentage, with 2 decimal precission
@@ -47,16 +51,16 @@ export const getPremiaWithSlippage = (
       ? slippageInBasisPoints
       : -slippageInBasisPoints);
 
-  return premia.mul(new BN(numerator)).div(new BN(fullInBasisPoints));
+  return (premia * BigInt(numerator)) / BigInt(fullInBasisPoints);
 };
 
 export const getToApprove = (
   type: OptionType,
   side: OptionSide,
   size: number,
-  premia: BN,
+  premia: bigint,
   strike?: number
-): BN => {
+): bigint => {
   if (isLong(side)) {
     // long call / long put - premia with slippage
     return premia;
@@ -72,9 +76,9 @@ export const getToApprove = (
   return shortPut(size, premia, strike);
 };
 
-export const longInteger = (n: Decimal, digits: number): BN => {
+export const longInteger = (n: Decimal, digits: number): bigint => {
   if (!n) {
-    return new BN(0);
+    return BigInt(0);
   }
   const str = n.toString(10);
   const nonScientificNotation = str.includes("e")
@@ -83,7 +87,7 @@ export const longInteger = (n: Decimal, digits: number): BN => {
   const [lead, dec] = nonScientificNotation.split(".");
 
   if (!dec) {
-    return new BN(lead + "".padEnd(digits, "0"));
+    return BigInt(lead + "".padEnd(digits, "0"));
   }
 
   const tail = dec
@@ -94,14 +98,16 @@ export const longInteger = (n: Decimal, digits: number): BN => {
   const leadingZeros = withLeadingZeros.match(/^0*([0-9]+)/);
 
   return leadingZeros && leadingZeros?.length > 1
-    ? new BN(leadingZeros[1])
-    : new BN(0);
+    ? BigInt(leadingZeros[1])
+    : BigInt(0);
 };
 
-export const shortInteger = (str: string, digits: number): Decimal => {
+export const shortInteger = (str: BigNumberish, digits: number): Decimal => {
   if (!str) {
     return 0;
   }
+
+  str = BigInt(str).toString(10);
 
   const padded = str.padStart(digits, "0");
   const [head, tail] = [

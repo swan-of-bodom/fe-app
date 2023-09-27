@@ -1,352 +1,423 @@
 [
   {
+    "name": "LPTokenImpl",
+    "type": "impl",
+    "interface_name": "carmine_protocol::tokens::lptoken::ILPToken"
+  },
+  {
+    "name": "core::integer::u256",
+    "type": "struct",
     "members": [
       {
         "name": "low",
-        "offset": 0,
-        "type": "felt"
+        "type": "core::integer::u128"
       },
       {
         "name": "high",
-        "offset": 1,
-        "type": "felt"
+        "type": "core::integer::u128"
       }
-    ],
-    "name": "Uint256",
-    "size": 2,
-    "type": "struct"
+    ]
   },
   {
-    "data": [
+    "name": "core::bool",
+    "type": "enum",
+    "variants": [
       {
-        "name": "previousOwner",
-        "type": "felt"
+        "name": "False",
+        "type": "()"
       },
       {
-        "name": "newOwner",
-        "type": "felt"
+        "name": "True",
+        "type": "()"
       }
-    ],
-    "keys": [],
-    "name": "OwnershipTransferred",
-    "type": "event"
+    ]
   },
   {
-    "data": [
-      {
-        "name": "from_",
-        "type": "felt"
-      },
-      {
-        "name": "to",
-        "type": "felt"
-      },
-      {
-        "name": "value",
-        "type": "Uint256"
-      }
-    ],
-    "keys": [],
-    "name": "Transfer",
-    "type": "event"
-  },
-  {
-    "data": [
-      {
-        "name": "owner",
-        "type": "felt"
-      },
-      {
-        "name": "spender",
-        "type": "felt"
-      },
-      {
-        "name": "value",
-        "type": "Uint256"
-      }
-    ],
-    "keys": [],
-    "name": "Approval",
-    "type": "event"
-  },
-  {
-    "inputs": [
+    "name": "carmine_protocol::tokens::lptoken::ILPToken",
+    "type": "interface",
+    "items": [
       {
         "name": "name",
-        "type": "felt"
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::felt252"
+          }
+        ],
+        "state_mutability": "view"
       },
       {
         "name": "symbol",
-        "type": "felt"
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::felt252"
+          }
+        ],
+        "state_mutability": "view"
       },
       {
         "name": "decimals",
-        "type": "felt"
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::integer::u8"
+          }
+        ],
+        "state_mutability": "view"
       },
       {
-        "name": "initial_supply",
-        "type": "Uint256"
+        "name": "total_supply",
+        "type": "function",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::integer::u256"
+          }
+        ],
+        "state_mutability": "view"
       },
       {
-        "name": "recipient",
-        "type": "felt"
+        "name": "balance_of",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "account",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u256"
+          }
+        ],
+        "state_mutability": "view"
       },
       {
-        "name": "owner",
-        "type": "felt"
-      }
-    ],
-    "name": "constructor",
-    "outputs": [],
-    "type": "constructor"
-  },
-  {
-    "inputs": [],
-    "name": "name",
-    "outputs": [
+        "name": "allowance",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "owner",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "spender",
+            "type": "core::starknet::contract_address::ContractAddress"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::integer::u256"
+          }
+        ],
+        "state_mutability": "view"
+      },
       {
-        "name": "name",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "symbol",
-    "outputs": [
+        "name": "transfer",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "recipient",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "amount",
+            "type": "core::integer::u256"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::bool"
+          }
+        ],
+        "state_mutability": "external"
+      },
       {
-        "name": "symbol",
-        "type": "felt"
+        "name": "transfer_from",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "sender",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "recipient",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "amount",
+            "type": "core::integer::u256"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::bool"
+          }
+        ],
+        "state_mutability": "external"
+      },
+      {
+        "name": "approve",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "spender",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "amount",
+            "type": "core::integer::u256"
+          }
+        ],
+        "outputs": [
+          {
+            "type": "core::bool"
+          }
+        ],
+        "state_mutability": "external"
+      },
+      {
+        "name": "mint",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "recipient",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "amount",
+            "type": "core::integer::u256"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "name": "burn",
+        "type": "function",
+        "inputs": [
+          {
+            "name": "account",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "amount",
+            "type": "core::integer::u256"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
       }
-    ],
-    "stateMutability": "view",
-    "type": "function"
+    ]
   },
   {
-    "inputs": [],
     "name": "totalSupply",
-    "outputs": [
-      {
-        "name": "totalSupply",
-        "type": "Uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
+    "type": "function",
     "inputs": [],
-    "name": "decimals",
     "outputs": [
       {
-        "name": "decimals",
-        "type": "felt"
+        "type": "core::integer::u256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "state_mutability": "view"
   },
   {
+    "name": "balanceOf",
+    "type": "function",
     "inputs": [
       {
         "name": "account",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
       }
     ],
-    "name": "balanceOf",
     "outputs": [
       {
-        "name": "balance",
-        "type": "Uint256"
+        "type": "core::integer::u256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "state_mutability": "view"
   },
   {
-    "inputs": [
-      {
-        "name": "owner",
-        "type": "felt"
-      },
-      {
-        "name": "spender",
-        "type": "felt"
-      }
-    ],
-    "name": "allowance",
-    "outputs": [
-      {
-        "name": "remaining",
-        "type": "Uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "name": "owner",
-        "type": "felt"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "recipient",
-        "type": "felt"
-      },
-      {
-        "name": "amount",
-        "type": "Uint256"
-      }
-    ],
-    "name": "transfer",
-    "outputs": [
-      {
-        "name": "success",
-        "type": "felt"
-      }
-    ],
-    "type": "function"
-  },
-  {
+    "name": "transferFrom",
+    "type": "function",
     "inputs": [
       {
         "name": "sender",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
       },
       {
         "name": "recipient",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
       },
       {
         "name": "amount",
-        "type": "Uint256"
+        "type": "core::integer::u256"
       }
     ],
-    "name": "transferFrom",
     "outputs": [
       {
-        "name": "success",
-        "type": "felt"
+        "type": "core::bool"
       }
     ],
-    "type": "function"
+    "state_mutability": "external"
   },
   {
+    "name": "constructor",
+    "type": "constructor",
     "inputs": [
       {
-        "name": "spender",
-        "type": "felt"
+        "name": "name",
+        "type": "core::felt252"
       },
       {
-        "name": "amount",
-        "type": "Uint256"
+        "name": "symbol",
+        "type": "core::felt252"
       }
-    ],
-    "name": "approve",
-    "outputs": [
-      {
-        "name": "success",
-        "type": "felt"
-      }
-    ],
-    "type": "function"
+    ]
   },
   {
+    "name": "increase_allowance",
+    "type": "function",
     "inputs": [
       {
         "name": "spender",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
       },
       {
         "name": "added_value",
-        "type": "Uint256"
+        "type": "core::integer::u256"
       }
     ],
-    "name": "increaseAllowance",
     "outputs": [
       {
-        "name": "success",
-        "type": "felt"
+        "type": "core::bool"
       }
     ],
-    "type": "function"
+    "state_mutability": "external"
   },
   {
+    "name": "increaseAllowance",
+    "type": "function",
     "inputs": [
       {
         "name": "spender",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "name": "addedValue",
+        "type": "core::integer::u256"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "core::bool"
+      }
+    ],
+    "state_mutability": "external"
+  },
+  {
+    "name": "decrease_allowance",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "spender",
+        "type": "core::starknet::contract_address::ContractAddress"
       },
       {
         "name": "subtracted_value",
-        "type": "Uint256"
+        "type": "core::integer::u256"
       }
     ],
-    "name": "decreaseAllowance",
     "outputs": [
       {
-        "name": "success",
-        "type": "felt"
+        "type": "core::bool"
       }
     ],
-    "type": "function"
+    "state_mutability": "external"
   },
   {
+    "name": "decreaseAllowance",
+    "type": "function",
     "inputs": [
       {
+        "name": "spender",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "name": "subtractedValue",
+        "type": "core::integer::u256"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "core::bool"
+      }
+    ],
+    "state_mutability": "external"
+  },
+  {
+    "kind": "struct",
+    "name": "carmine_protocol::tokens::lptoken::LPToken::Transfer",
+    "type": "event",
+    "members": [
+      {
+        "kind": "data",
+        "name": "from",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "kind": "data",
         "name": "to",
-        "type": "felt"
+        "type": "core::starknet::contract_address::ContractAddress"
       },
       {
-        "name": "amount",
-        "type": "Uint256"
+        "kind": "data",
+        "name": "value",
+        "type": "core::integer::u256"
       }
-    ],
-    "name": "mint",
-    "outputs": [],
-    "type": "function"
+    ]
   },
   {
-    "inputs": [
+    "kind": "struct",
+    "name": "carmine_protocol::tokens::lptoken::LPToken::Approval",
+    "type": "event",
+    "members": [
       {
-        "name": "account",
-        "type": "felt"
+        "kind": "data",
+        "name": "owner",
+        "type": "core::starknet::contract_address::ContractAddress"
       },
       {
-        "name": "amount",
-        "type": "Uint256"
-      }
-    ],
-    "name": "burn",
-    "outputs": [],
-    "type": "function"
-  },
-  {
-    "inputs": [
+        "kind": "data",
+        "name": "spender",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
       {
-        "name": "newOwner",
-        "type": "felt"
+        "kind": "data",
+        "name": "value",
+        "type": "core::integer::u256"
       }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "type": "function"
+    ]
   },
   {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "type": "function"
+    "kind": "enum",
+    "name": "carmine_protocol::tokens::lptoken::LPToken::Event",
+    "type": "event",
+    "variants": [
+      {
+        "kind": "nested",
+        "name": "Transfer",
+        "type": "carmine_protocol::tokens::lptoken::LPToken::Transfer"
+      },
+      {
+        "kind": "nested",
+        "name": "Approval",
+        "type": "carmine_protocol::tokens::lptoken::LPToken::Approval"
+      }
+    ]
   }
 ]

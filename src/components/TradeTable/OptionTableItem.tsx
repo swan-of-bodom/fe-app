@@ -18,19 +18,17 @@ const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
       background: theme.palette.grey[greyGrade],
     },
   };
-  const { strikePrice, maturity, optionType } = option.parsed;
+  const { strike, maturity, type } = option;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
 
-  const displayPremia = option.parsed.premiaDecimal.toFixed(4);
-  const currency = isCall(optionType) ? "ETH" : "USD";
+  const displayPremia = option.premia.toFixed(4);
+  const currency = isCall(type) ? "ETH" : "USD";
 
   return (
     <TableRow sx={style} onClick={handleClick}>
-      <TableCell sx={{ borderBottom: "1px solid white" }}>
-        ${strikePrice}
-      </TableCell>
+      <TableCell sx={{ borderBottom: "1px solid white" }}>${strike}</TableCell>
       <TableCell sx={{ borderBottom: "1px solid white" }}>{date}</TableCell>
       <TableCell sx={{ borderBottom: "1px solid white" }}>
         {currency} {displayPremia}

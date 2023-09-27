@@ -3,7 +3,6 @@ import { usePremiaQuery } from "../../hooks/usePremiaQuery";
 import { CustomDialogTitle } from "../MultiDialog/MultiDialog";
 
 import { math64x61toDecimal, math64x61ToInt } from "../../utils/units";
-import BN from "bn.js";
 import { getPremiaWithSlippage, shortInteger } from "../../utils/computations";
 import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
@@ -54,8 +53,8 @@ const WithOption = ({ option, size, updateTradeState }: Props) => {
 
   const premia = math64x61toDecimal(data);
   const premiaWithSlippage = getPremiaWithSlippage(
-    new BN(math64x61ToInt(data, option.digits)),
-    option.parsed.optionSide,
+    BigInt(math64x61ToInt(data, option.digits)),
+    option.side,
     false
   );
   const displayPremiaWithSlippage = shortInteger(
@@ -168,7 +167,7 @@ export const BuyInsuranceModal = () => {
 
   const { option, size } = data;
 
-  const title = `Buy Insurance for ${size} ${option.tokenPair.base.symbol}`;
+  const title = `Buy Insurance for ${size} ${option.baseToken.symbol}`;
 
   return (
     <Box sx={containerSx}>

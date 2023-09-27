@@ -2,8 +2,6 @@ import { RawOptionHistory } from "./../../types/history";
 import { QueryFunctionContext } from "react-query";
 import { ITradeHistory, RawTradeHistory } from "../../types/history";
 import { debug, LogTypes } from "../../utils/debugger";
-import BN from "bn.js";
-import { hexToBN } from "../../utils/utils";
 import { Option } from "../../classes/Option";
 import { API_URL } from "../../constants/amm";
 
@@ -11,15 +9,15 @@ const getOptionFromHistory = (option: RawOptionHistory | null) => {
   if (!option) {
     return null;
   }
-  const raw = {
-    option_side: new BN(option.option_side),
-    maturity: new BN(option.maturity),
-    strike_price: hexToBN(option.strike_price),
-    quote_token_address: hexToBN(option.quote_token_address),
-    base_token_address: hexToBN(option.base_token_address),
-    option_type: new BN(option.option_type),
-  };
-  return new Option({ raw });
+
+  return new Option(
+    option.base_token_address,
+    option.quote_token_address,
+    option.option_type,
+    option.option_side,
+    option.maturity,
+    BigInt(option.strike_price)
+  );
 };
 
 const parseHostoricDataResponse = (data: RawTradeHistory[]): ITradeHistory[] =>

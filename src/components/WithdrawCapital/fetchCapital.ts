@@ -1,7 +1,7 @@
 import { debug } from "../../utils/debugger";
 import { QueryFunctionContext } from "react-query";
 import { getUserPoolInfo } from "../../calls/getUserPoolInfo";
-import { UserPoolInfo } from "../../types/pool";
+import { UserPoolInfo } from "../../classes/Pool";
 
 export const fetchCapital = async ({
   queryKey,

@@ -17,7 +17,6 @@ import { stripZerosFromAddress } from "../../utils/utils";
 import { openWalletConnectDialog } from "../../redux/actions";
 import { QuoteResult, QuoteRequest, quote } from "wido";
 import { poolLimit } from "../../calls/poolLimit";
-import BN from "bn.js";
 import { getLptokenValue } from "../../calls/getLptokenValue";
 import { shortInteger } from "../../utils/computations";
 
@@ -59,9 +58,11 @@ const quoteApiWithLimitCheck = async (
   }
 
   const decimals = request.toToken === TO_TOKEN_CALL ? ETH_DIGITS : USDC_DIGITS;
-  const stakingLptoken = new BN(quoteResponse.toTokenAmount || "0");
+  const stakingLptoken = quoteResponse.toTokenAmount
+    ? BigInt(quoteResponse.toTokenAmount)
+    : 0n;
   const staking = shortInteger(
-    stakingLptoken.mul(lptokenValue.base).toString(10),
+    (stakingLptoken * lptokenValue.base).toString(10),
     ETH_DIGITS + decimals // ETH digits for LPTOKEN, decimals for pool currency
   );
 

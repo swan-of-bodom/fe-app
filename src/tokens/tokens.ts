@@ -1,7 +1,8 @@
+import { BigNumberish } from "starknet";
 import { Pool } from "../classes/Pool";
-import { ETH_ADDRESS, USDC_ADDRESS } from "../constants/amm";
+import { BTC_ADDRESS, ETH_ADDRESS, USDC_ADDRESS } from "../constants/amm";
 import { OptionType } from "../types/options";
-import { standardiseAddress } from "../utils/utils";
+import { isEqual, standardiseAddress } from "../utils/utils";
 
 export interface Token {
   id: TokenKey;
@@ -21,10 +22,12 @@ export enum TokenKey {
   // https://api.coingecko.com/api/v3/coins/list
   ETH = "ethereum",
   USDC = "usd-coin",
+  BTC = "bridged-wrapped-bitcoin-stargate",
 }
 
 export enum TokenPairKey {
   EthUsdc = "EthUsdc",
+  BtcUsdc = "BtcUsdc",
 }
 
 export type TokensList = {
@@ -48,11 +51,42 @@ export const tokensList: TokensList = {
     decimals: 6,
     tokenAddress: standardiseAddress(USDC_ADDRESS),
   },
+  [TokenKey.BTC]: {
+    id: TokenKey.BTC,
+    symbol: "BTC",
+    decimals: 8,
+    tokenAddress: standardiseAddress(BTC_ADDRESS),
+  },
 };
+
+export const tokens: Token[] = [
+  {
+    id: TokenKey.ETH,
+    symbol: "ETH",
+    decimals: 18,
+    tokenAddress: standardiseAddress(ETH_ADDRESS),
+  },
+  {
+    id: TokenKey.USDC,
+    symbol: "USDC",
+    decimals: 6,
+    tokenAddress: standardiseAddress(USDC_ADDRESS),
+  },
+  {
+    id: TokenKey.BTC,
+    symbol: "BTC",
+    decimals: 8,
+    tokenAddress: standardiseAddress(BTC_ADDRESS),
+  },
+];
 
 export const tokenPairList: TokenPairList = {
   EthUsdc: {
     base: tokensList[TokenKey.ETH],
+    quote: tokensList[TokenKey.USDC],
+  },
+  BtcUsdc: {
+    base: tokensList[TokenKey.BTC],
     quote: tokensList[TokenKey.USDC],
   },
 };
@@ -84,11 +118,16 @@ export const getPoolByPairType = (
 ): Pool => {
   const pair = tokenPairList[pairKey];
 
-  return new Pool({
-    parsed: {
-      optionType: type,
-      baseToken: pair.base.tokenAddress,
-      quoteToken: pair.quote.tokenAddress,
-    },
-  });
+  return new Pool(pair.base.tokenAddress, pair.quote.tokenAddress, type);
+};
+
+export const getTokenByAddress = (address: BigNumberish): Token => {
+  const match = tokens.find((t) => isEqual(address, t.tokenAddress));
+
+  if (match) {
+    return match;
+  }
+
+  // unreachable
+  throw Error(`Invalid token address: ${address}`);
 };

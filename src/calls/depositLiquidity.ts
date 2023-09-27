@@ -33,7 +33,7 @@ export const depositLiquidity = async (
       pool.tokenAddress,
       USDC_ADDRESS,
       ETH_ADDRESS,
-      pool.parsed.optionType,
+      pool.type,
       size,
       "0",
     ],

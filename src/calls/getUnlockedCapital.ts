@@ -1,12 +1,12 @@
-import { uint256 } from "starknet";
 import { AMM_METHODS } from "../constants/amm";
 import { AMMContract } from "../utils/blockchain";
 import { debug } from "../utils/debugger";
-import BN from "bn.js";
 
 const method = AMM_METHODS.GET_UNLOCKED_CAPITAL;
 
-export const getUnlockedCapital = async (lpoolAddress: string): Promise<BN> => {
+export const getUnlockedCapital = async (
+  lpoolAddress: string
+): Promise<bigint> => {
   const res = await AMMContract.call(method, [lpoolAddress]).catch(
     (e: Error) => {
       debug(`Failed while calling ${method}`, e.message);
@@ -14,5 +14,5 @@ export const getUnlockedCapital = async (lpoolAddress: string): Promise<BN> => {
     }
   );
 
-  return uint256.uint256ToBN(res[0]);
+  return res as bigint;
 };

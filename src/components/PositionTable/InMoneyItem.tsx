@@ -1,6 +1,6 @@
 import { OptionWithPosition } from "../../classes/Option";
 import { timestampToReadableDate } from "../../utils/utils";
-import { Button, TableCell, TableRow, Tooltip } from "@mui/material";
+import { TableCell, TableRow, Tooltip } from "@mui/material";
 import { debug } from "../../utils/debugger";
 import { tradeSettle } from "../../calls/tradeSettle";
 import { invalidatePositions } from "../../queries/client";
@@ -10,6 +10,7 @@ import { showToast } from "../../redux/actions";
 import { ToastType } from "../../redux/reducers/ui";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
+import buttonStyles from "../../style/button.module.css";
 
 type Props = {
   option: OptionWithPosition;
@@ -20,8 +21,8 @@ export const InMoneyItem = ({ option }: Props) => {
   const account = useAccount();
 
   const handleSettle = () => {
-    if (!account || !option?.raw?.position_size) {
-      debug("Could not trade close", { account, raw: option?.raw });
+    if (!account || !option?.sizeHex) {
+      debug("Could not trade close", { account, option });
       return;
     }
 
@@ -39,30 +40,34 @@ export const InMoneyItem = ({ option }: Props) => {
       });
   };
 
-  const { strikePrice, maturity, positionSize, positionValue } = option.parsed;
+  const { strike, maturity, size, value } = option;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
 
-  const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strikePrice}`;
+  const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strike}`;
   const decimals = 4;
 
   return (
     <TableRow>
       <TableCell>{desc}</TableCell>
       <TableCell>{date}</TableCell>
-      <TableCell>{positionSize.toFixed(decimals)}</TableCell>
+      <TableCell>{size.toFixed(decimals)}</TableCell>
       <TableCell>
-        <Tooltip title={positionValue}>
+        <Tooltip title={value}>
           <span>
-            {option.symbol} {positionValue.toFixed(decimals)}
+            {option.symbol} {value.toFixed(decimals)}
           </span>
         </Tooltip>
       </TableCell>
       <TableCell align="right">
-        <Button disabled={txPending} variant="contained" onClick={handleSettle}>
+        <button
+          className={`${buttonStyles.button} ${buttonStyles.green}`}
+          onClick={handleSettle}
+          disabled={txPending}
+        >
           {txPending ? "Processing..." : "Settle"}
-        </Button>
+        </button>
       </TableCell>
     </TableRow>
   );

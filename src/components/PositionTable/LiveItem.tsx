@@ -12,13 +12,13 @@ type Props = {
 
 export const LiveItem = ({ option }: Props) => {
   const txPending = useTxPending(option.id, TransactionAction.TradeClose);
-  const { strikePrice, maturity, positionSize, positionValue } = option.parsed;
+  const { strike, maturity, size, value } = option;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
 
-  const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strikePrice}`;
-  const sizeTooltipMessage = option.raw.position_size.toString(10) + " tokens";
+  const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strike}`;
+  const sizeTooltipMessage = BigInt(option.sizeHex).toString(10) + " tokens";
   const decimals = 4;
   const timeNow = new Date().getTime();
   const isExpired = msMaturity - timeNow <= 0;
@@ -34,13 +34,13 @@ export const LiveItem = ({ option }: Props) => {
       <TableCell>{isExpired ? `Expired on ${date}` : date}</TableCell>
       <TableCell>
         <Tooltip title={sizeTooltipMessage}>
-          <span>{positionSize.toFixed(decimals)}</span>
+          <span>{size.toFixed(decimals)}</span>
         </Tooltip>
       </TableCell>
       <TableCell>
-        <Tooltip title={positionValue}>
+        <Tooltip title={value}>
           <span>
-            {option.symbol} {positionValue.toFixed(decimals)}
+            {option.symbol} {value.toFixed(decimals)}
           </span>
         </Tooltip>
       </TableCell>

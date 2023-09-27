@@ -1,9 +1,8 @@
-import BN from "bn.js";
 import { assert } from "../utils";
 import { parseOption } from "./parseOption";
 import { Option, OptionWithPosition } from "../../classes/Option";
 
-export const parseOptionWithPosition = (arr: BN[]): OptionWithPosition => {
+export const parseOptionWithPosition = (arr: bigint[]): OptionWithPosition => {
   const expectedLength = 9;
 
   assert(arr.length === expectedLength, "option with position length");

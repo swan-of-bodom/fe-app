@@ -8,14 +8,12 @@ import {
 } from "@mui/material";
 import { LoadingAnimation } from "../Loading/Loading";
 import { isNonEmptyArray } from "../../utils/utils";
-
 import { WithdrawItem } from "./WithdrawItem";
 import { NoContent } from "../TableNoContent";
 import { fetchCapital } from "./fetchCapital";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { AccountInterface } from "starknet";
-import { UserPoolDisplayData } from "../../types/pool";
 import { useAccount } from "../../hooks/useAccount";
 import tableStyles from "../../style/table.module.css";
 
@@ -41,24 +39,6 @@ const WithdrawParentWithAccount = ({ address, account }: Props) => {
   if (!isNonEmptyArray(data))
     return <NoContent text="You currently do not have any staked capital" />;
 
-  const itemDataList = data.map(({ parsed }): UserPoolDisplayData => {
-    const {
-      optionType: type,
-      valueOfUserStakeBase,
-      valueOfUserStakeDecimal,
-      sizeOfUsersTokensBase,
-      sizeOfUsersTokensDecimal,
-    } = parsed;
-
-    return {
-      size: sizeOfUsersTokensDecimal,
-      fullSize: sizeOfUsersTokensBase,
-      value: valueOfUserStakeDecimal,
-      fullValue: valueOfUserStakeBase,
-      type,
-    };
-  });
-
   return (
     <Table aria-label="simple table" className={tableStyles.table}>
       <TableHead>
@@ -72,16 +52,8 @@ const WithdrawParentWithAccount = ({ address, account }: Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {itemDataList.map(({ value, fullValue, size, fullSize, type }, i) => (
-          <WithdrawItem
-            key={i}
-            account={account}
-            size={size}
-            fullSize={fullSize}
-            value={value}
-            fullValue={fullValue}
-            type={type}
-          />
+        {data.map((userPoolInfo, i) => (
+          <WithdrawItem key={i} account={account} userPoolInfo={userPoolInfo} />
         ))}
       </TableBody>
     </Table>

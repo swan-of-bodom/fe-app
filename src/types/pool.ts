@@ -1,4 +1,3 @@
-import BN from "bn.js";
 import { OptionType } from "./options";
 import {
   Address,
@@ -10,16 +9,16 @@ import {
 } from "./units";
 import { uint256 } from "starknet";
 
-export type ParsedPool = {
+export interface ParsedPool {
   quoteToken: string;
   baseToken: string;
   optionType: OptionType;
-};
+}
 
 export interface RawPool {
-  quote_token_address: AddressBN;
-  base_token_address: AddressBN;
-  option_type: BN;
+  quote_token_address: bigint;
+  base_token_address: bigint;
+  option_type: bigint;
 }
 
 export interface RawPoolInfo extends RawPool {
@@ -70,12 +69,4 @@ export interface ResponseUserPoolInfo {
   pool_info: ResponsePoolInfo;
   value_of_user_stake: uint256.Uint256;
   size_of_users_tokens: uint256.Uint256;
-}
-
-export interface UserPoolDisplayData {
-  size: Decimal;
-  fullSize: Int;
-  value: Decimal;
-  fullValue: Int;
-  type: OptionType;
 }

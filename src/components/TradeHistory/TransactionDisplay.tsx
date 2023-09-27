@@ -2,7 +2,6 @@ import { ETH_DIGITS, USDC_DIGITS } from "../../constants/amm";
 import { ITradeHistory } from "../../types/history";
 import { shortInteger } from "../../utils/computations";
 import {
-  hexToBN,
   timestampToDateAndTime,
   timestampToInsuranceDate,
 } from "../../utils/utils";
@@ -29,7 +28,7 @@ type SingleItemProps = {
 };
 
 const capitalToReadable = (type: string, capital: string) => {
-  const n = hexToBN(capital).toString(10);
+  const n = BigInt(capital);
   if (type === "Call") {
     return "ETH " + shortInteger(n, ETH_DIGITS);
   }
@@ -46,7 +45,7 @@ const SingleItem = ({ data }: SingleItemProps) => {
     capital_transfered,
   } = data;
 
-  const size = shortInteger(hexToBN(tokens_minted).toString(10), ETH_DIGITS);
+  const size = shortInteger(BigInt(tokens_minted).toString(10), ETH_DIGITS);
 
   const [date, time] = timestampToDateAndTime(timestamp * 1000);
 
@@ -55,13 +54,13 @@ const SingleItem = ({ data }: SingleItemProps) => {
       <TableCell>{date}</TableCell>
       <TableCell sx={{ borderRight: borderValue }}>{time}</TableCell>
       <TableCell>
-        {option && timestampToInsuranceDate(option.parsed.maturity * 1000)}
+        {option && timestampToInsuranceDate(option.maturity * 1000)}
       </TableCell>
       <TableCell align="left">{action}</TableCell>
       {option ? (
         <>
           <TableCell align="left">{`${option.sideAsText} ${option.typeAsText}`}</TableCell>
-          <TableCell align="left">{`$${option.parsed.strikePrice}`}</TableCell>
+          <TableCell align="left">{`$${option.strike}`}</TableCell>
           <TableCell align="left">{size}</TableCell>
         </>
       ) : (

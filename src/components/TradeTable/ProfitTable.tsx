@@ -55,16 +55,15 @@ export const ProfitTable = ({
   basePremia,
   premia,
 }: ProfitTableProps) => {
-  const numStrikePrice = option.parsed.strikePrice;
   const limited = "$" + premia.toFixed(2);
   const unlimited = "Unlimited";
   const breakEven =
     "$" +
     (option.isCall
-      ? numStrikePrice + basePremia
-      : numStrikePrice - basePremia
+      ? option.strike + basePremia
+      : option.strike - basePremia
     ).toFixed(2);
-  debug({ numStrikePrice, strk: option.parsed.strikePrice, breakEven });
+  debug({ strk: option.strike, breakEven });
 
   return (
     <ProfitTableTemplate

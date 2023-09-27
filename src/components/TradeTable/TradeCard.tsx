@@ -8,14 +8,13 @@ import {
   debounce,
 } from "@mui/material";
 import { LoadingAnimation } from "../Loading/Loading";
-import BN from "bn.js";
 import { useState, useCallback, useEffect } from "react";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
 import { FinancialData } from "../../types/options";
 import { getPremiaWithSlippage, longInteger } from "../../utils/computations";
 import { debug, LogTypes } from "../../utils/debugger";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
-import { timestampToReadableDate, isCall, isLong } from "../../utils/utils";
+import { timestampToReadableDate, isLong } from "../../utils/utils";
 import { ProfitGraph } from "../CryptoGraph/ProfitGraph";
 import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
@@ -157,12 +156,10 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
-  const { strikePrice, maturity, optionType, optionSide } = option.parsed;
-  const side = isLong(optionSide) ? "Long" : "Short";
-  const type = isCall(optionType) ? "Call" : "Put";
+  const { strike, maturity, type, side } = option;
   const msMaturity = maturity * 1000;
   const date = timestampToReadableDate(msMaturity);
-  const title = `${side} ${type} with strike price $${strikePrice} expiring on ${date}`;
+  const title = `${option.sideAsText} ${option.typeAsText} with strike price $${strike} expiring on ${date}`;
 
   if (loading || !data) {
     const graph = () => <LoadingAnimation />;
@@ -186,14 +183,14 @@ export const TradeCard = ({ option }: TradeCardProps) => {
   }
 
   const premia = option.isCall ? data.premiaBase : data.premiaQuote;
-  const currentPremia: BN = longInteger(premia, option.digits);
+  const currentPremia = longInteger(premia, option.digits);
 
   const displayPremia = `${option.symbol} ${premia.toFixed(5)}`;
 
   const graphData = getProfitGraphData(
-    optionType,
-    optionSide,
-    strikePrice,
+    type,
+    side,
+    strike,
     data.premiaUsd,
     amount
   );
@@ -216,7 +213,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
 
     const premiaWithSlippage = getPremiaWithSlippage(
       currentPremia,
-      option.parsed.optionSide,
+      option.side,
       false
     );
 
@@ -233,7 +230,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
   };
 
   const buttonText = () =>
-    (isLong(optionSide) ? "Buy" : "Sell") + " for " + displayPremia;
+    (isLong(side) ? "Buy" : "Sell") + " for " + displayPremia;
 
   const BuyButton = () => (
     <Button

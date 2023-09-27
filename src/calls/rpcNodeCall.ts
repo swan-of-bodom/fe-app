@@ -6,7 +6,6 @@
 //   "contract_address": "0x76dbabc4293db346b0a56b29b6ea9fe18e93742c73f12348c8747ecfc1050aa",
 //   "entry_point_selector": "0x2b20b26ede4304b68503c401a342731579b75844e5696ee13e6286cd51a9621",
 //   "calldata": ["0x03d1525605db970fa1724693404f5f64cba8af82ec4aab514e6ebd3dec4838ad"]
-import BN from "bn.js";
 import { store } from "../redux/store";
 import { NetworkName } from "../types/network";
 import { debug } from "../utils/debugger";
@@ -80,7 +79,7 @@ export const rpcNodeCall = async (
   contractAddress: string,
   selector: string,
   calldata: string[]
-): Promise<RPCNodeResponse<BN[]>> => {
+): Promise<RPCNodeResponse<bigint[]>> => {
   const res = await fetch(getUrl(rpcNode), {
     body: JSON.stringify(getRequestBody(contractAddress, selector, calldata)),
     headers: {

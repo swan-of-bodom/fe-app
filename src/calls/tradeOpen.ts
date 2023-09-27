@@ -9,7 +9,6 @@ import { AMM_ADDRESS, AMM_METHODS } from "../constants/amm";
 import { AccountInterface } from "starknet";
 import { Option } from "../classes/Option";
 import { debug } from "../utils/debugger";
-import BN from "bn.js";
 import { getToApprove, shortInteger } from "../utils/computations";
 
 import AmmAbi from "../abi/amm_abi.json";
@@ -24,7 +23,7 @@ export const approveAndTradeOpen = async (
   account: AccountInterface,
   option: Option,
   size: number,
-  premia: BN,
+  premia: bigint,
   balance: UserBalance,
   updateTradeState: ({
     failed,
@@ -34,21 +33,17 @@ export const approveAndTradeOpen = async (
     processing: boolean;
   }) => void
 ): Promise<boolean> => {
-  const { optionType, optionSide } = option.parsed;
-
   const toApprove = getToApprove(
-    optionType,
-    optionSide,
+    option.type,
+    option.side,
     size,
     premia,
-    option.parsed.strikePrice
+    option.strike
   );
-
-  debug("TO APPROVE", toApprove.toString(10));
 
   const tokenId = option.underlying.id;
 
-  if (balance[tokenId].lt(toApprove)) {
+  if (balance[tokenId] < toApprove) {
     const [has, needs] = [
       shortInteger(balance[tokenId].toString(10), option.digits),
       shortInteger(toApprove.toString(10), option.digits),
@@ -66,10 +61,8 @@ export const approveAndTradeOpen = async (
   const approveArgs = {
     contractAddress: option.tokenAddress,
     entrypoint: AMM_METHODS.APPROVE,
-    calldata: [AMM_ADDRESS, new BN(toApprove).toString(10), "0"],
+    calldata: [AMM_ADDRESS, toApprove.toString(10), "0"],
   };
-
-  debug("Trade open approve calldata", approveArgs);
 
   // one hour from now
   const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
@@ -79,12 +72,11 @@ export const approveAndTradeOpen = async (
     entrypoint: AMM_METHODS.TRADE_OPEN,
     calldata: [
       ...option.tradeCalldata(size),
-      intToMath64x61(premia.toString(10), option.digits),
+      intToMath64x61(premia.toString(10), option.digits), // cubit
+      "0", // cubit false
       deadline,
     ],
   };
-
-  debug("Trade open trade calldata", tradeOpenArgs);
 
   const res = await account
     .execute([approveArgs, tradeOpenArgs], [LpAbi, AmmAbi])

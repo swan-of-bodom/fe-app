@@ -14,13 +14,11 @@ import { CustomDialogTitle } from "../MultiDialog/MultiDialog";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { useDebounce } from "../../hooks/useDebounce";
 import { math64x61toDecimal, math64x61ToInt } from "../../utils/units";
-import BN from "bn.js";
 import { getPremiaWithSlippage, shortInteger } from "../../utils/computations";
 import { tradeClose } from "../../calls/tradeClose";
 import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
 import { useCurrency } from "../../hooks/useCurrency";
-import { Math64x61 } from "../../types/units";
 import { OptionWithPosition } from "../../classes/Option";
 
 const premiaToDisplayValue = (
@@ -39,15 +37,11 @@ const premiaToDisplayValue = (
   }
   // Short Call
   if (option.isCall && option.isShort) {
-    return `$${((option.parsed.positionSize * quote - premia) * base).toFixed(
-      2
-    )}`;
+    return `$${((option.size * quote - premia) * base).toFixed(2)}`;
   }
   // Short Put
   if (option.isPut && option.isShort) {
-    return `$${((option.parsed.positionSize * base - premia) * quote).toFixed(
-      2
-    )}`;
+    return `$${((option.size * base - premia) * quote).toFixed(2)}`;
   }
   // unreachable
   throw Error('Could not get "premiaToDisplayValue"');
@@ -112,10 +106,10 @@ type Props = {
 
 const WithOption = ({ option }: Props) => {
   const account = useAccount();
-  const base = useCurrency(option.tokenPair.base.id);
-  const quote = useCurrency(option.tokenPair.quote.id);
+  const base = useCurrency(option.baseToken.id);
+  const quote = useCurrency(option.quoteToken.id);
 
-  const { positionSize: max, optionSide: side } = option.parsed;
+  const { size: max, side } = option;
   const [size, setSize] = useState<number>(max);
   const [inputText, setInputText] = useState<string>(String(max));
   const debouncedSize = useDebounce<number>(size);
@@ -129,7 +123,7 @@ const WithOption = ({ option }: Props) => {
     setInputText(String(n));
   };
 
-  const close = (premia: Math64x61) => {
+  const close = (premia: bigint) => {
     if (!account || !size) {
       debug("Could not trade close", {
         account,
@@ -207,7 +201,7 @@ const WithOption = ({ option }: Props) => {
   debug("Closing premia:", premia);
   const premiaWithSlippage = shortInteger(
     getPremiaWithSlippage(
-      new BN(math64x61ToInt(data, option.digits)),
+      BigInt(math64x61ToInt(data, option.digits)),
       side,
       true
     ).toString(10),
@@ -286,7 +280,7 @@ export const ClosePosition = () => {
     );
   }
 
-  const title = `$${option.parsed.strikePrice} ${option.typeAsText}`;
+  const title = `$${option.strike} ${option.typeAsText}`;
 
   return (
     <>

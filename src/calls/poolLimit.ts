@@ -10,23 +10,25 @@ import {
 import { AMMContract } from "../utils/blockchain";
 import { shortInteger } from "../utils/computations";
 import { debug } from "../utils/debugger";
-import BN from "bn.js";
-import { uint256 } from "starknet";
+import { Result } from "starknet";
 
-export const lpoolBalance = async (lpoolAddress: string): Promise<BN> => {
-  const balanceRes = await AMMContract.call(AMM_METHODS.GET_LOOP_BALANCE, [
+export const lpoolBalance = async (lpoolAddress: string): Promise<bigint> => {
+  const balance: Result = await AMMContract.call(AMM_METHODS.GET_LOOP_BALANCE, [
     lpoolAddress,
   ]).catch((e: Error) => {
     debug(`Failed while calling ${AMM_METHODS.GET_LOOP_BALANCE}`, e.message);
     throw Error(e.message);
   });
 
-  const converted = uint256.uint256ToBN(balanceRes[0]);
-  return converted;
+  if (typeof balance === "bigint") {
+    return balance;
+  }
+
+  throw Error(`POOL BALANCE ${balance}`);
 };
 
-export const lpoolLimit = async (tokenAddress: string): Promise<BN> => {
-  const limitRes = await AMMContract.call(AMM_METHODS.GET_MAX_LPOOL_BALANCE, [
+export const lpoolLimit = async (tokenAddress: string): Promise<bigint> => {
+  const limit = await AMMContract.call(AMM_METHODS.GET_MAX_LPOOL_BALANCE, [
     tokenAddress,
   ]).catch((e: Error) => {
     debug(
@@ -36,12 +38,15 @@ export const lpoolLimit = async (tokenAddress: string): Promise<BN> => {
     throw Error(e.message);
   });
 
-  const converted = uint256.uint256ToBN(limitRes[0]);
-  return converted;
+  if (typeof limit === "bigint") {
+    return limit;
+  }
+
+  throw Error(`POOL LIMIT ${limit}`);
 };
 
 type PoolLimit = {
-  base: BN;
+  base: bigint;
   converted: number;
   symbol: string;
 };
@@ -67,9 +72,8 @@ export const poolLimit = async (lpoolAddress: string): Promise<PoolLimit> => {
     throw Error(e);
   });
 
-  const _stakable = limit.sub(balance);
-  const zero = new BN(0);
-  const stakable = _stakable.gt(zero) ? _stakable : zero;
+  const _stakable = limit - balance;
+  const stakable = _stakable > 0n ? _stakable : 0n;
   const converted = shortInteger(stakable.toString(10), decimals);
 
   debug(

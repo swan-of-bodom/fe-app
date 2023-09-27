@@ -18,14 +18,14 @@ const ClaimItem = ({
   account: AccountInterface;
 }) => {
   const txPending = useTxPending(option.id, TransactionAction.Settle);
-  const symbol = option.tokenPair.base.symbol;
+  const symbol = option.baseToken.symbol;
 
   const handleButtonClick = () => tradeSettle(account, option);
 
   return (
     <Box sx={{ display: "flex", flexFlow: "column" }}>
       <Typography variant="h6">
-        {symbol} ${option.parsed.strikePrice}
+        {symbol} ${option.strike}
       </Typography>
       <Box
         sx={{
@@ -36,7 +36,7 @@ const ClaimItem = ({
         }}
       >
         <Typography>
-          You are eligible to claim ${option.parsed.positionValue.toFixed(4)}
+          You are eligible to claim ${option.value.toFixed(4)}
         </Typography>
         <Button
           onClick={handleButtonClick}

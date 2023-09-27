@@ -1,4 +1,3 @@
-import BN from "bn.js";
 import config from "./config.json";
 
 export const NETWORK = config.NETWORK;
@@ -49,7 +48,8 @@ export const SLIPPAGE = 0.1;
 export const BASE_DIGITS = 18;
 export const ETH_DIGITS = 18;
 export const USDC_DIGITS = 6;
-export const ETH_BASE_VALUE = new BN(10).pow(new BN(ETH_DIGITS));
-export const USDC_BASE_VALUE = new BN(10).pow(new BN(USDC_DIGITS));
-export const BASE_MATH_64_61 = new BN(2).pow(new BN(61));
+export const ETH_BASE_VALUE = BigInt(10) ** BigInt(ETH_DIGITS);
+export const USDC_BASE_VALUE = BigInt(10) ** BigInt(USDC_DIGITS);
+export const BASE_MATH_64_61 = BigInt(2) ** BigInt(61);
+export const BASE_MATH_64 = BigInt(2) ** BigInt(64);
 export const USDC_PRECISSION = 1000;

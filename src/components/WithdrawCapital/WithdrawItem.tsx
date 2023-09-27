@@ -10,8 +10,6 @@ import { useState } from "react";
 import { AccountInterface } from "starknet";
 import { withdrawCall } from "./withdrawCall";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
-import { UserPoolDisplayData } from "../../types/pool";
-import BN from "bn.js";
 import { debug } from "../../utils/debugger";
 import { isCall } from "../../utils/utils";
 import { POOL_NAMES } from "../../constants/texts";
@@ -20,12 +18,15 @@ import { ToastType } from "../../redux/reducers/ui";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
 import buttonStyles from "../../style/button.module.css";
+import { UserPoolInfo } from "../../classes/Pool";
 
-interface Props extends UserPoolDisplayData {
+type Props = {
+  userPoolInfo: UserPoolInfo;
   account: AccountInterface;
-}
+};
 
-export const WithdrawItem = ({ account, value, fullSize, type }: Props) => {
+export const WithdrawItem = ({ account, userPoolInfo }: Props) => {
+  const { type, sizeHex, value } = userPoolInfo;
   // TODO: use proper pool id
   const txPending = useTxPending(String(type), TransactionAction.Withdraw);
   const [amount, setAmount] = useState<number>(0);
@@ -35,21 +36,19 @@ export const WithdrawItem = ({ account, value, fullSize, type }: Props) => {
   const cb = (n: number): number => (n >= 100 ? 100 : n);
   const handleChange = handleNumericChangeFactory(setText, setAmount, cb);
 
-  const precission = 10000;
-  const relativeSize = new BN(amount * precission)
-    .mul(new BN(fullSize))
-    .div(new BN(100 * precission))
-    .toString(10);
+  const precission = 10000n;
+  const relativeSize =
+    (BigInt(amount) * precission * BigInt(sizeHex)) / (100n * precission);
   debug("Relative size", relativeSize);
   const handleWithdraw = () => {
     if (!amount) {
       showToast("Cannot withdraw 0", ToastType.Warn);
       return;
     }
-    withdrawCall(account, setProcessing, type, relativeSize);
+    withdrawCall(account, setProcessing, type, relativeSize.toString(10));
   };
   const handleWithdrawAll = () =>
-    withdrawCall(account, setProcessing, type, fullSize);
+    withdrawCall(account, setProcessing, type, sizeHex);
 
   const [pool, currency] = isCall(type)
     ? [POOL_NAMES.CALL, "Ξ"]

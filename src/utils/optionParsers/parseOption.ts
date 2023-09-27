@@ -1,20 +1,10 @@
-import BN from "bn.js";
 import { assert } from "../utils";
 import { Option } from "../../classes/Option";
 
-export const parseOption = (arr: BN[]): Option => {
-  const expectedLength = 6;
+export const parseOption = (arr: bigint[]): Option => {
+  const expectedLength = 7;
 
   assert(arr.length === expectedLength, "option with position length");
 
-  const raw = {
-    option_side: arr[0],
-    maturity: arr[1],
-    strike_price: arr[2],
-    quote_token_address: arr[3],
-    base_token_address: arr[4],
-    option_type: arr[5],
-  };
-
-  return new Option({ raw });
+  return new Option(arr[5], arr[4], arr[6], arr[0], arr[1], arr[2]);
 };

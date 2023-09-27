@@ -8,19 +8,19 @@ export const devnetOptions = {
     baseUrl: "http://localhost:5050/",
     feederGatewayUrl: "feeder_gateway",
     gatewayUrl: "http://localhost:5050/",
-    chainId: constants.StarknetChainId.MAINNET,
+    chainId: constants.StarknetChainId.SN_MAIN,
   },
 };
 
 export const testnetOptions: ProviderOptions = {
   sequencer: {
-    network: "goerli-alpha",
+    network: constants.StarknetChainId.SN_GOERLI,
   },
 };
 
 export const mainnetOptions: ProviderOptions = {
   sequencer: {
-    network: "mainnet-alpha",
+    network: constants.StarknetChainId.SN_MAIN,
   },
 };
 
@@ -42,17 +42,17 @@ export const getNetworkObject = (): Network => {
   if (NETWORK === "mainnet") {
     return {
       name: NetworkName.Mainnet,
-      chainId: constants.StarknetChainId.MAINNET,
+      chainId: constants.StarknetChainId.SN_MAIN,
     };
   } else if (NETWORK === "testnet") {
     return {
       name: NetworkName.Testnet,
-      chainId: constants.StarknetChainId.TESTNET,
+      chainId: constants.StarknetChainId.SN_GOERLI,
     };
   } else if (NETWORK === "devnet") {
     return {
       name: NetworkName.Testnet,
-      chainId: constants.StarknetChainId.TESTNET,
+      chainId: constants.StarknetChainId.SN_GOERLI,
     };
   } else {
     throw new Error(`Invalid network provided! ${NETWORK}`);

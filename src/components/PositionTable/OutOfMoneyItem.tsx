@@ -1,6 +1,6 @@
 import { OptionWithPosition } from "../../classes/Option";
 import { timestampToReadableDate } from "../../utils/utils";
-import { Button, TableCell, TableRow } from "@mui/material";
+import { TableCell, TableRow } from "@mui/material";
 import { debug } from "../../utils/debugger";
 import { tradeSettle } from "../../calls/tradeSettle";
 import { invalidatePositions } from "../../queries/client";
@@ -8,6 +8,7 @@ import { afterTransaction } from "../../utils/blockchain";
 import { useAccount } from "../../hooks/useAccount";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
+import buttonStyles from "../../style/button.module.css";
 
 type Props = {
   option: OptionWithPosition;
@@ -18,8 +19,8 @@ export const OutOfMoneyItem = ({ option }: Props) => {
   const account = useAccount();
 
   const handleSettle = () => {
-    if (!account || !option?.raw?.position_size) {
-      debug("Could not trade close", { account, raw: option?.raw });
+    if (!account || !option?.size) {
+      debug("Could not trade close", { account, option });
       return;
     }
 
@@ -32,22 +33,26 @@ export const OutOfMoneyItem = ({ option }: Props) => {
     });
   };
 
-  const { strikePrice, maturity, positionSize } = option.parsed;
+  const { strike, maturity, size } = option;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
-  const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strikePrice}`;
+  const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strike}`;
   const decimals = 4;
 
   return (
     <TableRow>
       <TableCell>{desc}</TableCell>
       <TableCell>{date}</TableCell>
-      <TableCell>{positionSize.toFixed(decimals)}</TableCell>
+      <TableCell>{size.toFixed(decimals)}</TableCell>
       <TableCell align="right">
-        <Button disabled={txPending} variant="contained" onClick={handleSettle}>
+        <button
+          className={`${buttonStyles.button} ${buttonStyles.green}`}
+          onClick={handleSettle}
+          disabled={txPending}
+        >
           {txPending ? "Processing..." : "Settle"}
-        </Button>
+        </button>
       </TableCell>
     </TableRow>
   );

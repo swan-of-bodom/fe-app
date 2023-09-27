@@ -12,7 +12,7 @@ import { TransactionAction } from "../../redux/reducers/transactions";
 
 const InsuranceDisplay = ({ option }: { option: OptionWithPosition }) => {
   const txPending = useTxPending(option.id, TransactionAction.TradeClose);
-  const symbol = option.tokenPair.base.symbol;
+  const symbol = option.baseToken.symbol;
   const handleButtonClick = () => {
     setCloseOption(option);
     openCloseOptionDialog();
@@ -20,7 +20,7 @@ const InsuranceDisplay = ({ option }: { option: OptionWithPosition }) => {
   return (
     <Box sx={{ display: "flex", flexFlow: "column" }}>
       <Typography variant="h6">
-        {symbol} ${option.parsed.strikePrice}
+        {symbol} ${option.strike}
       </Typography>
       <Box
         sx={{
@@ -31,8 +31,8 @@ const InsuranceDisplay = ({ option }: { option: OptionWithPosition }) => {
         }}
       >
         <Typography>
-          Insurance covers {option.size} {symbol} at price $
-          {option.parsed.strikePrice} and expires {option.dateRich}
+          Insurance covers {option.size} {symbol} at price ${option.strike} and
+          expires {option.dateRich}
         </Typography>
         <Button
           disabled={txPending}

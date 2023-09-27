@@ -28,6 +28,11 @@
   color: #FAB000;
 }
 
+.green {
+  border: 2px solid #1AFF00;
+  color: #1AFF00;
+}
+
 .container button {
   align-items: center;
   background-color: transparent;

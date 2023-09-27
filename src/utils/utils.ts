@@ -1,21 +1,20 @@
-import BN from "bn.js";
 import {
   ETH_ADDRESS,
   ETH_DIGITS,
   USDC_ADDRESS,
-  USDC_BASE_VALUE,
   USDC_DIGITS,
 } from "../constants/amm";
 import { OptionSide, OptionType } from "../types/options";
 import { TESTNET_CHAINID } from "../constants/starknet";
+import { BigNumberish } from "starknet";
 
 export const isNonEmptyArray = (v: unknown): v is Array<any> =>
   !!(v && Array.isArray(v) && v.length > 0);
 
-export const handleBlockChainResponse = (v: unknown): BN | null =>
+export const handleBlockChainResponse = (v: unknown): bigint | null =>
   v && isNonEmptyArray(v) ? v[0] : null;
 
-export const weiToEth = (bn: BN, decimalPlaces: number): string => {
+export const weiToEth = (bn: bigint, decimalPlaces: number): string => {
   const v: string = Number(bn)
     .toLocaleString("fullwide", { useGrouping: false })
     .padStart(19, "0");
@@ -32,15 +31,6 @@ export const weiToEth = (bn: BN, decimalPlaces: number): string => {
   }
 
   return `${lead}.${dec}`;
-};
-
-export const weiTo64x61 = (wei: string): string => {
-  const base = new BN(wei);
-  const m = new BN(2).pow(new BN(61));
-  const d = new BN(10).pow(new BN(18));
-
-  const res = base.mul(m).div(d).toString(10);
-  return res;
 };
 
 export const timestampToReadableDate = (ts: number): string =>
@@ -97,19 +87,6 @@ export const timestampToRichDate = (ts: number): string => {
 export const hashToReadable = (v: string): string =>
   v.slice(0, 4) + "..." + v.slice(v.length - 4);
 
-export const premiaToUsd = (usdInMath64x61: BN): string => {
-  return new BN(usdInMath64x61)
-    .mul(new BN(USDC_BASE_VALUE))
-    .div(new BN(2).pow(new BN(61)))
-    .toString(10);
-};
-
-export const premiaToWei = (bn: BN): string =>
-  new BN(bn)
-    .mul(new BN(10).pow(new BN(18)))
-    .div(new BN(2).pow(new BN(61)))
-    .toString(10);
-
 export const debounce = (cb: (...args: any[]) => void, delay: number = 750) => {
   let timeout: number;
 
@@ -131,9 +108,9 @@ export const currencyAddresByType = (type: OptionType) =>
 export const digitsByType = (type: OptionType) =>
   isCall(type) ? ETH_DIGITS : USDC_DIGITS;
 
-export const toHex = (v: BN) => "0x" + v.toString(16);
+export const toHex = (v: BigNumberish) => "0x" + BigInt(v).toString(16);
 
-export const hexToBN = (v: string): BN => new BN(v.substring(2), "hex");
+export const hexToBN = (v: string): bigint => BigInt(v);
 
 export const assert = (condition: boolean, message?: string): void => {
   if (!condition) {
@@ -190,13 +167,20 @@ export const stripZerosFromAddress = (address: string): string => {
   return "0x" + withoutPrefix;
 };
 
-export const standardiseAddress = (address: string): string => {
-  const withoutPrefix = address.replace(/^0x0*/g, "").toLowerCase();
-  return "0x" + withoutPrefix;
-};
+export const standardiseAddress = (address: string): string =>
+  "0x" + BigInt(address).toString(16);
 
 export const uniquePrimitiveValues = (
   value: any,
   index: number,
   array: any[]
 ) => array.indexOf(value) === index;
+
+/**
+ * Compares if two values represent the same number.
+ * Great for comparing addresses (0x0123 === 0x123).
+ */
+export const isEqual = (
+  a: string | number | bigint,
+  b: string | number | bigint
+): boolean => BigInt(a) === BigInt(b);
