@@ -60,13 +60,13 @@ export interface UserPoolInfo {
 export interface ResponsePoolInfo {
   pool: RawPool;
   lptoken_address: AddressBN;
-  staked_capital: uint256.Uint256; // lpool_balance
-  unlocked_capital: uint256.Uint256;
+  staked_capital: bigint; // lpool_balance
+  unlocked_capital: bigint;
   value_of_pool_position: Math64x61BN;
 }
 
 export interface ResponseUserPoolInfo {
   pool_info: ResponsePoolInfo;
-  value_of_user_stake: uint256.Uint256;
-  size_of_users_tokens: uint256.Uint256;
+  value_of_user_stake: bigint;
+  size_of_users_tokens: bigint;
 }

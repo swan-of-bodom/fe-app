@@ -41,6 +41,20 @@ export class Option extends Pool {
     this.id = this.generateId();
   }
 
+  /**
+   * Generates id that uniquily describes option
+   */
+  generateId(): string {
+    return JSON.stringify({
+      base: this.baseToken.id,
+      quote: this.quoteToken.id,
+      type: this.type,
+      side: this.side,
+      maturity: this.maturity,
+      strike: this.strike,
+    });
+  }
+
   tradeCalldata(size: string | number): string[] {
     const targetSize = typeof size === "number" ? convertSizeToInt(size) : size;
     return [

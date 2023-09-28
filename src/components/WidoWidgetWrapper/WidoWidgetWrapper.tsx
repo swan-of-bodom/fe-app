@@ -19,6 +19,7 @@ import { QuoteResult, QuoteRequest, quote } from "wido";
 import { poolLimit } from "../../calls/poolLimit";
 import { getLptokenValue } from "../../calls/getLptokenValue";
 import { shortInteger } from "../../utils/computations";
+import { AccountInterface as WidoAccountInterface } from "wido-widget";
 
 // const TO_TOKEN_PUT =
 //   "0x18a6abca394bd5f822cfa5f88783c01b13e593d1603e7b41b00d31d2ea4827a";
@@ -178,7 +179,8 @@ const WidoWidgetWrapper = (pool: "call" | "put") => {
     <WidoWidget
       onConnectWalletClick={handleConnectWalletClick}
       ethProvider={ethProvider}
-      snAccount={account}
+      // this doesnt work, but it prevents constant errors
+      snAccount={account as WidoAccountInterface | undefined}
       fromTokens={fromTokens}
       toTokens={toTokens}
       presetToToken={presetToToken}

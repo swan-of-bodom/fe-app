@@ -48,7 +48,7 @@ export const depositLiquidity = async (
     .execute([approveCalldata, depositLiquidityCalldata], [LpAbi, AmmAbi])
     .catch((e: Error) => {
       debug('"Stake capital" user rejected or failed');
-      debug("error", e.message);
+      console.log(e);
     });
 
   if (res?.transaction_hash) {

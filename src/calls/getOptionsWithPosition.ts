@@ -21,8 +21,6 @@ export const getOptionsWithPositionOfUser = async (
     throw Error(e.message);
   });
 
-  debug("OPTIONS WITH POSITION", res);
-
   const parsed = (res as Response[]).map(
     ({ option, position_size, value_of_position }) => {
       const opt = new Option(
@@ -30,8 +28,7 @@ export const getOptionsWithPositionOfUser = async (
         option.quote_token_address,
         option.option_type,
         option.option_side,
-        // option.maturity,
-        1695822000,
+        option.maturity,
         option.strike_price.mag
       );
       const optionWithPosition = opt.addPosition(
@@ -41,8 +38,6 @@ export const getOptionsWithPositionOfUser = async (
       return optionWithPosition;
     }
   );
-
-  debug("PARSED OPTIONS WITH POSITION", parsed);
 
   return parsed;
 };

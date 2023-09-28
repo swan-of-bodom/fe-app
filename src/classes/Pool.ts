@@ -157,12 +157,10 @@ export class UserPoolInfo extends Pool {
     value: BigNumberish
   ) {
     super(base, quote, type);
-
     this.sizeHex = toHex(size);
     this.sizeBase = BigInt(size);
     // size is in LP digits - always 18
     this.size = shortInteger(this.sizeHex, BASE_DIGITS);
-
     this.valueHex = toHex(value);
     this.valueBase = BigInt(value);
     // value is in digits by type

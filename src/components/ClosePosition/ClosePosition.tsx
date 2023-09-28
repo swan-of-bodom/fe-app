@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   ButtonGroup,
   Skeleton,
   TextField,
@@ -20,6 +19,7 @@ import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
 import { useCurrency } from "../../hooks/useCurrency";
 import { OptionWithPosition } from "../../classes/Option";
+import buttonStyles from "../../style/button.module.css";
 
 const premiaToDisplayValue = (
   premia: number,
@@ -92,7 +92,12 @@ const Template = ({
           variant="contained"
           aria-label="outlined primary button group"
         >
-          <Button onClick={() => handleClick(max)}>Max</Button>
+          <button
+            className={buttonStyles.button}
+            onClick={() => handleClick(max)}
+          >
+            Max
+          </button>
         </ButtonGroup>
       </Box>
       {children}
@@ -159,9 +164,9 @@ const WithOption = ({ option }: Props) => {
               <Typography>Cannot close size 0</Typography>
             </Box>
           </Box>
-          <Button variant="contained" disabled>
+          <button className={buttonStyles.button} disabled>
             Close selected
-          </Button>
+          </button>
         </Box>
       </Template>
     );
@@ -260,9 +265,9 @@ const WithOption = ({ option }: Props) => {
             </Typography>
           </Box>
         </Box>
-        <Button variant="contained" onClick={() => close(data)}>
-          Close selected
-        </Button>
+        <button className={buttonStyles.button} onClick={() => close(data)}>
+          Close
+        </button>
       </Box>
     </Template>
   );

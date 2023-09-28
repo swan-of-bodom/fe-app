@@ -2,8 +2,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  useTheme,
-  Paper,
   Button,
   DialogActions,
   DialogContentText,
@@ -20,8 +18,9 @@ import { Close } from "@mui/icons-material";
 import { ClosePosition } from "../ClosePosition/ClosePosition";
 import { WalletInfo } from "../WalletInfo/WalletInfo";
 import { CallWido, PutWido } from "../WidoWidgetWrapper/WidoWidgetWrapper";
-import { CSSProperties, ReactNode } from "react";
+import { ReactNode } from "react";
 import { BuyInsuranceModal } from "../Insurance/BuyInsuranceModal";
+import buttonStyles from "../../style/button.module.css";
 
 const NetworkMismatch = () => (
   <>
@@ -37,9 +36,9 @@ const NetworkMismatch = () => (
       </DialogContentText>
     </DialogContent>
     <DialogActions>
-      <Button variant="contained" onClick={closeDialog} autoFocus>
+      <button className={buttonStyles.button} onClick={closeDialog} autoFocus>
         Close
-      </Button>
+      </button>
     </DialogActions>
   </>
 );
@@ -63,9 +62,9 @@ const MetamaskMissing = () => (
       </DialogContentText>
     </DialogContent>
     <DialogActions>
-      <Button variant="contained" onClick={closeDialog} autoFocus>
+      <button className={buttonStyles.button} onClick={closeDialog} autoFocus>
         Close
-      </Button>
+      </button>
     </DialogActions>
   </>
 );
@@ -93,9 +92,9 @@ const NotEnoughUnlocked = () => (
       </DialogContentText>
     </DialogContent>
     <DialogActions>
-      <Button variant="contained" onClick={closeDialog} autoFocus>
+      <button className={buttonStyles.button} onClick={closeDialog} autoFocus>
         Close
-      </Button>
+      </button>
     </DialogActions>
   </>
 );
@@ -132,29 +131,19 @@ type Props = {
 };
 
 const Border = ({ children }: Props) => {
-  const theme = useTheme();
-
   const style = {
-    p: 1,
+    padding: "1em",
     background: "black",
-    border: `solid 1px ${theme.palette.primary.main}`,
+    border: "1px solid white",
+    borderRadius: 0,
     overflow: "hidden",
   };
 
-  return <Paper sx={style}>{children}</Paper>;
+  return <div style={style}>{children}</div>;
 };
 
 export const MultiDialog = () => {
   const { dialogOpen, dialogContent } = useDialog();
-
-  const paperStyle: CSSProperties = { overflow: "hidden" };
-
-  if (
-    dialogContent === DialogContentElem.CallWido ||
-    dialogContent === DialogContentElem.PutWido
-  ) {
-    paperStyle.borderRadius = "1em";
-  }
 
   return (
     <Dialog
@@ -162,9 +151,7 @@ export const MultiDialog = () => {
       onClose={closeDialog}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      PaperProps={{
-        style: paperStyle,
-      }}
+      PaperProps={{ sx: { borderRadius: 0 } }}
     >
       {dialogContent === DialogContentElem.NetworkMismatch && (
         <Border>

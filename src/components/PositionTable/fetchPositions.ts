@@ -23,7 +23,6 @@ export const fetchPositions = async ({
       .filter((o) => !!o.size)
       .sort((a, b) => a.maturity - b.maturity);
 
-    debug("Fetched options with position", filtered);
     return filtered;
   } catch (e: unknown) {
     debug("Failed to parse positions", e);

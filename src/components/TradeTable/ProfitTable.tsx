@@ -1,6 +1,7 @@
 import { Table, TableBody, TableRow, TableCell, Skeleton } from "@mui/material";
 import { OptionWithPremia } from "../../classes/Option";
 import { debug } from "../../utils/debugger";
+import styles from "./profittable.module.css";
 
 type ProfitTableTemplateProps = {
   limited: string;
@@ -15,33 +16,33 @@ const ProfitTableTemplate = ({
   breakEven,
   isLong,
 }: ProfitTableTemplateProps) => (
-  <Table>
-    <TableBody>
-      <TableRow>
-        <TableCell>Maximum profit</TableCell>
-        <TableCell>{isLong ? unlimited : limited}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>Maximum loss</TableCell>
-        <TableCell>{!isLong ? unlimited : limited}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>Break even</TableCell>
-        <TableCell>{breakEven}</TableCell>
-      </TableRow>
-    </TableBody>
-  </Table>
+  <div className={styles.container}>
+    <div className={styles.row}>
+      <span>Max Profit</span>
+      <span>{isLong ? unlimited : limited}</span>
+    </div>
+    <div className={styles.row}>
+      <span>Max Loss</span>
+      <span>{!isLong ? unlimited : limited}</span>
+    </div>
+    <div className={styles.row}>
+      <span>Break Even</span>
+      <span>{breakEven}</span>
+    </div>
+    <div className={styles.row}>
+      <span>Total in ETH</span>
+      <span>0.00123</span>
+    </div>
+  </div>
 );
 
 export const ProfitTableSkeleton = () => (
-  <Skeleton>
-    <ProfitTableTemplate
-      limited="unlimited"
-      unlimited="unlimited"
-      breakEven="$1000"
-      isLong={true}
-    />
-  </Skeleton>
+  <ProfitTableTemplate
+    limited="Calculating..."
+    unlimited="Calculating..."
+    breakEven="Calculating..."
+    isLong={true}
+  />
 );
 
 type ProfitTableProps = {

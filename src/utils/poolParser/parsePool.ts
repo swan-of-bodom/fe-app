@@ -1,6 +1,5 @@
 import { UserPoolInfo } from "../../classes/Pool";
 import { ResponseUserPoolInfo } from "../../types/pool";
-import { uint256 } from "starknet";
 
 export const parseUserPoolInfo = (
   response: ResponseUserPoolInfo
@@ -16,11 +15,5 @@ export const parseUserPoolInfo = (
     option_type: type,
   } = poolInfo.pool;
 
-  return new UserPoolInfo(
-    base,
-    quote,
-    type,
-    uint256.uint256ToBN(size),
-    uint256.uint256ToBN(value)
-  );
+  return new UserPoolInfo(base, quote, type, size, value);
 };

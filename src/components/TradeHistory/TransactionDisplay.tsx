@@ -27,6 +27,8 @@ type SingleItemProps = {
   data: ITradeHistory;
 };
 
+const actionPrefix = "carmine_protocol::amm_core::amm::AMM::";
+
 const capitalToReadable = (type: string, capital: string) => {
   const n = BigInt(capital);
   if (type === "Call") {
@@ -56,7 +58,7 @@ const SingleItem = ({ data }: SingleItemProps) => {
       <TableCell>
         {option && timestampToInsuranceDate(option.maturity * 1000)}
       </TableCell>
-      <TableCell align="left">{action}</TableCell>
+      <TableCell align="left">{action.replace(actionPrefix, "")}</TableCell>
       {option ? (
         <>
           <TableCell align="left">{`${option.sideAsText} ${option.typeAsText}`}</TableCell>
@@ -84,7 +86,9 @@ const SingleItem = ({ data }: SingleItemProps) => {
 export const TransactionTable = ({ transactions }: TransactionTableProps) => {
   const [expanded, setExpanded] = useState(false);
 
-  const size = expanded ? transactions.length : 5;
+  const COLLAPSED_LENGTH = 5;
+
+  const size = expanded ? transactions.length : COLLAPSED_LENGTH;
 
   return (
     <TableContainer component={Paper}>
@@ -109,15 +113,17 @@ export const TransactionTable = ({ transactions }: TransactionTableProps) => {
           {transactions.slice(0, size).map((transaction, i) => (
             <SingleItem data={transaction} key={i} />
           ))}
-          <TableRow>
-            <td
-              onClick={() => setExpanded(!expanded)}
-              colSpan={7}
-              style={{ textAlign: "center", cursor: "pointer" }}
-            >
-              {expanded ? "Show less" : "Show more"}
-            </td>
-          </TableRow>
+          {transactions.length > COLLAPSED_LENGTH && (
+            <TableRow>
+              <td
+                onClick={() => setExpanded(!expanded)}
+                colSpan={7}
+                style={{ textAlign: "center", cursor: "pointer" }}
+              >
+                {expanded ? "Show less" : "Show more"}
+              </td>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>

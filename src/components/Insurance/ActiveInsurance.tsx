@@ -1,5 +1,5 @@
 import { LoadingAnimation } from "../Loading/Loading";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { useAccount } from "../../hooks/useAccount";
@@ -9,6 +9,7 @@ import { OptionWithPosition } from "../../classes/Option";
 import { openCloseOptionDialog, setCloseOption } from "../../redux/actions";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
+import styles from "../../style/button.module.css";
 
 const InsuranceDisplay = ({ option }: { option: OptionWithPosition }) => {
   const txPending = useTxPending(option.id, TransactionAction.TradeClose);
@@ -34,13 +35,13 @@ const InsuranceDisplay = ({ option }: { option: OptionWithPosition }) => {
           Insurance covers {option.size} {symbol} at price ${option.strike} and
           expires {option.dateRich}
         </Typography>
-        <Button
+        <button
+          className={`${styles.button} ${styles.green}`}
           disabled={txPending}
           onClick={handleButtonClick}
-          variant="contained"
         >
           {txPending ? "Processing..." : "Close"}
-        </Button>
+        </button>
       </Box>
     </Box>
   );

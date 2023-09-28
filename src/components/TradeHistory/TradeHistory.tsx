@@ -33,7 +33,7 @@ const TradeHistoryWithAddress = ({ address }: PropsAddress) => {
 
   const sorted = data.sort((a, b) => b.timestamp - a.timestamp);
 
-  debug(sorted);
+  debug("SORTED TRADE HISTORY DATA", sorted);
 
   return <TransactionTable transactions={sorted} />;
 };

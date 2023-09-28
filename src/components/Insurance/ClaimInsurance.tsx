@@ -1,5 +1,5 @@
 import { LoadingAnimation } from "../Loading/Loading";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { useAccount } from "../../hooks/useAccount";
@@ -9,6 +9,8 @@ import { OptionWithPosition } from "../../classes/Option";
 import { tradeSettle } from "../../calls/tradeSettle";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
+import styles from "../../style/button.module.css";
+import { debug } from "../../utils/debugger";
 
 const ClaimItem = ({
   option,
@@ -38,13 +40,13 @@ const ClaimItem = ({
         <Typography>
           You are eligible to claim ${option.value.toFixed(4)}
         </Typography>
-        <Button
+        <button
+          className={`${styles.button} ${styles.green}`}
           onClick={handleButtonClick}
-          variant="contained"
           disabled={txPending}
         >
           {txPending ? "Processing..." : "Claim"}
-        </Button>
+        </button>
       </Box>
     </Box>
   );
@@ -63,6 +65,8 @@ const WithAccount = ({ account }: { account: AccountInterface }) => {
   if (isError || !data) {
     return <Typography>Oh no :O</Typography>;
   }
+
+  debug("INSURANCE OPTIONS", data);
 
   const insurance = data.filter((o) => o.isPut && o.isLong && o.isInTheMoney);
 

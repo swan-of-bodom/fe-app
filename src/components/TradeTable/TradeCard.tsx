@@ -1,12 +1,4 @@
-import {
-  Grid,
-  Typography,
-  Box,
-  Skeleton,
-  TextField,
-  Button,
-  debounce,
-} from "@mui/material";
+import { Skeleton, debounce } from "@mui/material";
 import { LoadingAnimation } from "../Loading/Loading";
 import { useState, useCallback, useEffect } from "react";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
@@ -14,7 +6,7 @@ import { FinancialData } from "../../types/options";
 import { getPremiaWithSlippage, longInteger } from "../../utils/computations";
 import { debug, LogTypes } from "../../utils/debugger";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
-import { timestampToReadableDate, isLong } from "../../utils/utils";
+import { isLong, timestampToReadableDate } from "../../utils/utils";
 import { ProfitGraph } from "../CryptoGraph/ProfitGraph";
 import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
@@ -24,9 +16,11 @@ import { showToast } from "../../redux/actions";
 import { ToastType } from "../../redux/reducers/ui";
 import { UserBalance } from "../../types/wallet";
 import { OptionWithPremia } from "../../classes/Option";
+import style from "./card.module.css";
+import buttonStyles from "../../style/button.module.css";
 
 type TemplateProps = {
-  title: string;
+  option: OptionWithPremia;
   inputText: string;
   handleChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -37,7 +31,7 @@ type TemplateProps = {
 };
 
 export const TradeCardTemplate = ({
-  title,
+  option,
   inputText,
   handleChange,
   Graph,
@@ -45,62 +39,29 @@ export const TradeCardTemplate = ({
   BuyButton,
 }: TemplateProps) => {
   return (
-    <Grid container spacing={2}>
-      <Grid item md={12}>
-        <Typography sx={{ textAlign: "center" }} variant="h6">
-          {title}
-        </Typography>
-      </Grid>
-
-      <Grid item md={7} xs={12}>
-        <Graph />
-      </Grid>
-      <Grid item md={5} xs={12}>
-        <Box
-          sx={{
-            width: "100%",
-            aspectRatio: "5/3",
-            position: "relative",
-          }}
-        >
+    <div className={style.container}>
+      <div className={style.top}>
+        <h4>
+          {option.sideAsText} {option.typeAsText}, strike price ${option.strike}
+        </h4>
+        <h4>Expiry {timestampToReadableDate(option.maturity * 1000)}</h4>
+      </div>
+      <div>
+        <div className={style.left}>
+          <div className={style.graphholder}>
+            <Graph />
+          </div>
+          <div className={style.inputholder}>
+            <span>Option Size</span>
+            <input type="text" value={inputText} onChange={handleChange} />
+          </div>
+        </div>
+        <div className={style.right}>
           <ProfitTable />
-        </Box>
-      </Grid>
-      <Grid item md={7} xs={12}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-          }}
-        >
-          <Typography sx={{ display: "block" }}>Option size</Typography>
-          <TextField
-            id="option-size-input"
-            label="Option size"
-            type="text"
-            size="small"
-            autoFocus
-            value={inputText}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            inputProps={{
-              inputMode: "decimal",
-            }}
-            onChange={handleChange}
-          />
-        </Box>
-      </Grid>
-      <Grid
-        item
-        sx={{ justifyContent: "center", display: "flex" }}
-        md={5}
-        xs={12}
-      >
-        <BuyButton />
-      </Grid>
-    </Grid>
+          <BuyButton />
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -156,23 +117,20 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
-  const { strike, maturity, type, side } = option;
-  const msMaturity = maturity * 1000;
-  const date = timestampToReadableDate(msMaturity);
-  const title = `${option.sideAsText} ${option.typeAsText} with strike price $${strike} expiring on ${date}`;
+  const { strike, type, side } = option;
 
   if (loading || !data) {
     const graph = () => <LoadingAnimation />;
     const profitTable = () => <ProfitTableSkeleton />;
     const buyButton = () => (
       <Skeleton>
-        <Button variant="contained">Buy for ETH 0.00001</Button>
+        <button>Buy for ETH 0.00001</button>
       </Skeleton>
     );
 
     return (
       <TradeCardTemplate
-        title={title}
+        option={option}
         inputText={inputText}
         handleChange={handleChange}
         Graph={graph}
@@ -229,23 +187,19 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     ).catch(() => updateTradeState({ failed: true, processing: false }));
   };
 
-  const buttonText = () =>
-    (isLong(side) ? "Buy" : "Sell") + " for " + displayPremia;
-
   const BuyButton = () => (
-    <Button
-      variant="contained"
+    <button
+      className={`${buttonStyles.button} ${buttonStyles.green}`}
       disabled={tradeState.processing || !account || loading}
-      color={tradeState.failed ? "error" : "primary"}
       onClick={handleBuy}
     >
-      {tradeState.processing ? "Processing..." : buttonText()}
-    </Button>
+      {tradeState.processing ? "Processing..." : isLong(side) ? "Buy" : "Sell"}
+    </button>
   );
 
   return (
     <TradeCardTemplate
-      title={title}
+      option={option}
       inputText={inputText}
       handleChange={handleChange}
       Graph={() => ProfitGraph({ data: graphData })}
