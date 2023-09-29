@@ -1,4 +1,4 @@
-import { Skeleton, debounce } from "@mui/material";
+import { debounce } from "@mui/material";
 import { LoadingAnimation } from "../Loading/Loading";
 import { useState, useCallback, useEffect } from "react";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";

@@ -276,7 +276,8 @@ export class OptionWithPremia extends Option {
     super(base, quote, type, side, maturity, strike);
 
     this.premiaHex = toHex(premia);
-    this.premiaBase = BigInt(this.premiaHex) / BASE_MATH_64;
+    this.premiaBase =
+      (BigInt(this.premiaHex) * 10n ** BigInt(this.digits)) / BASE_MATH_64;
     this.premia = shortInteger(this.premiaBase, this.digits);
   }
 }

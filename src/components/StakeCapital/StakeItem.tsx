@@ -1,10 +1,4 @@
-import {
-  TableCell,
-  TableRow,
-  Tooltip,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { TableCell, TableRow, Typography, useTheme } from "@mui/material";
 import { CSSProperties, useEffect, useState } from "react";
 import { AccountInterface } from "starknet";
 import { handleStake } from "./handleStake";
