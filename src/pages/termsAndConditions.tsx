@@ -1,7 +1,8 @@
 import Typography from "@mui/material/Typography";
-import { Box, Button, Link, useTheme } from "@mui/material";
+import { Box, Link, useTheme } from "@mui/material";
 import { useEffect } from "react";
 import { setCookieWithExpiry } from "../utils/cookies";
+import buttonStyles from "../style/button.module.css";
 
 const HIDE_TIME_MS = 12 * 60 * 60 * 1000; // 12 hours in ms
 
@@ -57,12 +58,12 @@ const TermsAndConditions = ({ check, rerender }: Props) => {
         . It's important to read and understand these terms before using our
         service.
       </Typography>
-      <Button
-        variant="contained"
+      <button
+        className={buttonStyles.button}
         onClick={() => storeTermsAndConditions(check, rerender)}
       >
         Accept Terms and Conditions
-      </Button>
+      </button>
     </Box>
   );
 };
