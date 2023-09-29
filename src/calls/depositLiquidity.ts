@@ -1,9 +1,4 @@
-import {
-  AMM_ADDRESS,
-  AMM_METHODS,
-  ETH_ADDRESS,
-  USDC_ADDRESS,
-} from "../constants/amm";
+import { AMM_ADDRESS, AMM_METHODS } from "../constants/amm";
 import { debug } from "../utils/debugger";
 import { AccountInterface } from "starknet";
 import LpAbi from "../abi/lptoken_abi.json";
@@ -31,8 +26,8 @@ export const depositLiquidity = async (
     entrypoint: AMM_METHODS.DEPOSIT_LIQUIDITY,
     calldata: [
       pool.tokenAddress,
-      USDC_ADDRESS,
-      ETH_ADDRESS,
+      pool.quoteToken.tokenAddress,
+      pool.baseToken.tokenAddress,
       pool.type,
       size,
       "0",

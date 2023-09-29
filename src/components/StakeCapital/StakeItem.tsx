@@ -1,4 +1,10 @@
-import { TableCell, TableRow, Typography, useTheme } from "@mui/material";
+import {
+  TableCell,
+  TableRow,
+  Tooltip,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { CSSProperties, useEffect, useState } from "react";
 import { AccountInterface } from "starknet";
 import { handleStake } from "./handleStake";
@@ -12,6 +18,7 @@ import { TransactionAction } from "../../redux/reducers/transactions";
 import { getPoolState } from "../../calls/getPoolState";
 import buttonStyles from "../../style/button.module.css";
 import inputStyle from "../../style/input.module.css";
+import { TokenKey } from "../../tokens/tokens";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -19,6 +26,11 @@ type Props = {
 };
 
 const getApy = async (setApy: (n: number) => void, pool: Pool) => {
+  // TODO: not yet implemented for BTC
+  if (pool.baseToken.id === TokenKey.BTC) {
+    setApy(0);
+    return;
+  }
   const poolId = pool.isCall ? "eth-usdc-call" : "eth-usdc-put";
   fetch(`https://api.carmine.finance/api/v1/mainnet/${poolId}/apy`)
     .then((response) => response.json())
@@ -33,6 +45,11 @@ const getYieldSinceLaunch = async (
   setYieldSinceLaunch: (n: number) => void,
   pool: Pool
 ) => {
+  // TODO: not yet implemented for BTC
+  if (pool.baseToken.id === TokenKey.BTC) {
+    setYieldSinceLaunch(0);
+    return;
+  }
   const state = await getPoolState(
     pool.isCall ? "eth-usdc-call" : "eth-usdc-put"
   );
@@ -100,10 +117,22 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
         <Typography>{pool.name}</Typography>
       </TableCell>
       <TableCell>
-        <Typography sx={yslSx}>{displayYieldSinceLaunch}</Typography>
+        {pool.baseToken.id === TokenKey.BTC ? (
+          <Tooltip title="Not yet implemented for BTC">
+            <Typography sx={yslSx}>--</Typography>
+          </Tooltip>
+        ) : (
+          <Typography sx={yslSx}>{displayYieldSinceLaunch}</Typography>
+        )}
       </TableCell>
       <TableCell>
-        <Typography sx={apySx}>{displayApy}</Typography>
+        {pool.baseToken.id === TokenKey.BTC ? (
+          <Tooltip title="Not yet implemented for BTC">
+            <Typography sx={yslSx}>--</Typography>
+          </Tooltip>
+        ) : (
+          <Typography sx={apySx}>{displayApy}</Typography>
+        )}
       </TableCell>
       <TableCell sx={{ minWidth: "100px" }} align="center">
         <input

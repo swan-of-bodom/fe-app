@@ -22,6 +22,8 @@ export const StakeCapitalParent = () => {
   const pools = [
     getPoolByPairType(TokenPairKey.EthUsdc, OptionType.Call),
     getPoolByPairType(TokenPairKey.EthUsdc, OptionType.Put),
+    getPoolByPairType(TokenPairKey.BtcUsdc, OptionType.Call),
+    getPoolByPairType(TokenPairKey.BtcUsdc, OptionType.Put),
   ];
 
   const MAINNET_LAUNCH_TIMESTAMP = 1680864820000;
