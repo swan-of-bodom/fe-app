@@ -12,6 +12,7 @@ import {
   ETH_USDC_CALL_ADDRESS,
   ETH_USDC_PUT_ADDRESS,
 } from "../constants/amm";
+import { getUnlockedCapital } from "../calls/getUnlockedCapital";
 
 export class Pool {
   public baseToken: Token;
@@ -31,15 +32,19 @@ export class Pool {
     switch ((this.baseToken.id, this.quoteToken.id, this.type)) {
       case (TokenKey.ETH, TokenKey.USDC, OptionType.Call):
         this.lpAddress = ETH_USDC_CALL_ADDRESS;
+
         break;
       case (TokenKey.ETH, TokenKey.USDC, OptionType.Put):
         this.lpAddress = ETH_USDC_PUT_ADDRESS;
+
         break;
       case (TokenKey.BTC, TokenKey.USDC, OptionType.Call):
         this.lpAddress = BTC_USDC_CALL_ADDRESS;
+
         break;
       case (TokenKey.BTC, TokenKey.USDC, OptionType.Put):
         this.lpAddress = BTC_USDC_PUT_ADDRESS;
+
         break;
       default:
         throw Error(
@@ -73,6 +78,10 @@ export class Pool {
       this.quoteToken.id,
     ]);
     return { base, quote };
+  }
+
+  async getUnlocked() {
+    return getUnlockedCapital(this.lpAddress);
   }
 
   ////////////
@@ -164,6 +173,6 @@ export class UserPoolInfo extends Pool {
     this.valueHex = toHex(value);
     this.valueBase = BigInt(value);
     // value is in digits by type
-    this.value = shortInteger(this.sizeHex, this.digits);
+    this.value = shortInteger(this.valueHex, this.digits);
   }
 }

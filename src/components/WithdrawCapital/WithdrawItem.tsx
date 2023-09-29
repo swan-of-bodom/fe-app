@@ -2,7 +2,6 @@ import {
   ButtonGroup,
   TableCell,
   TableRow,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -10,15 +9,13 @@ import { useState } from "react";
 import { AccountInterface } from "starknet";
 import { withdrawCall } from "./withdrawCall";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
-import { debug } from "../../utils/debugger";
-import { isCall } from "../../utils/utils";
-import { POOL_NAMES } from "../../constants/texts";
 import { showToast } from "../../redux/actions";
 import { ToastType } from "../../redux/reducers/ui";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
 import buttonStyles from "../../style/button.module.css";
 import { UserPoolInfo } from "../../classes/Pool";
+import inputStyle from "../../style/input.module.css";
 
 type Props = {
   userPoolInfo: UserPoolInfo;
@@ -26,57 +23,40 @@ type Props = {
 };
 
 export const WithdrawItem = ({ account, userPoolInfo }: Props) => {
-  const { type, sizeHex, value } = userPoolInfo;
-  // TODO: use proper pool id
-  const txPending = useTxPending(String(type), TransactionAction.Withdraw);
+  const { value } = userPoolInfo;
+
+  const txPending = useTxPending(userPoolInfo.id, TransactionAction.Withdraw);
   const [amount, setAmount] = useState<number>(0);
   const [text, setText] = useState<string>("0");
   const [processing, setProcessing] = useState<boolean>(false);
 
-  const cb = (n: number): number => (n >= 100 ? 100 : n);
-  const handleChange = handleNumericChangeFactory(setText, setAmount, cb);
+  const handleChange = handleNumericChangeFactory(setText, setAmount);
 
-  const precission = 10000n;
-  const relativeSize =
-    (BigInt(amount) * precission * BigInt(sizeHex)) / (100n * precission);
-  debug("Relative size", relativeSize);
   const handleWithdraw = () => {
     if (!amount) {
       showToast("Cannot withdraw 0", ToastType.Warn);
       return;
     }
-    withdrawCall(account, setProcessing, type, relativeSize.toString(10));
+    withdrawCall(account, setProcessing, userPoolInfo, amount);
   };
   const handleWithdrawAll = () =>
-    withdrawCall(account, setProcessing, type, sizeHex);
-
-  const [pool, currency] = isCall(type)
-    ? [POOL_NAMES.CALL, "Ξ"]
-    : [POOL_NAMES.PUT, "$"];
+    withdrawCall(account, setProcessing, userPoolInfo, "all");
 
   const displayDigits = 5;
-  const displayValue = currency + " " + value.toFixed(displayDigits);
 
   return (
     <TableRow>
-      <TableCell>{pool}</TableCell>
+      <TableCell>{userPoolInfo.name}</TableCell>
       <TableCell>
-        <Tooltip title={String(value) === displayValue ? "" : value}>
-          <Typography>{displayValue}</Typography>
+        <Tooltip title={value}>
+          <Typography>{value.toFixed(displayDigits)}</Typography>
         </Tooltip>
       </TableCell>
       <TableCell sx={{ minWidth: "100px" }}>
-        <TextField
-          id="outlined-number"
-          label="Percentage %"
-          size="small"
+        <input
+          className={inputStyle.input}
+          type="text"
           value={text}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            inputMode: "decimal",
-          }}
           onChange={handleChange}
         />
       </TableCell>

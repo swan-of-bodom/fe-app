@@ -1,4 +1,3 @@
-import { Table, TableBody, TableRow, TableCell, Skeleton } from "@mui/material";
 import { OptionWithPremia } from "../../classes/Option";
 import { debug } from "../../utils/debugger";
 import styles from "./profittable.module.css";

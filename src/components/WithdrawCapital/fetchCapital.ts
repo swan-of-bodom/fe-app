@@ -12,7 +12,9 @@ export const fetchCapital = async ({
 
   const userPools = await getUserPoolInfo(address);
 
-  debug("Parsed pools", userPools);
+  const withValue = userPools.filter((pool) => pool.size > 0 && pool.value > 0);
 
-  return userPools;
+  debug("Parsed pools", { userPools, withValue });
+
+  return withValue;
 };

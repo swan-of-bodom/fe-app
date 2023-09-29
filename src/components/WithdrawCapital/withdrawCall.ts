@@ -1,18 +1,9 @@
 import { AccountInterface } from "starknet";
-import {
-  AMM_ADDRESS,
-  AMM_METHODS,
-  ETH_ADDRESS,
-  ETH_USDC_CALL_ADDRESS,
-  ETH_USDC_PUT_ADDRESS,
-  USDC_ADDRESS,
-} from "../../constants/amm";
-import { OptionType } from "../../types/options";
+import { AMM_ADDRESS, AMM_METHODS } from "../../constants/amm";
 import { debug } from "../../utils/debugger";
 import AmmAbi from "../../abi/amm_abi.json";
 import { invalidateStake } from "../../queries/client";
 import { afterTransaction } from "../../utils/blockchain";
-import { isCall } from "../../utils/utils";
 import {
   addTx,
   markTxAsDone,
@@ -21,38 +12,48 @@ import {
 } from "../../redux/actions";
 import { ToastType } from "../../redux/reducers/ui";
 import { TransactionAction } from "../../redux/reducers/transactions";
-import { getUnlockedCapital } from "../../calls/getUnlockedCapital";
+import { UserPoolInfo } from "../../classes/Pool";
+import { toHex } from "../../utils/utils";
+
+const calculateTokens = (
+  pool: UserPoolInfo,
+  amount: number
+): [bigint, bigint] => {
+  // amount * digits / value = percentage to withdraw
+  // percentage * size = tokens to withdraw
+  const NUM_PRECISSION = 1_000_000;
+
+  const percentageWithPrecission =
+    (BigInt(amount * NUM_PRECISSION) * 10n ** BigInt(pool.digits)) /
+    pool.valueBase;
+
+  const tokens =
+    (percentageWithPrecission * pool.sizeBase) / BigInt(NUM_PRECISSION);
+
+  const value =
+    (percentageWithPrecission * pool.valueBase) / BigInt(NUM_PRECISSION);
+
+  return [tokens, value];
+};
 
 export const withdrawCall = async (
   account: AccountInterface,
   setProcessing: (b: boolean) => void,
-  type: OptionType,
-  size: string
+  pool: UserPoolInfo,
+  amount: number | "all"
 ) => {
   setProcessing(true);
 
-  if (!size) {
-    return;
-  }
+  const unlocked = await pool.getUnlocked();
 
-  const call = isCall(type);
-
-  const unlocked = await getUnlockedCapital(
-    call ? ETH_USDC_CALL_ADDRESS : ETH_USDC_PUT_ADDRESS
-  ).catch(() => {
-    return undefined;
-  });
-
-  if (unlocked === undefined) {
-    setProcessing(false);
-    return;
-  }
-
-  debug({ unlocked, size });
+  const [tokens, value] =
+    amount === "all"
+      ? [pool.sizeBase, pool.valueBase]
+      : calculateTokens(pool, amount);
 
   // if withdrawing more than unlocked
   // show dialog and stop transaction
-  if (BigInt(size) > unlocked) {
+  if (value > unlocked) {
     debug("Withdrawing more than unlocked");
     openNotEnoughUnlockedCapitalDialog();
     setProcessing(false);
@@ -60,19 +61,22 @@ export const withdrawCall = async (
   }
 
   const calldata = [
-    call ? ETH_ADDRESS : USDC_ADDRESS,
-    USDC_ADDRESS,
-    ETH_ADDRESS,
-    "0x" + type,
-    size,
+    pool.underlying.tokenAddress,
+    pool.quoteToken.tokenAddress,
+    pool.baseToken.tokenAddress,
+    pool.type,
+    toHex(tokens),
     "0", // uint256 trailing 0
   ];
+
   const withdraw = {
     contractAddress: AMM_ADDRESS,
     entrypoint: AMM_METHODS.WITHDRAW_LIQUIDITY,
     calldata,
   };
+
   debug(`Calling ${AMM_METHODS.WITHDRAW_LIQUIDITY}`, withdraw);
+
   const res = await account.execute(withdraw, [AmmAbi]).catch((e) => {
     debug("Withdraw rejected by user or failed\n", e.message);
     setProcessing(false);
@@ -80,8 +84,8 @@ export const withdrawCall = async (
 
   if (res?.transaction_hash) {
     const hash = res.transaction_hash;
-    // TODO: add proper id per pool
-    addTx(hash, String(type), TransactionAction.Withdraw);
+
+    addTx(hash, pool.id, TransactionAction.Withdraw);
     afterTransaction(res.transaction_hash, () => {
       invalidateStake();
       setProcessing(false);
