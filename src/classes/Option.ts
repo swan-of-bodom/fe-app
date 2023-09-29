@@ -5,7 +5,7 @@ import {
   toHex,
 } from "../utils/utils";
 import { OptionSide, FinancialData, OptionStruct } from "../types/options";
-import { BASE_MATH_64 } from "../constants/amm";
+import { BASE_DIGITS, BASE_MATH_64 } from "../constants/amm";
 import { Pool } from "./Pool";
 import { shortInteger } from "../utils/computations";
 import { BigNumberish } from "starknet";
@@ -240,8 +240,10 @@ export class OptionWithPosition extends Option {
 
     this.sizeHex = toHex(size);
     this.valueHex = toHex(value);
-    this.size = shortInteger(this.sizeHex, this.digits);
-    this.value = Number(BigInt(this.valueHex) / BASE_MATH_64);
+    // size is Carmine token - always 18 digits
+    this.size = shortInteger(this.sizeHex, BASE_DIGITS);
+    this.value =
+      Number((BigInt(this.valueHex) * 1_000_000n) / BASE_MATH_64) / 1_000_000;
   }
 
   get fullSize(): string {

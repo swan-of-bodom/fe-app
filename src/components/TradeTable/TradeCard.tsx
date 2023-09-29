@@ -123,9 +123,9 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     const graph = () => <LoadingAnimation />;
     const profitTable = () => <ProfitTableSkeleton symbol={option.symbol} />;
     const buyButton = () => (
-      <Skeleton>
-        <button>Buy for ETH 0.00001</button>
-      </Skeleton>
+      <button className={`${buttonStyles.button}`} disabled>
+        Loading...
+      </button>
     );
 
     return (

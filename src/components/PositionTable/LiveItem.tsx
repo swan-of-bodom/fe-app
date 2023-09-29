@@ -5,6 +5,7 @@ import { openCloseOptionDialog, setCloseOption } from "../../redux/actions";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
 import buttonStyles from "../../style/button.module.css";
+import { debug } from "../../utils/debugger";
 
 type Props = {
   option: OptionWithPosition;
@@ -13,15 +14,14 @@ type Props = {
 export const LiveItem = ({ option }: Props) => {
   const txPending = useTxPending(option.id, TransactionAction.TradeClose);
   const { strike, maturity, size, value } = option;
-  const msMaturity = maturity * 1000;
 
-  const date = timestampToReadableDate(msMaturity);
+  debug("LIVE OPTION", option);
+
+  const date = timestampToReadableDate(maturity * 1000);
 
   const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strike}`;
   const sizeTooltipMessage = BigInt(option.sizeHex).toString(10) + " tokens";
   const decimals = 4;
-  const timeNow = new Date().getTime();
-  const isExpired = msMaturity - timeNow <= 0;
 
   const handleClick = () => {
     setCloseOption(option);
@@ -31,7 +31,7 @@ export const LiveItem = ({ option }: Props) => {
   return (
     <TableRow>
       <TableCell>{desc}</TableCell>
-      <TableCell>{isExpired ? `Expired on ${date}` : date}</TableCell>
+      <TableCell>{option.isExpired ? `Expired on ${date}` : date}</TableCell>
       <TableCell>
         <Tooltip title={sizeTooltipMessage}>
           <span>{size.toFixed(decimals)}</span>
