@@ -1,3 +1,4 @@
+import { Tooltip } from "@mui/material";
 import { OptionWithPremia } from "../../classes/Option";
 import { debug } from "../../utils/debugger";
 import styles from "./profittable.module.css";
@@ -6,6 +7,8 @@ type ProfitTableTemplateProps = {
   limited: string;
   unlimited: string;
   breakEven: string;
+  price: number;
+  symbol: string;
   isLong: boolean;
 };
 
@@ -13,6 +16,8 @@ const ProfitTableTemplate = ({
   limited,
   unlimited,
   breakEven,
+  price,
+  symbol,
   isLong,
 }: ProfitTableTemplateProps) => (
   <div className={styles.container}>
@@ -29,17 +34,21 @@ const ProfitTableTemplate = ({
       <span>{breakEven}</span>
     </div>
     <div className={styles.row}>
-      <span>Total in ETH</span>
-      <span>0.00123</span>
+      <span>Total in {symbol}</span>
+      <Tooltip title={`${symbol} ${price}`}>
+        <span>{price.toFixed(4)}</span>
+      </Tooltip>
     </div>
   </div>
 );
 
-export const ProfitTableSkeleton = () => (
+export const ProfitTableSkeleton = ({ symbol }: { symbol: string }) => (
   <ProfitTableTemplate
     limited="Calculating..."
     unlimited="Calculating..."
     breakEven="Calculating..."
+    price={0}
+    symbol={symbol}
     isLong={true}
   />
 );
@@ -47,12 +56,14 @@ export const ProfitTableSkeleton = () => (
 type ProfitTableProps = {
   option: OptionWithPremia;
   basePremia: number;
+  price: number;
   premia: number;
 };
 
 export const ProfitTable = ({
   option,
   basePremia,
+  price,
   premia,
 }: ProfitTableProps) => {
   const limited = "$" + premia.toFixed(2);
@@ -63,13 +74,15 @@ export const ProfitTable = ({
       ? option.strike + basePremia
       : option.strike - basePremia
     ).toFixed(2);
-  debug({ strk: option.strike, breakEven });
+  debug({ strike: option.strike, breakEven, basePremia });
 
   return (
     <ProfitTableTemplate
       limited={limited}
       unlimited={unlimited}
       breakEven={breakEven}
+      price={price}
+      symbol={option.symbol}
       isLong={option.isLong}
     />
   );

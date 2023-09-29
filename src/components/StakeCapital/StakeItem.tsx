@@ -1,7 +1,6 @@
 import {
   TableCell,
   TableRow,
-  TextField,
   Tooltip,
   Typography,
   useTheme,
@@ -18,6 +17,7 @@ import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
 import { getPoolState } from "../../calls/getPoolState";
 import buttonStyles from "../../style/button.module.css";
+import inputStyle from "../../style/input.module.css";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -97,6 +97,9 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
     pool.isCall ? openCallWidoDialog() : openPutWidoDialog();
   };
 
+  const handleStakeClick = () =>
+    handleStake(account!, amount, pool, setLoading);
+
   return (
     <TableRow>
       <TableCell sx={{ whiteSpace: "nowrap" }}>
@@ -109,22 +112,15 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
         <Typography sx={apySx}>{displayApy}</Typography>
       </TableCell>
       <TableCell sx={{ minWidth: "100px" }} align="center">
-        <TextField
-          id="outlined-number"
-          label="Amount"
-          size="small"
+        <input
+          className={inputStyle.input}
+          type="text"
           value={text}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            inputMode: "decimal",
-          }}
           onChange={handleChange}
         />
       </TableCell>
       <TableCell sx={{ display: "flex", alignItems: "center" }} align="right">
-        <Tooltip title="Stake from L1 directly to our liquidity pool - requires MetaMask">
+        {/* <Tooltip title="Stake from L1 directly to our liquidity pool - requires MetaMask">
           <button
             className={`${buttonStyles.button} ${buttonStyles.secondary}`}
             style={{ whiteSpace: "nowrap" }}
@@ -132,12 +128,12 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
           >
             Stake from L1
           </button>
-        </Tooltip>
+        </Tooltip> */}
         <button
-          style={{ borderRight: 0 }}
+          // style={{ borderRight: 0 }}
           className={`${buttonStyles.button} ${buttonStyles.secondary}`}
           disabled={loading || !account || txPending}
-          onClick={() => handleStake(account!, amount, pool, setLoading)}
+          onClick={handleStakeClick}
         >
           {loading || txPending
             ? "Processing..."

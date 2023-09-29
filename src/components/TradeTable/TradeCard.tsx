@@ -121,7 +121,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
 
   if (loading || !data) {
     const graph = () => <LoadingAnimation />;
-    const profitTable = () => <ProfitTableSkeleton />;
+    const profitTable = () => <ProfitTableSkeleton symbol={option.symbol} />;
     const buyButton = () => (
       <Skeleton>
         <button>Buy for ETH 0.00001</button>
@@ -142,8 +142,6 @@ export const TradeCard = ({ option }: TradeCardProps) => {
 
   const premia = option.isCall ? data.premiaBase : data.premiaQuote;
   const currentPremia = longInteger(premia, option.digits);
-
-  const displayPremia = `${option.symbol} ${premia.toFixed(5)}`;
 
   const graphData = getProfitGraphData(
     type,
@@ -207,6 +205,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
         ProfitTable({
           premia: data.premiaUsd,
           basePremia: data.sizeOnePremiaUsd,
+          price: premia,
           option,
         })
       }
