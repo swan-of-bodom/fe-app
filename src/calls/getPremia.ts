@@ -16,6 +16,9 @@ export const getPremia = async (
 
   const calldata = [option.struct, convertedSize, isClosing];
 
+  debug("GET_TOTAL_PREMIA", calldata);
+  debug("STRINGIFIED", JSON.stringify(calldata));
+
   const res = await AMMContract.call(
     method,
     calldata,

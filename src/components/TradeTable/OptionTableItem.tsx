@@ -1,5 +1,5 @@
 import { OptionWithPremia } from "../../classes/Option";
-import { isCall, timestampToReadableDate } from "../../utils/utils";
+import { timestampToReadableDate } from "../../utils/utils";
 import { TableCell, TableRow, useTheme } from "@mui/material";
 
 type OptionPreviewProps = {
@@ -24,14 +24,13 @@ const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
   const date = timestampToReadableDate(msMaturity);
 
   const displayPremia = option.premia.toFixed(4);
-  const currency = isCall(type) ? "ETH" : "USD";
 
   return (
     <TableRow sx={style} onClick={handleClick}>
       <TableCell sx={{ borderBottom: "1px solid white" }}>${strike}</TableCell>
       <TableCell sx={{ borderBottom: "1px solid white" }}>{date}</TableCell>
       <TableCell sx={{ borderBottom: "1px solid white" }}>
-        {currency} {displayPremia}
+        {option.symbol} {displayPremia}
       </TableCell>
       <TableCell sx={{ textAlign: "center", borderBottom: "1px solid white" }}>
         <span style={{ color: "#00FF38", fontSize: "20px" }}>+</span>

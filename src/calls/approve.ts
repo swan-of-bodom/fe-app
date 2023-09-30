@@ -1,21 +1,15 @@
-import {
-  AMM_ADDRESS,
-  AMM_METHODS,
-  ETH_ADDRESS,
-  USDC_ADDRESS,
-} from "../constants/amm";
+import { AMM_ADDRESS, AMM_METHODS } from "../constants/amm";
 import { AccountInterface } from "starknet";
 import LpAbi from "../abi/lptoken_abi.json";
 import { debug, LogTypes } from "../utils/debugger";
-import { OptionType } from "../types/options";
-import { isCall } from "../utils/utils";
+import { Option } from "../classes/Option";
 
 export const approve = async (
-  type: OptionType,
+  option: Option,
   account: AccountInterface,
   amount: string
 ) => {
-  const contractAddress = isCall(type) ? ETH_ADDRESS : USDC_ADDRESS;
+  const contractAddress = option.underlying.tokenAddress;
   try {
     const call = {
       contractAddress,

@@ -52,6 +52,7 @@ type PoolLimit = {
 };
 
 export const poolLimit = async (lpoolAddress: string): Promise<PoolLimit> => {
+  // TODO: abstract addresses away
   if (
     lpoolAddress !== ETH_USDC_CALL_ADDRESS &&
     lpoolAddress !== ETH_USDC_PUT_ADDRESS
