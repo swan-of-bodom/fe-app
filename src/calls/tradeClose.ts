@@ -34,11 +34,20 @@ export const tradeClose = async (
 
     debug({ premiaWithSlippage, premia });
 
+    const calldata = [
+      ...option.tradeCalldata(size),
+      premiaWithSlippage,
+      "0", // cubit false
+      deadline,
+    ];
+
     const call = {
       contractAddress: AMM_ADDRESS,
       entrypoint: AMM_METHODS.TRADE_CLOSE,
-      calldata: [...option.tradeCalldata(size), premiaWithSlippage, deadline],
+      calldata,
     };
+
+    debug("CLOSING", calldata);
 
     debug("Executing following call:", call);
     const res = await account.execute(call, [AmmAbi]);

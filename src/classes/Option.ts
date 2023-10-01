@@ -1,11 +1,11 @@
-import { bnToOptionSide } from "../utils/conversions";
+import { bnToOptionSide, convertSizeToInt } from "../utils/conversions";
 import {
   timestampToReadableDate,
   timestampToShortTimeDate,
   toHex,
 } from "../utils/utils";
 import { OptionSide, FinancialData, OptionStruct } from "../types/options";
-import { BASE_DIGITS, BASE_MATH_64 } from "../constants/amm";
+import { BASE_MATH_64 } from "../constants/amm";
 import { Pool } from "./Pool";
 import { shortInteger } from "../utils/computations";
 import { BigNumberish } from "starknet";
@@ -55,17 +55,8 @@ export class Option extends Pool {
     });
   }
 
-  numericSizeToUnderying(n: number): string {
-    const PRECISSION = 1_000_000;
-    return (
-      (BigInt(n * PRECISSION) * 10n ** BigInt(this.digits)) /
-      BigInt(PRECISSION)
-    ).toString(10);
-  }
-
   tradeCalldata(size: string | number): string[] {
-    const targetSize =
-      typeof size === "string" ? size : this.numericSizeToUnderying(size);
+    const targetSize = typeof size === "string" ? size : convertSizeToInt(size);
     return [
       this.type,
       this.strikeHex, // cubit
@@ -250,7 +241,7 @@ export class OptionWithPosition extends Option {
     this.sizeHex = toHex(size);
     this.valueHex = toHex(value);
     // size is Carmine token - always 18 digits
-    this.size = shortInteger(this.sizeHex, BASE_DIGITS);
+    this.size = shortInteger(this.sizeHex, this.baseToken.decimals);
     this.value =
       Number((BigInt(this.valueHex) * 1_000_000n) / BASE_MATH_64) / 1_000_000;
   }
