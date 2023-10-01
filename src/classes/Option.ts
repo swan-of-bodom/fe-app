@@ -1,4 +1,4 @@
-import { bnToOptionSide, convertSizeToInt } from "../utils/conversions";
+import { bnToOptionSide } from "../utils/conversions";
 import {
   timestampToReadableDate,
   timestampToShortTimeDate,
@@ -7,7 +7,7 @@ import {
 import { OptionSide, FinancialData, OptionStruct } from "../types/options";
 import { BASE_MATH_64 } from "../constants/amm";
 import { Pool } from "./Pool";
-import { shortInteger } from "../utils/computations";
+import { longInteger, shortInteger } from "../utils/computations";
 import { BigNumberish } from "starknet";
 import { Cubit } from "../types/units";
 
@@ -55,15 +55,20 @@ export class Option extends Pool {
     });
   }
 
-  tradeCalldata(size: string | number): string[] {
-    const targetSize = typeof size === "string" ? size : convertSizeToInt(size);
+  tradeCalldata(size: number | string): string[] {
+    // base token digits
+    const convertedSize =
+      typeof size === "string"
+        ? // string is for full size closing
+          size
+        : longInteger(size, this.baseToken.decimals).toString(10);
     return [
       this.type,
       this.strikeHex, // cubit
       "0", // cubit - false
       this.maturityHex,
       this.side,
-      toHex(targetSize),
+      convertedSize,
       this.quoteToken.tokenAddress,
       this.baseToken.tokenAddress,
     ];

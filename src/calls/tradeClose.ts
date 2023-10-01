@@ -47,9 +47,8 @@ export const tradeClose = async (
       calldata,
     };
 
-    debug("CLOSING", calldata);
+    debug("TRADE CLOSE", calldata);
 
-    debug("Executing following call:", call);
     const res = await account.execute(call, [AmmAbi]);
     if (res?.transaction_hash) {
       const hash = res.transaction_hash;

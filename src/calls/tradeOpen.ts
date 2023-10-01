@@ -67,15 +67,19 @@ export const approveAndTradeOpen = async (
   // one hour from now
   const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
 
+  const calldata = [
+    ...option.tradeCalldata(size),
+    intToMath64x61(premia.toString(10), option.digits), // cubit
+    "0", // cubit false
+    deadline,
+  ];
+
+  debug("TRADE OPEN CALLDATA", calldata);
+
   const tradeOpenArgs = {
     contractAddress: AMM_ADDRESS,
     entrypoint: AMM_METHODS.TRADE_OPEN,
-    calldata: [
-      ...option.tradeCalldata(size),
-      intToMath64x61(premia.toString(10), option.digits), // cubit
-      "0", // cubit false
-      deadline,
-    ],
+    calldata,
   };
 
   const res = await account
@@ -84,8 +88,6 @@ export const approveAndTradeOpen = async (
       debug("Trade open rejected or failed", e.message);
       throw Error("Trade open rejected or failed");
     });
-
-  debug("Done trading", res);
 
   if (res?.transaction_hash) {
     const hash = res.transaction_hash;
