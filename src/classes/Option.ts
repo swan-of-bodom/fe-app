@@ -1,4 +1,4 @@
-import { bnToOptionSide, convertSizeToInt } from "../utils/conversions";
+import { bnToOptionSide } from "../utils/conversions";
 import {
   timestampToReadableDate,
   timestampToShortTimeDate,
@@ -55,15 +55,24 @@ export class Option extends Pool {
     });
   }
 
+  numericSizeToUnderying(n: number): string {
+    const PRECISSION = 1_000_000;
+    return (
+      (BigInt(n * PRECISSION) * 10n ** BigInt(this.digits)) /
+      BigInt(PRECISSION)
+    ).toString(10);
+  }
+
   tradeCalldata(size: string | number): string[] {
-    const targetSize = typeof size === "number" ? convertSizeToInt(size) : size;
+    const targetSize =
+      typeof size === "string" ? size : this.numericSizeToUnderying(size);
     return [
       this.type,
       this.strikeHex, // cubit
       "0", // cubit - false
       this.maturityHex,
       this.side,
-      targetSize,
+      toHex(targetSize),
       this.quoteToken.tokenAddress,
       this.baseToken.tokenAddress,
     ];
