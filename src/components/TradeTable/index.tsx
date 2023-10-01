@@ -1,5 +1,12 @@
 import { OptionSide, OptionType } from "../../types/options";
-import { Box, TableContainer, useTheme } from "@mui/material";
+import {
+  Box,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TableContainer,
+  useTheme,
+} from "@mui/material";
 import { useState } from "react";
 import OptionsTable from "./OptionsTable";
 import { isCall, isLong } from "../../utils/utils";
@@ -10,6 +17,8 @@ import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { OptionWithPremia } from "../../classes/Option";
 import styles from "../../style/button.module.css";
+import { selectNoBorder } from "../../style/sx";
+import { TokenPairKey } from "../../tokens/tokens";
 
 const getText = (type: OptionType, side: OptionSide) =>
   `We currently do not have any ${isLong(side) ? "long" : "short"} ${
@@ -55,7 +64,22 @@ const TradeTable = () => {
     data ? data[1] : OptionType.Call
   );
   const [typeSet, setTypeSet] = useState(false);
+
+  const [pair, setPair] = useState<TokenPairKey>(TokenPairKey.EthUsdc);
+
   const theme = useTheme();
+
+  const handlePairChange = (event: SelectChangeEvent) => {
+    if (event.target.value === TokenPairKey.EthUsdc) {
+      setPair(TokenPairKey.EthUsdc);
+      return;
+    }
+    if (event.target.value === TokenPairKey.BtcUsdc) {
+      setPair(TokenPairKey.BtcUsdc);
+
+      return;
+    }
+  };
 
   if (!typeSet && data && data[1]) {
     setCallPut(data[1]);
@@ -64,7 +88,11 @@ const TradeTable = () => {
 
   const filtered = data
     ? data[0].filter(
-        (option) => option.isFresh && option.isSide(side) && option.isType(type)
+        (option) =>
+          option.isFresh &&
+          option.isSide(side) &&
+          option.isType(type) &&
+          option.isPair(pair)
       )
     : [];
 
@@ -86,6 +114,16 @@ const TradeTable = () => {
           marginTop: "100px",
         }}
       >
+        <div>
+          <Select sx={selectNoBorder} value={pair} onChange={handlePairChange}>
+            <MenuItem value={TokenPairKey.EthUsdc}>
+              {TokenPairKey.EthUsdc}
+            </MenuItem>
+            <MenuItem value={TokenPairKey.BtcUsdc}>
+              {TokenPairKey.BtcUsdc}
+            </MenuItem>
+          </Select>
+        </div>
         <div className={styles.container}>
           <button
             className={isLong(side) ? styles.active : "non-active"}

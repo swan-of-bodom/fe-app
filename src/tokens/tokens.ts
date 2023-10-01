@@ -26,8 +26,8 @@ export enum TokenKey {
 }
 
 export enum TokenPairKey {
-  EthUsdc = "EthUsdc",
-  BtcUsdc = "BtcUsdc",
+  EthUsdc = "ETH / USDC",
+  BtcUsdc = "BTC / USDC",
 }
 
 export type TokensList = {
@@ -81,11 +81,11 @@ export const tokens: Token[] = [
 ];
 
 export const tokenPairList: TokenPairList = {
-  EthUsdc: {
+  [TokenPairKey.EthUsdc]: {
     base: tokensList[TokenKey.ETH],
     quote: tokensList[TokenKey.USDC],
   },
-  BtcUsdc: {
+  [TokenPairKey.BtcUsdc]: {
     base: tokensList[TokenKey.BTC],
     quote: tokensList[TokenKey.USDC],
   },

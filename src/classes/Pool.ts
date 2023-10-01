@@ -1,6 +1,11 @@
 import { bnToOptionType } from "../utils/conversions";
 import { OptionType } from "../types/options";
-import { Token, TokenKey, getTokenByAddress } from "../tokens/tokens";
+import {
+  Token,
+  TokenKey,
+  TokenPairKey,
+  getTokenByAddress,
+} from "../tokens/tokens";
 import { getMultipleTokensValueInUsd } from "../tokens/tokenPrices";
 import { BigNumberish } from "starknet";
 import { toHex } from "../utils/utils";
@@ -18,7 +23,7 @@ export class Pool {
   public baseToken: Token;
   public quoteToken: Token;
   public type: OptionType;
-  public pair: string;
+  public pair: TokenPairKey;
   public lpAddress: string;
   public id: string;
 
@@ -27,23 +32,26 @@ export class Pool {
     this.quoteToken = getTokenByAddress(quote);
     this.type = bnToOptionType(type);
     this.id = this.generateId();
-    this.pair = this.baseToken.id + this.quoteToken.id;
 
-    switch ((this.baseToken.id, this.quoteToken.id, this.type)) {
-      case (TokenKey.ETH, TokenKey.USDC, OptionType.Call):
+    switch (this.baseToken.id + this.quoteToken.id + this.type) {
+      case TokenKey.ETH + TokenKey.USDC + OptionType.Call:
         this.lpAddress = ETH_USDC_CALL_ADDRESS;
+        this.pair = TokenPairKey.EthUsdc;
 
         break;
-      case (TokenKey.ETH, TokenKey.USDC, OptionType.Put):
+      case TokenKey.ETH + TokenKey.USDC + OptionType.Put:
         this.lpAddress = ETH_USDC_PUT_ADDRESS;
+        this.pair = TokenPairKey.EthUsdc;
 
         break;
-      case (TokenKey.BTC, TokenKey.USDC, OptionType.Call):
+      case TokenKey.BTC + TokenKey.USDC + OptionType.Call:
         this.lpAddress = BTC_USDC_CALL_ADDRESS;
+        this.pair = TokenPairKey.BtcUsdc;
 
         break;
-      case (TokenKey.BTC, TokenKey.USDC, OptionType.Put):
+      case TokenKey.BTC + TokenKey.USDC + OptionType.Put:
         this.lpAddress = BTC_USDC_PUT_ADDRESS;
+        this.pair = TokenPairKey.BtcUsdc;
 
         break;
       default:
@@ -82,6 +90,10 @@ export class Pool {
 
   async getUnlocked() {
     return getUnlockedCapital(this.lpAddress);
+  }
+
+  isPair(key: TokenPairKey): boolean {
+    return this.pair === key;
   }
 
   ////////////
