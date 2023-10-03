@@ -44,7 +44,14 @@ export const approveAndTradeOpen = async (
       shortInteger(balance[tokenId].toString(10), option.digits),
       toApproveNumber,
     ];
-    debug({ size, premiaMath64, has, needs });
+    debug({
+      size,
+      premiaMath64,
+      premiaTokenCount,
+      toApproveNumber,
+      has,
+      needs,
+    });
     showToast(
       `To open this position you need ${option.symbol}\u00A0${Number(
         needs

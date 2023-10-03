@@ -1,21 +1,14 @@
 import { OptionSide } from "../types/options";
 import { Decimal } from "../types/units";
-import { ETH_DIGITS, USDC_DIGITS } from "../constants/amm";
 import { store } from "../redux/store";
 import { isLong } from "./utils";
 import { BigNumberish } from "starknet";
 import { Option } from "../classes/Option";
 
-type GetApproveAmount = (
-  size: number,
-  premia: bigint,
-  strike?: number
-) => bigint;
-
 export const PRECISION = 10000;
 
-const shortCall: GetApproveAmount = (size, premia) => {
-  const base = longInteger(size, ETH_DIGITS);
+const shortCall = (size: number, premia: bigint, digits: number): bigint => {
+  const base = longInteger(size, digits);
 
   const res = base - premia;
 
@@ -28,11 +21,16 @@ const shortCall: GetApproveAmount = (size, premia) => {
   return res;
 };
 
-const shortPut: GetApproveAmount = (size, premia, strike) => {
+const shortPut = (
+  size: number,
+  premia: bigint,
+  strike: number,
+  digits: number
+): bigint => {
   if (!strike) {
     throw new Error("Short Put get to approve did not receive strike price");
   }
-  const base = longInteger(size * strike, USDC_DIGITS);
+  const base = longInteger(size * strike, digits);
 
   return base - premia;
 };
@@ -67,12 +65,12 @@ export const getToApprove = (
 
   if (option.isCall) {
     // short call - locked capital minus premia with slippage
-    return shortCall(size, premia);
+    return shortCall(size, premia, option.digits);
   }
 
   // short put - locked capital minus premia with slippage
   // locked capital is size * strike price
-  return shortPut(size, premia, option.strike);
+  return shortPut(size, premia, option.strike, option.digits);
 };
 
 export const longInteger = (n: Decimal, digits: number): bigint => {
