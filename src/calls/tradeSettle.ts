@@ -1,4 +1,3 @@
-import { AMM_ADDRESS, AMM_METHODS } from "../constants/amm";
 import AmmAbi from "../abi/amm_abi.json";
 import { AccountInterface } from "starknet";
 import { OptionWithPosition } from "../classes/Option";
@@ -13,16 +12,10 @@ export const tradeSettle = async (
   option: OptionWithPosition
 ) => {
   try {
-    const call = {
-      contractAddress: AMM_ADDRESS,
-      entrypoint: AMM_METHODS.TRADE_SETTLE,
-      calldata: option.tradeCalldata(option.fullSize),
-    };
-    debug("Executing following call:", call);
-    const res = await account.execute(call, [AmmAbi]);
+    const res = await account.execute(option.tradeSettleCalldata, [AmmAbi]);
     if (res?.transaction_hash) {
       const hash = res.transaction_hash;
-      addTx(hash, option.id, TransactionAction.Settle);
+      addTx(hash, option.optionId, TransactionAction.Settle);
       afterTransaction(
         res.transaction_hash,
         () => {

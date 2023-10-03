@@ -28,7 +28,7 @@ export const decimalToMath64x61 = (n: Decimal): Math64x61 => {
 export const math64x61ToInt = (n: BigNumberish, digits: number): Int =>
   ((BigInt(n) * 10n ** BigInt(digits)) / BASE_MATH_64).toString(10);
 
-export const intToMath64x61 = (n: Int, digits: number): Math64x61 =>
+export const intToMath64x61 = (n: BigNumberish, digits: number): Math64x61 =>
   ((BigInt(n) * BASE_MATH_64) / 10n ** BigInt(digits)).toString(10);
 
 export const decimalToUint256 = (n: Decimal, digits: number): uint256.Uint256 =>

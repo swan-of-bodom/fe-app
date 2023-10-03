@@ -1,8 +1,8 @@
 import { UserBalance } from "./../types/wallet";
 import { AccountInterface, Contract } from "starknet";
 import ABI from "../abi/lptoken_abi.json";
-import { TokenKey } from "../tokens/tokens";
 import { BTC_ADDRESS, ETH_ADDRESS, USDC_ADDRESS } from "../constants/amm";
+import { TokenKey } from "../classes/Token";
 
 const CARM_TOKEN_ADDRESS =
   "0x3c0286e9e428a130ae7fbbe911b794e8a829c367dd788e7cfe3efb0367548fa";

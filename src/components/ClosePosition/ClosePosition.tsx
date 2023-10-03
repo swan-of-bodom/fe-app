@@ -1,10 +1,4 @@
-import {
-  Box,
-  ButtonGroup,
-  Skeleton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { useCloseOption } from "../../hooks/useCloseOption";
 import { usePremiaQuery } from "../../hooks/usePremiaQuery";
@@ -20,6 +14,7 @@ import { store } from "../../redux/store";
 import { useCurrency } from "../../hooks/useCurrency";
 import { OptionWithPosition } from "../../classes/Option";
 import buttonStyles from "../../style/button.module.css";
+import inputStyles from "../../style/input.module.css";
 
 const premiaToDisplayValue = (
   premia: number,
@@ -72,33 +67,19 @@ const Template = ({
           alignItems: "center",
         }}
       >
-        <TextField
-          id="close-position-input"
-          label="Size"
-          type="numeric"
-          size="small"
+        <input
+          className={inputStyles.input}
+          style={{ margin: "16px", minWidth: "200px" }}
+          type="text"
           value={inputText}
-          autoFocus
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            inputMode: "decimal",
-          }}
-          sx={{ m: 2 }}
           onChange={handleChange}
         />
-        <ButtonGroup
-          variant="contained"
-          aria-label="outlined primary button group"
+        <button
+          className={`${buttonStyles.button} ${buttonStyles.secondary}`}
+          onClick={() => handleClick(max)}
         >
-          <button
-            className={buttonStyles.button}
-            onClick={() => handleClick(max)}
-          >
-            Max
-          </button>
-        </ButtonGroup>
+          Max
+        </button>
       </Box>
       {children}
     </>
@@ -119,7 +100,11 @@ const WithOption = ({ option }: Props) => {
   const [inputText, setInputText] = useState<string>(String(max));
   const debouncedSize = useDebounce<number>(size);
 
-  const { data, error, isFetching } = usePremiaQuery(option, size, true);
+  const {
+    data: premiaMath64,
+    error,
+    isFetching,
+  } = usePremiaQuery(option, size, true);
 
   const cb = (n: number) => (n > max ? max : n);
   const handleChange = handleNumericChangeFactory(setInputText, setSize, cb);
@@ -181,14 +166,30 @@ const WithOption = ({ option }: Props) => {
         inputText={inputText}
         max={max}
       >
-        <Skeleton variant="text" />
-        <Skeleton variant="text" />
-        <Skeleton variant="text" height="50px" />
+        <Box
+          sx={{
+            display: "flex",
+            flexFlow: "column",
+          }}
+        >
+          <Box
+            sx={{
+              my: 3,
+            }}
+          >
+            <Box>
+              <Typography>Loading...</Typography>
+            </Box>
+          </Box>
+          <button className={buttonStyles.button} disabled>
+            Loading...
+          </button>
+        </Box>
       </Template>
     );
   }
 
-  if (typeof data === "undefined" || error) {
+  if (typeof premiaMath64 === "undefined" || error) {
     // no data
     return (
       <Template
@@ -202,19 +203,22 @@ const WithOption = ({ option }: Props) => {
     );
   }
 
-  const premia = math64x61toDecimal(data);
-  debug("Closing premia:", premia);
+  const premiaNumber = math64x61toDecimal(premiaMath64);
+
+  debug({ premiaMath64, premiaNumber });
+
   const premiaWithSlippage = shortInteger(
     getPremiaWithSlippage(
-      BigInt(math64x61ToInt(data, option.digits)),
+      BigInt(math64x61ToInt(premiaMath64, option.digits)),
       side,
       true
     ).toString(10),
     option.digits
   );
+
   const slippage = store.getState().settings.slippage;
 
-  const displayPremia = premiaToDisplayValue(premia, base, quote, option);
+  const displayPremia = premiaToDisplayValue(premiaNumber, base, quote, option);
   const displayPremiaWithSlippage = premiaToDisplayValue(
     premiaWithSlippage,
     base,
@@ -265,8 +269,11 @@ const WithOption = ({ option }: Props) => {
             </Typography>
           </Box>
         </Box>
-        <button className={buttonStyles.button} onClick={() => close(data)}>
-          Close
+        <button
+          className={`${buttonStyles.button} ${buttonStyles.green}`}
+          onClick={() => close(premiaMath64)}
+        >
+          Close selected
         </button>
       </Box>
     </Template>

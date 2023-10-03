@@ -1,11 +1,5 @@
 import { bnToOptionType } from "../utils/conversions";
 import { OptionType } from "../types/options";
-import {
-  Token,
-  TokenKey,
-  TokenPairKey,
-  getTokenByAddress,
-} from "../tokens/tokens";
 import { getMultipleTokensValueInUsd } from "../tokens/tokenPrices";
 import { BigNumberish } from "starknet";
 import { toHex } from "../utils/utils";
@@ -18,40 +12,34 @@ import {
   ETH_USDC_PUT_ADDRESS,
 } from "../constants/amm";
 import { getUnlockedCapital } from "../calls/getUnlockedCapital";
+import { Pair, PairKey } from "./Pair";
+import { Token } from "./Token";
 
-export class Pool {
-  public baseToken: Token;
-  public quoteToken: Token;
+export class Pool extends Pair {
   public type: OptionType;
-  public pair: TokenPairKey;
   public lpAddress: string;
-  public id: string;
+  public poolId: string;
 
   constructor(base: BigNumberish, quote: BigNumberish, type: BigNumberish) {
-    this.baseToken = getTokenByAddress(base);
-    this.quoteToken = getTokenByAddress(quote);
+    super(base, quote);
     this.type = bnToOptionType(type);
-    this.id = this.generateId();
+    this.poolId = this.generateId();
 
-    switch (this.baseToken.id + this.quoteToken.id + this.type) {
-      case TokenKey.ETH + TokenKey.USDC + OptionType.Call:
+    switch (this.pairId + this.type) {
+      case PairKey.ETH_USDC + OptionType.Call:
         this.lpAddress = ETH_USDC_CALL_ADDRESS;
-        this.pair = TokenPairKey.EthUsdc;
 
         break;
-      case TokenKey.ETH + TokenKey.USDC + OptionType.Put:
+      case PairKey.ETH_USDC + OptionType.Put:
         this.lpAddress = ETH_USDC_PUT_ADDRESS;
-        this.pair = TokenPairKey.EthUsdc;
 
         break;
-      case TokenKey.BTC + TokenKey.USDC + OptionType.Call:
+      case PairKey.BTC_USDC + OptionType.Call:
         this.lpAddress = BTC_USDC_CALL_ADDRESS;
-        this.pair = TokenPairKey.BtcUsdc;
 
         break;
-      case TokenKey.BTC + TokenKey.USDC + OptionType.Put:
+      case PairKey.BTC_USDC + OptionType.Put:
         this.lpAddress = BTC_USDC_PUT_ADDRESS;
-        this.pair = TokenPairKey.BtcUsdc;
 
         break;
       default:
@@ -65,15 +53,15 @@ export class Pool {
    * Generates id that uniquily describes pool
    */
   generateId(): string {
-    return JSON.stringify({
-      base: this.baseToken.id,
-      quote: this.quoteToken.id,
-      type: this.type,
-    });
+    return JSON.stringify([
+      BigInt(this.baseToken.address).toString(36),
+      BigInt(this.quoteToken.address).toString(36),
+      BigInt(this.type).toString(10),
+    ]);
   }
 
   eq(other: Pool): boolean {
-    return this.id === other.id;
+    return this.poolId === other.poolId;
   }
 
   isType(type: OptionType): boolean {
@@ -92,8 +80,8 @@ export class Pool {
     return getUnlockedCapital(this.lpAddress);
   }
 
-  isPair(key: TokenPairKey): boolean {
-    return this.pair === key;
+  isPair(key: PairKey): boolean {
+    return this.pairId === key;
   }
 
   ////////////
@@ -121,8 +109,9 @@ export class Pool {
     return this.underlying.decimals;
   }
 
+  // Address of the underlying token
   get tokenAddress(): string {
-    return this.underlying.tokenAddress;
+    return this.underlying.address;
   }
 
   get symbol(): string {

@@ -1,5 +1,5 @@
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import { TokenKey } from "../tokens/tokens";
+import { TokenKey } from "../classes/Token";
 
 export enum SupportedWalletIds {
   ArgentX = "argentX",

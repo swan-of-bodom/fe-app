@@ -18,7 +18,7 @@ import { QueryKeys } from "../../queries/keys";
 import { OptionWithPremia } from "../../classes/Option";
 import styles from "../../style/button.module.css";
 import { selectNoBorder } from "../../style/sx";
-import { TokenPairKey } from "../../tokens/tokens";
+import { PairKey } from "../../classes/Pair";
 
 const getText = (type: OptionType, side: OptionSide) =>
   `We currently do not have any ${isLong(side) ? "long" : "short"} ${
@@ -65,17 +65,17 @@ const TradeTable = () => {
   );
   const [typeSet, setTypeSet] = useState(false);
 
-  const [pair, setPair] = useState<TokenPairKey>(TokenPairKey.EthUsdc);
+  const [pair, setPair] = useState<PairKey>(PairKey.ETH_USDC);
 
   const theme = useTheme();
 
   const handlePairChange = (event: SelectChangeEvent) => {
-    if (event.target.value === TokenPairKey.EthUsdc) {
-      setPair(TokenPairKey.EthUsdc);
+    if (event.target.value === PairKey.ETH_USDC) {
+      setPair(PairKey.ETH_USDC);
       return;
     }
-    if (event.target.value === TokenPairKey.BtcUsdc) {
-      setPair(TokenPairKey.BtcUsdc);
+    if (event.target.value === PairKey.BTC_USDC) {
+      setPair(PairKey.BTC_USDC);
 
       return;
     }
@@ -116,12 +116,8 @@ const TradeTable = () => {
       >
         <div>
           <Select sx={selectNoBorder} value={pair} onChange={handlePairChange}>
-            <MenuItem value={TokenPairKey.EthUsdc}>
-              {TokenPairKey.EthUsdc}
-            </MenuItem>
-            <MenuItem value={TokenPairKey.BtcUsdc}>
-              {TokenPairKey.BtcUsdc}
-            </MenuItem>
+            <MenuItem value={PairKey.ETH_USDC}>{PairKey.ETH_USDC}</MenuItem>
+            <MenuItem value={PairKey.BTC_USDC}>{PairKey.BTC_USDC}</MenuItem>
           </Select>
         </div>
         <div className={styles.container}>

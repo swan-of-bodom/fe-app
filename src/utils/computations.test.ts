@@ -1,4 +1,4 @@
-import { OptionSide, OptionType } from "../types/options";
+import { Option } from "../classes/Option";
 import { getToApprove, longInteger } from "./computations";
 
 type ToApproveDataset = {
@@ -42,37 +42,29 @@ const shortPutDataset: ToApproveDataset[] = [
 describe("approve amount", () => {
   test("LONG CALL", () => {
     longCallDataset.forEach(({ size, premia, correct }) => {
-      const res = getToApprove(
-        OptionType.Call,
-        OptionSide.Long,
-        size,
-        premia,
-        1000 // strike price is only relevant for short put
-      );
+      const mockOption = { isCall: true, isLong: true, strike: 1000 };
+      const res = getToApprove(mockOption as Option, size, premia);
       expect(res === correct).toBe(true);
     });
   });
   test("SHORT CALL", () => {
     shortCallDataset.forEach(({ size, premia, correct }) => {
-      const res = getToApprove(OptionType.Call, OptionSide.Short, size, premia);
+      const mockOption = { isCall: true, isLong: false, strike: 1000 };
+      const res = getToApprove(mockOption as Option, size, premia);
       expect(res === correct).toBe(true);
     });
   });
   test("LONG PUT", () => {
     longPutDataset.forEach(({ size, premia, correct }) => {
-      const res = getToApprove(OptionType.Put, OptionSide.Long, size, premia);
+      const mockOption = { isCall: false, isLong: true, strike: 1000 };
+      const res = getToApprove(mockOption as Option, size, premia);
       expect(res === correct).toBe(true);
     });
   });
   test("SHORT PUT", () => {
     shortPutDataset.forEach(({ size, premia, correct }) => {
-      const res = getToApprove(
-        OptionType.Put,
-        OptionSide.Short,
-        size,
-        premia,
-        1200
-      );
+      const mockOption = { isCall: false, isLong: false, strike: 1200 };
+      const res = getToApprove(mockOption as Option, size, premia);
       expect(res === correct).toBe(true);
     });
   });

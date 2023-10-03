@@ -61,9 +61,9 @@ export const withdrawCall = async (
   }
 
   const calldata = [
-    pool.underlying.tokenAddress,
-    pool.quoteToken.tokenAddress,
-    pool.baseToken.tokenAddress,
+    pool.underlying.address,
+    pool.quoteToken.address,
+    pool.baseToken.address,
     pool.type,
     toHex(tokens),
     "0", // uint256 trailing 0
@@ -85,7 +85,7 @@ export const withdrawCall = async (
   if (res?.transaction_hash) {
     const hash = res.transaction_hash;
 
-    addTx(hash, pool.id, TransactionAction.Withdraw);
+    addTx(hash, pool.poolId, TransactionAction.Withdraw);
     afterTransaction(res.transaction_hash, () => {
       invalidateStake();
       setProcessing(false);

@@ -16,7 +16,7 @@ export const depositLiquidity = async (
   nok: () => void
 ): Promise<void> => {
   const approveCalldata = {
-    contractAddress: pool.tokenAddress,
+    contractAddress: pool.lpAddress,
     entrypoint: AMM_METHODS.APPROVE,
     calldata: [AMM_ADDRESS, size, "0"],
   };
@@ -25,9 +25,9 @@ export const depositLiquidity = async (
     contractAddress: AMM_ADDRESS,
     entrypoint: AMM_METHODS.DEPOSIT_LIQUIDITY,
     calldata: [
-      pool.tokenAddress,
-      pool.quoteToken.tokenAddress,
-      pool.baseToken.tokenAddress,
+      pool.lpAddress,
+      pool.quoteToken.address,
+      pool.baseToken.address,
       pool.type,
       size,
       "0",
@@ -48,7 +48,7 @@ export const depositLiquidity = async (
 
   if (res?.transaction_hash) {
     const hash = res.transaction_hash;
-    addTx(hash, pool.id, TransactionAction.Stake);
+    addTx(hash, pool.poolId, TransactionAction.Stake);
     afterTransaction(
       res.transaction_hash,
       () => {

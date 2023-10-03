@@ -12,7 +12,7 @@ import { TransactionAction } from "../../redux/reducers/transactions";
 import styles from "../../style/button.module.css";
 
 const InsuranceDisplay = ({ option }: { option: OptionWithPosition }) => {
-  const txPending = useTxPending(option.id, TransactionAction.TradeClose);
+  const txPending = useTxPending(option.optionId, TransactionAction.TradeClose);
   const symbol = option.baseToken.symbol;
   const handleButtonClick = () => {
     setCloseOption(option);

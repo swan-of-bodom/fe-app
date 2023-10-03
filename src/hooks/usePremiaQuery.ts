@@ -9,7 +9,7 @@ export const usePremiaQuery = (
   isClosing: boolean
 ) =>
   useQuery<bigint, Error>(
-    [QueryKeys.premia, option.id, size, isClosing],
+    [QueryKeys.premia, option.optionId, size, isClosing],
     () => getPremia(option, size, isClosing),
     {
       enabled: true, // If we have searchQuery, then enable the query on render

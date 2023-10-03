@@ -9,7 +9,7 @@ export const approve = async (
   account: AccountInterface,
   amount: string
 ) => {
-  const contractAddress = option.underlying.tokenAddress;
+  const contractAddress = option.underlying.address;
   try {
     const call = {
       contractAddress,

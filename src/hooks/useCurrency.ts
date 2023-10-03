@@ -1,5 +1,5 @@
+import { TokenKey } from "../classes/Token";
 import { getTokenValueInUsd } from "../tokens/tokenPrices";
-import { TokenKey } from "../tokens/tokens";
 import { useState, useEffect } from "react";
 
 export const useCurrency = (id: TokenKey): number | undefined => {

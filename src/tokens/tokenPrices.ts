@@ -1,4 +1,4 @@
-import { TokenKey } from "./tokens";
+import { TokenKey } from "../classes/Token";
 
 type RecentValue = {
   id: TokenKey;

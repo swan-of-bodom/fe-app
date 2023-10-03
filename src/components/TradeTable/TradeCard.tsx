@@ -18,6 +18,7 @@ import { UserBalance } from "../../types/wallet";
 import { OptionWithPremia } from "../../classes/Option";
 import style from "./card.module.css";
 import buttonStyles from "../../style/button.module.css";
+import { intToMath64x61 } from "../../utils/units";
 
 type TemplateProps = {
   option: OptionWithPremia;
@@ -80,6 +81,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
   const [inputText, setInputText] = useState<string>("1");
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<FinancialData | null>(null);
+  const [premiaMath64, setPremiaMath64] = useState<bigint | undefined>();
   const [balance, setBalance] = useState<UserBalance | undefined>(undefined);
   const [tradeState, updateTradeState] = useState<TradeState>({
     failed: false,
@@ -93,9 +95,10 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     debounce((size: number, controller: AbortController) => {
       fetchModalData(size, option, account, controller.signal)
         .then((v) => {
-          if (v && v[0]) {
-            setData(v[0]);
-            setBalance(v[1]);
+          if (v && v.prices && v.premiaMath64) {
+            setData(v.prices);
+            setBalance(v.balance);
+            setPremiaMath64(v.premiaMath64);
             setLoading(false);
           }
         })
@@ -119,7 +122,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
 
   const { strike, type, side } = option;
 
-  if (loading || !data) {
+  if (loading || !data || !premiaMath64) {
     const graph = () => <LoadingAnimation />;
     const profitTable = () => <ProfitTableSkeleton symbol={option.symbol} />;
     const buyButton = () => (
@@ -140,8 +143,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     );
   }
 
-  const premia = option.isCall ? data.premiaBase : data.premiaQuote;
-  const currentPremia = longInteger(premia, option.digits);
+  const premia = data.premia;
 
   const graphData = getProfitGraphData(
     type,
@@ -168,7 +170,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     }
 
     const premiaWithSlippage = getPremiaWithSlippage(
-      currentPremia,
+      premiaMath64,
       option.side,
       false
     );

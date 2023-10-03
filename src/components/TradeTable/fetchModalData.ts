@@ -29,13 +29,19 @@ const recentUserBalance = async (account: AccountInterface | undefined) => {
   return balanceData.balance;
 };
 
+type ModalData = {
+  prices: FinancialData;
+  premiaMath64: bigint;
+  balance?: UserBalance;
+};
+
 export const fetchModalData = async (
   size: number,
   option: OptionWithPremia,
   account: AccountInterface | undefined,
   signal: AbortSignal
-): Promise<[FinancialData | null, UserBalance | undefined]> => {
-  const [{ base, quote }, fetchedPremia, userBalance] = await Promise.all([
+): Promise<ModalData | undefined> => {
+  const [{ base, quote }, premiaMath64, balance] = await Promise.all([
     option.tokenPricesInUsd(),
     getPremia(option, size, false),
     recentUserBalance(account),
@@ -48,18 +54,19 @@ export const fetchModalData = async (
   debug("Fetched ETH, premia and user balance", {
     base,
     quote,
-    fetchedPremia,
-    userBalance,
+    premiaMath64,
+    balance,
   });
 
   if (signal.aborted) {
-    return [null, undefined];
+    return;
   }
 
-  const convertedPremia = math64x61toDecimal(fetchedPremia);
+  const convertedPremia = math64x61toDecimal(premiaMath64);
 
-  return [
-    option.financialData(size, convertedPremia, base, quote),
-    userBalance,
-  ];
+  return {
+    prices: option.financialData(size, convertedPremia, base, quote),
+    premiaMath64: premiaMath64,
+    balance,
+  };
 };

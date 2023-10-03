@@ -18,7 +18,7 @@ import { TransactionAction } from "../../redux/reducers/transactions";
 import { getPoolState } from "../../calls/getPoolState";
 import buttonStyles from "../../style/button.module.css";
 import inputStyle from "../../style/input.module.css";
-import { TokenKey } from "../../tokens/tokens";
+import { TokenKey } from "../../classes/Token";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -65,7 +65,7 @@ const getYieldSinceLaunch = async (
 };
 
 export const StakeCapitalItem = ({ account, pool }: Props) => {
-  const txPending = useTxPending(pool.id, TransactionAction.Stake);
+  const txPending = useTxPending(pool.poolId, TransactionAction.Stake);
   const [amount, setAmount] = useState<number>(0);
   const [text, setText] = useState<string>("0");
   const [loading, setLoading] = useState<boolean>(false);

@@ -25,7 +25,10 @@ type Props = {
 export const WithdrawItem = ({ account, userPoolInfo }: Props) => {
   const { value } = userPoolInfo;
 
-  const txPending = useTxPending(userPoolInfo.id, TransactionAction.Withdraw);
+  const txPending = useTxPending(
+    userPoolInfo.poolId,
+    TransactionAction.Withdraw
+  );
   const [amount, setAmount] = useState<number>(0);
   const [text, setText] = useState<string>("0");
   const [processing, setProcessing] = useState<boolean>(false);

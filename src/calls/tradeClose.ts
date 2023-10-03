@@ -1,4 +1,3 @@
-import { AMM_ADDRESS, AMM_METHODS } from "../constants/amm";
 import AmmAbi from "../abi/amm_abi.json";
 import { AccountInterface } from "starknet";
 import { OptionWithPosition } from "../classes/Option";
@@ -23,36 +22,20 @@ export const tradeClose = async (
   isClosing: boolean
 ) => {
   try {
-    // one hour from now
-    const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
-
     const premiaWithSlippage = getPremiaWithSlippage(
-      BigInt(premia),
+      premia,
       option.side,
       isClosing
     ).toString(10);
 
-    debug({ premiaWithSlippage, premia });
+    const res = await account.execute(
+      option.tradeCloseCalldata(size, premiaWithSlippage),
+      [AmmAbi]
+    );
 
-    const calldata = [
-      ...option.tradeCalldata(size),
-      premiaWithSlippage,
-      "0", // cubit false
-      deadline,
-    ];
-
-    const call = {
-      contractAddress: AMM_ADDRESS,
-      entrypoint: AMM_METHODS.TRADE_CLOSE,
-      calldata,
-    };
-
-    debug("TRADE CLOSE", calldata);
-
-    const res = await account.execute(call, [AmmAbi]);
     if (res?.transaction_hash) {
       const hash = res.transaction_hash;
-      addTx(hash, option.id, TransactionAction.TradeClose);
+      addTx(hash, option.optionId, TransactionAction.TradeClose);
       afterTransaction(
         hash,
         () => {

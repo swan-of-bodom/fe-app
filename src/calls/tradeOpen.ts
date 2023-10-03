@@ -5,25 +5,23 @@ import {
   markTxAsFailed,
   showToast,
 } from "./../redux/actions";
-import { AMM_ADDRESS, AMM_METHODS } from "../constants/amm";
 import { AccountInterface } from "starknet";
 import { Option } from "../classes/Option";
 import { debug } from "../utils/debugger";
 import { getToApprove, shortInteger } from "../utils/computations";
-
 import AmmAbi from "../abi/amm_abi.json";
 import LpAbi from "../abi/lptoken_abi.json";
 import { afterTransaction } from "../utils/blockchain";
 import { invalidatePositions } from "../queries/client";
-import { intToMath64x61 } from "../utils/units";
 import { TransactionAction } from "../redux/reducers/transactions";
 import { ToastType } from "../redux/reducers/ui";
+import { math64x61ToInt, math64x61toDecimal } from "../utils/units";
 
 export const approveAndTradeOpen = async (
   account: AccountInterface,
   option: Option,
   size: number,
-  premia: bigint,
+  premiaMath64: bigint,
   balance: UserBalance,
   updateTradeState: ({
     failed,
@@ -33,57 +31,34 @@ export const approveAndTradeOpen = async (
     processing: boolean;
   }) => void
 ): Promise<boolean> => {
-  const toApprove = getToApprove(
-    option.type,
-    option.side,
-    size,
-    premia,
-    option.strike
-  );
+  const premiaTokenCount = math64x61ToInt(premiaMath64, option.digits);
+  const toApprove = getToApprove(option, size, BigInt(premiaTokenCount));
+  const toApproveNumber = shortInteger(toApprove, option.digits);
+
+  debug({ premiaMath64, toApprove, toApproveNumber });
 
   const tokenId = option.underlying.id;
 
-  if (balance[tokenId] < toApprove) {
+  if (balance[tokenId] < toApproveNumber) {
     const [has, needs] = [
       shortInteger(balance[tokenId].toString(10), option.digits),
-      shortInteger(toApprove.toString(10), option.digits),
+      toApproveNumber,
     ];
-    debug({ size, premia, has, needs });
+    debug({ size, premiaMath64, has, needs });
     showToast(
-      `To open this position you need ${option.symbol}${needs.toFixed(
-        4
-      )}, but you only have ${option.symbol}${has.toFixed(4)}`,
+      `To open this position you need ${option.symbol}\u00A0${Number(
+        needs
+      ).toFixed(4)}, but you only have ${option.symbol}\u00A0${has.toFixed(4)}`,
       ToastType.Warn
     );
     throw Error("Not enough funds");
   }
 
-  const approveArgs = {
-    contractAddress: option.tokenAddress,
-    entrypoint: AMM_METHODS.APPROVE,
-    calldata: [AMM_ADDRESS, toApprove.toString(10), "0"],
-  };
-
-  // one hour from now
-  const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
-
-  const calldata = [
-    ...option.tradeCalldata(size),
-    intToMath64x61(premia.toString(10), option.digits), // cubit
-    "0", // cubit false
-    deadline,
-  ];
-
-  debug("TRADE OPEN CALLDATA", calldata);
-
-  const tradeOpenArgs = {
-    contractAddress: AMM_ADDRESS,
-    entrypoint: AMM_METHODS.TRADE_OPEN,
-    calldata,
-  };
+  const approve = option.underlying.approveCalldata(toApprove);
+  const tradeOpen = option.tradeOpenCalldata(size, premiaMath64);
 
   const res = await account
-    .execute([approveArgs, tradeOpenArgs], [LpAbi, AmmAbi])
+    .execute([approve, tradeOpen], [LpAbi, AmmAbi])
     .catch((e) => {
       debug("Trade open rejected or failed", e.message);
       throw Error("Trade open rejected or failed");
@@ -91,7 +66,7 @@ export const approveAndTradeOpen = async (
 
   if (res?.transaction_hash) {
     const hash = res.transaction_hash;
-    addTx(hash, option.id, TransactionAction.TradeOpen);
+    addTx(hash, option.optionId, TransactionAction.TradeOpen);
     afterTransaction(
       hash,
       () => {

@@ -1,6 +1,5 @@
 import { Tooltip } from "@mui/material";
 import { OptionWithPremia } from "../../classes/Option";
-import { debug } from "../../utils/debugger";
 import styles from "./profittable.module.css";
 
 type ProfitTableTemplateProps = {
@@ -74,7 +73,6 @@ export const ProfitTable = ({
       ? option.strike + basePremia
       : option.strike - basePremia
     ).toFixed(2);
-  debug({ strike: option.strike, breakEven, basePremia });
 
   return (
     <ProfitTableTemplate

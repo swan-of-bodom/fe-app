@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const LiveItem = ({ option }: Props) => {
-  const txPending = useTxPending(option.id, TransactionAction.TradeClose);
+  const txPending = useTxPending(option.optionId, TransactionAction.TradeClose);
   const { strike, maturity, size, value } = option;
 
   debug("LIVE OPTION", option);

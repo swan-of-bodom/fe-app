@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAccount } from "../../hooks/useAccount";
-import { TokenKey, tokensList } from "../../tokens/tokens";
 import { useUserBalance } from "../../hooks/useUserBalance";
 import { useCurrency } from "../../hooks/useCurrency";
 import { LoadingAnimation } from "../Loading/Loading";
@@ -39,6 +38,7 @@ import { TransactionAction } from "../../redux/reducers/transactions";
 import tableStyles from "../../style/table.module.css";
 import buttonStyles from "../../style/button.module.css";
 import { selectNoBorder } from "../../style/sx";
+import { Token, TokenKey } from "../../classes/Token";
 
 type BuyButtonProps = {
   option: Option;
@@ -58,7 +58,7 @@ const PlusIcon = () => (
 );
 
 const BuyInsuranceButton = ({ option, size }: BuyButtonProps) => {
-  const txPending = useTxPending(option.id, TransactionAction.TradeOpen);
+  const txPending = useTxPending(option.optionId, TransactionAction.TradeOpen);
   const handleButtonClick = () => {
     if (size === 0) {
       showToast("Please select size greater than 0", ToastType.Warn);
@@ -88,7 +88,7 @@ export const BuyInsuranceBox = () => {
   const account = useAccount();
   const balance = useUserBalance();
   const [currency, setCurrency] = useState<TokenKey>(TokenKey.ETH);
-  const token = tokensList[currency];
+  const token = Token.byKey(currency);
   const displayBalance = balance
     ? shortInteger(balance[currency].toString(10), token.decimals).toFixed(4)
     : undefined;

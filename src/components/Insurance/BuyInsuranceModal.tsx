@@ -1,9 +1,8 @@
-import { Box, Button, Tooltip, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import { usePremiaQuery } from "../../hooks/usePremiaQuery";
 import { CustomDialogTitle } from "../MultiDialog/MultiDialog";
-
-import { math64x61toDecimal, math64x61ToInt } from "../../utils/units";
-import { getPremiaWithSlippage, shortInteger } from "../../utils/computations";
+import { math64x61toDecimal } from "../../utils/units";
+import { getPremiaWithSlippage } from "../../utils/computations";
 import { useAccount } from "../../hooks/useAccount";
 import { store } from "../../redux/store";
 import { Option } from "../../classes/Option";
@@ -13,6 +12,7 @@ import { useState } from "react";
 import { TradeState } from "../TradeTable/TradeCard";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
 import { useUserBalance } from "../../hooks/useUserBalance";
+import buttonStyles from "../../style/button.module.css";
 
 export type BuyInsuranceModalData = {
   option: Option;
@@ -35,14 +35,18 @@ const WithOption = ({ option, size, updateTradeState }: Props) => {
   const account = useAccount();
   const balance = useUserBalance();
 
-  const { data, error, isFetching } = usePremiaQuery(option, size, false);
+  const {
+    data: premiaMath64,
+    error,
+    isFetching,
+  } = usePremiaQuery(option, size, false);
 
   if (isFetching || !balance) {
     // loading...
     return <LoadingAnimation />;
   }
 
-  if (typeof data === "undefined" || error) {
+  if (typeof premiaMath64 === "undefined" || error) {
     // no data
     return (
       <Typography>
@@ -51,16 +55,18 @@ const WithOption = ({ option, size, updateTradeState }: Props) => {
     );
   }
 
-  const premia = math64x61toDecimal(data);
+  const premiaNumber = math64x61toDecimal(premiaMath64);
   const premiaWithSlippage = getPremiaWithSlippage(
-    BigInt(math64x61ToInt(data, option.digits)),
+    premiaMath64,
     option.side,
     false
   );
-  const displayPremiaWithSlippage = shortInteger(
-    premiaWithSlippage.toString(10),
-    option.digits
-  );
+  const displayPremiaWithSlippage = math64x61toDecimal(premiaWithSlippage);
+
+  // shortInteger(
+  //   premiaWithSlippage.toString(10),
+  //   option.digits
+  // );
   const slippage = store.getState().settings.slippage;
 
   const handleClick = () =>
@@ -93,9 +99,9 @@ const WithOption = ({ option, size, updateTradeState }: Props) => {
           }}
         >
           <Typography sx={{ fontSize: "1.2rem" }}>Insurance price</Typography>
-          <Tooltip title={`$${premia}`} placement="top">
+          <Tooltip title={`$${premiaNumber}`} placement="top">
             <Typography sx={{ fontSize: "1.2rem" }}>
-              ${premia.toFixed(2)}
+              ${premiaNumber.toFixed(2)}
             </Typography>
           </Tooltip>
         </Box>
@@ -116,9 +122,13 @@ const WithOption = ({ option, size, updateTradeState }: Props) => {
           </Tooltip>
         </Box>
       </Box>
-      <Button disabled={!account} variant="contained" onClick={handleClick}>
+      <button
+        className={`${buttonStyles.button} ${buttonStyles.green}`}
+        disabled={!account}
+        onClick={handleClick}
+      >
         Buy Insurance
-      </Button>
+      </button>
     </Box>
   );
 };

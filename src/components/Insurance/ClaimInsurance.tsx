@@ -19,7 +19,7 @@ const ClaimItem = ({
   option: OptionWithPosition;
   account: AccountInterface;
 }) => {
-  const txPending = useTxPending(option.id, TransactionAction.Settle);
+  const txPending = useTxPending(option.optionId, TransactionAction.Settle);
   const symbol = option.baseToken.symbol;
 
   const handleButtonClick = () => tradeSettle(account, option);

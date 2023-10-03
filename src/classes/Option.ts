@@ -5,10 +5,10 @@ import {
   toHex,
 } from "../utils/utils";
 import { OptionSide, FinancialData, OptionStruct } from "../types/options";
-import { BASE_MATH_64 } from "../constants/amm";
+import { AMM_ADDRESS, AMM_METHODS, BASE_MATH_64 } from "../constants/amm";
 import { Pool } from "./Pool";
 import { longInteger, shortInteger } from "../utils/computations";
-import { BigNumberish } from "starknet";
+import { BigNumberish, Call } from "starknet";
 import { Cubit } from "../types/units";
 
 export class Option extends Pool {
@@ -17,7 +17,7 @@ export class Option extends Pool {
   public strike: number;
   public strikeHex: string;
   public side: OptionSide;
-  public id: string;
+  public optionId: string;
 
   constructor(
     base: BigNumberish,
@@ -38,7 +38,7 @@ export class Option extends Pool {
       typeof strike === "number" ? strike : Number(strike / BASE_MATH_64);
 
     this.side = bnToOptionSide(side);
-    this.id = this.generateId();
+    this.optionId = this.generateId();
   }
 
   /**
@@ -69,15 +69,15 @@ export class Option extends Pool {
       this.maturityHex,
       this.side,
       convertedSize,
-      this.quoteToken.tokenAddress,
-      this.baseToken.tokenAddress,
+      this.quoteToken.address,
+      this.baseToken.address,
     ];
   }
 
   addPosition(size: BigNumberish, value: BigNumberish): OptionWithPosition {
     return new OptionWithPosition(
-      this.baseToken.tokenAddress,
-      this.quoteToken.tokenAddress,
+      this.baseToken.address,
+      this.quoteToken.address,
       this.type,
       this.side,
       this.maturity,
@@ -89,8 +89,8 @@ export class Option extends Pool {
 
   addPremia(premia: BigNumberish): OptionWithPremia {
     return new OptionWithPremia(
-      this.baseToken.tokenAddress,
-      this.quoteToken.tokenAddress,
+      this.baseToken.address,
+      this.quoteToken.address,
       this.type,
       this.side,
       this.maturity,
@@ -107,23 +107,17 @@ export class Option extends Pool {
     size: number,
     // premia is in base token
     premia: number,
-    basePrice: number,
-    quotePrice: number
+    price: number
   ): FinancialData {
-    const premiaUsd = premia * basePrice;
-    const premiaBase = premia;
-    const premiaQuote = premiaUsd / quotePrice;
+    const premiaUsd = premia * price;
     const sizeOnePremiaUsd = premiaUsd / size;
-    const sizeOnePremiaBase = premiaBase / size;
-    const sizeOnePremiaQuote = premiaQuote / size;
+    const sizeOnePremia = premia / size;
 
     return {
       premiaUsd,
-      premiaBase,
-      premiaQuote,
       sizeOnePremiaUsd,
-      sizeOnePremiaBase,
-      sizeOnePremiaQuote,
+      premia,
+      sizeOnePremia,
     };
   }
 
@@ -131,23 +125,17 @@ export class Option extends Pool {
     size: number,
     // premia is in quote token
     premia: number,
-    basePrice: number,
-    quotePrice: number
+    price: number
   ): FinancialData {
-    const premiaUsd = premia * quotePrice;
-    const premiaBase = premiaUsd / basePrice;
-    const premiaQuote = premia;
+    const premiaUsd = premia * price;
     const sizeOnePremiaUsd = premiaUsd / size;
-    const sizeOnePremiaBase = premiaBase / size;
-    const sizeOnePremiaQuote = premiaQuote / size;
+    const sizeOnePremia = premia / size;
 
     return {
       premiaUsd,
-      premiaBase,
-      premiaQuote,
+      premia,
       sizeOnePremiaUsd,
-      sizeOnePremiaBase,
-      sizeOnePremiaQuote,
+      sizeOnePremia,
     };
   }
 
@@ -158,8 +146,34 @@ export class Option extends Pool {
     quotePrice: number
   ): FinancialData {
     return this.isCall
-      ? this.financialDataCall(size, premia, basePrice, quotePrice)
-      : this.financialDataPut(size, premia, basePrice, quotePrice);
+      ? this.financialDataCall(size, premia, basePrice)
+      : this.financialDataPut(size, premia, quotePrice);
+  }
+
+  _tradeOpenCloseCalldata(
+    size: string | number,
+    premia: BigNumberish,
+    open: boolean
+  ): Call {
+    // one hour from now
+    const deadline = String(Math.round(new Date().getTime() / 1000) + 60 * 60);
+
+    const calldata = [
+      ...this.tradeCalldata(size),
+      premia.toString(10), // cubit
+      "0", // cubit false
+      deadline,
+    ];
+
+    return {
+      contractAddress: AMM_ADDRESS,
+      entrypoint: open ? AMM_METHODS.TRADE_OPEN : AMM_METHODS.TRADE_CLOSE,
+      calldata,
+    };
+  }
+
+  tradeOpenCalldata(size: string | number, premia: BigNumberish): Call {
+    return this._tradeOpenCloseCalldata(size, premia, true);
   }
 
   ////////////
@@ -170,8 +184,8 @@ export class Option extends Pool {
     const otherSide =
       this.side === OptionSide.Long ? OptionSide.Short : OptionSide.Long;
     return new Option(
-      this.baseToken.tokenAddress,
-      this.quoteToken.tokenAddress,
+      this.baseToken.address,
+      this.quoteToken.address,
       this.type,
       otherSide,
       this.maturityHex,
@@ -210,8 +224,8 @@ export class Option extends Pool {
       option_side: this.side,
       maturity: this.maturityHex,
       strike_price: Cubit(this.strikeHex),
-      quote_token_address: this.quoteToken.tokenAddress,
-      base_token_address: this.baseToken.tokenAddress,
+      quote_token_address: this.quoteToken.address,
+      base_token_address: this.baseToken.address,
       option_type: this.type,
     };
   }
@@ -249,6 +263,22 @@ export class OptionWithPosition extends Option {
     this.size = shortInteger(this.sizeHex, this.baseToken.decimals);
     this.value =
       Number((BigInt(this.valueHex) * 1_000_000n) / BASE_MATH_64) / 1_000_000;
+  }
+
+  tradeCloseCalldata(size: string | number, premia: BigNumberish): Call {
+    return this._tradeOpenCloseCalldata(size, premia, false);
+  }
+
+  tradeCloseAllCalldata(premia: BigNumberish): Call {
+    return this._tradeOpenCloseCalldata(this.sizeHex, premia, false);
+  }
+
+  get tradeSettleCalldata(): Call {
+    return {
+      contractAddress: AMM_ADDRESS,
+      entrypoint: AMM_METHODS.TRADE_SETTLE,
+      calldata: this.tradeCalldata(this.sizeHex),
+    };
   }
 
   get fullSize(): string {

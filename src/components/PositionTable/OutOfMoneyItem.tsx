@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const OutOfMoneyItem = ({ option }: Props) => {
-  const txPending = useTxPending(option.id, TransactionAction.Settle);
+  const txPending = useTxPending(option.optionId, TransactionAction.Settle);
   const account = useAccount();
 
   const handleSettle = () => {

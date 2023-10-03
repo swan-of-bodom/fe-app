@@ -1,9 +1,10 @@
-import { OptionSide, OptionType } from "../types/options";
+import { OptionSide } from "../types/options";
 import { Decimal } from "../types/units";
 import { ETH_DIGITS, USDC_DIGITS } from "../constants/amm";
 import { store } from "../redux/store";
-import { isCall, isLong } from "./utils";
+import { isLong } from "./utils";
 import { BigNumberish } from "starknet";
+import { Option } from "../classes/Option";
 
 type GetApproveAmount = (
   size: number,
@@ -55,25 +56,23 @@ export const getPremiaWithSlippage = (
 };
 
 export const getToApprove = (
-  type: OptionType,
-  side: OptionSide,
+  option: Option,
   size: number,
-  premia: bigint,
-  strike?: number
+  premia: bigint
 ): bigint => {
-  if (isLong(side)) {
+  if (option.isLong) {
     // long call / long put - premia with slippage
     return premia;
   }
 
-  if (isCall(type)) {
+  if (option.isCall) {
     // short call - locked capital minus premia with slippage
     return shortCall(size, premia);
   }
 
   // short put - locked capital minus premia with slippage
   // locked capital is size * strike price
-  return shortPut(size, premia, strike);
+  return shortPut(size, premia, option.strike);
 };
 
 export const longInteger = (n: Decimal, digits: number): bigint => {
