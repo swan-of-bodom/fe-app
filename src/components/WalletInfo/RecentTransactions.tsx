@@ -7,7 +7,7 @@ import {
 import { debug } from "../../utils/debugger";
 import { addressElision, getStarkscanUrl } from "../../utils/utils";
 import { useCurrentChainId } from "../../hooks/useCurrentChainId";
-import styles from "./recent.module.css";
+import styles from "./walletinfo.module.css";
 
 const Tx = ({ tx }: { tx: Transaction }) => {
   const theme = useTheme();
@@ -38,7 +38,7 @@ const Tx = ({ tx }: { tx: Transaction }) => {
   const date = new Intl.DateTimeFormat("default", dateOptions).format(d);
 
   return (
-    <div className={styles.grid}>
+    <div className={`${styles.grid} ${styles.container}`}>
       <div className={styles.div1}>
         <Tooltip title={hash}>
           <Link
@@ -47,7 +47,7 @@ const Tx = ({ tx }: { tx: Transaction }) => {
             href={exploreUrl}
             rel="noreferrer"
           >
-            {addressElision(hash)}
+            {addressElision(hash).toUpperCase()}
           </Link>
         </Tooltip>
       </div>
@@ -71,7 +71,7 @@ export const RecentTransaction = () => {
   debug("txs", { chainId, txs, currentNetworkTxs });
 
   if (txs.length === 0) {
-    return <div>Transactions will appear here</div>;
+    return <div className={styles.title}>No recent transactions</div>;
   }
 
   return (

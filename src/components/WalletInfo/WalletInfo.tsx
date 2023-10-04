@@ -7,7 +7,7 @@ import { ContentCopy, Info, PowerSettingsNew } from "@mui/icons-material";
 import { ToastType } from "../../redux/reducers/ui";
 import { RecentTransaction } from "./RecentTransactions";
 import { addressElision, getStarkscanUrl } from "../../utils/utils";
-import styles from "./info.module.css";
+import styles from "./walletinfo.module.css";
 
 const handleDisconnect = () => {
   closeDialog();
