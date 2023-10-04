@@ -15,7 +15,7 @@ import { afterTransaction } from "../utils/blockchain";
 import { invalidatePositions } from "../queries/client";
 import { TransactionAction } from "../redux/reducers/transactions";
 import { ToastType } from "../redux/reducers/ui";
-import { math64x61ToInt, math64x61toDecimal } from "../utils/units";
+import { math64x61ToInt } from "../utils/units";
 
 export const approveAndTradeOpen = async (
   account: AccountInterface,

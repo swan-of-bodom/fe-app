@@ -131,7 +131,6 @@ type Props = {
 
 const Border = ({ children }: Props) => {
   const style = {
-    padding: "1em",
     background: "black",
     border: "1px solid white",
     borderRadius: 0,

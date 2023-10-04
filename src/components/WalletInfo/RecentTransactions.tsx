@@ -1,21 +1,13 @@
-import {
-  Box,
-  Link,
-  Paper,
-  Stack,
-  Tooltip,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Link, Stack, Tooltip, useTheme } from "@mui/material";
 import { useRecentTxs } from "../../hooks/useRecentTxs";
 import {
   Transaction,
   TransactionStatus,
 } from "../../redux/reducers/transactions";
-import { HourglassBottomTwoTone, Done, Report } from "@mui/icons-material";
 import { debug } from "../../utils/debugger";
 import { addressElision, getStarkscanUrl } from "../../utils/utils";
 import { useCurrentChainId } from "../../hooks/useCurrentChainId";
+import styles from "./recent.module.css";
 
 const Tx = ({ tx }: { tx: Transaction }) => {
   const theme = useTheme();
@@ -26,8 +18,6 @@ const Tx = ({ tx }: { tx: Transaction }) => {
     txHash: hash,
   });
 
-  debug("TX", { hash, timestamp, action, status });
-
   const shade = theme.palette.mode;
 
   const color =
@@ -37,13 +27,6 @@ const Tx = ({ tx }: { tx: Transaction }) => {
       ? theme.palette.success[shade]
       : theme.palette.error[shade];
 
-  const Icon =
-    status === TransactionStatus.Pending
-      ? HourglassBottomTwoTone
-      : status === TransactionStatus.Success
-      ? Done
-      : Report;
-
   const d = new Date(timestamp);
   const dateOptions = {
     day: "numeric",
@@ -51,53 +34,31 @@ const Tx = ({ tx }: { tx: Transaction }) => {
     hour: "numeric",
     minute: "numeric",
     second: "numeric",
-    timeZoneName: "short",
   } as const;
   const date = new Intl.DateTimeFormat("default", dateOptions).format(d);
 
   return (
-    <Paper
-      sx={{
-        display: "flex",
-        flexFlow: "column",
-        background: color,
-        m: 1,
-        p: 1,
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexFlow: "row",
-        }}
-      >
-        <div>
-          <Tooltip title={hash}>
-            <Link
-              sx={{ color: theme.palette.text.primary }}
-              target="_blank"
-              href={exploreUrl}
-              rel="noreferrer"
-            >
-              <Typography>{addressElision(hash)}</Typography>
-            </Link>
-          </Tooltip>
-        </div>
-        <div>
-          <Typography>{action}</Typography>
-        </div>
-        <div>
-          <Tooltip title={status}>
-            <Icon />
-          </Tooltip>
-        </div>
-      </Box>
-      <Box>
-        <Typography variant="caption">{date}</Typography>
-      </Box>
-    </Paper>
+    <div className={styles.grid}>
+      <div className={styles.div1}>
+        <Tooltip title={hash}>
+          <Link
+            sx={{ color: theme.palette.text.primary }}
+            target="_blank"
+            href={exploreUrl}
+            rel="noreferrer"
+          >
+            {addressElision(hash)}
+          </Link>
+        </Tooltip>
+      </div>
+      <div className={styles.div2}>{action}</div>
+      <div className={styles.div3}>
+        <div style={{ background: color }} className={styles.bead}></div>
+      </div>
+      <div className={styles.div4}></div>
+      <div className={styles.div5}>{date}</div>
+      <div className={styles.div6}></div>
+    </div>
   );
 };
 
@@ -110,11 +71,11 @@ export const RecentTransaction = () => {
   debug("txs", { chainId, txs, currentNetworkTxs });
 
   if (txs.length === 0) {
-    return <Box>Transactions will appear here</Box>;
+    return <div>Transactions will appear here</div>;
   }
 
   return (
-    <Box>
+    <div>
       <Stack
         sx={{
           maxHeight: "60vh",
@@ -125,6 +86,6 @@ export const RecentTransaction = () => {
           <Tx tx={tx} key={i} />
         ))}
       </Stack>
-    </Box>
+    </div>
   );
 };

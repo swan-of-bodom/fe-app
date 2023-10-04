@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  IconButton,
-  Link,
-  Skeleton,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { IconButton, Link, Skeleton, Tooltip, Typography } from "@mui/material";
 import { useWallet } from "../../hooks/useWallet";
 import { disconnect } from "../../network/account";
 import { closeDialog, showToast } from "../../redux/actions";
@@ -15,6 +7,7 @@ import { ContentCopy, Info, PowerSettingsNew } from "@mui/icons-material";
 import { ToastType } from "../../redux/reducers/ui";
 import { RecentTransaction } from "./RecentTransactions";
 import { addressElision, getStarkscanUrl } from "../../utils/utils";
+import styles from "./info.module.css";
 
 const handleDisconnect = () => {
   closeDialog();
@@ -33,6 +26,11 @@ const iconStyle = {
   marginRight: 1,
 };
 
+const buttonStyle = {
+  opacity: "70%",
+  scale: "80%",
+};
+
 export const WalletInfo = () => {
   const wallet = useWallet();
 
@@ -48,52 +46,41 @@ export const WalletInfo = () => {
   });
 
   return (
-    <>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: ".5rem",
-        }}
-      >
+    <div>
+      <div className={styles.header}>
         <Tooltip title={address}>
-          <Button
-            sx={{ mr: 2 }}
-            variant="outlined"
-            onClick={() => handleCopy(address)}
-          >
+          <div className={styles.account} onClick={() => handleCopy(address)}>
             <WalletIcon sx={iconStyle} wallet={wallet} />
-
-            <Typography>{addressElision(address)}</Typography>
-          </Button>
+            <Typography sx={{ opacity: "70%", textTransform: "uppercase" }}>
+              {addressElision(address)}
+            </Typography>
+          </div>
         </Tooltip>
 
         <Tooltip title="Copy address">
-          <IconButton onClick={() => handleCopy(address)}>
+          <IconButton sx={buttonStyle} onClick={() => handleCopy(address)}>
             <ContentCopy />
           </IconButton>
         </Tooltip>
 
         <Tooltip title="Explore">
           <Link target="_blank" href={exploreUrl} rel="noreferrer">
-            <IconButton>
+            <IconButton sx={buttonStyle}>
               <Info />
             </IconButton>
           </Link>
         </Tooltip>
 
         <Tooltip title="Disconnect">
-          <IconButton onClick={handleDisconnect}>
+          <IconButton sx={buttonStyle} onClick={handleDisconnect}>
             <PowerSettingsNew />
           </IconButton>
         </Tooltip>
-      </Box>
-      <br />
-      <Typography variant="h6">Recent transactions</Typography>
-      <br />
+      </div>
+      <div>
+        <h4 className={styles.title}>Recent transactions</h4>
+      </div>
       <RecentTransaction />
-    </>
+    </div>
   );
 };
