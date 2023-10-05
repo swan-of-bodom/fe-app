@@ -60,8 +60,6 @@ export const fetchHistoricalData = async ({
       debug(LogTypes.WARN, "Failed fetching trade history\n", e);
     });
 
-  debug("RAW HISTORIC DATA", data);
-
   if (data?.length) {
     return parseHostoricDataResponse(data);
   }
