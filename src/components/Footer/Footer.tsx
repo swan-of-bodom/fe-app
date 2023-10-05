@@ -37,7 +37,7 @@ export const Footer = () => {
               />
             </td>
             <td>
-              <Link href={"https://github.com/CarmineOptions"} txt="Discord" />
+              <Link href={"https://discord.gg/uRs7j8w3bX"} txt="Discord" />
             </td>
           </tr>
           <tr>
