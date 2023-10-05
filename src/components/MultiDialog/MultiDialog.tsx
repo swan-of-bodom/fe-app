@@ -108,8 +108,7 @@ export const CustomDialogTitle = ({ title }: CustomDialogTitleProps) => (
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
-      p: 0,
-      pb: 2,
+      p: 2,
     }}
   >
     {title}

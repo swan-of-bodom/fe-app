@@ -3,7 +3,7 @@ import { LoadingAnimation } from "../Loading/Loading";
 import { useState, useCallback, useEffect } from "react";
 import { approveAndTradeOpen } from "../../calls/tradeOpen";
 import { FinancialData } from "../../types/options";
-import { getPremiaWithSlippage, longInteger } from "../../utils/computations";
+import { getPremiaWithSlippage } from "../../utils/computations";
 import { debug, LogTypes } from "../../utils/debugger";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { isLong, timestampToReadableDate } from "../../utils/utils";
@@ -18,7 +18,6 @@ import { UserBalance } from "../../types/wallet";
 import { OptionWithPremia } from "../../classes/Option";
 import style from "./card.module.css";
 import buttonStyles from "../../style/button.module.css";
-import { intToMath64x61 } from "../../utils/units";
 
 type TemplateProps = {
   option: OptionWithPremia;

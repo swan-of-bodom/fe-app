@@ -1,4 +1,3 @@
-import { AMM_ADDRESS, AMM_METHODS } from "../constants/amm";
 import { debug } from "../utils/debugger";
 import { AccountInterface } from "starknet";
 import LpAbi from "../abi/lptoken_abi.json";
