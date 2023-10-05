@@ -1,10 +1,12 @@
 import { bnToOptionType } from "../utils/conversions";
 import { OptionType } from "../types/options";
 import { getMultipleTokensValueInUsd } from "../tokens/tokenPrices";
-import { BigNumberish } from "starknet";
+import { BigNumberish, Call } from "starknet";
 import { toHex } from "../utils/utils";
 import { shortInteger } from "../utils/computations";
 import {
+  AMM_ADDRESS,
+  AMM_METHODS,
   BASE_DIGITS,
   BTC_USDC_CALL_ADDRESS,
   BTC_USDC_PUT_ADDRESS,
@@ -82,6 +84,33 @@ export class Pool extends Pair {
 
   isPair(key: PairKey): boolean {
     return this.pairId === key;
+  }
+
+  private _depositWithdrawCalldata(amount: BigNumberish): BigNumberish[] {
+    return [
+      this.underlying.address,
+      this.quoteToken.address,
+      this.baseToken.address,
+      this.type,
+      BigInt(amount).toString(10),
+      "0", // uint256 0
+    ];
+  }
+
+  depositLiquidityCalldata(amount: BigNumberish): Call {
+    return {
+      contractAddress: AMM_ADDRESS,
+      entrypoint: AMM_METHODS.DEPOSIT_LIQUIDITY,
+      calldata: this._depositWithdrawCalldata(amount),
+    };
+  }
+
+  withdrawLiquidityCalldata(amount: BigNumberish): Call {
+    return {
+      contractAddress: AMM_ADDRESS,
+      entrypoint: AMM_METHODS.WITHDRAW_LIQUIDITY,
+      calldata: this._depositWithdrawCalldata(amount),
+    };
   }
 
   ////////////

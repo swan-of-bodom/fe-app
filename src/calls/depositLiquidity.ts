@@ -15,24 +15,9 @@ export const depositLiquidity = async (
   ok: () => void,
   nok: () => void
 ): Promise<void> => {
-  const approveCalldata = {
-    contractAddress: pool.lpAddress,
-    entrypoint: AMM_METHODS.APPROVE,
-    calldata: [AMM_ADDRESS, size, "0"],
-  };
+  const approveCalldata = pool.underlying.approveCalldata(size);
 
-  const depositLiquidityCalldata = {
-    contractAddress: AMM_ADDRESS,
-    entrypoint: AMM_METHODS.DEPOSIT_LIQUIDITY,
-    calldata: [
-      pool.lpAddress,
-      pool.quoteToken.address,
-      pool.baseToken.address,
-      pool.type,
-      size,
-      "0",
-    ],
-  };
+  const depositLiquidityCalldata = pool.depositLiquidityCalldata(size);
 
   debug("Depositing liquidity with calldata:", [
     approveCalldata,

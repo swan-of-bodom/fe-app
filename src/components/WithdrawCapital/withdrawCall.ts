@@ -1,5 +1,4 @@
 import { AccountInterface } from "starknet";
-import { AMM_ADDRESS, AMM_METHODS } from "../../constants/amm";
 import { debug } from "../../utils/debugger";
 import AmmAbi from "../../abi/amm_abi.json";
 import { invalidateStake } from "../../queries/client";
@@ -13,7 +12,6 @@ import {
 import { ToastType } from "../../redux/reducers/ui";
 import { TransactionAction } from "../../redux/reducers/transactions";
 import { UserPoolInfo } from "../../classes/Pool";
-import { toHex } from "../../utils/utils";
 
 const calculateTokens = (
   pool: UserPoolInfo,
@@ -60,22 +58,9 @@ export const withdrawCall = async (
     return;
   }
 
-  const calldata = [
-    pool.underlying.address,
-    pool.quoteToken.address,
-    pool.baseToken.address,
-    pool.type,
-    toHex(tokens),
-    "0", // uint256 trailing 0
-  ];
+  const withdraw = pool.withdrawLiquidityCalldata(tokens);
 
-  const withdraw = {
-    contractAddress: AMM_ADDRESS,
-    entrypoint: AMM_METHODS.WITHDRAW_LIQUIDITY,
-    calldata,
-  };
-
-  debug(`Calling ${AMM_METHODS.WITHDRAW_LIQUIDITY}`, withdraw);
+  debug("Withdraw call", withdraw);
 
   const res = await account.execute(withdraw, [AmmAbi]).catch((e) => {
     debug("Withdraw rejected by user or failed\n", e.message);
