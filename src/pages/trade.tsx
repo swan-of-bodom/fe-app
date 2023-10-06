@@ -20,7 +20,7 @@ const TradePage = () => {
         Vote on proposal 14
       </Typography>
       <Vote /> */}
-      {showAlternativeGraph ? (
+      {!showAlternativeGraph ? (
         <div style={{ width: "100%", height: "500px" }}>
           <AlternativeTradingView />
         </div>
