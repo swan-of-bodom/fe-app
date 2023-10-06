@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 import { WalletButton } from "../ConnectWallet/Button";
 import { ReactNode } from "react";
-import SettingsIcon from "@mui/icons-material/Settings";
 import { NetworkSwitch } from "../NetworkSwitch/NetworkSwitch";
 import styles from "./header.module.css";
+import { LinksMenu } from "../LinksMenu/LinksMenu";
 
 type NavLinkProps = {
   title: string;
@@ -49,12 +49,8 @@ export const Header = () => (
       </NavLink>
       <NetworkSwitch />
       {navLinks.map((navData, i) => navLink(navData, i))}
-      <NavLink to="/settings">
-        <div className={styles.settingscontainer}>
-          <SettingsIcon />
-        </div>
-      </NavLink>
       <WalletButton />
+      <LinksMenu />
     </div>
   </header>
 );

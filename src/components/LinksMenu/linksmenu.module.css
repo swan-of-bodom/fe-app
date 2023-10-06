@@ -1,0 +1,17 @@
+.container {
+  border: 1px solid white;
+}
+
+.container>div {
+  padding: 1em;
+}
+
+.stack {
+  display: flex;
+  flex-flow: column;
+  justify-content: start;
+}
+
+.stack>a {
+  text-decoration: none;
+}
