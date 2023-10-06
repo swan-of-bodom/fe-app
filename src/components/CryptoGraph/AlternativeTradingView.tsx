@@ -1,4 +1,3 @@
-// TradingViewWidget.jsx
 import { useEffect, useRef, memo } from "react";
 
 function TradingViewWidget() {
@@ -33,7 +32,7 @@ function TradingViewWidget() {
       "hideSymbolLogo": false,
       "scalePosition": "right",
       "scaleMode": "Normal",
-      "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
+      "fontFamily": "Neue Haas Grotesk, sans-serif, -apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
       "fontSize": "10",
       "noTimeScale": false,
       "valuesTracking": "1",
@@ -42,6 +41,7 @@ function TradingViewWidget() {
       "maLineColor": "#2962FF",
       "maLineWidth": 1,
       "maLength": 9,
+      "backgroundColor": "rgba(0, 0, 0, 1)",
       "lineWidth": 2,
       "lineType": 0,
       "dateRanges": [
