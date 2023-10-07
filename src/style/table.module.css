@@ -29,3 +29,10 @@
   justify-content: center;
   border-left: 1px solid white !important;
 }
+
+.textcontainer {
+  display: flex;
+  flex-flow: row;
+  border: 1px solid white;
+  padding: 25px 50px;
+}

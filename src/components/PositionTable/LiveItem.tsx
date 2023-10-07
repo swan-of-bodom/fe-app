@@ -5,7 +5,6 @@ import { openCloseOptionDialog, setCloseOption } from "../../redux/actions";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
 import buttonStyles from "../../style/button.module.css";
-import { debug } from "../../utils/debugger";
 
 type Props = {
   option: OptionWithPosition;
@@ -14,8 +13,6 @@ type Props = {
 export const LiveItem = ({ option }: Props) => {
   const txPending = useTxPending(option.optionId, TransactionAction.TradeClose);
   const { strike, maturity, size, value } = option;
-
-  debug("LIVE OPTION", option);
 
   const date = timestampToReadableDate(maturity * 1000);
 

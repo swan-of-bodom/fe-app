@@ -5,8 +5,8 @@ import { useNetwork } from "../../hooks/useNetwork";
 import { ProofResult, getProof } from "./getProof";
 import { AccountInterface } from "starknet";
 import { shortInteger } from "../../utils/computations";
-import styles from "./airdrop.module.css";
 import { NETWORK } from "../../constants/amm";
+import styles from "../../style/table.module.css";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -17,7 +17,7 @@ type Props = {
 const AirdropTemplate = ({ account, message, data }: Props) => (
   <div>
     <h3>Airdrop</h3>
-    <div className={styles.container}>
+    <div className={styles.textcontainer}>
       {message} {account && <ClaimButton account={account} data={data} />}
     </div>
   </div>
