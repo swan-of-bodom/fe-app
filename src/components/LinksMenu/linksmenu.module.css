@@ -14,4 +14,22 @@
 
 .stack>a {
   text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.iconholder {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: .5em;
+}
+
+.homelink {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  opacity: .7;
 }

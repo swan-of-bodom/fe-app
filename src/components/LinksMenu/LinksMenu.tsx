@@ -1,5 +1,5 @@
 import { Menu } from "@mui/material";
-import { ReactComponent as ThreeDots } from "./icon.svg";
+import { ReactComponent as ThreeDots } from "./icons/three-dots.svg";
 import { useState } from "react";
 import { MenuContent } from "./MenuContent";
 
