@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ArgentIcon, BraavosIcon } from "../assets";
 import { SupportedWalletIds } from "../../types/wallet";
 import { connect } from "../../network/account";
-import { debug } from "../../utils/debugger";
 import { getStarknet } from "get-starknet-core";
 import { closeDialog } from "../../redux/actions";
 
@@ -102,8 +101,6 @@ export const WalletBox = () => {
     const available = await sn.getAvailableWallets();
     const connector = available.find((wallet) => wallet.id === id);
 
-    debug("Connector", connector);
-
     if (connector) {
       connect(connector);
       closeDialog();
@@ -114,7 +111,7 @@ export const WalletBox = () => {
   };
 
   return (
-    <Grid container spacing={2}>
+    <Grid sx={{ p: 2 }} container spacing={2}>
       <Grid item md={12}>
         <Typography
           sx={{ cursor: "pointer" }}

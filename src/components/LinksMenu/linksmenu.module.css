@@ -9,7 +9,7 @@
 .stack {
   display: flex;
   flex-flow: column;
-  justify-content: start;
+  justify-content: flex-start;
 }
 
 .stack>a {

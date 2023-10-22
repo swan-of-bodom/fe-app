@@ -63,7 +63,12 @@ const WithAccount = ({ account }: { account: AccountInterface }) => {
   }
 
   if (isError || !data) {
-    return <Typography>Oh no :O</Typography>;
+    return (
+      <Typography>
+        We are experiencing difficulties fetching your data. Please try again
+        later.
+      </Typography>
+    );
   }
 
   debug("INSURANCE OPTIONS", data);
