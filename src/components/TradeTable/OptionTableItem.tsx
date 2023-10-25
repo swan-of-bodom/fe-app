@@ -18,7 +18,7 @@ const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
       background: theme.palette.grey[greyGrade],
     },
   };
-  const { strike, maturity, type } = option;
+  const { strike, maturity } = option;
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);

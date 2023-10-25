@@ -9,7 +9,6 @@ import { CSSProperties, useEffect, useState } from "react";
 import { AccountInterface } from "starknet";
 import { handleStake } from "./handleStake";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
-import { openCallWidoDialog, openPutWidoDialog } from "../../redux/actions";
 import { Pool } from "../../classes/Pool";
 import { intToDecimal } from "../../utils/units";
 import { BASE_DIGITS } from "../../constants/amm";
@@ -104,10 +103,6 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
     yslSx.color = theme.palette.success.main;
   }
 
-  const handleWidoClick = () => {
-    pool.isCall ? openCallWidoDialog() : openPutWidoDialog();
-  };
-
   const handleStakeClick = () =>
     handleStake(account!, amount, pool, setLoading);
 
@@ -143,17 +138,7 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
         />
       </TableCell>
       <TableCell sx={{ display: "flex", alignItems: "center" }} align="right">
-        {/* <Tooltip title="Stake from L1 directly to our liquidity pool - requires MetaMask">
-          <button
-            className={`${buttonStyles.button} ${buttonStyles.secondary}`}
-            style={{ whiteSpace: "nowrap" }}
-            onClick={handleWidoClick}
-          >
-            Stake from L1
-          </button>
-        </Tooltip> */}
         <button
-          // style={{ borderRight: 0 }}
           className={`${buttonStyles.button} ${buttonStyles.secondary}`}
           disabled={loading || !account || txPending}
           onClick={handleStakeClick}

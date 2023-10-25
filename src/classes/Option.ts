@@ -10,6 +10,7 @@ import { Pool } from "./Pool";
 import { longInteger, shortInteger } from "../utils/computations";
 import { BigNumberish, Call } from "starknet";
 import { Cubit } from "../types/units";
+import { sendGtagEvent } from "../analytics";
 
 export class Option extends Pool {
   public maturity: number;
@@ -176,6 +177,17 @@ export class Option extends Pool {
     return this._tradeOpenCloseCalldata(size, premia, true);
   }
 
+  sendItemSelected() {
+    const params = {
+      item_id: this.optionId,
+      item_name: this.display,
+      item_category: "Options",
+      item_category1: this.typeAsText,
+      item_category2: this.sideAsText,
+    };
+    sendGtagEvent("select_item", params);
+  }
+
   ////////////
   // GETTERS
   ////////////
@@ -206,9 +218,11 @@ export class Option extends Pool {
   }
 
   get display(): string {
-    return `${this.sideAsText} ${this.typeAsText} - strike price $${
-      this.strike
-    } - expires ${timestampToReadableDate(this.maturity * 1000)}`;
+    return `${this.pairId} ${this.sideAsText} ${
+      this.typeAsText
+    } - strike price $${this.strike} - expires ${timestampToReadableDate(
+      this.maturity * 1000
+    )}`;
   }
 
   get isFresh(): boolean {

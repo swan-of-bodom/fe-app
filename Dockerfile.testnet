@@ -10,6 +10,7 @@ RUN npm install --force
 COPY . .
 # override config with testnet config
 RUN cp /app/config-testnet.json /app/src/constants/config.json
+RUN ./google_analytics_setup.sh testnet
 
 RUN npm run build
 
