@@ -37,10 +37,10 @@ export const timestampToReadableDate = (ts: number): string =>
   new Intl.DateTimeFormat("default", {
     hour: "numeric",
     minute: "numeric",
-    second: "numeric",
     weekday: "long",
     month: "long",
     day: "numeric",
+    year: "numeric",
     timeZoneName: "short",
   }).format(ts);
 

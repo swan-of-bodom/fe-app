@@ -329,4 +329,8 @@ export class OptionWithPremia extends Option {
       (BigInt(this.premiaHex) * 10n ** BigInt(this.digits)) / BASE_MATH_64;
     this.premia = shortInteger(this.premiaBase, this.digits);
   }
+
+  get displayPremia(): string {
+    return this.premia.toFixed(4);
+  }
 }

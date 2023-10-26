@@ -1,5 +1,4 @@
 import { OptionWithPremia } from "../../classes/Option";
-import { timestampToReadableDate } from "../../utils/utils";
 import { TableCell, TableRow, useTheme } from "@mui/material";
 
 type OptionPreviewProps = {
@@ -18,19 +17,17 @@ const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
       background: theme.palette.grey[greyGrade],
     },
   };
-  const { strike, maturity } = option;
-  const msMaturity = maturity * 1000;
-
-  const date = timestampToReadableDate(msMaturity);
-
-  const displayPremia = option.premia.toFixed(4);
 
   return (
     <TableRow sx={style} onClick={handleClick}>
-      <TableCell sx={{ borderBottom: "1px solid white" }}>${strike}</TableCell>
-      <TableCell sx={{ borderBottom: "1px solid white" }}>{date}</TableCell>
       <TableCell sx={{ borderBottom: "1px solid white" }}>
-        {option.symbol} {displayPremia}
+        ${option.strike}
+      </TableCell>
+      <TableCell sx={{ borderBottom: "1px solid white" }}>
+        {option.dateRich}
+      </TableCell>
+      <TableCell sx={{ borderBottom: "1px solid white" }}>
+        {option.symbol} {option.displayPremia}
       </TableCell>
       <TableCell sx={{ textAlign: "center", borderBottom: "1px solid white" }}>
         <span style={{ color: "#00FF38", fontSize: "20px" }}>+</span>
