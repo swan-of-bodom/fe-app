@@ -10,6 +10,7 @@ import { Pool } from "../classes/Pool";
 export const depositLiquidity = async (
   account: AccountInterface,
   size: string,
+  sizeNum: number,
   pool: Pool,
   ok: () => void,
   nok: () => void
@@ -23,12 +24,16 @@ export const depositLiquidity = async (
     depositLiquidityCalldata,
   ]);
 
+  pool.sendStakeBeginCheckoutEvent(sizeNum);
+
   const res = await account
     .execute([approveCalldata, depositLiquidityCalldata], [LpAbi, AmmAbi])
     .catch((e: Error) => {
       debug('"Stake capital" user rejected or failed');
       console.log(e);
     });
+
+  pool.sendStakePurchaseEvent(sizeNum);
 
   if (res?.transaction_hash) {
     const hash = res.transaction_hash;

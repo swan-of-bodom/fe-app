@@ -62,11 +62,6 @@ const WithOption = ({ option, size, updateTradeState }: Props) => {
     false
   );
   const displayPremiaWithSlippage = math64x61toDecimal(premiaWithSlippage);
-
-  // shortInteger(
-  //   premiaWithSlippage.toString(10),
-  //   option.digits
-  // );
   const slippage = store.getState().settings.slippage;
 
   const handleClick = () =>
@@ -74,9 +69,11 @@ const WithOption = ({ option, size, updateTradeState }: Props) => {
       account!,
       option,
       size,
+      premiaNumber,
       premiaWithSlippage,
       balance,
-      updateTradeState
+      updateTradeState,
+      true
     );
 
   return (

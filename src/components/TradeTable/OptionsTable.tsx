@@ -23,7 +23,7 @@ const OptionsTable = ({ options }: Props) => {
   const handleOptionClick = (o: OptionWithPremia) => {
     setModalOption(o);
     setOpen(true);
-    o.sendItemSelected();
+    o.sendViewEvent();
   };
 
   return (

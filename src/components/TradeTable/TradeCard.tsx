@@ -18,6 +18,7 @@ import { UserBalance } from "../../types/wallet";
 import { OptionWithPremia } from "../../classes/Option";
 import style from "./card.module.css";
 import buttonStyles from "../../style/button.module.css";
+import { math64x61toDecimal } from "../../utils/units";
 
 type TemplateProps = {
   option: OptionWithPremia;
@@ -174,12 +175,15 @@ export const TradeCard = ({ option }: TradeCardProps) => {
       false
     );
 
+    option.sendBeginCheckoutEvent(amount, premia);
+
     updateTradeState({ failed: false, processing: true });
 
     approveAndTradeOpen(
       account,
       option,
       amount,
+      math64x61toDecimal(premiaMath64),
       premiaWithSlippage,
       balance,
       updateTradeState

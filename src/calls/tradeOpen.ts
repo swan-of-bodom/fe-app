@@ -21,6 +21,7 @@ export const approveAndTradeOpen = async (
   account: AccountInterface,
   option: Option,
   size: number,
+  premiaNum: number,
   premiaMath64: bigint,
   balance: UserBalance,
   updateTradeState: ({
@@ -29,7 +30,8 @@ export const approveAndTradeOpen = async (
   }: {
     failed: boolean;
     processing: boolean;
-  }) => void
+  }) => void,
+  isInsurance = false
 ): Promise<boolean> => {
   const premiaTokenCount = math64x61ToInt(premiaMath64, option.digits);
   const toApprove = getToApprove(option, size, BigInt(premiaTokenCount));
@@ -64,12 +66,16 @@ export const approveAndTradeOpen = async (
   const approve = option.underlying.approveCalldata(toApprove);
   const tradeOpen = option.tradeOpenCalldata(size, premiaMath64);
 
+  option.sendBeginCheckoutEvent(size, premiaNum, isInsurance);
+
   const res = await account
     .execute([approve, tradeOpen], [LpAbi, AmmAbi])
     .catch((e) => {
       debug("Trade open rejected or failed", e.message);
       throw Error("Trade open rejected or failed");
     });
+
+  option.sendPurchaseEvent(size, premiaNum, isInsurance);
 
   if (res?.transaction_hash) {
     const hash = res.transaction_hash;

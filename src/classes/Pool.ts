@@ -16,6 +16,7 @@ import {
 import { getUnlockedCapital } from "../calls/getUnlockedCapital";
 import { Pair, PairKey } from "./Pair";
 import { Token } from "./Token";
+import { sendGtagEvent } from "../analytics";
 
 export class Pool extends Pair {
   public type: OptionType;
@@ -111,6 +112,28 @@ export class Pool extends Pair {
       entrypoint: AMM_METHODS.WITHDRAW_LIQUIDITY,
       calldata: this._depositWithdrawCalldata(amount),
     };
+  }
+
+  sendStakeBeginCheckoutEvent(size: number) {
+    const params = {
+      event_category: "staking",
+      event_label: "stake button clicked",
+      type: this.typeAsText,
+      pair: this.pairId,
+      size,
+    };
+    sendGtagEvent("begin_checkout", params);
+  }
+
+  sendStakePurchaseEvent(size: number) {
+    const params = {
+      event_category: "staking",
+      event_label: "confirmed in wallet",
+      type: this.typeAsText,
+      pair: this.pairId,
+      size,
+    };
+    sendGtagEvent("purchase", params);
   }
 
   ////////////

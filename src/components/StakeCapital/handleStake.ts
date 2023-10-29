@@ -59,5 +59,5 @@ export const handleStake = async (
     setLoading(false);
   };
 
-  depositLiquidity(account, size, pool, ok, nok);
+  depositLiquidity(account, size, amount, pool, ok, nok);
 };

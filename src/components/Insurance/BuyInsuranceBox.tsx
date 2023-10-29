@@ -70,6 +70,7 @@ const BuyInsuranceButton = ({ option, size }: BuyButtonProps) => {
     }
     debug("Buying this option", option, "with size", size);
     setBuyInsuranceModal({ option: option, size });
+    option.sendViewEvent(true);
     openBuyInsuranceDialog();
   };
 

@@ -177,15 +177,50 @@ export class Option extends Pool {
     return this._tradeOpenCloseCalldata(size, premia, true);
   }
 
-  sendItemSelected() {
+  sendViewEvent(isInsurance = false) {
+    const category = isInsurance ? "insurance" : "option";
     const params = {
-      item_id: this.optionId,
-      item_name: this.display,
-      item_category: "Options",
-      item_category1: this.typeAsText,
-      item_category2: this.sideAsText,
+      event_category: category,
+      event_label: "option dialog opened",
+      type: this.typeAsText,
+      side: this.sideAsText,
+      pair: this.pairId,
+      maturity: this.maturity,
+      strike: this.strike,
     };
-    sendGtagEvent("select_item", params);
+    sendGtagEvent("view_item", params);
+  }
+
+  sendBeginCheckoutEvent(size: number, premia: number, isInsurance = false) {
+    const category = isInsurance ? "insurance" : "option";
+    const params = {
+      event_category: category,
+      event_label: "buy button clicked",
+      type: this.typeAsText,
+      side: this.sideAsText,
+      pair: this.pairId,
+      maturity: this.maturity,
+      strike: this.strike,
+      size,
+      premia,
+    };
+    sendGtagEvent("begin_checkout", params);
+  }
+
+  sendPurchaseEvent(size: number, premia: number, isInsurance = false) {
+    const category = isInsurance ? "insurance" : "option";
+    const params = {
+      event_category: category,
+      event_label: "confirmed in wallet",
+      type: this.typeAsText,
+      side: this.sideAsText,
+      pair: this.pairId,
+      maturity: this.maturity,
+      strike: this.strike,
+      size,
+      premia,
+    };
+    sendGtagEvent("purchase", params);
   }
 
   ////////////
