@@ -175,8 +175,6 @@ export const TradeCard = ({ option }: TradeCardProps) => {
       false
     );
 
-    option.sendBeginCheckoutEvent(amount, premia);
-
     updateTradeState({ failed: false, processing: true });
 
     approveAndTradeOpen(
