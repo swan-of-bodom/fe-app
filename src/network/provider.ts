@@ -13,8 +13,9 @@ export const devnetOptions = {
 };
 
 export const testnetOptions: ProviderOptions = {
-  sequencer: {
-    network: constants.StarknetChainId.SN_GOERLI,
+  rpc: {
+    nodeUrl: "https://api.carmine.finance/api/v1/testnet/call",
+    chainId: constants.StarknetChainId.SN_GOERLI,
   },
 };
 
