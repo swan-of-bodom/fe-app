@@ -1,7 +1,9 @@
-import { Provider, ProviderOptions } from "starknet";
+import { Provider, ProviderOptions, RpcProviderOptions } from "starknet";
 import { Network, NetworkName } from "../types/network";
 import { constants } from "starknet";
 import { NETWORK } from "../constants/amm";
+
+import { Chain, goerli, mainnet } from "@starknet-react/chains";
 
 export const devnetOptions = {
   sequencer: {
@@ -20,9 +22,27 @@ export const testnetOptions: ProviderOptions = {
 };
 
 export const mainnetOptions: ProviderOptions = {
-  sequencer: {
-    network: constants.StarknetChainId.SN_MAIN,
+  rpc: {
+    nodeUrl: "https://api.carmine.finance/api/v1/mainnet/call",
+    chainId: constants.StarknetChainId.SN_GOERLI,
   },
+};
+
+export const jsonProviderOptions = (chain: Chain): RpcProviderOptions => {
+  if (chain.id === goerli.id) {
+    return {
+      nodeUrl: "https://api.carmine.finance/api/v1/testnet/call",
+      chainId: constants.StarknetChainId.SN_GOERLI,
+    };
+  }
+  if (chain.id === mainnet.id) {
+    return {
+      nodeUrl: "https://api.carmine.finance/api/v1/mainnet/call",
+      chainId: constants.StarknetChainId.SN_GOERLI,
+    };
+  }
+  // unreachable
+  throw Error("Invalid network");
 };
 
 export const providerOptions = (): ProviderOptions => {
