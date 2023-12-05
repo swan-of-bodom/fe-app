@@ -9,8 +9,6 @@ export enum DialogContentElem {
   Slippage = "Slippage",
   CloseOption = "CloseOption",
   BuyInsurance = "BuyInsurance",
-  CallWido = "CallWido",
-  PutWido = "PutWido",
   MetamaskMissing = "MetamaskMissing",
   NotEnoughUnlocked = "NotEnoughUnlocked",
 }

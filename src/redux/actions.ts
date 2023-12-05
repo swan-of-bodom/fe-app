@@ -60,12 +60,6 @@ export const openBuyInsuranceDialog = () =>
 export const openAccountDialog = () =>
   openDialogWithContent(DialogContentElem.Account);
 
-export const openCallWidoDialog = () =>
-  openDialogWithContent(DialogContentElem.CallWido);
-
-export const openPutWidoDialog = () =>
-  openDialogWithContent(DialogContentElem.PutWido);
-
 export const openMetamaskMissingDialog = () =>
   openDialogWithContent(DialogContentElem.MetamaskMissing);
 

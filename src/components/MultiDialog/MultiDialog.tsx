@@ -16,7 +16,6 @@ import { SlippageContent } from "../Slippage/SlippageContent";
 import { Close } from "@mui/icons-material";
 import { ClosePosition } from "../ClosePosition/ClosePosition";
 import { WalletInfo } from "../WalletInfo/WalletInfo";
-import { CallWido, PutWido } from "../WidoWidgetWrapper/WidoWidgetWrapper";
 import { ReactNode } from "react";
 import { BuyInsuranceModal } from "../Insurance/BuyInsuranceModal";
 import buttonStyles from "../../style/button.module.css";
@@ -180,8 +179,6 @@ export const MultiDialog = () => {
           <WalletInfo />
         </Border>
       )}
-      {dialogContent === DialogContentElem.CallWido && <CallWido />}
-      {dialogContent === DialogContentElem.PutWido && <PutWido />}
       {dialogContent === DialogContentElem.MetamaskMissing && (
         <Border>
           <MetamaskMissing />
