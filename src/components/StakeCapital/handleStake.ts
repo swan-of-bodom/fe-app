@@ -1,13 +1,14 @@
-import { getUserBalance } from "./../../calls/balanceOf";
-import { debug } from "../../utils/debugger";
 import { AccountInterface } from "starknet";
-import { invalidateStake } from "../../queries/client";
+
 import { depositLiquidity } from "../../calls/depositLiquidity";
-import { decimalToInt } from "../../utils/units";
+import { Pool } from "../../classes/Pool";
+import { invalidateStake } from "../../queries/client";
 import { showToast } from "../../redux/actions";
 import { ToastType } from "../../redux/reducers/ui";
 import { longInteger, shortInteger } from "../../utils/computations";
-import { Pool } from "../../classes/Pool";
+import { debug } from "../../utils/debugger";
+import { decimalToInt } from "../../utils/units";
+import { getUserBalance } from "./../../calls/balanceOf";
 
 export const handleStake = async (
   account: AccountInterface,

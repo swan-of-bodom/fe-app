@@ -1,8 +1,9 @@
+import { connect } from "starknetkit";
+
+import { useAccount } from "../../hooks/useAccount";
+import { connect as accountConnect } from "../../network/account";
 import { AccountInfo } from "./AccountInfo";
 import styles from "./connect.module.css";
-import { connect as accountConnect } from "../../network/account";
-import { connect } from "starknetkit";
-import { useAccount } from "../../hooks/useAccount";
 
 type CustomWallet = {
   name: string;
@@ -24,9 +25,11 @@ const okxWallet: CustomWallet = {
 const addCustomWallet = (wallet: CustomWallet, callback: () => void) => {
   // starknet wallet object or undefined
   const walletWindowObject = window[wallet.windowPropName];
+  // console.log(windowProp)
 
-  if (!walletWindowObject) {
+  if (!walletWindowObject && wallet === okxWallet) {
     console.log(`Wallet ${wallet.name} is not available`);
+    window.open("https://chromewebstore.google.com/detail/okx-wallet/mcohilncbfahbmgdjkbpemcciiolgcge");
     return;
   }
 
@@ -88,6 +91,10 @@ export const WalletButton = () => {
     setTimeout(
       () =>
         addCustomWallet(okxWallet, () => {
+          const wallet = window.starknet_okxwallet;
+          if (wallet && wallet.isConnected) {
+            accountConnect(wallet);
+          }
           console.log("CUSTOM WALLET CLICKED");
         }),
       1

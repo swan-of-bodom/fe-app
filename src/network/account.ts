@@ -1,14 +1,11 @@
+import { ConnectedStarknetWindowObject, getStarknet, StarknetWindowObject } from "get-starknet-core";
+
 import { openNetworkMismatchDialog, updateNetwork } from "../redux/actions";
-import {
-  StarknetWindowObject,
-  getStarknet,
-  ConnectedStarknetWindowObject,
-} from "get-starknet-core";
-import { debug } from "../utils/debugger";
 import { store } from "../redux/store";
-import { SupportedWalletIds } from "../types/wallet";
-import { addWalletEventHandlers } from "./walletEvents";
 import { NetworkName } from "../types/network";
+import { SupportedWalletIds } from "../types/wallet";
+import { debug } from "../utils/debugger";
+import { addWalletEventHandlers } from "./walletEvents";
 
 const isConnectedWallet = (
   wallet: StarknetWindowObject | undefined
@@ -89,7 +86,9 @@ export const connect = (
 };
 
 const foundWallet = (): boolean =>
-  !!window.starknet_argentX || !!window.starknet_braavos;
+  !!window.starknet_argentX ||
+  !!window.starknet_braavos ||
+  !!window.starknet_okxwallet;
 
 export const connectToLatest = async () => {
   const { walletId } = store.getState().network;
