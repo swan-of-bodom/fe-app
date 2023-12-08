@@ -1,14 +1,15 @@
-import { openNetworkMismatchDialog, updateNetwork } from "../redux/actions";
 import {
-  StarknetWindowObject,
-  getStarknet,
   ConnectedStarknetWindowObject,
+  getStarknet,
+  StarknetWindowObject,
 } from "get-starknet-core";
-import { debug } from "../utils/debugger";
+
+import { openNetworkMismatchDialog, updateNetwork } from "../redux/actions";
 import { store } from "../redux/store";
-import { SupportedWalletIds } from "../types/wallet";
-import { addWalletEventHandlers } from "./walletEvents";
 import { NetworkName } from "../types/network";
+import { SupportedWalletIds } from "../types/wallet";
+import { debug } from "../utils/debugger";
+import { addWalletEventHandlers } from "./walletEvents";
 
 const isConnectedWallet = (
   wallet: StarknetWindowObject | undefined
@@ -27,14 +28,26 @@ export const getWallet = (): ConnectedStarknetWindowObject | undefined => {
     return undefined;
   }
 
-  const wallet =
-    walletId === SupportedWalletIds.ArgentX
-      ? window.starknet_argentX
-      : window.starknet_braavos;
+  let wallet = null;
+
+  switch (walletId) {
+    case SupportedWalletIds.ArgentX:
+      wallet = window.starknet_argentX;
+      break;
+    case SupportedWalletIds.Braavos:
+      wallet = window.starknet_braavos;
+      break;
+    case SupportedWalletIds.OKXWallet:
+      wallet = window.starknet_okxwallet;
+      break;
+    default:
+      return undefined;
+  }
 
   if (isConnectedWallet(wallet)) {
     return wallet;
   }
+
   return undefined;
 };
 
@@ -89,7 +102,9 @@ export const connect = (
 };
 
 const foundWallet = (): boolean =>
-  !!window.starknet_argentX || !!window.starknet_braavos;
+  !!window.starknet_argentX ||
+  !!window.starknet_braavos ||
+  !!window.starknet_okxwallet;
 
 export const connectToLatest = async () => {
   const { walletId } = store.getState().network;

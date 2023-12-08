@@ -12,6 +12,9 @@ export const ETH_USDC_PUT_ADDRESS = config.ETH_USDC_PUT_ADDRESS;
 export const BTC_USDC_CALL_ADDRESS = config.BTC_USDC_CALL_ADDRESS;
 export const BTC_USDC_PUT_ADDRESS = config.BTC_USDC_PUT_ADDRESS;
 
+export const isTestnet = NETWORK === "testnet";
+export const isMainnet = NETWORK === "mainnet";
+
 export const enum AMM_METHODS {
   IS_OPTION_AVAILABLE = "is_option_available",
   GET_POOL_AVAILABLE_BALANCE = "get_pool_available_balance",
