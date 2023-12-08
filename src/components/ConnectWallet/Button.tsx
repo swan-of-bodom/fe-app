@@ -4,8 +4,11 @@ import { useAccount } from "../../hooks/useAccount";
 import { connect as accountConnect } from "../../network/account";
 import { AccountInfo } from "./AccountInfo";
 import styles from "./connect.module.css";
+import { isMainnet } from "../../constants/amm";
+import { SupportedWalletIds } from "../../types/wallet";
 
 type CustomWallet = {
+  id: SupportedWalletIds;
   name: string;
   alt?: string;
   image: string;
@@ -13,6 +16,7 @@ type CustomWallet = {
 };
 
 const okxWallet: CustomWallet = {
+  id: SupportedWalletIds.OKXWallet,
   name: "OKX Wallet",
   alt: "OKX Wallet",
   image:
@@ -22,16 +26,9 @@ const okxWallet: CustomWallet = {
 
 // this is a hack that adds one extra wallet
 // to "starknetkit" modal with custom callback
-const addCustomWallet = (wallet: CustomWallet, callback: () => void) => {
+const addCustomWallet = (wallet: CustomWallet) => {
   // starknet wallet object or undefined
   const walletWindowObject = window[wallet.windowPropName];
-  // console.log(windowProp)
-
-  if (!walletWindowObject && wallet === okxWallet) {
-    console.log(`Wallet ${wallet.name} is not available`);
-    window.open("https://chromewebstore.google.com/detail/okx-wallet/mcohilncbfahbmgdjkbpemcciiolgcge");
-    return;
-  }
 
   const shadowParent = Array.from(document.body.children)
     .filter((el) => el.tagName === "DIV")
@@ -68,8 +65,17 @@ const addCustomWallet = (wallet: CustomWallet, callback: () => void) => {
   list.appendChild(customWallet);
 
   customWallet.addEventListener("click", () => {
-    // connect the wallet by calling its callback
-    callback();
+    // user does not have wallet, open extension store
+    if (!walletWindowObject) {
+      if (wallet.id === SupportedWalletIds.OKXWallet) {
+        window.open(
+          "https://chromewebstore.google.com/detail/okx-wallet/mcohilncbfahbmgdjkbpemcciiolgcge"
+        );
+      }
+
+      return;
+    }
+    accountConnect(walletWindowObject);
     // simulate overlay click to close the modal
     overlay.click();
   });
@@ -79,26 +85,22 @@ export const WalletButton = () => {
   const account = useAccount();
 
   const handleConnect = async () => {
-    connect({ modalMode: "alwaysAsk", dappName: "Carmine Options AMM" }).then(
-      (wallet) => {
-        if (wallet && wallet.isConnected) {
-          accountConnect(wallet);
-        }
+    connect({
+      modalMode: "alwaysAsk",
+      dappName: "Carmine Options AMM",
+      // app currently has only dark theme
+      modalTheme: "dark",
+    }).then((wallet) => {
+      if (wallet && wallet.isConnected) {
+        accountConnect(wallet);
       }
-    );
+    });
 
-    // call inside timeout to make sure modal is present in the DOM
-    setTimeout(
-      () =>
-        addCustomWallet(okxWallet, () => {
-          const wallet = window.starknet_okxwallet;
-          if (wallet && wallet.isConnected) {
-            accountConnect(wallet);
-          }
-          console.log("CUSTOM WALLET CLICKED");
-        }),
-      1
-    );
+    // OKX Wallet currently supports only Mainnet
+    if (isMainnet) {
+      // call inside timeout to make sure modal is present in the DOM
+      setTimeout(() => addCustomWallet(okxWallet), 1);
+    }
   };
 
   if (account) {
