@@ -48,7 +48,7 @@ const App = () => {
                   <Route
                     key={i}
                     path={oldPath}
-                    element={<Navigate to={newPath} replace />}
+                    element={<Navigate to={newPath} replace />} 
                   />
                 ))}
 
