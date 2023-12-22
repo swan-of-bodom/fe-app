@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 import { OptionWithPosition } from "../../classes/Option";
 import { BuyInsuranceModalData } from "../../components/Insurance/BuyInsuranceModal";
 import { TransferData } from "../../components/Transfer/transfer";
@@ -21,6 +22,11 @@ export enum ToastType {
   Success = "success",
   Error = "error",
 }
+export enum PortfolioParamType {
+  AirDrop = "airdrop",
+  History = "history",
+  Position = "position",
+}
 
 export type ToastState = {
   message: string;
@@ -36,6 +42,7 @@ export interface UiState {
   buyInsuranceModalData?: BuyInsuranceModalData;
   transferData?: TransferData;
   transferDialogShown: boolean;
+  portfolioParam?: PortfolioParamType;
 }
 
 export const ui = createSlice({
@@ -45,6 +52,7 @@ export const ui = createSlice({
     dialogContent: DialogContentElem.Wallet,
     toastState: { message: "", type: ToastType.Info, open: false },
     transferDialogShown: false,
+    portfolioParam: PortfolioParamType.Position,
   } as UiState,
   reducers: {
     toggleDialog: (state, action: { payload: Partial<UiState> }) => {
@@ -79,6 +87,10 @@ export const ui = createSlice({
       state.transferDialogShown = action.payload;
       return state;
     },
+    setParamState: (state, action: { payload: PortfolioParamType }) => {
+      state.portfolioParam = action.payload;
+      return state;
+    },
   },
 });
 
@@ -89,4 +101,5 @@ export const {
   setToastState,
   setTransferDataModalState,
   setTransferDialogShown,
+  setParamState,
 } = ui.actions;

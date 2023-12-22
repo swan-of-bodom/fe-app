@@ -25,9 +25,7 @@ import { Slip } from "./components/Slip";
 
 const App = () => {
   const [check, rerender] = useState(false);
-
   const acceptedTermsAndConditions = isCookieSet("carmine-t&c");
-
   const oldPathRedirects = [
     ["/trade", "/"],
     ["/position", "/portfolio"],

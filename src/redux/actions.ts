@@ -2,8 +2,10 @@ import { setSlippageState, updateSettingsState } from "./reducers/settings";
 import { updateNetworkState } from "./reducers/network";
 import {
   DialogContentElem,
+  PortfolioParamType,
   setBuyInsuranceModalState,
   setCloseOptionState,
+  setParamState,
   setToastState,
   setTransferDataModalState,
   setTransferDialogShown,
@@ -14,6 +16,8 @@ import { store } from "./store";
 import { Settings } from "../types/settings";
 import { NetworkState } from "../types/network";
 import { OptionWithPosition } from "../classes/Option";
+import { BuyInsuranceModalData } from "../components/Insurance/BuyInsuranceModal";
+import { TransferData } from "../components/Transfer/transfer";
 import {
   addTxReducer,
   setTxStatusReducer,
@@ -21,8 +25,6 @@ import {
   TransactionAction,
   TransactionStatus,
 } from "./reducers/transactions";
-import { BuyInsuranceModalData } from "../components/Insurance/BuyInsuranceModal";
-import { TransferData } from "../components/Transfer/transfer";
 
 export const updateSettings = (v: Partial<Settings>) =>
   store.dispatch(updateSettingsState(v));
@@ -76,6 +78,8 @@ export const setCloseOption = (option: OptionWithPosition) =>
 
 export const setBuyInsuranceModal = (data: BuyInsuranceModalData) =>
   store.dispatch(setBuyInsuranceModalState(data));
+export const setPortfolioParam = (option: PortfolioParamType) =>
+  store.dispatch(setParamState(option));
 
 export const openTransferModal = (data: TransferData) =>
   store.dispatch(setTransferDataModalState(data));
