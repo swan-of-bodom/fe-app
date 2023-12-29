@@ -15,13 +15,13 @@ import { Info } from "@mui/icons-material";
 import { timestampToReadableDate } from "../../utils/utils";
 import tableStyles from "../../style/table.module.css";
 import { Pool } from "../../classes/Pool";
-import { ETH_ADDRESS, USDC_ADDRESS } from "../../constants/amm";
+import { BTC_ADDRESS, ETH_ADDRESS, USDC_ADDRESS } from "../../constants/amm";
 
 const POOLS = [
   new Pool(ETH_ADDRESS, USDC_ADDRESS, OptionType.Call),
   new Pool(ETH_ADDRESS, USDC_ADDRESS, OptionType.Put),
-  // new Pool(BTC_ADDRESS, USDC_ADDRESS, OptionType.Call),
-  // new Pool(BTC_ADDRESS, USDC_ADDRESS, OptionType.Put),
+  new Pool(BTC_ADDRESS, USDC_ADDRESS, OptionType.Call),
+  new Pool(BTC_ADDRESS, USDC_ADDRESS, OptionType.Put),
 ];
 
 export const StakeCapitalParent = () => {

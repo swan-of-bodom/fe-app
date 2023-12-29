@@ -117,7 +117,7 @@ const TradeTable = () => {
         <div>
           <Select sx={selectNoBorder} value={pair} onChange={handlePairChange}>
             <MenuItem value={PairKey.ETH_USDC}>{PairKey.ETH_USDC}</MenuItem>
-            {/* <MenuItem value={PairKey.BTC_USDC}>{PairKey.BTC_USDC}</MenuItem> */}
+            <MenuItem value={PairKey.BTC_USDC}>{PairKey.BTC_USDC}</MenuItem>
           </Select>
         </div>
         <div className={styles.container}>
