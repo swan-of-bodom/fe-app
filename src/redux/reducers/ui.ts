@@ -63,6 +63,7 @@ export const ui = createSlice({
       return state;
     },
     setCloseOptionState: (state, action: { payload: OptionWithPosition }) => {
+      // @ts-ignore
       state.activeCloseOption = action.payload;
       return state;
     },
