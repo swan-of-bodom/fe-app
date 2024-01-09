@@ -23,6 +23,16 @@ export const MenuContent = ({ handleClose }: Props) => {
           </div>
           Home
         </NavLink>
+        <NavLink
+          className={styles.homelink}
+          to="/settings"
+          onClick={handleClose}
+        >
+          <div className={styles.iconholder}>
+            <Settings />
+          </div>
+          Settings
+        </NavLink>
       </div>
       <div className={styles.stack}>
         <a
@@ -55,12 +65,6 @@ export const MenuContent = ({ handleClose }: Props) => {
           </div>
           About
         </a>
-        <NavLink to="/settings" onClick={handleClose}>
-          <div className={styles.iconholder}>
-            <Settings />
-          </div>
-          Settings
-        </NavLink>
         <a
           href="https://github.com/CarmineOptions"
           target="_blank"
@@ -90,6 +94,16 @@ export const MenuContent = ({ handleClose }: Props) => {
             <Twitter />
           </div>
           Twitter
+        </a>
+        <a
+          href="https://legacy.app.carmine.finance"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <div className={styles.iconholder}>
+            <Developers />
+          </div>
+          Legacy App
         </a>
       </div>
     </div>

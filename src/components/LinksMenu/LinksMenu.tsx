@@ -12,7 +12,12 @@ export const LinksMenu = () => {
   return (
     <div
       id="links-menu"
-      style={{ display: "flex", marginLeft: "1em", cursor: "pointer" }}
+      style={{
+        display: "flex",
+        marginLeft: "1em",
+        marginRight: "1em",
+        cursor: "pointer",
+      }}
       onClick={toggleOpen}
     >
       <ThreeDots />

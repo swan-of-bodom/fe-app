@@ -49,8 +49,8 @@ export const Header = () => (
       </NavLink>
       <NetworkSwitch />
       {navLinks.map((navData, i) => navLink(navData, i))}
-      <WalletButton />
       <LinksMenu />
+      <WalletButton />
     </div>
   </header>
 );
