@@ -6,9 +6,9 @@ import { AccountInfo } from "./AccountInfo";
 import styles from "./connect.module.css";
 import { isMainnet } from "../../constants/amm";
 import { SupportedWalletIds } from "../../types/wallet";
-import { useState } from "react";
 import { userLpBalance } from "../Transfer/transfer";
-import { openTransferModal } from "../../redux/actions";
+import { openTransferModal, transferDialogShown } from "../../redux/actions";
+import { store } from "../../redux/store";
 
 type CustomWallet = {
   id: SupportedWalletIds;
@@ -86,7 +86,7 @@ const addCustomWallet = (wallet: CustomWallet) => {
 
 export const WalletButton = () => {
   const account = useAccount();
-  const [transferCalled, setTransferedCalled] = useState(false);
+  const dialogShown = store.getState().ui.transferDialogShown;
 
   const handleConnect = async () => {
     connect({
@@ -108,8 +108,8 @@ export const WalletButton = () => {
   };
 
   if (account) {
-    if (!transferCalled && isMainnet) {
-      setTransferedCalled(true);
+    if (!dialogShown && isMainnet) {
+      transferDialogShown();
       userLpBalance(account.address).then((transferData) => {
         if (transferData.shouldTransfer) {
           openTransferModal(transferData);

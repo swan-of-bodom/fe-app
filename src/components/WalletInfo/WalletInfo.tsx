@@ -1,7 +1,11 @@
 import { IconButton, Link, Skeleton, Tooltip, Typography } from "@mui/material";
 import { useWallet } from "../../hooks/useWallet";
 import { disconnect } from "../../network/account";
-import { closeDialog, showToast } from "../../redux/actions";
+import {
+  closeDialog,
+  showToast,
+  transferDialogEnable,
+} from "../../redux/actions";
 import { WalletIcon } from "../assets";
 import { ContentCopy, Info, PowerSettingsNew } from "@mui/icons-material";
 import { ToastType } from "../../redux/reducers/ui";
@@ -12,6 +16,7 @@ import styles from "./walletinfo.module.css";
 const handleDisconnect = () => {
   closeDialog();
   disconnect();
+  transferDialogEnable();
 };
 
 const handleCopy = (msg: string) => {

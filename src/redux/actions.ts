@@ -6,6 +6,7 @@ import {
   setCloseOptionState,
   setToastState,
   setTransferDataModalState,
+  setTransferDialogShown,
   ToastType,
   toggleDialog,
 } from "./reducers/ui";
@@ -81,6 +82,12 @@ export const openTransferModal = (data: TransferData) =>
 
 export const showToast = (message: string, type: ToastType = ToastType.Info) =>
   store.dispatch(setToastState({ message, open: true, type }));
+
+export const transferDialogShown = () =>
+  store.dispatch(setTransferDialogShown(true));
+
+export const transferDialogEnable = () =>
+  store.dispatch(setTransferDialogShown(false));
 
 export const hideToast = () => store.dispatch(setToastState({ open: false }));
 

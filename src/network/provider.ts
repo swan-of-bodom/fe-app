@@ -3,7 +3,7 @@ import { Network, NetworkName } from "../types/network";
 import { constants } from "starknet";
 import { NETWORK } from "../constants/amm";
 
-export const devnetOptions: RpcProviderOptions = {};
+// export const devnetOptions: RpcProviderOptions = {};
 
 export const testnetOptions: RpcProviderOptions = {
   nodeUrl: "https://api.carmine.finance/api/v1/testnet/call",
@@ -20,8 +20,8 @@ export const providerOptions = (): RpcProviderOptions => {
     return mainnetOptions;
   } else if (NETWORK === "testnet") {
     return testnetOptions;
-  } else if (NETWORK === "devnet") {
-    return devnetOptions;
+    // } else if (NETWORK === "devnet") {
+    //   return devnetOptions;
   } else {
     throw new Error(`Invalid network provided! ${NETWORK}`);
   }

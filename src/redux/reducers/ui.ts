@@ -35,6 +35,7 @@ export interface UiState {
   activeCloseOption?: OptionWithPosition;
   buyInsuranceModalData?: BuyInsuranceModalData;
   transferData?: TransferData;
+  transferDialogShown: boolean;
 }
 
 export const ui = createSlice({
@@ -43,6 +44,7 @@ export const ui = createSlice({
     dialogOpen: false,
     dialogContent: DialogContentElem.Wallet,
     toastState: { message: "", type: ToastType.Info, open: false },
+    transferDialogShown: false,
   } as UiState,
   reducers: {
     toggleDialog: (state, action: { payload: Partial<UiState> }) => {
@@ -73,6 +75,10 @@ export const ui = createSlice({
       state.dialogContent = DialogContentElem.TransferCapital;
       return state;
     },
+    setTransferDialogShown: (state, action: { payload: boolean }) => {
+      state.transferDialogShown = action.payload;
+      return state;
+    },
   },
 });
 
@@ -82,4 +88,5 @@ export const {
   setCloseOptionState,
   setToastState,
   setTransferDataModalState,
+  setTransferDialogShown,
 } = ui.actions;

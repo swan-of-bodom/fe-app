@@ -30,9 +30,9 @@ export const StakeCapitalParent = () => {
   const MAINNET_LAUNCH_TIMESTAMP = 1680864820000;
   const yslTooltipText = `Annual Percentage Yield calculated from the launch to Mainnet on ${timestampToReadableDate(
     MAINNET_LAUNCH_TIMESTAMP
-  )}`;
+  )}.\nCurrently showing legacy protocol APY.`;
   const apyTooltipText =
-    "APY (Annual Percentage Yield) is calculated based on the last week and represents the annualized yield of the pool. Keep in mind that it does NOT account for risk and that past returns do not imply future returns.";
+    "APY (Annual Percentage Yield) is calculated based on the last week and represents the annualized yield of the pool. Keep in mind that it does NOT account for risk and that past returns do not imply future returns.\nCurrently showing legacy protocol APY.";
 
   return (
     <Table aria-label="simple table" className={tableStyles.table}>
@@ -43,7 +43,7 @@ export const StakeCapitalParent = () => {
           </TableCell>
           <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
             <Tooltip title={yslTooltipText}>
-              <Typography>APY all time</Typography>
+              <Typography>v0 APY all time</Typography>
             </Tooltip>
           </TableCell>
           <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
@@ -53,7 +53,7 @@ export const StakeCapitalParent = () => {
             >
               <Tooltip title={apyTooltipText}>
                 <Typography>
-                  APY last week
+                  v0 APY last week
                   <Info sx={{ height: "17px", marginBottom: "-2px" }} />
                 </Typography>
               </Tooltip>
