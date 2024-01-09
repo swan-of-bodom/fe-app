@@ -33,6 +33,17 @@ export const MenuContent = ({ handleClose }: Props) => {
           </div>
           Settings
         </NavLink>
+        <a
+          href="https://legacy.app.carmine.finance"
+          target="_blank"
+          rel="noreferrer"
+          className={styles.homelink}
+        >
+          <div className={styles.iconholder}>
+            <Developers />
+          </div>
+          Legacy App
+        </a>
       </div>
       <div className={styles.stack}>
         <a
@@ -94,16 +105,6 @@ export const MenuContent = ({ handleClose }: Props) => {
             <Twitter />
           </div>
           Twitter
-        </a>
-        <a
-          href="https://legacy.app.carmine.finance"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <div className={styles.iconholder}>
-            <Developers />
-          </div>
-          Legacy App
         </a>
       </div>
     </div>

@@ -19,6 +19,7 @@ import { OptionWithPremia } from "../../classes/Option";
 import style from "./card.module.css";
 import buttonStyles from "../../style/button.module.css";
 import { math64x61toDecimal } from "../../utils/units";
+import { TokenKey } from "../../classes/Token";
 
 type TemplateProps = {
   option: OptionWithPremia;
@@ -77,8 +78,10 @@ type TradeCardProps = {
 
 export const TradeCard = ({ option }: TradeCardProps) => {
   const account = useAccount();
-  const [amount, setAmount] = useState<number>(1);
-  const [inputText, setInputText] = useState<string>("1");
+  // base amount for BTC is 0.1 and 1 for anything else
+  const baseAmount = option.underlying.id === TokenKey.BTC ? 0.1 : 1;
+  const [amount, setAmount] = useState<number>(baseAmount);
+  const [inputText, setInputText] = useState<string>(baseAmount.toString(10));
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<FinancialData | null>(null);
   const [premiaMath64, setPremiaMath64] = useState<bigint | undefined>();
