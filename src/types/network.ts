@@ -1,4 +1,4 @@
-import { Provider } from "starknet";
+import { RpcProvider } from "starknet";
 import { SupportedWalletIds } from "./wallet";
 import { constants } from "starknet";
 
@@ -16,6 +16,6 @@ export interface Network {
 
 export interface NetworkState {
   walletId?: SupportedWalletIds;
-  provider: Provider;
+  provider: RpcProvider;
   network: Network;
 }

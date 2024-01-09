@@ -5,6 +5,7 @@ import {
   setBuyInsuranceModalState,
   setCloseOptionState,
   setToastState,
+  setTransferDataModalState,
   ToastType,
   toggleDialog,
 } from "./reducers/ui";
@@ -20,6 +21,7 @@ import {
   TransactionStatus,
 } from "./reducers/transactions";
 import { BuyInsuranceModalData } from "../components/Insurance/BuyInsuranceModal";
+import { TransferData } from "../components/Transfer/transfer";
 
 export const updateSettings = (v: Partial<Settings>) =>
   store.dispatch(updateSettingsState(v));
@@ -73,6 +75,9 @@ export const setCloseOption = (option: OptionWithPosition) =>
 
 export const setBuyInsuranceModal = (data: BuyInsuranceModalData) =>
   store.dispatch(setBuyInsuranceModalState(data));
+
+export const openTransferModal = (data: TransferData) =>
+  store.dispatch(setTransferDataModalState(data));
 
 export const showToast = (message: string, type: ToastType = ToastType.Info) =>
   store.dispatch(setToastState({ message, open: true, type }));

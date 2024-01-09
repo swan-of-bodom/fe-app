@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { OptionWithPosition } from "../../classes/Option";
 import { BuyInsuranceModalData } from "../../components/Insurance/BuyInsuranceModal";
+import { TransferData } from "../../components/Transfer/transfer";
 
 export enum DialogContentElem {
   Wallet = "Wallet",
@@ -11,6 +12,7 @@ export enum DialogContentElem {
   BuyInsurance = "BuyInsurance",
   MetamaskMissing = "MetamaskMissing",
   NotEnoughUnlocked = "NotEnoughUnlocked",
+  TransferCapital = "TransferCapital",
 }
 
 export enum ToastType {
@@ -32,6 +34,7 @@ export interface UiState {
   toastState: ToastState;
   activeCloseOption?: OptionWithPosition;
   buyInsuranceModalData?: BuyInsuranceModalData;
+  transferData?: TransferData;
 }
 
 export const ui = createSlice({
@@ -64,6 +67,12 @@ export const ui = createSlice({
       state.toastState = { ...state.toastState, ...action.payload };
       return state;
     },
+    setTransferDataModalState: (state, action: { payload: TransferData }) => {
+      state.transferData = action.payload;
+      state.dialogOpen = true;
+      state.dialogContent = DialogContentElem.TransferCapital;
+      return state;
+    },
   },
 });
 
@@ -72,4 +81,5 @@ export const {
   setBuyInsuranceModalState,
   setCloseOptionState,
   setToastState,
+  setTransferDataModalState,
 } = ui.actions;

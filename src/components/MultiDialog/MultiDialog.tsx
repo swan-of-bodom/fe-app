@@ -19,6 +19,7 @@ import { WalletInfo } from "../WalletInfo/WalletInfo";
 import { ReactNode } from "react";
 import { BuyInsuranceModal } from "../Insurance/BuyInsuranceModal";
 import buttonStyles from "../../style/button.module.css";
+import { TransferDialog } from "../Transfer";
 
 const NetworkMismatch = () => (
   <>
@@ -187,6 +188,11 @@ export const MultiDialog = () => {
       {dialogContent === DialogContentElem.NotEnoughUnlocked && (
         <Border>
           <NotEnoughUnlocked />
+        </Border>
+      )}
+      {dialogContent === DialogContentElem.TransferCapital && (
+        <Border>
+          <TransferDialog />
         </Border>
       )}
     </Dialog>
