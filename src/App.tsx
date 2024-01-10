@@ -24,6 +24,7 @@ import APYInfoPage from "./pages/apyInfo";
 import TradeDashboardPage from "./pages/dashboard";
 import Insurance from "./pages/insurance";
 import "./style/base.css";
+import { Slip } from "./components/Slip";
 
 const App = () => {
   const [check, rerender] = useState(false);
@@ -42,6 +43,7 @@ const App = () => {
         <CssBaseline />
         {acceptedTermsAndConditions ? (
           <>
+            <Slip />
             <Router>
               <Routes>
                 {/* paths that no longer exist are redirected to new paths */}
