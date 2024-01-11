@@ -1,8 +1,10 @@
 import { setSlippageState, updateSettingsState } from "./reducers/settings";
 import { updateNetworkState } from "./reducers/network";
 import {
+  addReferredPairState,
   DialogContentElem,
   PortfolioParamType,
+  ReferralSent,
   setBuyInsuranceModalState,
   setCloseOptionState,
   setParamState,
@@ -116,3 +118,6 @@ export const markTxAsFailed = (hash: string) =>
   store.dispatch(
     setTxStatusReducer({ hash, status: TransactionStatus.Failed })
   );
+
+export const addReferredPair = (pair: ReferralSent) =>
+  store.dispatch(addReferredPairState(pair));

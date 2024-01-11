@@ -69,7 +69,6 @@ export const connect = (
       return;
     }
     updateNetwork({ walletId: wallet.id as SupportedWalletIds });
-    debug("Wallet connected", wallet);
 
     const network = store.getState().network.network;
 

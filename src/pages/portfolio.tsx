@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Airdrop } from "../components/Airdrop/Airdrop";
@@ -9,51 +9,45 @@ import { usePortfolioParam } from "../hooks/usePortfolio";
 import { setPortfolioParam } from "../redux/actions";
 import { PortfolioParamType } from "../redux/reducers/ui";
 import buttonStyles from "../style/button.module.css";
+import { Referral } from "../components/Referral";
+import { isMainnet } from "../constants/amm";
 
 const Portfolio = () => {
-  const airDrop = useRef<HTMLDivElement>(null);
-  const position = useRef<HTMLDivElement>(null);
-  const history = useRef<HTMLDivElement>(null);
   const portfolioParam = usePortfolioParam();
   const navigate = useNavigate();
   const { target } = useParams();
-  const scrollToTarget = (targetRef: RefObject<HTMLDivElement>) => {
-    if (targetRef.current) {
-      targetRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+
   useEffect(() => {
     document.title = "Portfolio | Carmine Finance";
     // Check if the URL contains the #history hash
     switch (target) {
       case "history":
-        scrollToTarget(history);
         setPortfolioParam(PortfolioParamType.History);
         break;
       case "airdrop":
-        scrollToTarget(airDrop);
         setPortfolioParam(PortfolioParamType.AirDrop);
         break;
       case "position":
-        scrollToTarget(position);
         setPortfolioParam(PortfolioParamType.Position);
+        break;
+      case "referral":
+        setPortfolioParam(PortfolioParamType.Referral);
         break;
       default:
         switch (portfolioParam) {
           case PortfolioParamType.History:
-            scrollToTarget(history);
             setPortfolioParam(PortfolioParamType.History);
             break;
           case PortfolioParamType.AirDrop:
-            scrollToTarget(airDrop);
             setPortfolioParam(PortfolioParamType.AirDrop);
             break;
           case PortfolioParamType.Position:
-            scrollToTarget(position);
             setPortfolioParam(PortfolioParamType.Position);
             break;
+          case PortfolioParamType.Referral:
+            setPortfolioParam(PortfolioParamType.Referral);
+            break;
           default:
-            scrollToTarget(position);
             setPortfolioParam(PortfolioParamType.Position);
             break;
         }
@@ -72,7 +66,6 @@ const Portfolio = () => {
           navigate(`/portfolio/airdrop`);
         }}
       >
-        {" "}
         Airdrop
       </button>
       <button
@@ -84,39 +77,55 @@ const Portfolio = () => {
           navigate(`/portfolio/position`);
         }}
       >
-        {" "}
         Position
       </button>
       <button
         className={`${
           portfolioParam === PortfolioParamType.History &&
           buttonStyles.secondary
-        }`}
+        } ${buttonStyles.offset}`}
         onClick={() => {
           navigate(`/portfolio/history`);
         }}
       >
-        {" "}
         History
       </button>
+      {isMainnet && (
+        <button
+          className={`${
+            portfolioParam === PortfolioParamType.Referral &&
+            buttonStyles.secondary
+          }`}
+          onClick={() => {
+            navigate(`/portfolio/referral`);
+          }}
+        >
+          Referral
+        </button>
+      )}
       {portfolioParam === PortfolioParamType.AirDrop && (
-        <div ref={airDrop}>
+        <div>
           <Airdrop />
         </div>
       )}
       {portfolioParam === PortfolioParamType.Position && (
-        <div ref={position}>
+        <div>
           <Positions />
         </div>
       )}
       {portfolioParam === PortfolioParamType.History && (
-        <div ref={history}>
+        <div>
           <h3 id="history">History</h3>
           <p>
             Please be advised that it takes 5-20 minutes for a transaction to
             appear.
           </p>
           <TradeHistory />
+        </div>
+      )}
+      {isMainnet && portfolioParam === PortfolioParamType.Referral && (
+        <div>
+          <Referral />
         </div>
       )}
     </Layout>
