@@ -45,7 +45,7 @@ export const InMoneyItem = ({ option }: Props) => {
 
   const date = timestampToReadableDate(msMaturity);
 
-  const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strike}`;
+  const desc = `$${strike} ${option.name}`;
   const decimals = 4;
 
   return (
