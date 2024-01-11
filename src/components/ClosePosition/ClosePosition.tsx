@@ -60,7 +60,7 @@ const Template = ({
   children,
 }: TemplateProps) => {
   return (
-    <>
+    <div style={{ padding: "0 16px 16px 16px" }}>
       <Box
         sx={{
           display: "flex",
@@ -69,7 +69,10 @@ const Template = ({
       >
         <input
           className={inputStyles.input}
-          style={{ margin: "16px", minWidth: "200px" }}
+          style={{
+            marginRight: "8px",
+            minWidth: "200px",
+          }}
           type="text"
           value={inputText}
           onChange={handleChange}
@@ -82,7 +85,7 @@ const Template = ({
         </button>
       </Box>
       {children}
-    </>
+    </div>
   );
 };
 

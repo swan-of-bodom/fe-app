@@ -34,6 +34,7 @@ const iconStyle = {
 const buttonStyle = {
   opacity: "70%",
   scale: "80%",
+  minWidth: 0,
 };
 
 export const WalletInfo = () => {
