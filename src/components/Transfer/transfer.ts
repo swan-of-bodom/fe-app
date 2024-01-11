@@ -71,8 +71,6 @@ export const userLpBalance = async (
 
   const transferData: TransferData = { shouldTransfer, call, put };
 
-  console.log("GOT TRANSFER DATA:", transferData);
-
   return transferData;
 };
 

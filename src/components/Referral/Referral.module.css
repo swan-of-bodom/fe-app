@@ -3,6 +3,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+  max-width: 100%;
 }
 
 .link {
@@ -12,6 +13,8 @@
   justify-content: center;
   align-items: center;
   padding: 0 1rem;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .iconbutton {

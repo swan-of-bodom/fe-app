@@ -35,6 +35,11 @@ export type ToastState = {
   type: ToastType;
 };
 
+export type ReferralSent = {
+  code: string;
+  address: string;
+};
+
 export interface UiState {
   dialogOpen: boolean;
   dialogContent: DialogContentElem;
@@ -44,6 +49,7 @@ export interface UiState {
   transferData?: TransferData;
   transferDialogShown: boolean;
   portfolioParam?: PortfolioParamType;
+  referralsSent: ReferralSent[];
 }
 
 export const ui = createSlice({
@@ -54,6 +60,7 @@ export const ui = createSlice({
     toastState: { message: "", type: ToastType.Info, open: false },
     transferDialogShown: false,
     portfolioParam: PortfolioParamType.Position,
+    referralsSent: [],
   } as UiState,
   reducers: {
     toggleDialog: (state, action: { payload: Partial<UiState> }) => {
@@ -93,6 +100,10 @@ export const ui = createSlice({
       state.portfolioParam = action.payload;
       return state;
     },
+    addReferredPairState: (state, action: { payload: ReferralSent }) => {
+      state.referralsSent = [...state.referralsSent, action.payload];
+      return state;
+    },
   },
 });
 
@@ -104,4 +115,5 @@ export const {
   setTransferDataModalState,
   setTransferDialogShown,
   setParamState,
+  addReferredPairState,
 } = ui.actions;
