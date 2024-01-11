@@ -26,6 +26,7 @@ export enum PortfolioParamType {
   AirDrop = "airdrop",
   History = "history",
   Position = "position",
+  Referral = "referral",
 }
 
 export type ToastState = {

@@ -1,0 +1,19 @@
+.linkcontainer {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.link {
+  border: 1px solid white;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.iconbutton {
+  cursor: pointer;
+}

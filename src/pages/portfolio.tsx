@@ -9,6 +9,8 @@ import { usePortfolioParam } from "../hooks/usePortfolio";
 import { setPortfolioParam } from "../redux/actions";
 import { PortfolioParamType } from "../redux/reducers/ui";
 import buttonStyles from "../style/button.module.css";
+import { Referral } from "../components/Referral";
+import { isMainnet } from "../constants/amm";
 
 const Portfolio = () => {
   const portfolioParam = usePortfolioParam();
@@ -28,6 +30,9 @@ const Portfolio = () => {
       case "position":
         setPortfolioParam(PortfolioParamType.Position);
         break;
+      case "referral":
+        setPortfolioParam(PortfolioParamType.Referral);
+        break;
       default:
         switch (portfolioParam) {
           case PortfolioParamType.History:
@@ -38,6 +43,9 @@ const Portfolio = () => {
             break;
           case PortfolioParamType.Position:
             setPortfolioParam(PortfolioParamType.Position);
+            break;
+          case PortfolioParamType.Referral:
+            setPortfolioParam(PortfolioParamType.Referral);
             break;
           default:
             setPortfolioParam(PortfolioParamType.Position);
@@ -75,13 +83,26 @@ const Portfolio = () => {
         className={`${
           portfolioParam === PortfolioParamType.History &&
           buttonStyles.secondary
-        }`}
+        } ${buttonStyles.offset}`}
         onClick={() => {
           navigate(`/portfolio/history`);
         }}
       >
         History
       </button>
+      {isMainnet && (
+        <button
+          className={`${
+            portfolioParam === PortfolioParamType.Referral &&
+            buttonStyles.secondary
+          }`}
+          onClick={() => {
+            navigate(`/portfolio/referral`);
+          }}
+        >
+          Referral
+        </button>
+      )}
       {portfolioParam === PortfolioParamType.AirDrop && (
         <div>
           <Airdrop />
@@ -100,6 +121,11 @@ const Portfolio = () => {
             appear.
           </p>
           <TradeHistory />
+        </div>
+      )}
+      {isMainnet && portfolioParam === PortfolioParamType.Referral && (
+        <div>
+          <Referral />
         </div>
       )}
     </Layout>
