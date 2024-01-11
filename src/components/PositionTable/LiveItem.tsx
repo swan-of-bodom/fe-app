@@ -15,7 +15,7 @@ export const LiveItem = ({ option }: Props) => {
 
   const date = timestampToReadableDate(maturity * 1000);
 
-  const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strike}`;
+  const desc = `$${strike} ${option.name}`;
   const sizeTooltipMessage = BigInt(option.sizeHex).toString(10) + " tokens";
   const decimals = 4;
 

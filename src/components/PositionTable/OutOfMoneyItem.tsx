@@ -37,7 +37,7 @@ export const OutOfMoneyItem = ({ option }: Props) => {
   const msMaturity = maturity * 1000;
 
   const date = timestampToReadableDate(msMaturity);
-  const desc = `${option.sideAsText} ${option.typeAsText} with strike $${strike}`;
+  const desc = `$${strike} ${option.name}`;
   const decimals = 4;
 
   return (
