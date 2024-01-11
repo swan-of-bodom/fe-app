@@ -116,6 +116,7 @@ export const CustomDialogTitle = ({ title }: CustomDialogTitleProps) => (
       onClick={closeDialog}
       sx={{
         color: (theme) => theme.palette.grey[500],
+        minWidth: 0,
       }}
     >
       <Close />
