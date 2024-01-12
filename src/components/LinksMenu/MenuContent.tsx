@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 
-import Governance from "../../pages/governance";
 import { ReactComponent as About } from "./icons/about.svg";
 import { ReactComponent as Developers } from "./icons/developers.svg";
 import { ReactComponent as Discord } from "./icons/discord.svg";
