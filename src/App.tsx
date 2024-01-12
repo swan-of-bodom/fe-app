@@ -1,7 +1,12 @@
 import { CssBaseline } from "@mui/material";
 import { useState } from "react";
 import { Provider } from "react-redux";
-import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 
 import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
 import { MultiDialog } from "./components/MultiDialog/MultiDialog";
@@ -39,10 +44,20 @@ const App = () => {
         <CssBaseline />
         {acceptedTermsAndConditions ? (
           <>
-            <Slip />
+            <div
+              style={{
+                width: "100vw",
+                height: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <h3>App is currently undergoing maintainance</h3>
+            </div>
+            {/* <Slip />
             <Router>
               <Routes>
-                {/* paths that no longer exist are redirected to new paths */}
                 {oldPathRedirects.map(([oldPath, newPath], i) => (
                   <Route
                     key={i}
@@ -50,7 +65,6 @@ const App = () => {
                     element={<Navigate to={newPath} replace />} 
                   />
                 ))}
-
                 <Route path="/" element={<TradePage />} />
                 <Route path="/insurance" element={<Insurance />} />
                 <Route path="/portfolio/:target?" element={<Portfolio />} />
@@ -68,7 +82,7 @@ const App = () => {
             </Router>
             <MultiDialog />
             <Toast />
-            <AlphaRibbon />
+            <AlphaRibbon /> */}
           </>
         ) : (
           <TermsAndConditions check={check} rerender={rerender} />
