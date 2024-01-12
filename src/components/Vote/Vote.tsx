@@ -1,106 +1,101 @@
-import { Box, Button, Link, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
 import { AccountInterface } from "starknet";
 
 import GovernanceAbi from "../../abi/amm_abi.json";
-import { balanceOfCarmineToken } from "../../calls/balanceOf";
 import { GOVERNANCE_ADDRESS } from "../../constants/amm";
-import { useAccount } from "../../hooks/useAccount";
 import { Proposal } from "../../types/proposal";
 import { debug } from "../../utils/debugger";
+
+import styles from "./Vote.module.css";
 
 enum Opinion {
   YAY = "1",
   NAY = "2",
 }
-var ZERO =  BigInt('0');
+
 const vote = async (
   account: AccountInterface,
   propId: number,
   opinion: Opinion
 ) => {
-  var bal=ZERO;
-  if(account) {
-    bal = await balanceOfCarmineToken(account!);
-  }
-  if(bal>0){
-    const call = {
-      contractAddress: GOVERNANCE_ADDRESS,
-          entrypoint: "vote",
-      calldata: [propId, opinion],
-    };
-  
-    const res = await account.execute(call, [GovernanceAbi]).catch((e) => {
-      debug("Vote rejected or failed", e.message);
-    });
-    debug(res);  
-  } else {
-    debug("Insufficent Balance");
-  }
+  const call = {
+    contractAddress: GOVERNANCE_ADDRESS,
+    entrypoint: "vote",
+    calldata: [propId, opinion],
+  };
+
+  const res = await account.execute(call, [GovernanceAbi]).catch((e) => {
+    debug("Vote rejected or failed", e.message);
+  });
+  debug(res);
 };
 
-export const Vote = ({ discordLink, id }: Proposal) => {
-  const account = useAccount();
-  const [balCarmine, setBalance] = useState(ZERO);
-  const voteButtonSx = { m: 2 };
-  useEffect(() => {
-    async function getBalance() {
-      const bal = await balanceOfCarmineToken(account!);
-      setBalance(bal);
-    }
-    getBalance()
-  }, [account]);
+type VoteButtonsProps = {
+  account?: AccountInterface;
+  propId: number;
+  balance: bigint;
+};
+
+const VoteButtons = ({ account, propId, balance }: VoteButtonsProps) => {
+  if (!account) {
+    return <p>Connect wallet to vote</p>;
+  }
+  if (balance === 0n) {
+    return <p>Only Carmine Token holders can vote</p>;
+  }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexFlow: "column",
-        my: 8,
-        mx: 2,
-      }}
-    >
-      {!!discordLink && (
-        <>
-          <Typography>
-            To see proposal details and discuss go to the{" "}
-            <Link target="_blank" href={discordLink}>
-              Discord thread
-            </Link>
-            .
-          </Typography>
-        </>
-      )}
-      {account && balCarmine === ZERO && <Typography>Only Carmine Token holders can vote. </Typography>}
-      {account && balCarmine > ZERO &&(
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexFlow: "row",
-          gap: 2,
-        }}
+    <div className={styles.votebuttoncontainer}>
+      <button onClick={() => vote(account, propId, Opinion.YAY)}>
+        Vote Yes
+      </button>
+      <button onClick={() => vote(account, propId, Opinion.NAY)}>
+        Vote No
+      </button>
+    </div>
+  );
+};
+
+type PropMessageProps = {
+  link?: string;
+};
+
+const PropMessage = ({ link }: PropMessageProps) => {
+  if (link) {
+    return (
+      <p>
+        To see proposal details and discuss go to the{" "}
+        <a target="_blank" rel="noopener nofollow noreferrer" href={link}>
+          Discord thread
+        </a>
+        .
+      </p>
+    );
+  }
+  return (
+    <p>
+      There is currently no thread associated with this proposal, feel free to{" "}
+      <a
+        target="_blank"
+        rel="noopener nofollow noreferrer"
+        href="https://discord.com/channels/969228248552706078/969228248552706081" // community/general channel
       >
-          <Button
-            onClick={() => vote(account!, id, Opinion.YAY)}
-            sx={voteButtonSx}
-            variant="contained"
-            disabled={!account || balCarmine === ZERO}
-          >
-            Vote Yes
-          </Button>
-          <Button
-            onClick={() => vote(account!, id, Opinion.NAY)}
-            sx={voteButtonSx}
-            variant="contained"
-            disabled={!account  || balCarmine === ZERO}
-          >
-            Vote No
-          </Button>
-      </Box>
-      )}
-    </Box>
+        discuss on our Discord
+      </a>
+      .
+    </p>
+  );
+};
+
+type VoteProps = {
+  proposal: Proposal;
+  balance: bigint;
+  account?: AccountInterface;
+};
+
+export const Vote = ({ proposal, balance, account }: VoteProps) => {
+  return (
+    <div>
+      <PropMessage link={proposal.discordLink} />
+      <VoteButtons account={account} propId={proposal.id} balance={balance} />
+    </div>
   );
 };

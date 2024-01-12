@@ -1,17 +1,18 @@
-import { Box, Typography } from "@mui/material";
-
+import { AccountInterface } from "starknet";
 import { Proposal } from "../../types/proposal";
 import { Vote } from "../Vote/Vote";
 
 type Props = {
-  data: Proposal;
+  proposal: Proposal;
+  balance: bigint;
+  account?: AccountInterface;
 };
 
-export const ProposalItem = ({ data }: Props) => (
-  <Box>
-    <Typography variant="h4">Proposal {data.id}</Typography>
-    <Box>
-      <Vote id={data.id} discordLink={data.discordLink} />
-    </Box>
-  </Box>
+export const ProposalItem = ({ proposal, balance, account }: Props) => (
+  <div>
+    <h3>Proposal {proposal.id}</h3>
+    <div>
+      <Vote proposal={proposal} balance={balance} account={account} />
+    </div>
+  </div>
 );

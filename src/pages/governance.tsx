@@ -2,10 +2,8 @@ import { Box, Typography } from "@mui/material";
 import { useEffect } from "react";
 
 import { Layout } from "../components/layout";
-// import { Proposals } from "../components/ConnectWallet/NetworkButton";
 import { Proposals } from "../components/Proposal";
-import { useNetwork } from "../hooks/useNetwork";
-import { NetworkName } from "../types/network";
+import { isMainnet } from "../constants/amm";
 
 type Props = {
   message: string;
@@ -13,8 +11,6 @@ type Props = {
 };
 
 const Governance = () => {
-  const network = useNetwork();
-  const isMainnet = network === NetworkName.Mainnet;
   const SwitchNetwork = ({ message, data }: Props) => (
     <Box
       sx={{
@@ -44,10 +40,11 @@ const Governance = () => {
 
   return (
     <Layout>
-      {!isMainnet && (
+      {isMainnet ? (
+        <Proposals />
+      ) : (
         <SwitchNetwork message="To see live proposals please switch to mainnet" />
       )}
-      {isMainnet && <Proposals />}
     </Layout>
   );
 };

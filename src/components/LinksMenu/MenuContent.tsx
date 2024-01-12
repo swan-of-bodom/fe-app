@@ -24,12 +24,6 @@ export const MenuContent = ({ handleClose }: Props) => {
           </div>
           Home
         </NavLink>
-        <NavLink className={styles.homelink} to="/governance" onClick={handleClose}>
-          <div className={styles.iconholder}>
-            {/* <Governance /> */}
-          </div>
-          Governance
-        </NavLink>
         <NavLink
           className={styles.homelink}
           to="/settings"
@@ -39,6 +33,16 @@ export const MenuContent = ({ handleClose }: Props) => {
             <Settings />
           </div>
           Settings
+        </NavLink>
+        <NavLink
+          className={styles.homelink}
+          to="/governance"
+          onClick={handleClose}
+        >
+          <div className={styles.iconholder}>
+            <Developers />
+          </div>
+          Governance
         </NavLink>
         <a
           href="https://legacy.app.carmine.finance"
