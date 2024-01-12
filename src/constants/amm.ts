@@ -18,10 +18,8 @@ export const LEGACY_CALL_LP =
   "0x7aba50fdb4e024c1ba63e2c60565d0fd32566ff4b18aa5818fc80c30e749024";
 export const LEGACY_PUT_LP =
   "0x18a6abca394bd5f822cfa5f88783c01b13e593d1603e7b41b00d31d2ea4827a";
-
 export const isTestnet = NETWORK === "testnet";
 export const isMainnet = NETWORK === "mainnet";
-
 export const enum AMM_METHODS {
   IS_OPTION_AVAILABLE = "is_option_available",
   GET_POOL_AVAILABLE_BALANCE = "get_pool_available_balance",

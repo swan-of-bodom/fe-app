@@ -1,13 +1,14 @@
-import styles from "./linksmenu.module.css";
 import { NavLink } from "react-router-dom";
+
+import { ReactComponent as About } from "./icons/about.svg";
 import { ReactComponent as Developers } from "./icons/developers.svg";
 import { ReactComponent as Discord } from "./icons/discord.svg";
-import { ReactComponent as Home } from "./icons/home.svg";
 import { ReactComponent as Docs } from "./icons/documentation.svg";
-import { ReactComponent as About } from "./icons/about.svg";
-import { ReactComponent as Settings } from "./icons/settings.svg";
 import { ReactComponent as Github } from "./icons/github.svg";
+import { ReactComponent as Home } from "./icons/home.svg";
+import { ReactComponent as Settings } from "./icons/settings.svg";
 import { ReactComponent as Twitter } from "./icons/twitter.svg";
+import styles from "./linksmenu.module.css";
 
 type Props = {
   handleClose: () => void;
@@ -32,6 +33,16 @@ export const MenuContent = ({ handleClose }: Props) => {
             <Settings />
           </div>
           Settings
+        </NavLink>
+        <NavLink
+          className={styles.homelink}
+          to="/governance"
+          onClick={handleClose}
+        >
+          <div className={styles.iconholder}>
+            <Developers />
+          </div>
+          Governance
         </NavLink>
         <a
           href="https://legacy.app.carmine.finance"

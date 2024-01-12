@@ -5,10 +5,12 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-d
 
 import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
 import { MultiDialog } from "./components/MultiDialog/MultiDialog";
+import { Slip } from "./components/Slip";
 import { Toast } from "./components/Toast/Toast";
 import { Controller } from "./Controller";
 import APYInfoPage from "./pages/apyInfo";
 import TradeDashboardPage from "./pages/dashboard";
+import Governance from "./pages/governance";
 import Insurance from "./pages/insurance";
 import NotFound from "./pages/notFound";
 import Portfolio from "./pages/portfolio";
@@ -21,7 +23,6 @@ import { store } from "./redux/store";
 import { isCookieSet } from "./utils/cookies";
 
 import "./style/base.css";
-import { Slip } from "./components/Slip";
 
 const App = () => {
   const [check, rerender] = useState(false);
@@ -61,6 +62,7 @@ const App = () => {
                 <Route path="/apy-info" element={<APYInfoPage />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/dashboard" element={<TradeDashboardPage />} />
+                <Route path="/governance" element={<Governance />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Router>

@@ -1,19 +1,22 @@
-import { Box, Button, Link, Typography } from "@mui/material";
 import { AccountInterface } from "starknet";
-import { debug } from "../../utils/debugger";
-import { useAccount } from "../../hooks/useAccount";
+
 import GovernanceAbi from "../../abi/amm_abi.json";
 import { GOVERNANCE_ADDRESS } from "../../constants/amm";
+import { Proposal } from "../../types/proposal";
+import { debug } from "../../utils/debugger";
+
+import styles from "./Vote.module.css";
 
 enum Opinion {
   YAY = "1",
-  // "-1" felt
-  NAY = "0x800000000000011000000000000000000000000000000000000000000000000",
+  NAY = "2",
 }
 
-const vote = async (account: AccountInterface, opinion: Opinion) => {
-  const propId = "14";
-
+const vote = async (
+  account: AccountInterface,
+  propId: number,
+  opinion: Opinion
+) => {
   const call = {
     contractAddress: GOVERNANCE_ADDRESS,
     entrypoint: "vote",
@@ -26,62 +29,73 @@ const vote = async (account: AccountInterface, opinion: Opinion) => {
   debug(res);
 };
 
-const voteYes = async (account: AccountInterface) => vote(account, Opinion.YAY);
-const voteNo = async (account: AccountInterface) => vote(account, Opinion.NAY);
+type VoteButtonsProps = {
+  account?: AccountInterface;
+  propId: number;
+  balance: bigint;
+};
 
-export const Vote = () => {
-  const account = useAccount();
-
-  const voteButtonSx = { m: 2 };
-
+const VoteButtons = ({ account, propId, balance }: VoteButtonsProps) => {
+  if (!account) {
+    return <p>Connect wallet to vote</p>;
+  }
+  if (balance === 0n) {
+    return <p>Only Carmine Token holders can vote</p>;
+  }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexFlow: "column",
-        my: 8,
-        mx: 2,
-      }}
-    >
-      <Typography>
-        This is the second proposal, that fixes standard proposal passing, you
-        can read more about this in the{" "}
-        <Link
-          target="_blank"
-          href="https://discord.com/channels/969228248552706078/1035256265082949722/1116669484124622889"
-        >
-          Discord anouncement
-        </Link>
-      </Typography>
-      {!account && <Typography>Connect your wallet to vote</Typography>}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexFlow: "row",
-          gap: 2,
-        }}
+    <div className={styles.votebuttoncontainer}>
+      <button onClick={() => vote(account, propId, Opinion.YAY)}>
+        Vote Yes
+      </button>
+      <button onClick={() => vote(account, propId, Opinion.NAY)}>
+        Vote No
+      </button>
+    </div>
+  );
+};
+
+type PropMessageProps = {
+  link?: string;
+};
+
+const PropMessage = ({ link }: PropMessageProps) => {
+  if (link) {
+    return (
+      <p>
+        To see proposal details and discuss go to the{" "}
+        <a target="_blank" rel="noopener nofollow noreferrer" href={link}>
+          Discord thread
+        </a>
+        .
+      </p>
+    );
+  }
+  return (
+    <p>
+      There is currently no thread associated with this proposal, feel free to{" "}
+      <a
+        target="_blank"
+        rel="noopener nofollow noreferrer"
+        href="https://discord.com/channels/969228248552706078/969228248552706081" // community/general channel
       >
-        <Button
-          onClick={() => voteYes(account!)}
-          sx={voteButtonSx}
-          variant="contained"
-          disabled={!account}
-        >
-          Vote Yes
-        </Button>
-        <Button
-          onClick={() => voteNo(account!)}
-          sx={voteButtonSx}
-          variant="contained"
-          disabled={!account}
-        >
-          Vote No
-        </Button>
-      </Box>
-    </Box>
+        discuss on our Discord
+      </a>
+      .
+    </p>
+  );
+};
+
+type VoteProps = {
+  proposal: Proposal;
+  balance: bigint;
+  account?: AccountInterface;
+};
+
+export const Vote = ({ proposal, balance, account }: VoteProps) => {
+  return (
+    <div>
+      <PropMessage link={proposal.discordLink} />
+      <VoteButtons account={account} propId={proposal.id} balance={balance} />
+    </div>
   );
 };
