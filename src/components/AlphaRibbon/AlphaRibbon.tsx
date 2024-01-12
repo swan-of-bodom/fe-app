@@ -42,7 +42,7 @@ export const AlphaRibbon = () => {
         }}
       >
         <Typography variant="h5">StarkNet Alpha</Typography>
-        <IconButton onClick={handleClose}>
+        <IconButton sx={{ minWidth: 0 }} onClick={handleClose}>
           <Close />
         </IconButton>
       </Box>
