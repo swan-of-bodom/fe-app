@@ -2,7 +2,7 @@ import { Box, Button, Link, Typography } from "@mui/material";
 import { AccountInterface } from "starknet";
 
 import GovernanceAbi from "../../abi/amm_abi.json";
-import { getTokenAddresses } from "../../constants/amm";
+import { GOVERNANCE_ADDRESS } from "../../constants/amm";
 import { useAccount } from "../../hooks/useAccount";
 import { Proposal } from "../../types/proposal";
 import { debug } from "../../utils/debugger";
@@ -18,8 +18,8 @@ const vote = async (
   opinion: Opinion
 ) => {
   const call = {
-    contractAddress: getTokenAddresses().GOVERNANCE_CONTRACT_ADDRESS,
-    entrypoint: "vote",
+    contractAddress: GOVERNANCE_ADDRESS,
+        entrypoint: "vote",
     calldata: [propId, opinion],
   };
 

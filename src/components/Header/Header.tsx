@@ -28,10 +28,6 @@ const navLinks = [
     title: "Staking",
     link: "/staking",
   },
-  {
-    title: "Governance",
-    link: "/governance",
-  },
 ] as NavLinkProps[];
 
 const navLink = ({ title, link }: NavLinkProps, i: number): ReactNode => (
