@@ -2,6 +2,7 @@ import {
   BTC_USDC_CALL_ADDRESS,
   ETH_USDC_PUT_ADDRESS,
   BTC_USDC_PUT_ADDRESS,
+  MAINNET_AUX_CONTRACT_ADDRESS,
 } from "./../constants/amm";
 import { debug } from "./../utils/debugger";
 import {
@@ -24,7 +25,7 @@ const getUserPoolInfoAuxContract = async (
 ): Promise<UserPoolInfo[]> => {
   const AuxContract = new Contract(
     AuxAbi,
-    "0x051e4bb147f0cc73b9c06c4b155ff4986226091162d9f616097d5c77c13d9395",
+    MAINNET_AUX_CONTRACT_ADDRESS,
     provider
   );
 
