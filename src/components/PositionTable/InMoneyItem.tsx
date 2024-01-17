@@ -1,5 +1,4 @@
 import { OptionWithPosition } from "../../classes/Option";
-import { timestampToReadableDate } from "../../utils/utils";
 import { TableCell, TableRow, Tooltip } from "@mui/material";
 import { debug } from "../../utils/debugger";
 import { tradeSettle } from "../../calls/tradeSettle";
@@ -40,23 +39,19 @@ export const InMoneyItem = ({ option }: Props) => {
       });
   };
 
-  const { strike, maturity, size, value } = option;
-  const msMaturity = maturity * 1000;
-
-  const date = timestampToReadableDate(msMaturity);
-
-  const desc = `$${strike} ${option.name}`;
   const decimals = 4;
 
   return (
     <TableRow>
-      <TableCell>{desc}</TableCell>
-      <TableCell>{date}</TableCell>
-      <TableCell>{size.toFixed(decimals)}</TableCell>
+      <TableCell>{option.name}</TableCell>
+      <TableCell>{option.sideAsText}</TableCell>
+      <TableCell>{`$${option.strike}`}</TableCell>
+      <TableCell>{option.dateShort}</TableCell>
+      <TableCell>{option.size.toFixed(decimals)}</TableCell>
       <TableCell>
-        <Tooltip title={value}>
+        <Tooltip title={option.value}>
           <span>
-            {option.symbol} {value.toFixed(decimals)}
+            {option.symbol} {option.value.toFixed(decimals)}
           </span>
         </Tooltip>
       </TableCell>
