@@ -1,21 +1,14 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { OptionType } from "../../types/options";
-import { StakeCapitalItem } from "./StakeItem";
-import { useAccount } from "../../hooks/useAccount";
-import { Link as RouterLink } from "react-router-dom";
 import { Info } from "@mui/icons-material";
-import { timestampToReadableDate } from "../../utils/utils";
-import tableStyles from "../../style/table.module.css";
+import { Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+
 import { Pool } from "../../classes/Pool";
 import { BTC_ADDRESS, ETH_ADDRESS, USDC_ADDRESS } from "../../constants/amm";
+import { useAccount } from "../../hooks/useAccount";
+import tableStyles from "../../style/table.module.css";
+import { OptionType } from "../../types/options";
+import { timestampToReadableDate } from "../../utils/utils";
+import { StakeCapitalItem } from "./StakeItem";
 
 const POOLS = [
   new Pool(ETH_ADDRESS, USDC_ADDRESS, OptionType.Call),

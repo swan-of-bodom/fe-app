@@ -1,23 +1,18 @@
-import {
-  TableCell,
-  TableRow,
-  Tooltip,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { TableCell, TableRow, Tooltip, Typography, useTheme } from "@mui/material";
 import { CSSProperties, useEffect, useState } from "react";
 import { AccountInterface } from "starknet";
-import { handleStake } from "./handleStake";
-import { handleNumericChangeFactory } from "../../utils/inputHandling";
+
+import { getPoolState } from "../../calls/getPoolState";
 import { Pool } from "../../classes/Pool";
-import { intToDecimal } from "../../utils/units";
+import { TokenKey } from "../../classes/Token";
 import { BASE_DIGITS } from "../../constants/amm";
 import { useTxPending } from "../../hooks/useRecentTxs";
 import { TransactionAction } from "../../redux/reducers/transactions";
-import { getPoolState } from "../../calls/getPoolState";
 import buttonStyles from "../../style/button.module.css";
 import inputStyle from "../../style/input.module.css";
-import { TokenKey } from "../../classes/Token";
+import { handleNumericChangeFactory } from "../../utils/inputHandling";
+import { intToDecimal } from "../../utils/units";
+import { handleStake } from "./handleStake";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -66,6 +61,7 @@ const getYieldSinceLaunch = async (
 export const StakeCapitalItem = ({ account, pool }: Props) => {
   const txPending = useTxPending(pool.poolId, TransactionAction.Stake);
   const [amount, setAmount] = useState<number>(0);
+  const [showLockInfo, setLockInfo] = useState<boolean>(false);
   const [text, setText] = useState<string>("0");
   const [loading, setLoading] = useState<boolean>(false);
   const [apy, setApy] = useState<number | undefined>();
@@ -105,51 +101,59 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
 
   const handleStakeClick = () =>
     handleStake(account!, amount, pool, setLoading);
-
+  const handleLockedInfo = () => setLockInfo(!showLockInfo);
   return (
-    <TableRow>
-      <TableCell sx={{ whiteSpace: "nowrap" }}>
-        <Typography>{pool.name}</Typography>
-      </TableCell>
-      <TableCell>
-        {pool.baseToken.id === TokenKey.BTC ? (
-          <Tooltip title="Not yet implemented for BTC">
-            <Typography sx={yslSx}>--</Typography>
-          </Tooltip>
-        ) : (
-          <Typography sx={yslSx}>{displayYieldSinceLaunch}</Typography>
-        )}
-      </TableCell>
-      <TableCell>
-        {pool.baseToken.id === TokenKey.BTC ? (
-          <Tooltip title="Not yet implemented for BTC">
-            <Typography sx={yslSx}>--</Typography>
-          </Tooltip>
-        ) : (
-          <Typography sx={apySx}>{displayApy}</Typography>
-        )}
-      </TableCell>
-      <TableCell sx={{ minWidth: "100px" }} align="center">
-        <input
-          className={inputStyle.input}
-          type="text"
-          value={text}
-          onChange={handleChange}
-        />
-      </TableCell>
-      <TableCell sx={{ display: "flex", alignItems: "center" }} align="right">
-        <button
-          className={buttonStyles.secondary}
-          disabled={loading || !account || txPending}
-          onClick={handleStakeClick}
-        >
-          {loading || txPending
-            ? "Processing..."
-            : account
-            ? "Stake"
-            : "Connect wallet"}
-        </button>
-      </TableCell>
-    </TableRow>
+    <>
+      <TableRow>
+        <TableCell sx={{ whiteSpace: "nowrap" }} onClick={handleLockedInfo}>
+          <Typography>{pool.name}</Typography>
+        </TableCell>
+        <TableCell onClick={handleLockedInfo}>
+          {pool.baseToken.id === TokenKey.BTC ? (
+            <Tooltip title="Not yet implemented for BTC">
+              <Typography sx={yslSx}>--</Typography>
+            </Tooltip>
+          ) : (
+            <Typography sx={yslSx}>{displayYieldSinceLaunch}</Typography>
+          )}
+        </TableCell>
+        <TableCell onClick={handleLockedInfo}>
+          {pool.baseToken.id === TokenKey.BTC ? (
+            <Tooltip title="Not yet implemented for BTC">
+              <Typography sx={yslSx}>--</Typography>
+            </Tooltip>
+          ) : (
+            <Typography sx={apySx}>{displayApy}</Typography>
+          )}
+        </TableCell>
+        <TableCell sx={{ minWidth: "100px" }} align="center">
+          <input
+            className={inputStyle.input}
+            type="text"
+            value={text}
+            onChange={handleChange}
+          />
+        </TableCell>
+        <TableCell sx={{ display: "flex", alignItems: "center" }} align="right">
+          <button
+            className={buttonStyles.secondary}
+            disabled={loading || !account || txPending}
+            onClick={handleStakeClick}
+          >
+            {loading || txPending
+              ? "Processing..."
+              : account
+              ? "Stake"
+              : "Connect wallet"}
+          </button>
+        </TableCell>
+      </TableRow>
+      {showLockInfo&&(
+        <TableRow>
+          <TableCell>Unlocked capital</TableCell>
+          <TableCell>Locked capital</TableCell>
+        </TableRow>
+      )}
+    </>
   );
 };

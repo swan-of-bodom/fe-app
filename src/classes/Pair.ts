@@ -4,7 +4,7 @@ import { TokenKey } from "./Token";
 
 export enum PairKey {
   ETH_USDC = "ETH / USDC",
-  BTC_USDC = "BTC / USDC",
+  BTC_USDC = "wBTC / USDC",
 }
 
 export class Pair {

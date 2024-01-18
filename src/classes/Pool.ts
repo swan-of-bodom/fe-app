@@ -1,22 +1,15 @@
-import { bnToOptionType } from "../utils/conversions";
-import { OptionType } from "../types/options";
-import { getMultipleTokensValueInUsd } from "../tokens/tokenPrices";
 import { BigNumberish, Call } from "starknet";
-import { toHex } from "../utils/utils";
-import { shortInteger } from "../utils/computations";
-import {
-  AMM_ADDRESS,
-  AMM_METHODS,
-  BASE_DIGITS,
-  BTC_USDC_CALL_ADDRESS,
-  BTC_USDC_PUT_ADDRESS,
-  ETH_USDC_CALL_ADDRESS,
-  ETH_USDC_PUT_ADDRESS,
-} from "../constants/amm";
+
+import { sendGtagEvent } from "../analytics";
 import { getUnlockedCapital } from "../calls/getUnlockedCapital";
+import { AMM_ADDRESS, AMM_METHODS, BASE_DIGITS, BTC_USDC_CALL_ADDRESS, BTC_USDC_PUT_ADDRESS, ETH_USDC_CALL_ADDRESS, ETH_USDC_PUT_ADDRESS } from "../constants/amm";
+import { getMultipleTokensValueInUsd } from "../tokens/tokenPrices";
+import { OptionType } from "../types/options";
+import { shortInteger } from "../utils/computations";
+import { bnToOptionType } from "../utils/conversions";
+import { toHex } from "../utils/utils";
 import { Pair, PairKey } from "./Pair";
 import { Token } from "./Token";
-import { sendGtagEvent } from "../analytics";
 
 export class Pool extends Pair {
   public type: OptionType;

@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { Info } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
+import { useEffect } from "react";
+import { Link as RouterLink } from "react-router-dom";
+
+import { Layout } from "../components/layout";
 import StakeCapital from "../components/StakeCapital";
 import WithdrawCapital from "../components/WithdrawCapital";
-import { Link as RouterLink } from "react-router-dom";
-import { Info } from "@mui/icons-material";
-import { Layout } from "../components/layout";
 
 const StakePage = () => {
   useEffect(() => {
