@@ -9,6 +9,8 @@
     "@mui/icons-material": "^5.10.6",
     "@mui/material": "^5.10.7",
     "@reduxjs/toolkit": "^1.8.6",
+    "@starknet-react/chains": "^0.1.5",
+    "@starknet-react/core": "^2.2.2",
     "bn.js": "^5.2.1",
     "ethers": "^5.7.2",
     "get-starknet-core": "^3.0.1",
@@ -21,7 +23,8 @@
     "react-ts-tradingview-widgets": "^1.0.14",
     "recharts": "^2.1.16",
     "redux": "^4.2.0",
-    "starknet": "^5.19.5",
+    "starknet": "^5.26.1",
+    "starknetid.js": "^3.0.0",
     "starknetkit": "^1.0.21"
   },
   "scripts": {

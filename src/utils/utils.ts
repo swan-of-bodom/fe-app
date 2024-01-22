@@ -1,12 +1,8 @@
-import {
-  ETH_ADDRESS,
-  ETH_DIGITS,
-  USDC_ADDRESS,
-  USDC_DIGITS,
-} from "../constants/amm";
-import { OptionSide, OptionType } from "../types/options";
-import { TESTNET_CHAINID } from "../constants/starknet";
 import { BigNumberish } from "starknet";
+
+import { ETH_ADDRESS, ETH_DIGITS, USDC_ADDRESS, USDC_DIGITS } from "../constants/amm";
+import { TESTNET_CHAINID } from "../constants/starknet";
+import { OptionSide, OptionType } from "../types/options";
 
 export const isNonEmptyArray = (v: unknown): v is Array<any> =>
   !!(v && Array.isArray(v) && v.length > 0);
