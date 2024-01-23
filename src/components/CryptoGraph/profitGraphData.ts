@@ -1,96 +1,10 @@
 import { OptionSide, OptionType } from "../../types/options";
 
+export type CurrencyData = { usd: number; market: number };
+
 export type GraphData = {
-  plot: Array<{ usd: number; market: number }>;
+  plot: CurrencyData[];
   domain: number[];
-};
-
-const longCall = (
-  strikePrice: number,
-  premia: number,
-  size: number
-): GraphData => {
-  const step = 0.25;
-  const granuality = strikePrice / step;
-  const spread = [0, 2 * granuality];
-  const plot = [];
-
-  for (let i = spread[0]; i <= spread[1]; i++) {
-    const x = i * step;
-    const y = x < strikePrice ? -premia : (x - strikePrice) * size - premia;
-    plot.push({ market: x, usd: y });
-  }
-
-  const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
-  const domain = [first - 0.2 * last, last];
-
-  return { plot, domain };
-};
-
-const longPut = (
-  strikePrice: number,
-  premia: number,
-  size: number
-): GraphData => {
-  const step = 0.25;
-  const granuality = strikePrice / step;
-  const spread = [0, 2 * granuality];
-  const plot = [];
-
-  for (let i = spread[0]; i <= spread[1]; i++) {
-    const x = i * step;
-    const y = x < strikePrice ? (strikePrice - x) * size - premia : -premia;
-    plot.push({ market: x, usd: y });
-  }
-
-  const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
-  const domain = [last - 0.3 * first, first];
-
-  return { plot, domain };
-};
-
-const shortCall = (
-  strikePrice: number,
-  premia: number,
-  size: number
-): GraphData => {
-  const step = 0.25;
-  const granuality = strikePrice / step;
-  const spread = [0, 2 * granuality];
-  const plot = [];
-
-  for (let i = spread[0]; i <= spread[1]; i++) {
-    const x = i * step;
-    const y = x < strikePrice ? premia : (strikePrice - x) * size + premia;
-    plot.push({ market: x, usd: y });
-  }
-
-  const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
-  const domain = [last, first - 0.3 * last];
-
-  return { plot, domain };
-};
-
-const shortPut = (
-  strikePrice: number,
-  premia: number,
-  size: number
-): GraphData => {
-  const step = 0.25;
-  const granuality = strikePrice / step;
-  const spread = [0, 2 * granuality];
-  const plot = [];
-
-  for (let i = spread[0]; i <= spread[1]; i++) {
-    const x = i * step;
-    const y = x < strikePrice ? (x - strikePrice) * size + premia : premia;
-    plot.push({ market: x, usd: y });
-  }
-
-  const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
-  const domain = [first, last - 0.3 * first];
-
-  return { plot, domain };
 };
 
 export const getProfitGraphData = (
@@ -100,16 +14,63 @@ export const getProfitGraphData = (
   premia: number,
   size: number
 ): GraphData => {
-  switch (type + side) {
-    case OptionType.Call + OptionSide.Long:
-      return longCall(strikePrice, premia, size);
-    case OptionType.Put + OptionSide.Long:
-      return longPut(strikePrice, premia, size);
-    case OptionType.Call + OptionSide.Short:
-      return shortCall(strikePrice, premia, size);
-    case OptionType.Put + OptionSide.Short:
-      return shortPut(strikePrice, premia, size);
-    default:
-      throw Error(`Invalid type or side ${type}, ${side}`);
+  const step = 0.2;
+  const granuality = 1 / step;
+  const spread = [0.85 * strikePrice, 1.15 * strikePrice];
+  const plot = [];
+
+  if (side === OptionSide.Long && type === OptionType.Call) {
+    for (let i = spread[0] * granuality; i <= spread[1] * granuality; i++) {
+      const x = i * step;
+      const y = x < strikePrice ? -premia : (x - strikePrice) * size - premia;
+      plot.push({ market: x, usd: y });
+    }
+
+    const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
+    const domain = [first - 0.2 * last, last];
+
+    return { plot, domain };
   }
+
+  if (side === OptionSide.Short && type === OptionType.Call) {
+    for (let i = spread[0] * granuality; i <= spread[1] * granuality; i++) {
+      const x = i * step;
+      const y = x < strikePrice ? premia : (strikePrice - x) * size + premia;
+      plot.push({ market: x, usd: y });
+    }
+
+    const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
+    const domain = [last, first - 0.3 * last];
+
+    return { plot, domain };
+  }
+
+  if (side === OptionSide.Long && type === OptionType.Put) {
+    for (let i = spread[0] * granuality; i <= spread[1] * granuality; i++) {
+      const x = i * step;
+      const y = x < strikePrice ? (strikePrice - x) * size - premia : -premia;
+      plot.push({ market: x, usd: y });
+    }
+
+    const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
+    const domain = [last - 0.3 * first, first];
+
+    return { plot, domain };
+  }
+
+  if (side === OptionSide.Short && type === OptionType.Put) {
+    for (let i = spread[0] * granuality; i <= spread[1] * granuality; i++) {
+      const x = i * step;
+      const y = x < strikePrice ? (x - strikePrice) * size + premia : premia;
+      plot.push({ market: x, usd: y });
+    }
+
+    const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
+    const domain = [first, last - 0.3 * first];
+
+    return { plot, domain };
+  }
+
+  // Unreachable
+  throw Error(`Invalid type or side ${type}, ${side}`);
 };
