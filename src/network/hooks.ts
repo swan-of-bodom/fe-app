@@ -70,7 +70,6 @@ export const onConnect = (account: AccountInterface) => {
     reportReferral(account.address);
 
     // prompt user to transfer capital from old AMM
-    // TODO: reactivate when AMM fixed
-    // transferLps(account.address);
+    transferLps(account.address);
   }
 };
