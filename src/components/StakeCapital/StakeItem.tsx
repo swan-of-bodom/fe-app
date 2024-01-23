@@ -1,5 +1,6 @@
-import { TableCell, TableRow, Tooltip, Typography, useTheme } from "@mui/material";
+import { Box, TableCell, TableRow, Tooltip, Typography, useTheme } from "@mui/material";
 import { CSSProperties, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { AccountInterface } from "starknet";
 
 import { getPoolState } from "../../calls/getPoolState";
@@ -7,11 +8,14 @@ import { Pool } from "../../classes/Pool";
 import { TokenKey } from "../../classes/Token";
 import { BASE_DIGITS } from "../../constants/amm";
 import { useTxPending } from "../../hooks/useRecentTxs";
+import { QueryKeys } from "../../queries/keys";
 import { TransactionAction } from "../../redux/reducers/transactions";
 import buttonStyles from "../../style/button.module.css";
 import inputStyle from "../../style/input.module.css";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { intToDecimal } from "../../utils/units";
+import { LoadingAnimation } from "../Loading/Loading";
+import { fetchStakeCapital } from "./fetchStakeCapital";
 import { handleStake } from "./handleStake";
 
 type Props = {
@@ -65,17 +69,25 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
   const [text, setText] = useState<string>("0");
   const [loading, setLoading] = useState<boolean>(false);
   const [apy, setApy] = useState<number | undefined>();
+  const [unCapital,setUnCapital] = useState("0");
+  const [lockCapital,setLockCapital] = useState("0");
   const [yieldSinceLaunch, setYieldSinceLaunch] = useState<
     number | undefined
   >();
-
+  const { isLoading, isError, data } = useQuery(
+    [QueryKeys.stake, pool.name],
+    fetchStakeCapital
+  );
   const theme = useTheme();
 
   useEffect(() => {
     getApy(setApy, pool);
     getYieldSinceLaunch(setYieldSinceLaunch, pool);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if(data && data.status==="success"){
+      setUnCapital(BigInt(data.data.unlocked_cap).toString(10));
+      setLockCapital(BigInt(data.data.locked_cap).toString(10));
+    }
+  }, [isLoading, data, pool]);
 
   const handleChange = handleNumericChangeFactory(setText, setAmount);
 
@@ -148,10 +160,20 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
           </button>
         </TableCell>
       </TableRow>
-      {showLockInfo&&(
+      {showLockInfo && (
         <TableRow>
-          <TableCell>Unlocked capital</TableCell>
-          <TableCell>Locked capital</TableCell>
+          {isLoading ? (
+            <Box sx={{ padding: "20px" }}>
+              <LoadingAnimation size={20} />
+            </Box>
+          ) : (
+            <>
+              {" "}
+              <TableCell>UNLOCKED CAPITAL: {unCapital}</TableCell>
+              <TableCell>LOCKED CAPITAL: {lockCapital}</TableCell>
+            </>
+          )}
+          {isError&&(<TableCell>Failed fetching data.</TableCell>)}
         </TableRow>
       )}
     </>
