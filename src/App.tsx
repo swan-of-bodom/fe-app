@@ -26,9 +26,7 @@ import TermsAndConditions from "./pages/termsAndConditions";
 import TradePage from "./pages/trade";
 import { store } from "./redux/store";
 import { isCookieSet } from "./utils/cookies";
-
 import "./style/base.css";
-import Maintainance from "./pages/maintainance";
 
 const App = () => {
   const [check, rerender] = useState(false);
@@ -45,17 +43,6 @@ const App = () => {
         <CssBaseline />
         {acceptedTermsAndConditions ? (
           <>
-            {/* <div
-              style={{
-                width: "100vw",
-                height: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <h3>App is currently undergoing maintainance</h3>
-            </div> */}
             <Slip />
             <Router>
               <Routes>
@@ -66,7 +53,7 @@ const App = () => {
                     element={<Navigate to={newPath} replace />}
                   />
                 ))}
-                {/* <Route path="/" element={<TradePage />} />
+                <Route path="/" element={<TradePage />} />
                 <Route path="/insurance" element={<Insurance />} />
                 <Route path="/portfolio/:target?" element={<Portfolio />} />
                 <Route path="/staking" element={<StakePage />} />
@@ -77,17 +64,6 @@ const App = () => {
                 <Route path="/apy-info" element={<APYInfoPage />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/dashboard" element={<TradeDashboardPage />} />
-                <Route path="/governance" element={<Governance />} />
-                <Route path="*" element={<NotFound />} /> */}
-
-                <Route path="/" element={<Maintainance />} />
-                <Route path="/insurance" element={<Maintainance />} />
-                <Route path="/portfolio/:target?" element={<Maintainance />} />
-                <Route path="/staking" element={<Maintainance />} />
-                <Route path="/staking-explained" element={<Maintainance />} />
-                <Route path="/apy-info" element={<Maintainance />} />
-                <Route path="/settings" element={<Maintainance />} />
-                <Route path="/dashboard" element={<Maintainance />} />
                 <Route path="/governance" element={<Governance />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

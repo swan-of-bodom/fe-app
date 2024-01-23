@@ -184,3 +184,9 @@ export const isEqual = (
   a: string | number | bigint,
   b: string | number | bigint
 ): boolean => BigInt(a) === BigInt(b);
+
+export const isPromiseFulfilled = <T>(
+  result: PromiseSettledResult<T>
+): result is PromiseFulfilledResult<T> => {
+  return result.status === "fulfilled";
+};

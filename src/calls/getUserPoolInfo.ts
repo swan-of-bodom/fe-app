@@ -2,6 +2,7 @@ import {
   BTC_USDC_CALL_ADDRESS,
   ETH_USDC_PUT_ADDRESS,
   BTC_USDC_PUT_ADDRESS,
+  MAINNET_AUX_CONTRACT_ADDRESS,
 } from "./../constants/amm";
 import { debug } from "./../utils/debugger";
 import {
@@ -16,6 +17,7 @@ import { UserPoolInfo } from "../classes/Pool";
 import { Contract } from "starknet";
 import AuxAbi from "../abi/aux_abi.json";
 import { provider } from "../network/provider";
+import { isPromiseFulfilled } from "../utils/utils";
 
 const method = AMM_METHODS.GET_USER_POOL_INFOS;
 
@@ -24,7 +26,7 @@ const getUserPoolInfoAuxContract = async (
 ): Promise<UserPoolInfo[]> => {
   const AuxContract = new Contract(
     AuxAbi,
-    "0x051e4bb147f0cc73b9c06c4b155ff4986226091162d9f616097d5c77c13d9395",
+    MAINNET_AUX_CONTRACT_ADDRESS,
     provider
   );
 
@@ -39,11 +41,13 @@ const getUserPoolInfoAuxContract = async (
     AuxContract.call("get_user_pool_info", [address, lpAddress])
   );
 
-  const res = await Promise.all(promises);
+  const settledRequests = await Promise.allSettled(promises);
 
-  console.log("HEEERERERERERE", res);
+  const response = settledRequests
+    .filter(isPromiseFulfilled)
+    .map((r) => r.value);
 
-  const parsed = (res as ResponseUserPoolInfo[]).map((v) =>
+  const parsed = (response as ResponseUserPoolInfo[]).map((v) =>
     parseUserPoolInfo(v)
   );
 

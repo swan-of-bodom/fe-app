@@ -12,12 +12,16 @@ export const ETH_USDC_PUT_ADDRESS = config.ETH_USDC_PUT_ADDRESS;
 export const BTC_USDC_CALL_ADDRESS = config.BTC_USDC_CALL_ADDRESS;
 export const BTC_USDC_PUT_ADDRESS = config.BTC_USDC_PUT_ADDRESS;
 
+export const MAINNET_AUX_CONTRACT_ADDRESS =
+  "0x03e174d3d7dce00ad5e15299593a28c3defc660c77220867c921611a3aef4149";
+
 export const LEGACY_AMM =
   "0x076dbabc4293db346b0a56b29b6ea9fe18e93742c73f12348c8747ecfc1050aa";
 export const LEGACY_CALL_LP =
   "0x7aba50fdb4e024c1ba63e2c60565d0fd32566ff4b18aa5818fc80c30e749024";
 export const LEGACY_PUT_LP =
   "0x18a6abca394bd5f822cfa5f88783c01b13e593d1603e7b41b00d31d2ea4827a";
+
 export const isTestnet = NETWORK === "testnet";
 export const isMainnet = NETWORK === "mainnet";
 export const enum AMM_METHODS {

@@ -97,7 +97,7 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
         TableElement({
           isFetching,
           data: liveOptions,
-          titles: ["Option", "Maturity", "Size", "Value"],
+          titles: ["Pool", "Side", "Strike", "Maturity", "Size", "Value"],
           ItemElem: LiveItem,
           desc: "live",
         })
@@ -106,7 +106,7 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
         TableElement({
           isFetching,
           data: inOptions,
-          titles: ["Option", "Expiry", "Size", "Value"],
+          titles: ["Pool", "Side", "Strike", "Expiry", "Size", "Value"],
           ItemElem: InMoneyItem,
           desc: "expired with profit",
         })
@@ -115,7 +115,7 @@ const PositionsWithAddress = ({ address }: PropsAddress) => {
         TableElement({
           isFetching,
           data: outOptions,
-          titles: ["Option", "Expiry", "Size"],
+          titles: ["Pool", "Side", "Strike", "Expiry", "Size"],
           ItemElem: OutOfMoneyItem,
           desc: "expired without profit",
         })
