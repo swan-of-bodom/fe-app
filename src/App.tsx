@@ -1,12 +1,16 @@
 import { CssBaseline } from "@mui/material";
 import { useState } from "react";
 import { Provider } from "react-redux";
-import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 
 import { AlphaRibbon } from "./components/AlphaRibbon/AlphaRibbon";
 import { MultiDialog } from "./components/MultiDialog/MultiDialog";
 import { Slip } from "./components/Slip";
-import { StarknetProvider } from "./components/StarknetProvider";
 import { Toast } from "./components/Toast/Toast";
 import { Controller } from "./Controller";
 import APYInfoPage from "./pages/apyInfo";
@@ -35,47 +39,45 @@ const App = () => {
   ];
 
   return (
-    <StarknetProvider>
-      <Provider store={store}>
-        <Controller>
-          <CssBaseline />
-          {acceptedTermsAndConditions ? (
-            <>
-              <Slip />
-              <Router>
-                <Routes>
-                  {oldPathRedirects.map(([oldPath, newPath], i) => (
-                    <Route
-                      key={i}
-                      path={oldPath}
-                      element={<Navigate to={newPath} replace />}
-                    />
-                  ))}
-                  <Route path="/" element={<TradePage />} />
-                  <Route path="/insurance" element={<Insurance />} />
-                  <Route path="/portfolio/:target?" element={<Portfolio />} />
-                  <Route path="/staking" element={<StakePage />} />
+    <Provider store={store}>
+      <Controller>
+        <CssBaseline />
+        {acceptedTermsAndConditions ? (
+          <>
+            <Slip />
+            <Router>
+              <Routes>
+                {oldPathRedirects.map(([oldPath, newPath], i) => (
                   <Route
-                    path="/staking-explained"
-                    element={<StakingExplainedPage />}
+                    key={i}
+                    path={oldPath}
+                    element={<Navigate to={newPath} replace />}
                   />
-                  <Route path="/apy-info" element={<APYInfoPage />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/dashboard" element={<TradeDashboardPage />} />
-                  <Route path="/governance" element={<Governance />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Router>
-              <MultiDialog />
-              <Toast />
-              <AlphaRibbon />
-            </>
-          ) : (
-            <TermsAndConditions check={check} rerender={rerender} />
-          )}
-        </Controller>
-      </Provider>
-    </StarknetProvider>
+                ))}
+                <Route path="/" element={<TradePage />} />
+                <Route path="/insurance" element={<Insurance />} />
+                <Route path="/portfolio/:target?" element={<Portfolio />} />
+                <Route path="/staking" element={<StakePage />} />
+                <Route
+                  path="/staking-explained"
+                  element={<StakingExplainedPage />}
+                />
+                <Route path="/apy-info" element={<APYInfoPage />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/dashboard" element={<TradeDashboardPage />} />
+                <Route path="/governance" element={<Governance />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Router>
+            <MultiDialog />
+            <Toast />
+            <AlphaRibbon />
+          </>
+        ) : (
+          <TermsAndConditions check={check} rerender={rerender} />
+        )}
+      </Controller>
+    </Provider>
   );
 };
 

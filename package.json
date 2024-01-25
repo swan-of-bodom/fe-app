@@ -24,7 +24,6 @@
     "recharts": "^2.1.16",
     "redux": "^4.2.0",
     "starknet": "^5.26.1",
-    "starknetid.js": "^3.0.0",
     "starknetkit": "^1.0.21"
   },
   "scripts": {
