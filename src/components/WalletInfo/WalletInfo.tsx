@@ -1,20 +1,22 @@
+import { ContentCopy, Info, PowerSettingsNew } from "@mui/icons-material";
 import { IconButton, Link, Skeleton, Tooltip, Typography } from "@mui/material";
+
+// import { useWallet } from "react";
+// import { constants } from "starknet";
+// import { StarknetIdNavigator } from "starknetid.js";
+
 import { useWallet } from "../../hooks/useWallet";
 import { disconnect } from "../../network/account";
-import {
-  closeDialog,
-  showToast,
-  transferDialogEnable,
-} from "../../redux/actions";
-import { WalletIcon } from "../assets";
-import { ContentCopy, Info, PowerSettingsNew } from "@mui/icons-material";
+// import { closeDialog, showToast, transferDialogEnable } from "../../network/provider";
+import { closeDialog, showToast, transferDialogEnable } from "../../redux/actions";
 import { ToastType } from "../../redux/reducers/ui";
-import { RecentTransaction } from "./RecentTransactions";
 import { addressElision, getStarkscanUrl } from "../../utils/utils";
+import { WalletIcon } from "../assets";
+import { RecentTransaction } from "./RecentTransactions";
 import styles from "./walletinfo.module.css";
 
 const handleDisconnect = () => {
-  closeDialog();
+  closeDialog();  
   disconnect();
   transferDialogEnable();
 };
@@ -39,17 +41,28 @@ const buttonStyle = {
 
 export const WalletInfo = () => {
   const wallet = useWallet();
-
+  // const [starkName, setStarkName] = useState("");
   if (!wallet) {
     return <Skeleton width={256} height={88} />;
   }
-
+  
   const { account } = wallet;
   const { address } = account;
-  const exploreUrl = getStarkscanUrl({
+  const exploreUrl = getStarkscanUrl({  
     chainId: wallet.account.chainId,
     contractHash: address,
   });
+  // // eslint-disable-next-line react-hooks/rules-of-hooks
+  // useEffect(() => { 
+  //   const fetchStarkName = async () => {
+  //     const starknetIdNavigator = new StarknetIdNavigator(
+  //       provider,
+  //       wallet.chainId as constants.StarknetChainId
+  //     );
+  //     const starkname = await starknetIdNavigator.getStarkName(address ?? "");
+  //   }
+  //   fetchStarkName();
+  // }, [address, wallet]);
 
   return (
     <div>

@@ -91,7 +91,8 @@ export const WalletButton = () => {
       dappName: "Carmine Options AMM",
       // app currently has only dark theme
       modalTheme: "dark",
-    }).then((wallet) => {
+    }).then((modalResult) => {
+      const { wallet } = modalResult;
       if (wallet && wallet.isConnected) {
         accountConnect(wallet);
       }

@@ -1,10 +1,10 @@
+import { apiUrl } from "../api";
 import { OptionWithPremia } from "../classes/Option";
-import { API_URL } from "../constants/amm";
 import { parseBatchOfOptions } from "../utils/optionParsers/batch";
 import { parseNonExpiredOption } from "../utils/optionParsers/parseNonExpiredOption";
 
 export const getNonExpiredOptions = async (): Promise<OptionWithPremia[]> =>
-  fetch(`${API_URL}live-options`)
+  fetch(apiUrl("live-options"))
     .then((res) => res.json())
     .then((res) => {
       if (res?.status !== "success" || !res?.data?.length) {

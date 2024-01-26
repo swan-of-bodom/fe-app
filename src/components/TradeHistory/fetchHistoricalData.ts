@@ -3,7 +3,7 @@ import { QueryFunctionContext } from "react-query";
 import { ITradeHistory, RawTradeHistory } from "../../types/history";
 import { debug, LogTypes } from "../../utils/debugger";
 import { Option } from "../../classes/Option";
-import { API_URL } from "../../constants/amm";
+import { apiUrl } from "../../api";
 
 const getOptionFromHistory = (option: RawOptionHistory | null) => {
   if (!option) {
@@ -48,7 +48,7 @@ export const fetchHistoricalData = async ({
     );
   }
 
-  const data = await fetch(`${API_URL}transactions?address=${walletAddress}`)
+  const data = await fetch(apiUrl(`transactions?address=${walletAddress}`))
     .then((res) => res.json())
     .then((v) => {
       if (v?.status === "success") {
