@@ -1,5 +1,6 @@
+import { apiUrl } from "../api";
 import { userLpBalance } from "../components/Transfer/transfer";
-import { API_URL, isMainnet } from "../constants/amm";
+import { isMainnet } from "../constants/amm";
 import {
   addReferredPair,
   openTransferModal,
@@ -39,7 +40,7 @@ const reportReferral = (referredAddress: string) => {
     }),
   };
 
-  fetch(`${API_URL}referral_event`, options)
+  fetch(apiUrl("referral_event"), options)
     .then((response) => {
       if (response.ok) {
         addReferredPair({ code, address: referredAddress });

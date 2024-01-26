@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import TradeTable from "../components/TradeTable";
-import { Layout } from "../components/layout";
+
 import { AlternativeTradingView } from "../components/CryptoGraph/AlternativeTradingView";
+import { Layout } from "../components/layout";
+import TradeTable from "../components/TradeTable";
 
 const TradePage = () => {
   useEffect(() => {

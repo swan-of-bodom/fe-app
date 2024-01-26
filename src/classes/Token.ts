@@ -1,11 +1,6 @@
 import { BigNumberish, Call } from "starknet";
-import {
-  AMM_ADDRESS,
-  AMM_METHODS,
-  BTC_ADDRESS,
-  ETH_ADDRESS,
-  USDC_ADDRESS,
-} from "../constants/amm";
+
+import { AMM_ADDRESS, AMM_METHODS, BTC_ADDRESS, ETH_ADDRESS, USDC_ADDRESS } from "../constants/amm";
 
 export enum TokenKey {
   // coingecko API is used for fetching the prices
@@ -19,7 +14,7 @@ export enum TokenKey {
 const TOKENS: [TokenKey, string, number, string][] = [
   [TokenKey.ETH, "ETH", 18, ETH_ADDRESS],
   [TokenKey.USDC, "USDC", 6, USDC_ADDRESS],
-  [TokenKey.BTC, "BTC", 8, BTC_ADDRESS],
+  [TokenKey.BTC, "wBTC", 8, BTC_ADDRESS],
 ];
 
 export class Token {

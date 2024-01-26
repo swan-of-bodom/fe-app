@@ -1,4 +1,4 @@
-import { useEffect, useRef, memo } from "react";
+import { memo, useEffect, useRef } from "react";
 
 function TradingViewWidget() {
   const container = useRef(null);
@@ -16,7 +16,7 @@ function TradingViewWidget() {
           "BINANCE:ETHUSD|1M|USD"
         ],
         [
-          "BINANCE:BTCUSD|1M|USD"
+          "BINANCE:wBTCUSD|1M|USD"
         ]
       ],
       "chartOnly": false,

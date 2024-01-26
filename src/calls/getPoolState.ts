@@ -1,3 +1,4 @@
+import { apiUrl } from "../api";
 import { debug } from "../utils/debugger";
 
 type RawPoolState = {
@@ -36,12 +37,8 @@ const parsePoolState = (obj: RawPoolState): PoolState => {
   return parsed;
 };
 
-export const getPoolState = async (
-  pool: "eth-usdc-call" | "eth-usdc-put"
-): Promise<PoolState> => {
-  const state = await fetch(
-    `https://api.carmine.finance/api/v1/mainnet/${pool}/state`
-  )
+export const getPoolState = async (pool: string): Promise<PoolState> => {
+  const state = await fetch(apiUrl(`${pool}/state`))
     .then((response) => response.json())
     .then((result) => {
       if (result && result.status === "success") {

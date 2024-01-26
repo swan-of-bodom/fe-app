@@ -1,11 +1,11 @@
 import { useReducer } from "react";
 import { useAccount } from "../../hooks/useAccount";
-import { API_URL } from "../../constants/amm";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 import styles from "./Referral.module.css";
 import { showToast } from "../../redux/actions";
 import { ToastType } from "../../redux/reducers/ui";
+import { apiUrl } from "../../api";
 
 enum ActionType {
   Fetching,
@@ -77,7 +77,7 @@ const GetReferralLink = () => {
       return;
     }
     dispatch({ type: ActionType.Fetching });
-    const url = `${API_URL}get_referral?address=${account.address}`;
+    const url = apiUrl(`get_referral?address=${account.address}`);
     fetch(url)
       .then((res) => res.json())
       .then((resBody: RefResult) => {

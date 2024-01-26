@@ -26,6 +26,7 @@ import TermsAndConditions from "./pages/termsAndConditions";
 import TradePage from "./pages/trade";
 import { store } from "./redux/store";
 import { isCookieSet } from "./utils/cookies";
+
 import "./style/base.css";
 
 const App = () => {

@@ -1,8 +1,9 @@
 import { AccountInterface } from "starknet";
-import { API_URL, coreTeamAddresses } from "../../constants/amm";
+import { coreTeamAddresses } from "../../constants/amm";
 import { balanceOfCarmineToken } from "../../calls/balanceOf";
 import { hexToBN, standardiseAddress } from "../../utils/utils";
 import { debug } from "../../utils/debugger";
+import { apiUrl } from "../../api";
 
 type Eligible = {
   eligible: true;
@@ -21,7 +22,7 @@ export const getProof = async (
   account: AccountInterface
 ): Promise<ProofResult> => {
   const merkleTreeRequest = fetch(
-    `${API_URL}airdrop?address=${account.address}`
+    apiUrl(`airdrop?address=${account.address}`)
   ).then((r) => r.json());
   const carmBalanceRequest = balanceOfCarmineToken(account);
 
