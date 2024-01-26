@@ -21,7 +21,7 @@
     "react-ts-tradingview-widgets": "^1.0.14",
     "recharts": "^2.1.16",
     "redux": "^4.2.0",
-    "starknet": "^5.26.1",
+    "starknet": "^5.19.5",
     "starknetkit": "^1.0.21"
   },
   "scripts": {
