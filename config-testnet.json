@@ -1,6 +1,6 @@
 {
   "NETWORK": "testnet",
-  "API_URL": "https://api.carmine.finance/api/v1/testnet/",
+  "API_URL": "https://api.carmine.finance",
   "AMM_ADDRESS": "0x282530d787351ad7a90fdf0ecd52c6fa2ba57452cc08ea0309d1141c4356387",
   "GOVERNANCE_ADDRESS": "TODO",
   "ETH_ADDRESS": "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",

@@ -2,7 +2,15 @@ import { BigNumberish, Call } from "starknet";
 
 import { sendGtagEvent } from "../analytics";
 import { getUnlockedCapital } from "../calls/getUnlockedCapital";
-import { AMM_ADDRESS, AMM_METHODS, BASE_DIGITS, BTC_USDC_CALL_ADDRESS, BTC_USDC_PUT_ADDRESS, ETH_USDC_CALL_ADDRESS, ETH_USDC_PUT_ADDRESS } from "../constants/amm";
+import {
+  AMM_ADDRESS,
+  AMM_METHODS,
+  BASE_DIGITS,
+  BTC_USDC_CALL_ADDRESS,
+  BTC_USDC_PUT_ADDRESS,
+  ETH_USDC_CALL_ADDRESS,
+  ETH_USDC_PUT_ADDRESS,
+} from "../constants/amm";
 import { getMultipleTokensValueInUsd } from "../tokens/tokenPrices";
 import { OptionType } from "../types/options";
 import { shortInteger } from "../utils/computations";
@@ -15,6 +23,7 @@ export class Pool extends Pair {
   public type: OptionType;
   public lpAddress: string;
   public poolId: string;
+  public apiPoolId: string;
 
   constructor(base: BigNumberish, quote: BigNumberish, type: BigNumberish) {
     super(base, quote);
@@ -24,18 +33,22 @@ export class Pool extends Pair {
     switch (this.pairId + this.type) {
       case PairKey.ETH_USDC + OptionType.Call:
         this.lpAddress = ETH_USDC_CALL_ADDRESS;
+        this.apiPoolId = "eth-usdc-call";
 
         break;
       case PairKey.ETH_USDC + OptionType.Put:
         this.lpAddress = ETH_USDC_PUT_ADDRESS;
+        this.apiPoolId = "eth-usdc-put";
 
         break;
       case PairKey.BTC_USDC + OptionType.Call:
         this.lpAddress = BTC_USDC_CALL_ADDRESS;
+        this.apiPoolId = "btc-usdc-call";
 
         break;
       case PairKey.BTC_USDC + OptionType.Put:
         this.lpAddress = BTC_USDC_PUT_ADDRESS;
+        this.apiPoolId = "btc-usdc-put";
 
         break;
       default:
