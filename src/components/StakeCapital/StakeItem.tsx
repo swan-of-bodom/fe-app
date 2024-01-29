@@ -40,7 +40,7 @@ const ShowApy = ({ apy }: { apy?: number }) => {
     return <Typography sx={sx}>--</Typography>;
   }
 
-  const sign = apy < 0 ? "-" : "+";
+  const sign = apy < 0 ? "-" : "";
 
   if (apy < 0) {
     sx.color = theme.palette.error.main;
@@ -50,7 +50,8 @@ const ShowApy = ({ apy }: { apy?: number }) => {
 
   return (
     <Typography sx={sx}>
-      {sign} {apy.toFixed(2)}
+      {sign}
+      {apy.toFixed(2)}%
     </Typography>
   );
 };
