@@ -40,20 +40,13 @@ const ShowApy = ({ apy }: { apy?: number }) => {
     return <Typography sx={sx}>--</Typography>;
   }
 
-  const sign = apy < 0 ? "-" : "";
-
   if (apy < 0) {
     sx.color = theme.palette.error.main;
   } else {
     sx.color = theme.palette.success.main;
   }
 
-  return (
-    <Typography sx={sx}>
-      {sign}
-      {apy.toFixed(2)}%
-    </Typography>
-  );
+  return <Typography sx={sx}>{apy.toFixed(2)}%</Typography>;
 };
 
 export const StakeCapitalItem = ({ account, pool }: Props) => {
