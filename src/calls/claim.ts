@@ -10,6 +10,9 @@ export const claim = async (
 ) => {
   const contractAddress = GOVERNANCE_ADDRESS;
   const [address, amount, ...proof] = data;
+
+  // calldata structure explained here: https://github.com/CarmineOptions/carmine-api/tree/master/carmine-api-airdrop
+  // in Cairo, to send array you need to insert the length of array before the array items - "String(proof.length)"
   const calldata = [address, amount, String(proof.length), ...proof];
   const call = {
     contractAddress,
