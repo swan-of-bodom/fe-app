@@ -76,10 +76,10 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
           <Typography>{pool.name}</Typography>
         </TableCell>
         <TableCell onClick={handleLockedInfo}>
-          <ShowApy apy={weekly} />
+          <ShowApy apy={sinceLaunch} />
         </TableCell>
         <TableCell onClick={handleLockedInfo}>
-          <ShowApy apy={sinceLaunch} />
+          <ShowApy apy={weekly} />
         </TableCell>
         <TableCell sx={{ minWidth: "100px" }} align="center">
           <input
