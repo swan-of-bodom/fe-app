@@ -53,12 +53,12 @@ const addCustomWallet = (wallet: CustomWallet) => {
     ((customWallet as HTMLElement).querySelector("img") as HTMLImageElement) ||
     undefined;
 
-  if (!paragraphs || !paragraphs[0] || !paragraphs[1] || !img) {
+  if (!paragraphs || !paragraphs[0] || !img) {
     return;
   }
 
+  Array.from(paragraphs).map((p) => (p.innerText = ""));
   paragraphs[0].innerText = wallet.name;
-  paragraphs[1].innerText = "";
   img.alt = wallet.alt || "";
   img.src = wallet.image;
 
