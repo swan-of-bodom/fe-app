@@ -51,6 +51,16 @@ export class Pool extends Pair {
         this.apiPoolId = "btc-usdc-put";
 
         break;
+      case PairKey.ETH_STRK + OptionType.Call:
+        this.lpAddress = ETH_USDC_CALL_ADDRESS;
+        this.apiPoolId = "eth-strk-call";
+
+        break;
+      case PairKey.ETH_STRK + OptionType.Put:
+        this.lpAddress = ETH_USDC_PUT_ADDRESS;
+        this.apiPoolId = "eth-strk-put";
+
+        break;
       default:
         throw Error(
           `Invalid Pool ${this.baseToken.id + this.quoteToken.id + this.type}`
