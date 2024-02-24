@@ -6,8 +6,13 @@ import { FinancialData, OptionSide, OptionStruct } from "../types/options";
 import { Cubit } from "../types/units";
 import { longInteger, shortInteger } from "../utils/computations";
 import { bnToOptionSide } from "../utils/conversions";
-import { timestampToReadableDate, timestampToShortTimeDate, toHex } from "../utils/utils";
+import {
+  timestampToReadableDate,
+  timestampToShortTimeDate,
+  toHex,
+} from "../utils/utils";
 import { Pool } from "./Pool";
+import { TokenKey } from "./Token";
 
 export class Option extends Pool {
   public maturity: number;
@@ -282,6 +287,13 @@ export class Option extends Pool {
 
   get dateRich(): string {
     return timestampToReadableDate(this.maturity * 1000);
+  }
+
+  get strikeCurrency(): string {
+    if (this.quoteToken.id === TokenKey.USDC) {
+      return "$";
+    }
+    return this.quoteToken.symbol;
   }
 }
 

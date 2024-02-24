@@ -44,7 +44,8 @@ export const TradeCardTemplate = ({
     <div className={style.container}>
       <div className={style.top}>
         <h4>
-          {option.sideAsText} {option.typeAsText}, strike price ${option.strike}
+          {option.sideAsText} {option.typeAsText}, strike price{" "}
+          {option.strikeCurrency} {option.strike}
         </h4>
         <h4>Expiry {timestampToReadableDate(option.maturity * 1000)}</h4>
       </div>
@@ -157,13 +158,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
 
   const premia = data.premia;
 
-  const graphData = getProfitGraphData(
-    type,
-    side,
-    strike,
-    data.premiaUsd,
-    amount
-  );
+  const graphData = getProfitGraphData(option, data.premiaUsd, amount);
 
   const handleBuy = async () => {
     if (!account) {

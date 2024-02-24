@@ -1,3 +1,4 @@
+import { Option } from "../../classes/Option";
 import { OptionSide, OptionType } from "../../types/options";
 
 export type CurrencyData = { usd: number; market: number };
@@ -8,12 +9,11 @@ export type GraphData = {
 };
 
 export const getProfitGraphData = (
-  type: OptionType,
-  side: OptionSide,
-  strikePrice: number,
+  option: Option,
   premia: number,
   size: number
 ): GraphData => {
+  const { strike: strikePrice, type, side } = option;
   const step = 0.2;
   const granuality = 1 / step;
   const spread = [0.85 * strikePrice, 1.15 * strikePrice];

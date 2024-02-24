@@ -21,7 +21,7 @@ const OptionTableItem = ({ option, handleClick }: OptionPreviewProps) => {
   return (
     <TableRow sx={style} onClick={handleClick}>
       <TableCell sx={{ borderBottom: "1px solid white" }}>
-        ${option.strike}
+        {option.strikeCurrency} {option.strike}
       </TableCell>
       <TableCell sx={{ borderBottom: "1px solid white" }}>
         {option.dateRich}

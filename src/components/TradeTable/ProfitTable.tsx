@@ -65,10 +65,11 @@ export const ProfitTable = ({
   price,
   premia,
 }: ProfitTableProps) => {
-  const limited = "$" + premia.toFixed(2);
+  const limited = option.strikeCurrency + " " + premia.toFixed(2);
   const unlimited = "Unlimited";
   const breakEven =
-    "$" +
+    option.strikeCurrency +
+    " " +
     (option.isCall
       ? option.strike + basePremia
       : option.strike - basePremia
