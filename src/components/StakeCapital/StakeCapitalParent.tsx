@@ -11,7 +11,12 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 
 import { Pool } from "../../classes/Pool";
-import { BTC_ADDRESS, ETH_ADDRESS, USDC_ADDRESS } from "../../constants/amm";
+import {
+  BTC_ADDRESS,
+  ETH_ADDRESS,
+  STRK_ADDRESS,
+  USDC_ADDRESS,
+} from "../../constants/amm";
 import { useAccount } from "../../hooks/useAccount";
 import tableStyles from "../../style/table.module.css";
 import { OptionType } from "../../types/options";
@@ -23,6 +28,8 @@ const POOLS = [
   new Pool(ETH_ADDRESS, USDC_ADDRESS, OptionType.Put),
   new Pool(BTC_ADDRESS, USDC_ADDRESS, OptionType.Call),
   new Pool(BTC_ADDRESS, USDC_ADDRESS, OptionType.Put),
+  new Pool(ETH_ADDRESS, STRK_ADDRESS, OptionType.Call),
+  new Pool(ETH_ADDRESS, STRK_ADDRESS, OptionType.Put),
 ];
 
 export const StakeCapitalParent = () => {
