@@ -82,9 +82,6 @@ const getBaseAmount = (pairId: PairKey) => {
   if (pairId === PairKey.BTC_USDC) {
     return 0.1;
   }
-  if (pairId === PairKey.ETH_STRK) {
-    return 0.001;
-  }
 
   // default
   return 1;
