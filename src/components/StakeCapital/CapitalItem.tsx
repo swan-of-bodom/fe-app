@@ -26,7 +26,7 @@ export const CapitalItemContent = ({ pool }: Props) => {
     );
   }
 
-  if (isError || !data) {
+  if (isError || !data.data) {
     return <p>Failed fetching data.</p>;
   }
 

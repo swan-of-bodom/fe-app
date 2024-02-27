@@ -291,7 +291,7 @@ export const ClosePosition = () => {
     );
   }
 
-  const title = `$${option.strike} ${option.typeAsText}`;
+  const title = `${option.strikeCurrency} ${option.strike} ${option.typeAsText}`;
 
   return (
     <>

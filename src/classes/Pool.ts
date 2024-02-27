@@ -8,6 +8,8 @@ import {
   BASE_DIGITS,
   BTC_USDC_CALL_ADDRESS,
   BTC_USDC_PUT_ADDRESS,
+  ETH_STRK_CALL_ADDRESS,
+  ETH_STRK_PUT_ADDRESS,
   ETH_USDC_CALL_ADDRESS,
   ETH_USDC_PUT_ADDRESS,
 } from "../constants/amm";
@@ -49,6 +51,16 @@ export class Pool extends Pair {
       case PairKey.BTC_USDC + OptionType.Put:
         this.lpAddress = BTC_USDC_PUT_ADDRESS;
         this.apiPoolId = "btc-usdc-put";
+
+        break;
+      case PairKey.ETH_STRK + OptionType.Call:
+        this.lpAddress = ETH_STRK_CALL_ADDRESS;
+        this.apiPoolId = "eth-strk-call";
+
+        break;
+      case PairKey.ETH_STRK + OptionType.Put:
+        this.lpAddress = ETH_STRK_PUT_ADDRESS;
+        this.apiPoolId = "eth-strk-put";
 
         break;
       default:

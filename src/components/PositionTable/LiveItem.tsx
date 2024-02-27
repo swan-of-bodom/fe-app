@@ -23,7 +23,7 @@ export const LiveItem = ({ option }: Props) => {
     <TableRow>
       <TableCell>{option.name}</TableCell>
       <TableCell>{option.sideAsText}</TableCell>
-      <TableCell>{`$${option.strike}`}</TableCell>
+      <TableCell>{`${option.strikeCurrency} ${option.strike}`}</TableCell>
       <TableCell>{option.dateShort}</TableCell>
       <TableCell>
         <Tooltip title={sizeTooltipMessage}>

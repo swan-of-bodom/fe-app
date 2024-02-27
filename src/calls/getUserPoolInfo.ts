@@ -3,6 +3,8 @@ import {
   ETH_USDC_PUT_ADDRESS,
   BTC_USDC_PUT_ADDRESS,
   MAINNET_AUX_CONTRACT_ADDRESS,
+  ETH_STRK_PUT_ADDRESS,
+  ETH_STRK_CALL_ADDRESS,
 } from "./../constants/amm";
 import { debug } from "./../utils/debugger";
 import {
@@ -35,6 +37,8 @@ const getUserPoolInfoAuxContract = async (
     ETH_USDC_PUT_ADDRESS,
     BTC_USDC_CALL_ADDRESS,
     BTC_USDC_PUT_ADDRESS,
+    ETH_STRK_CALL_ADDRESS,
+    ETH_STRK_PUT_ADDRESS,
   ];
 
   const promises = lpAddresses.map((lpAddress) =>

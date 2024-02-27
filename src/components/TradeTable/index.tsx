@@ -79,6 +79,11 @@ const TradeTable = () => {
 
       return;
     }
+    if (event.target.value === PairKey.ETH_STRK) {
+      setPair(PairKey.ETH_STRK);
+
+      return;
+    }
   };
 
   if (!typeSet && data && data[1]) {
@@ -118,6 +123,7 @@ const TradeTable = () => {
           <Select sx={selectNoBorder} value={pair} onChange={handlePairChange}>
             <MenuItem value={PairKey.ETH_USDC}>{PairKey.ETH_USDC}</MenuItem>
             <MenuItem value={PairKey.BTC_USDC}>{PairKey.BTC_USDC}</MenuItem>
+            <MenuItem value={PairKey.ETH_STRK}>{PairKey.ETH_STRK}</MenuItem>
           </Select>
         </div>
         <div className={styles.container}>

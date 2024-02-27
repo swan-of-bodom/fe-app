@@ -19,7 +19,7 @@ import { OptionWithPremia } from "../../classes/Option";
 import style from "./card.module.css";
 import buttonStyles from "../../style/button.module.css";
 import { math64x61toDecimal } from "../../utils/units";
-import { TokenKey } from "../../classes/Token";
+import { PairKey } from "../../classes/Pair";
 
 type TemplateProps = {
   option: OptionWithPremia;
@@ -44,7 +44,8 @@ export const TradeCardTemplate = ({
     <div className={style.container}>
       <div className={style.top}>
         <h4>
-          {option.sideAsText} {option.typeAsText}, strike price ${option.strike}
+          {option.sideAsText} {option.typeAsText}, strike price{" "}
+          {option.strikeCurrency} {option.strike}
         </h4>
         <h4>Expiry {timestampToReadableDate(option.maturity * 1000)}</h4>
       </div>
@@ -76,10 +77,23 @@ type TradeCardProps = {
   option: OptionWithPremia;
 };
 
+const getBaseAmount = (pairId: PairKey) => {
+  // special cases
+  if (pairId === PairKey.BTC_USDC) {
+    return 0.1;
+  }
+  if (pairId === PairKey.ETH_STRK) {
+    return 0.001;
+  }
+
+  // default
+  return 1;
+};
+
 export const TradeCard = ({ option }: TradeCardProps) => {
   const account = useAccount();
   // base amount for BTC is 0.1 and 1 for anything else
-  const baseAmount = option.underlying.id === TokenKey.BTC ? 0.1 : 1;
+  const baseAmount = getBaseAmount(option.pairId);
   const [amount, setAmount] = useState<number>(baseAmount);
   const [inputText, setInputText] = useState<string>(baseAmount.toString(10));
   const [loading, setLoading] = useState<boolean>(true);
@@ -144,13 +158,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
 
   const premia = data.premia;
 
-  const graphData = getProfitGraphData(
-    type,
-    side,
-    strike,
-    data.premiaUsd,
-    amount
-  );
+  const graphData = getProfitGraphData(option, data.premiaUsd, amount);
 
   const handleBuy = async () => {
     if (!account) {

@@ -1,7 +1,12 @@
 import { UserBalance } from "./../types/wallet";
 import { AccountInterface, Contract } from "starknet";
 import ABI from "../abi/lptoken_abi.json";
-import { BTC_ADDRESS, ETH_ADDRESS, USDC_ADDRESS } from "../constants/amm";
+import {
+  BTC_ADDRESS,
+  ETH_ADDRESS,
+  STRK_ADDRESS,
+  USDC_ADDRESS,
+} from "../constants/amm";
 import { TokenKey } from "../classes/Token";
 
 const CARM_TOKEN_ADDRESS =
@@ -34,6 +39,12 @@ export const balanceOfBtc = async (
   return balanceFromTokenAddress(account, BTC_ADDRESS);
 };
 
+export const balanceOfStrk = async (
+  account: AccountInterface
+): Promise<bigint> => {
+  return balanceFromTokenAddress(account, STRK_ADDRESS);
+};
+
 export const balanceOfCarmineToken = async (
   account: AccountInterface
 ): Promise<bigint> => balanceFromTokenAddress(account, CARM_TOKEN_ADDRESS);
@@ -45,11 +56,13 @@ export const getUserBalance = async (
     balanceOfEth(account),
     balanceOfUsdc(account),
     balanceOfBtc(account),
+    balanceOfStrk(account),
   ];
   const values = await Promise.all(promises);
   return {
     [TokenKey.ETH]: values[0],
     [TokenKey.USDC]: values[1],
     [TokenKey.BTC]: values[2],
+    [TokenKey.STRK]: values[3],
   };
 };

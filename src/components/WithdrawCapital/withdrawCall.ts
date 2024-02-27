@@ -52,7 +52,7 @@ export const withdrawCall = async (
   // if withdrawing more than unlocked
   // show dialog and stop transaction
   if (value > unlocked) {
-    debug("Withdrawing more than unlocked");
+    debug("Withdrawing more than unlocked", { value, unlocked });
     openNotEnoughUnlockedCapitalDialog();
     setProcessing(false);
     return;
