@@ -20,26 +20,36 @@ type CustomTooltipProps = {
   active: boolean;
   color: Color;
   usd?: number;
+  currency: string;
 };
 
-const NewCustomTooltip = ({ active, usd, color }: CustomTooltipProps) => {
+const CustomTooltip = ({
+  active,
+  usd,
+  color,
+  currency,
+}: CustomTooltipProps) => {
   if (!active || !usd) {
     return null;
   }
 
+  console.log("GRAPH CURRENCY", currency);
+
   return (
     <Box>
       <Typography sx={{ color, fontWeight: "800" }}>
-        ${usd.toFixed(2)}
+        {currency} {usd.toFixed(2)}
       </Typography>
     </Box>
   );
 };
 
 export const ProfitGraph = ({ data }: ProfitGraphProps) => {
+  const { currency } = data;
   const defaultTooltipData = {
     active: false,
     color: Color.Green,
+    currency,
   };
   const [color, setColor] = useState<Color>(Color.Green);
   const [tooltipData, setTooltipData] =
@@ -60,7 +70,7 @@ export const ProfitGraph = ({ data }: ProfitGraphProps) => {
       const color = usd >= 0 ? Color.Green : Color.Red;
 
       setColor(color);
-      setTooltipData({ active: true, usd, color });
+      setTooltipData({ active: true, usd, color, currency });
     }
   };
 
@@ -96,10 +106,11 @@ export const ProfitGraph = ({ data }: ProfitGraphProps) => {
         />
         <Tooltip
           content={
-            <NewCustomTooltip
+            <CustomTooltip
               active={tooltipData.active}
               usd={tooltipData.usd}
               color={tooltipData.color}
+              currency={tooltipData.currency}
             />
           }
         />

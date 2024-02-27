@@ -6,6 +6,7 @@ export type CurrencyData = { usd: number; market: number };
 export type GraphData = {
   plot: CurrencyData[];
   domain: number[];
+  currency: string;
 };
 
 export const getProfitGraphData = (
@@ -18,6 +19,7 @@ export const getProfitGraphData = (
   const granuality = 1 / step;
   const spread = [0.85 * strikePrice, 1.15 * strikePrice];
   const plot = [];
+  const currency = option.strikeCurrency;
 
   if (side === OptionSide.Long && type === OptionType.Call) {
     for (let i = spread[0] * granuality; i <= spread[1] * granuality; i++) {
@@ -29,7 +31,7 @@ export const getProfitGraphData = (
     const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
     const domain = [first - 0.2 * last, last];
 
-    return { plot, domain };
+    return { plot, domain, currency };
   }
 
   if (side === OptionSide.Short && type === OptionType.Call) {
@@ -42,7 +44,7 @@ export const getProfitGraphData = (
     const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
     const domain = [last, first - 0.3 * last];
 
-    return { plot, domain };
+    return { plot, domain, currency };
   }
 
   if (side === OptionSide.Long && type === OptionType.Put) {
@@ -55,7 +57,7 @@ export const getProfitGraphData = (
     const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
     const domain = [last - 0.3 * first, first];
 
-    return { plot, domain };
+    return { plot, domain, currency };
   }
 
   if (side === OptionSide.Short && type === OptionType.Put) {
@@ -68,7 +70,7 @@ export const getProfitGraphData = (
     const [first, last] = [plot[0].usd, plot[plot.length - 1].usd];
     const domain = [first, last - 0.3 * first];
 
-    return { plot, domain };
+    return { plot, domain, currency };
   }
 
   // Unreachable

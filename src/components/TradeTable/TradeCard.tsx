@@ -6,7 +6,7 @@ import { FinancialData } from "../../types/options";
 import { getPremiaWithSlippage } from "../../utils/computations";
 import { debug, LogTypes } from "../../utils/debugger";
 import { handleNumericChangeFactory } from "../../utils/inputHandling";
-import { isLong, timestampToReadableDate } from "../../utils/utils";
+import { timestampToReadableDate } from "../../utils/utils";
 import { ProfitGraph } from "../CryptoGraph/ProfitGraph";
 import { getProfitGraphData } from "../CryptoGraph/profitGraphData";
 import { fetchModalData } from "./fetchModalData";
@@ -134,8 +134,6 @@ export const TradeCard = ({ option }: TradeCardProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
-  const { strike, type, side } = option;
-
   if (loading || !data || !premiaMath64) {
     const graph = () => <LoadingAnimation />;
     const profitTable = () => <ProfitTableSkeleton symbol={option.symbol} />;
@@ -198,7 +196,7 @@ export const TradeCard = ({ option }: TradeCardProps) => {
       disabled={tradeState.processing || !account || loading}
       onClick={handleBuy}
     >
-      {tradeState.processing ? "Processing..." : isLong(side) ? "Buy" : "Sell"}
+      {tradeState.processing ? "Processing..." : option.isLong ? "Buy" : "Sell"}
     </button>
   );
 

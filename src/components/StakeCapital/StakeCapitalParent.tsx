@@ -24,12 +24,12 @@ import { timestampToReadableDate } from "../../utils/utils";
 import { StakeCapitalItem } from "./StakeItem";
 
 const POOLS = [
+  new Pool(ETH_ADDRESS, STRK_ADDRESS, OptionType.Call),
+  new Pool(ETH_ADDRESS, STRK_ADDRESS, OptionType.Put),
   new Pool(ETH_ADDRESS, USDC_ADDRESS, OptionType.Call),
   new Pool(ETH_ADDRESS, USDC_ADDRESS, OptionType.Put),
   new Pool(BTC_ADDRESS, USDC_ADDRESS, OptionType.Call),
   new Pool(BTC_ADDRESS, USDC_ADDRESS, OptionType.Put),
-  new Pool(ETH_ADDRESS, STRK_ADDRESS, OptionType.Call),
-  new Pool(ETH_ADDRESS, STRK_ADDRESS, OptionType.Put),
 ];
 
 export const StakeCapitalParent = () => {
