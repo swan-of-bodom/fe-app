@@ -22,7 +22,6 @@ const premiaToDisplayValue = (
   quote: number,
   option: OptionWithPosition
 ) => {
-  console.log("GETTING CLOSE AND SHIT", { premia, base, quote });
   // Long Call
   if (option.isCall && option.isLong) {
     return `$${(premia * base).toFixed(2)}`;
