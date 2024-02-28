@@ -1,4 +1,10 @@
-import { TableCell, TableRow, Typography, useTheme } from "@mui/material";
+import {
+  TableCell,
+  TableRow,
+  Tooltip,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { CSSProperties, useEffect, useState } from "react";
 import { AccountInterface } from "starknet";
 import { Pool } from "../../classes/Pool";
@@ -10,6 +16,7 @@ import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { handleStake } from "./handleStake";
 import { CapitalItem } from "./CapitalItem";
 import { apiUrl } from "../../api";
+import { PairKey } from "../../classes/Pair";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -18,7 +25,7 @@ type Props = {
 
 const getApy = async (
   setApy: ([n, m]: [number, number]) => void,
-  pool: Pool
+  pool: Pool,
 ) => {
   fetch(apiUrl(`${pool.apiPoolId}/apy`, { version: 2 }))
     .then((response) => response.json())
@@ -49,6 +56,16 @@ const ShowApy = ({ apy }: { apy?: number }) => {
   return <Typography sx={sx}>{apy.toFixed(2)}%</Typography>;
 };
 
+const ApyNotAvailable = () => {
+  const sx: CSSProperties = { fontWeight: "bold", textAlign: "center" };
+
+  return (
+    <Tooltip title="This pool has not been active long enough to determine a reliable APY">
+      <Typography sx={sx}>--</Typography>
+    </Tooltip>
+  );
+};
+
 export const StakeCapitalItem = ({ account, pool }: Props) => {
   const txPending = useTxPending(pool.poolId, TransactionAction.Stake);
   const [amount, setAmount] = useState<number>(0);
@@ -76,10 +93,18 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
           <Typography>{pool.name}</Typography>
         </TableCell>
         <TableCell onClick={handleLockedInfo}>
-          <ShowApy apy={sinceLaunch} />
+          {pool.pairId === PairKey.ETH_STRK ? (
+            <ApyNotAvailable />
+          ) : (
+            <ShowApy apy={sinceLaunch} />
+          )}
         </TableCell>
         <TableCell onClick={handleLockedInfo}>
-          <ShowApy apy={weekly} />
+          {pool.pairId === PairKey.ETH_STRK ? (
+            <ApyNotAvailable />
+          ) : (
+            <ShowApy apy={weekly} />
+          )}
         </TableCell>
         <TableCell sx={{ minWidth: "100px" }} align="center">
           <input
@@ -98,8 +123,8 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
             {loading || txPending
               ? "Processing..."
               : account
-              ? "Stake"
-              : "Connect wallet"}
+                ? "Stake"
+                : "Connect wallet"}
           </button>
         </TableCell>
       </TableRow>
