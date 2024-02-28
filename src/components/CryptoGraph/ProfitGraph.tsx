@@ -33,8 +33,6 @@ const CustomTooltip = ({
     return null;
   }
 
-  console.log("GRAPH CURRENCY", currency);
-
   return (
     <Box>
       <Typography sx={{ color, fontWeight: "800" }}>

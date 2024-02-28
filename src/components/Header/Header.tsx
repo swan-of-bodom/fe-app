@@ -17,16 +17,16 @@ const navLinks = [
     link: "/staking",
   },
   {
+    title: "Insurance",
+    link: "/insurance",
+  },
+  {
     title: "Trade",
     link: "/",
   },
   {
     title: "Portfolio",
     link: "/portfolio",
-  },
-  {
-    title: "Insurance",
-    link: "/insurance",
   },
 ] as NavLinkProps[];
 
