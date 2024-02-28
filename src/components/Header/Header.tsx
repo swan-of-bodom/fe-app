@@ -13,6 +13,10 @@ type NavLinkProps = {
 
 const navLinks = [
   {
+    title: "Staking",
+    link: "/staking",
+  },
+  {
     title: "Trade",
     link: "/",
   },
@@ -23,10 +27,6 @@ const navLinks = [
   {
     title: "Insurance",
     link: "/insurance",
-  },
-  {
-    title: "Staking",
-    link: "/staking",
   },
 ] as NavLinkProps[];
 
