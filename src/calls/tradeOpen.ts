@@ -85,7 +85,7 @@ export const approveAndTradeOpen = async (
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         user_address: account.address,
-        calldata: tradeOpen,
+        calldata: tradeOpen.calldata,
       }),
     };
 
