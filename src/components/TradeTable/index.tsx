@@ -1,12 +1,5 @@
 import { OptionSide, OptionType } from "../../types/options";
-import {
-  Box,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TableContainer,
-  useTheme,
-} from "@mui/material";
+import { Box, TableContainer, useTheme } from "@mui/material";
 import { useState } from "react";
 import OptionsTable from "./OptionsTable";
 import { isCall, isLong } from "../../utils/utils";
@@ -16,9 +9,8 @@ import { fetchOptionsWithType } from "./fetchOptions";
 import { useQuery } from "react-query";
 import { QueryKeys } from "../../queries/keys";
 import { OptionWithPremia } from "../../classes/Option";
-import styles from "../../style/button.module.css";
-import { selectNoBorder } from "../../style/sx";
 import { PairKey } from "../../classes/Pair";
+import styles from "../../style/button.module.css";
 
 const getText = (type: OptionType, side: OptionSide) =>
   `We currently do not have any ${isLong(side) ? "long" : "short"} ${
@@ -57,34 +49,17 @@ const Content = ({ options, type, side, loading, error }: ContentProps) => {
 const TradeTable = () => {
   const { isLoading, isError, data } = useQuery(
     QueryKeys.optionsWithType,
-    fetchOptionsWithType
+    fetchOptionsWithType,
   );
   const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
   const [type, setCallPut] = useState<OptionType>(
-    data ? data[1] : OptionType.Call
+    data ? data[1] : OptionType.Call,
   );
   const [typeSet, setTypeSet] = useState(false);
 
   const [pair, setPair] = useState<PairKey>(PairKey.ETH_USDC);
 
   const theme = useTheme();
-
-  const handlePairChange = (event: SelectChangeEvent) => {
-    if (event.target.value === PairKey.ETH_USDC) {
-      setPair(PairKey.ETH_USDC);
-      return;
-    }
-    if (event.target.value === PairKey.BTC_USDC) {
-      setPair(PairKey.BTC_USDC);
-
-      return;
-    }
-    if (event.target.value === PairKey.ETH_STRK) {
-      setPair(PairKey.ETH_STRK);
-
-      return;
-    }
-  };
 
   if (!typeSet && data && data[1]) {
     setCallPut(data[1]);
@@ -97,9 +72,11 @@ const TradeTable = () => {
           option.isFresh &&
           option.isSide(side) &&
           option.isType(type) &&
-          option.isPair(pair)
+          option.isPair(pair),
       )
     : [];
+
+  const shownPairs = [PairKey.ETH_STRK, PairKey.ETH_USDC, PairKey.BTC_USDC];
 
   return (
     <>
@@ -119,14 +96,18 @@ const TradeTable = () => {
           marginTop: "100px",
         }}
       >
-        <div>
-          <Select sx={selectNoBorder} value={pair} onChange={handlePairChange}>
-            <MenuItem value={PairKey.ETH_USDC}>{PairKey.ETH_USDC}</MenuItem>
-            <MenuItem value={PairKey.BTC_USDC}>{PairKey.BTC_USDC}</MenuItem>
-            <MenuItem value={PairKey.ETH_STRK}>{PairKey.ETH_STRK}</MenuItem>
-          </Select>
-        </div>
         <div className={styles.container}>
+          {shownPairs.map((currentPair, i) => (
+            <button
+              key={i}
+              className={pair === currentPair ? styles.active : "non-active"}
+              onClick={() => setPair(currentPair)}
+            >
+              {currentPair}
+            </button>
+          ))}
+        </div>
+        <div className={`${styles.container} ${styles.twos}`}>
           <button
             className={isLong(side) ? styles.active : "non-active"}
             onClick={() => setLongShort(OptionSide.Long)}
