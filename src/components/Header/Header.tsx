@@ -22,7 +22,7 @@ const navLinks = [
   },
   {
     title: "Trade",
-    link: "/",
+    link: "/trade",
   },
   {
     title: "Portfolio",
@@ -32,9 +32,17 @@ const navLinks = [
 
 const navLink = ({ title, link }: NavLinkProps, i: number): ReactNode => (
   <NavLink
-    className={(p) =>
-      p.isActive ? `${styles.navlink} ${styles.active}` : styles.navlink
-    }
+    className={(p) => {
+      const active = `${styles.navlink} ${styles.active}`;
+      const nonActive = styles.navlink;
+
+      // "/" is "/staking"
+      if (window.location.pathname === "/" && link === "/staking") {
+        return active;
+      }
+
+      return p.isActive ? active : nonActive;
+    }}
     to={link}
     key={i}
   >

@@ -33,7 +33,6 @@ const App = () => {
   const [check, rerender] = useState(false);
   const acceptedTermsAndConditions = isCookieSet("carmine-t&c");
   const oldPathRedirects = [
-    ["/trade", "/"],
     ["/position", "/portfolio"],
     ["/history", "/portfolio#history"],
   ];
@@ -54,7 +53,8 @@ const App = () => {
                     element={<Navigate to={newPath} replace />}
                   />
                 ))}
-                <Route path="/" element={<TradePage />} />
+                <Route path="/" element={<StakePage />} />
+                <Route path="/trade" element={<TradePage />} />
                 <Route path="/insurance" element={<Insurance />} />
                 <Route path="/portfolio/:target?" element={<Portfolio />} />
                 <Route path="/staking" element={<StakePage />} />
