@@ -16,7 +16,6 @@ import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { handleStake } from "./handleStake";
 import { CapitalItem } from "./CapitalItem";
 import { apiUrl } from "../../api";
-import { PairKey } from "../../classes/Pair";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -25,7 +24,7 @@ type Props = {
 
 const getApy = async (
   setApy: ([n, m]: [number, number]) => void,
-  pool: Pool,
+  pool: Pool
 ) => {
   fetch(apiUrl(`${pool.apiPoolId}/apy`, { version: 2 }))
     .then((response) => response.json())
@@ -56,6 +55,7 @@ const ShowApy = ({ apy }: { apy?: number }) => {
   return <Typography sx={sx}>{apy.toFixed(2)}%</Typography>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ApyNotAvailable = () => {
   const sx: CSSProperties = { fontWeight: "bold", textAlign: "center" };
 
@@ -93,18 +93,10 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
           <Typography>{pool.name}</Typography>
         </TableCell>
         <TableCell onClick={handleLockedInfo}>
-          {pool.pairId === PairKey.ETH_STRK ? (
-            <ApyNotAvailable />
-          ) : (
-            <ShowApy apy={sinceLaunch} />
-          )}
+          <ShowApy apy={sinceLaunch} />
         </TableCell>
         <TableCell onClick={handleLockedInfo}>
-          {pool.pairId === PairKey.ETH_STRK ? (
-            <ApyNotAvailable />
-          ) : (
-            <ShowApy apy={weekly} />
-          )}
+          <ShowApy apy={weekly} />
         </TableCell>
         <TableCell sx={{ minWidth: "100px" }} align="center">
           <input
@@ -123,8 +115,8 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
             {loading || txPending
               ? "Processing..."
               : account
-                ? "Stake"
-                : "Connect wallet"}
+              ? "Stake"
+              : "Connect wallet"}
           </button>
         </TableCell>
       </TableRow>
