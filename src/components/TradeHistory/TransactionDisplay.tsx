@@ -60,7 +60,7 @@ const SingleItem = ({ data }: SingleItemProps) => {
       <TableCell align="left">{action.replace(actionPrefix, "")}</TableCell>
       {option ? (
         <>
-          <TableCell align="left">{`${option.sideAsText} ${option.typeAsText}`}</TableCell>
+          <TableCell align="left">{`${option.sideAsText} ${option.typeAsText} ${option.pairId}`}</TableCell>
           <TableCell align="left">{`$${option.strike}`}</TableCell>
           <TableCell align="left">{size.toFixed(4)}</TableCell>
         </>
