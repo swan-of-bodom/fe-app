@@ -65,7 +65,7 @@ export const ProfitTable = ({
   price,
   premia,
 }: ProfitTableProps) => {
-  const limited = option.strikeCurrency + " " + premia.toFixed(2);
+  const limited = "$ " + premia.toFixed(2); // this is always in $
   const unlimited = "Unlimited";
   const breakEven =
     option.strikeCurrency +
