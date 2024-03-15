@@ -1,4 +1,5 @@
 import { Option } from "../../classes/Option";
+import { TokenKey } from "../../classes/Token";
 import { OptionSide, OptionType } from "../../types/options";
 
 export type CurrencyData = { usd: number; market: number };
@@ -9,13 +10,21 @@ export type GraphData = {
   currency: string;
 };
 
+const getStep = (option: Option): number => {
+  if (option.baseToken.id === TokenKey.STRK) {
+    return 0.01;
+  }
+  return 0.2;
+};
+
 export const getProfitGraphData = (
   option: Option,
   premia: number,
   size: number
 ): GraphData => {
   const { strike: strikePrice, type, side } = option;
-  const step = 0.2;
+
+  const step = getStep(option);
   const granuality = 1 / step;
   const spread = [0.85 * strikePrice, 1.15 * strikePrice];
   const plot = [];

@@ -28,18 +28,15 @@ export class Option extends Pool {
     type: BigNumberish,
     side: BigNumberish,
     maturity: BigNumberish,
-    strike: bigint | number
+    strike: BigNumberish
   ) {
     super(base, quote, type);
 
     this.maturityHex = toHex(maturity);
     this.maturity = Number(BigInt(maturity));
-    this.strikeHex = toHex(
-      typeof strike === "bigint" ? strike : BigInt(strike) * BASE_MATH_64
-    );
-    this.strike =
-      typeof strike === "number" ? strike : Number(strike / BASE_MATH_64);
-
+    this.strikeHex =
+      typeof strike === "string" ? strike : "0x" + strike.toString(16);
+    this.strike = Number((BigInt(strike) * 100n) / BASE_MATH_64) / 100;
     this.side = bnToOptionSide(side);
     this.optionId = this.generateId();
   }
@@ -84,7 +81,7 @@ export class Option extends Pool {
       this.type,
       this.side,
       this.maturity,
-      this.strike,
+      this.strikeHex,
       size,
       value
     );
@@ -97,7 +94,7 @@ export class Option extends Pool {
       this.type,
       this.side,
       this.maturity,
-      this.strike,
+      this.strikeHex,
       premia
     );
   }
@@ -238,7 +235,7 @@ export class Option extends Pool {
       this.type,
       otherSide,
       this.maturityHex,
-      this.strike
+      this.strikeHex
     );
   }
 
@@ -309,7 +306,7 @@ export class OptionWithPosition extends Option {
     type: BigNumberish,
     side: BigNumberish,
     maturity: BigNumberish,
-    strike: bigint | number,
+    strike: BigNumberish,
     size: BigNumberish,
     value: BigNumberish
   ) {
@@ -363,7 +360,7 @@ export class OptionWithPremia extends Option {
     type: BigNumberish,
     side: BigNumberish,
     maturity: BigNumberish,
-    strike: bigint | number,
+    strike: BigNumberish,
     premia: BigNumberish
   ) {
     super(base, quote, type, side, maturity, strike);

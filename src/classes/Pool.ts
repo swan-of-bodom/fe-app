@@ -12,6 +12,8 @@ import {
   ETH_STRK_PUT_ADDRESS,
   ETH_USDC_CALL_ADDRESS,
   ETH_USDC_PUT_ADDRESS,
+  STRK_USDC_CALL_ADDRESS,
+  STRK_USDC_PUT_ADDRESS,
 } from "../constants/amm";
 import { getMultipleTokensValueInUsd } from "../tokens/tokenPrices";
 import { OptionType } from "../types/options";
@@ -61,6 +63,16 @@ export class Pool extends Pair {
       case PairKey.ETH_STRK + OptionType.Put:
         this.lpAddress = ETH_STRK_PUT_ADDRESS;
         this.apiPoolId = "eth-strk-put";
+
+        break;
+      case PairKey.STRK_USDC + OptionType.Call:
+        this.lpAddress = STRK_USDC_CALL_ADDRESS;
+        this.apiPoolId = "strk-usdc-put";
+
+        break;
+      case PairKey.STRK_USDC + OptionType.Put:
+        this.lpAddress = STRK_USDC_PUT_ADDRESS;
+        this.apiPoolId = "strk-usdc-put";
 
         break;
       default:

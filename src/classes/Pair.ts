@@ -7,6 +7,7 @@ export enum PairKey {
   ETH_USDC = "ETH / USDC",
   BTC_USDC = "wBTC / USDC",
   ETH_STRK = "ETH / STRK",
+  STRK_USDC = "STRK / USDC",
 }
 
 export class Pair {
@@ -29,6 +30,9 @@ export class Pair {
     }
     if (base.id === TokenKey.ETH && quote.id === TokenKey.STRK) {
       return PairKey.ETH_STRK;
+    }
+    if (base.id === TokenKey.STRK && quote.id === TokenKey.USDC) {
+      return PairKey.STRK_USDC;
     }
 
     // unreachable

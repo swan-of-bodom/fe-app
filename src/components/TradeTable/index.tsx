@@ -1,5 +1,5 @@
 import { OptionSide, OptionType } from "../../types/options";
-import { Box, TableContainer, useTheme } from "@mui/material";
+import { Box, TableContainer } from "@mui/material";
 import { useState } from "react";
 import OptionsTable from "./OptionsTable";
 import { isCall, isLong } from "../../utils/utils";
@@ -49,17 +49,15 @@ const Content = ({ options, type, side, loading, error }: ContentProps) => {
 const TradeTable = () => {
   const { isLoading, isError, data } = useQuery(
     QueryKeys.optionsWithType,
-    fetchOptionsWithType,
+    fetchOptionsWithType
   );
   const [side, setLongShort] = useState<OptionSide>(OptionSide.Long);
   const [type, setCallPut] = useState<OptionType>(
-    data ? data[1] : OptionType.Call,
+    data ? data[1] : OptionType.Call
   );
   const [typeSet, setTypeSet] = useState(false);
 
   const [pair, setPair] = useState<PairKey>(PairKey.ETH_USDC);
-
-  const theme = useTheme();
 
   if (!typeSet && data && data[1]) {
     setCallPut(data[1]);
@@ -72,27 +70,25 @@ const TradeTable = () => {
           option.isFresh &&
           option.isSide(side) &&
           option.isType(type) &&
-          option.isPair(pair),
+          option.isPair(pair)
       )
     : [];
 
-  const shownPairs = [PairKey.ETH_STRK, PairKey.ETH_USDC, PairKey.BTC_USDC];
+  const shownPairs = [
+    PairKey.STRK_USDC,
+    PairKey.ETH_STRK,
+    PairKey.ETH_USDC,
+    PairKey.BTC_USDC,
+  ];
 
   return (
     <>
-      <Box
-        sx={{
-          visibility: data ? "" : "hidden",
+      <div
+        style={{
+          visibility: data ? undefined : "hidden",
           display: "flex",
-          [theme.breakpoints.down("md")]: {
-            flexFlow: "column",
-            gap: 2,
-            alignItems: "flex-start",
-          },
-          [theme.breakpoints.up("md")]: {
-            flexFlow: "row",
-            justifyContent: "space-between",
-          },
+          flexFlow: "column",
+          gap: "20px",
           marginTop: "100px",
         }}
       >
@@ -107,7 +103,10 @@ const TradeTable = () => {
             </button>
           ))}
         </div>
-        <div className={`${styles.container} ${styles.twos}`}>
+        <div
+          className={`${styles.container} ${styles.twos}`}
+          style={{ marginLeft: "auto" }}
+        >
           <button
             className={isLong(side) ? styles.active : "non-active"}
             onClick={() => setLongShort(OptionSide.Long)}
@@ -133,7 +132,7 @@ const TradeTable = () => {
             Put
           </button>
         </div>
-      </Box>
+      </div>
       <TableContainer component={Box}>
         <Content
           options={filtered}

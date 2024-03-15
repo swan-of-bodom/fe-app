@@ -16,6 +16,7 @@ import { handleNumericChangeFactory } from "../../utils/inputHandling";
 import { handleStake } from "./handleStake";
 import { CapitalItem } from "./CapitalItem";
 import { apiUrl } from "../../api";
+import { PairKey } from "../../classes/Pair";
 
 type Props = {
   account: AccountInterface | undefined;
@@ -93,10 +94,18 @@ export const StakeCapitalItem = ({ account, pool }: Props) => {
           <Typography>{pool.name}</Typography>
         </TableCell>
         <TableCell onClick={handleLockedInfo}>
-          <ShowApy apy={sinceLaunch} />
+          {pool.pairId === PairKey.STRK_USDC ? (
+            <ApyNotAvailable />
+          ) : (
+            <ShowApy apy={sinceLaunch} />
+          )}
         </TableCell>
         <TableCell onClick={handleLockedInfo}>
-          <ShowApy apy={weekly} />
+          {pool.pairId === PairKey.STRK_USDC ? (
+            <ApyNotAvailable />
+          ) : (
+            <ShowApy apy={weekly} />
+          )}
         </TableCell>
         <TableCell sx={{ minWidth: "100px" }} align="center">
           <input
