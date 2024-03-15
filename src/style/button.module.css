@@ -15,6 +15,7 @@
 .container button:first-child {
     border-radius: 5px 0 0 5px;
 }
+
 .container button:last-child {
     border-radius: 0 5px 5px 0;
 }
@@ -23,12 +24,12 @@
     border-radius: 5px 0 0 5px;
 }
 
-.container.twos button:nth-child(even) {
+.container.twos button:nth-child(2) {
     border-radius: 0 5px 5px 0;
     margin-right: 15px;
 }
 
-.container > button.active {
+.container>button.active {
     border-color: #1aff00;
     color: #1aff00;
 }
