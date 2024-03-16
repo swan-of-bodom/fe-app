@@ -57,7 +57,7 @@ const TradeTable = () => {
   );
   const [typeSet, setTypeSet] = useState(false);
 
-  const [pair, setPair] = useState<PairKey>(PairKey.ETH_USDC);
+  const [pair, setPair] = useState<PairKey>(PairKey.STRK_USDC);
 
   if (!typeSet && data && data[1]) {
     setCallPut(data[1]);
