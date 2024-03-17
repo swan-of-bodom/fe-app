@@ -67,7 +67,7 @@ export class Pool extends Pair {
         break;
       case PairKey.STRK_USDC + OptionType.Call:
         this.lpAddress = STRK_USDC_CALL_ADDRESS;
-        this.apiPoolId = "strk-usdc-put";
+        this.apiPoolId = "strk-usdc-call";
 
         break;
       case PairKey.STRK_USDC + OptionType.Put:
