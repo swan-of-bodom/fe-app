@@ -22,6 +22,7 @@ import Portfolio from "./pages/portfolio";
 import Settings from "./pages/settings";
 import StakePage from "./pages/stake";
 import StakingExplainedPage from "./pages/stakeInfo";
+import SwapPage from "./pages/swap";
 import TermsAndConditions from "./pages/termsAndConditions";
 import TradePage from "./pages/trade";
 import { store } from "./redux/store";
@@ -55,6 +56,7 @@ const App = () => {
                 ))}
                 <Route path="/" element={<StakePage />} />
                 <Route path="/trade" element={<TradePage />} />
+                <Route path="/trade/swap" element={<SwapPage />} />
                 <Route path="/insurance" element={<Insurance />} />
                 <Route path="/portfolio/:target?" element={<Portfolio />} />
                 <Route path="/staking" element={<StakePage />} />
